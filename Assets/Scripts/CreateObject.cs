@@ -34,7 +34,7 @@ public class CreateObject : MonoBehaviour {
 
                 //print(newUfo.transform.position.ToString()); //Консоль
                 Debug.Log(newUfo.transform.position.ToString());//Дебаг
-                Debug.Log("Cout Ufo Real =" + coutUfoReal.ToString());//Дебаг
+                Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());//Дебаг
             }
             yield return new WaitForSeconds(3);
         }
