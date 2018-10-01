@@ -12,6 +12,7 @@ public class CreateObject : MonoBehaviour {
         StartCoroutine(CreateObjectUfo());
     }
 
+    [ExecuteInEditMode]
     IEnumerator CreateObjectUfo()
     {
         int coutUfoReal = 0;
@@ -33,8 +34,8 @@ public class CreateObject : MonoBehaviour {
                 //newUfo.MovePosition(newUfo.position + movement * speed * Time.deltaTime);
 
                 //print(newUfo.transform.position.ToString()); //Консоль
-                Debug.Log(newUfo.transform.position.ToString());//Дебаг
-                Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());//Дебаг
+                Debug.Log("UFO pos=" + newUfo.transform.position.ToString());//Дебаг
+                //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());//Дебаг
             }
             yield return new WaitForSeconds(3);
         }

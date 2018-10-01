@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CompletePlayerController.cs" />
      <Compile Include="Assets\Scripts\CreateObject.cs" />
+     <Compile Include="Assets\Scripts\GenerateGridFields.cs" />
      <Compile Include="Assets\Scripts\MovementUfo.cs" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>F:/Projects/TheCell/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
