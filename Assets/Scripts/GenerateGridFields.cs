@@ -6,11 +6,13 @@ public class GenerateGridFields : MonoBehaviour {
 
     public GameObject prefabField;
     public GameObject prefabPanel;
-    public Dictionary<int, GameObject> Fields;
+    //public Dictionary<int, GameObject> Fields;
+    public Dictionary<string, GameObject> Fields;
 
 	// Use this for initialization
 	void Start () {
-        Fields = new Dictionary<int, GameObject>();
+        //Fields = new Dictionary<int, GameObject>();
+        Fields = new Dictionary<string, GameObject>();
         //StartGenCircle();
         StartGenGrig();
     }
@@ -413,6 +415,7 @@ public class GenerateGridFields : MonoBehaviour {
             pos += new Vector3(10, -5, 0);
 
             Instantiate(prefabCompas, pos, Quaternion.identity);
+            
         }
     }
 
@@ -420,18 +423,52 @@ public class GenerateGridFields : MonoBehaviour {
     public float gridY = 5f;
     public float spacing = 1f;
 
+    private int counter;
+    
+
     void StartGenGrig()
     {
-        //for (int y = 0; y < gridY; y++)
-        for (int y = 0; y > (gridY *-1); y--)
+        int maxWidth = (int)gridY * -1;
+        int maxHeight = (int)gridX;
+        counter = maxWidth * maxHeight;
+        Debug.Log("counter=" + counter.ToString());
+        counter = 0;
+        //for (int y = 0; y > (gridY *-1); y--)
+        //{
+        //    for (int x = 0; x < gridX; x++)
+        //    {
+        for (int y = 0; y > maxWidth; y--)
         {
-            for (int x = 0; x < gridX; x++)
+            for (int x = 0; x < maxHeight; x++)
             {
+                
                 Vector3 pos = new Vector3(x, y, 1) * spacing;
                 //Vector2 pos = new Vector2(x, y) * spacing;
-                Instantiate(prefabField, pos, Quaternion.identity);
+                pos.z = 1;
+                //Instantiate(prefabField, pos, Quaternion.identity);
                 //Debug.Log("pos=" + pos);
+                GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+                //newFiled.tag = "Field";
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                Debug.Log("Field name init : " + nameFiled);
+                newFiled.name = nameFiled;
+                //string nameFiled = "Field";
+                //string nameFiled = + x + "x" + Mathf.Abs(y);
+                //Debug.Log("newFiled.tag pre : " + newFiled.tag);
+                //Debug.Log("newFiled.tag init : " + nameFiled);
+                //newFiled.tag = nameFiled;
+                //Debug.Log("newFiled.tag=" + newFiled.tag.ToString());
+                //Fields.Add(counter, newFiled);
+                Fields.Add(nameFiled, newFiled);
+                counter++;
             }
         }
-    } 
+    }
+
+    void OnGUI()
+    {
+        //GUI.Label(new Rect(0, 0, 100, 100), (int)(1.0f / Time.smoothDeltaTime));
+        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
+    }
+   
 }
