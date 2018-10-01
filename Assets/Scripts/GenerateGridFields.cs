@@ -11,13 +11,17 @@ public class GenerateGridFields : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Fields = new Dictionary<int, GameObject>();
+        //StartGenCircle();
+        StartGenGrig();
     }
 
 
     void Awake()
     {
+        
         //CreateFields();
-        StartCoroutine(CreateFieldsAsync());
+        //StartCoroutine(CreateFieldsAsync());
+        //StartGenGrig();
     }
 	
 	// Update is called once per frame
@@ -367,4 +371,67 @@ public class GenerateGridFields : MonoBehaviour {
 
        
     }
+
+
+
+
+    //public Rigidbody rocket;
+    //public float speed = 10f;
+
+    //void FireRocket()
+    //{
+    //    Rigidbody rocketClone = (Rigidbody)Instantiate(rocket, transform.position, transform.rotation);
+    //    rocketClone.velocity = transform.forward * speed;
+
+    //    // You can also access other components / scripts of the clone
+    //    //rocketClone.GetComponent<MyRocketScript>().DoSomething();
+    //}
+
+    //// Calls the fire method when holding down ctrl or mouse
+    //void Update()
+    //{
+    //    if (Input.GetButtonDown("Fire1"))
+    //    {
+    //        FireRocket();
+    //    }
+    //}
+
+    //---------------------
+
+    public GameObject prefabCompas;
+    public int numberOfObjects = 10;
+    public float radius = 0.1f;
+
+    void StartGenCircle()
+    {
+        for (int i = 0; i < numberOfObjects; i++)
+        {
+            float angle = i * Mathf.PI * 2 / numberOfObjects;
+            
+            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+
+            pos += new Vector3(10, -5, 0);
+
+            Instantiate(prefabCompas, pos, Quaternion.identity);
+        }
+    }
+
+    public float gridX = 5f;
+    public float gridY = 5f;
+    public float spacing = 1f;
+
+    void StartGenGrig()
+    {
+        //for (int y = 0; y < gridY; y++)
+        for (int y = 0; y > (gridY *-1); y--)
+        {
+            for (int x = 0; x < gridX; x++)
+            {
+                Vector3 pos = new Vector3(x, y, 1) * spacing;
+                //Vector2 pos = new Vector2(x, y) * spacing;
+                Instantiate(prefabField, pos, Quaternion.identity);
+                //Debug.Log("pos=" + pos);
+            }
+        }
+    } 
 }

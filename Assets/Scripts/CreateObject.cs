@@ -30,7 +30,8 @@ public class CreateObject : MonoBehaviour {
                 
                 GameObject newUfo = (GameObject)Instantiate(prefabUfo);
                 int add = (coutUfoReal * 1);
-                newUfo.transform.position = new Vector2(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add);
+                //newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
+                newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add);
                 //newUfo.MovePosition(newUfo.position + movement * speed * Time.deltaTime);
 
                 //print(newUfo.transform.position.ToString()); //Консоль
