@@ -444,7 +444,7 @@ public class GenerateGridFields : MonoBehaviour {
                 
                 Vector3 pos = new Vector3(x, y, 1) * spacing;
                 //Vector2 pos = new Vector2(x, y) * spacing;
-                pos.z = 1;
+                pos.z = 0;
                 //Instantiate(prefabField, pos, Quaternion.identity);
                 //Debug.Log("pos=" + pos);
                 GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);

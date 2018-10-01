@@ -14,6 +14,7 @@ public class CompletePlayerController : MonoBehaviour {
 	public Text winText;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text winTextLog;
     public Camera MainCamera;
+    public Color ColorCurrentField = Color.yellow;
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
 	[SerializeField]
@@ -69,7 +70,9 @@ public class CompletePlayerController : MonoBehaviour {
         {
             //Debug.Log("Filed finded !!! " + prefabFind.name);
             winTextLog.text = prefabFind.name.ToString();
-            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            //prefabFind.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
+            
         }
     }
 
