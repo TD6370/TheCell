@@ -11,16 +11,13 @@ public class GenerateGridFields : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Fields = new Dictionary<int, GameObject>();
-        //CreateFields();
-        //StartCoroutine(CreateFieldsAsync());
-        
     }
 
 
     void Awake()
     {
-        CreateFields();
-        //StartCoroutine(CreateFieldsAsync());
+        //CreateFields();
+        StartCoroutine(CreateFieldsAsync());
     }
 	
 	// Update is called once per frame
@@ -28,7 +25,7 @@ public class GenerateGridFields : MonoBehaviour {
 		
 	}
 
-    IEnumerator CreateFieldsAsync()
+    IEnumerator CreateFieldsAsync_()
     {
         if (prefabField == null)
         {
@@ -133,7 +130,113 @@ public class GenerateGridFields : MonoBehaviour {
         ////    Controls.Add(b.btn);
     }
 
+    IEnumerator CreateFieldsAsync()
+    {
+        Vector2 sizeSpriteRendererField = prefabField.GetComponent<SpriteRenderer>().sprite.rect.size;
+        Debug.Log("size Field==" + sizeSpriteRendererField);
+
+        float widthFiled = sizeSpriteRendererField.x; // .Size.Width;
+        float heightFiled = sizeSpriteRendererField.y;
+
+        Vector2 sizeSpriteRendererprefabPanel = prefabPanel.GetComponent<SpriteRenderer>().sprite.rect.size;
+        Debug.Log("size Panel==" + sizeSpriteRendererField);
+
+        var scaleX = prefabPanel.transform.localScale.x;
+        var scaleY = prefabPanel.transform.localScale.y;
+
+        float widthPanel = sizeSpriteRendererprefabPanel.x * scaleX;
+        float heightPanel = sizeSpriteRendererprefabPanel.y * scaleY;
+
+        int widthLenght = (int)(widthPanel / widthFiled);
+        int heightLenght = (int)(heightPanel / heightFiled);
+
+        int maxLengthOfArray = widthLenght * heightLenght;
+        Debug.Log("maxLengthOfArray =" + maxLengthOfArray.ToString());
+        int counter = 0;
+
+        Vector2 panelLocation = prefabPanel.GetComponent<Renderer>().bounds.size;
+        Debug.Log("panelLocation =" + panelLocation.ToString());
+
+        prefabPanel.GetComponent<Renderer>().enabled = false;
+
+        widthFiled = 1f;
+        heightFiled = 1f;
+
+        float offsetX = 1;
+        float offsetY = 1;
+        for (int heig = 0; heig < widthLenght; heig++)
+        {
+            for (int wid = 0; wid < heightLenght; wid++)
+            {
+                counter++;
+                Vector2 newPos = new Vector2(offsetX, offsetY);
+                GameObject newFiled = (GameObject)Instantiate(prefabField);
+                newFiled.transform.position = new Vector2(offsetX, offsetY);
+                Debug.Log("newFiled.transform.position =" + newFiled.transform.position.ToString());
+                offsetX += widthFiled;
+
+                yield return null;
+            }
+            offsetX = 0;
+            offsetY -= heightFiled;
+        }
+
+    }
+
+
     public void CreateFields()
+    {
+        Vector2 sizeSpriteRendererField = prefabField.GetComponent<SpriteRenderer>().sprite.rect.size;
+        Debug.Log("size Field==" + sizeSpriteRendererField);
+
+        float widthFiled = sizeSpriteRendererField.x; // .Size.Width;
+        float heightFiled = sizeSpriteRendererField.y;
+
+        Vector2 sizeSpriteRendererprefabPanel = prefabPanel.GetComponent<SpriteRenderer>().sprite.rect.size;
+        Debug.Log("size Panel==" + sizeSpriteRendererField);
+
+        var scaleX = prefabPanel.transform.localScale.x;
+        var scaleY = prefabPanel.transform.localScale.y;
+
+        float widthPanel = sizeSpriteRendererprefabPanel.x * scaleX;
+        float heightPanel = sizeSpriteRendererprefabPanel.y * scaleY;
+
+        int widthLenght = (int)(widthPanel / widthFiled);
+        int heightLenght = (int)(heightPanel / heightFiled);
+
+        int maxLengthOfArray = widthLenght * heightLenght;
+        Debug.Log("maxLengthOfArray =" + maxLengthOfArray.ToString());
+        int counter = 0;
+
+        Vector2 panelLocation = prefabPanel.GetComponent<Renderer>().bounds.size;
+        Debug.Log("panelLocation =" + panelLocation.ToString());
+
+        prefabPanel.GetComponent<Renderer>().enabled = false;
+
+        widthFiled = 1f;
+        heightFiled = 1f;
+
+        float offsetX = 1;
+        float offsetY = 1;
+        for (int heig = 0; heig < widthLenght; heig++)
+        {
+            for (int wid = 0; wid < heightLenght; wid++)
+            {
+                counter++;
+                Vector2 newPos = new Vector2(offsetX, offsetY);
+                GameObject newFiled = (GameObject)Instantiate(prefabField);
+                newFiled.transform.position = new Vector2(offsetX, offsetY);
+                Debug.Log("newFiled.transform.position =" + newFiled.transform.position.ToString());
+                offsetX += widthFiled;
+
+                //Fields.Add(counter, newFiled);
+            }
+            offsetX = 0;
+            offsetY -= heightFiled;
+        }
+    }
+
+    public void CreateFields_()
     {
         Vector2 sizeSpriteRendererField = prefabField.GetComponent<SpriteRenderer>().sprite.rect.size;
         Debug.Log("size Field==" + sizeSpriteRendererField);
@@ -173,8 +276,13 @@ public class GenerateGridFields : MonoBehaviour {
         //Debug.Log("visible=" + prefabPanel.GetComponent<Renderer>().enabled.ToString());
 
         //#TEST
-        widthFiled = 35;
-        heightFiled = 35;
+        //widthFiled = 35;
+        //heightFiled = 35;
+
+        widthFiled = 1f;
+        heightFiled = 1f;
+        //widthFiled = 0.5f;
+        //heightFiled = 0.5f;
 
 
         //Vector2 offset = new Vector2();
@@ -182,8 +290,8 @@ public class GenerateGridFields : MonoBehaviour {
         //Vector2 offset = new Vector2(prefabField.transform.position.x, prefabField.transform.position.y);
         //float offsetX = prefabField.transform.position.x;
         //float offsetY = prefabField.transform.position.y;
-        float offsetX = 0;
-        float offsetY = 0;
+        float offsetX = 1;
+        float offsetY = 1;
         //Debug.Log("offset 1=" + offset.ToString());
         for (int heig = 0; heig < widthLenght; heig++)
         {
@@ -202,14 +310,28 @@ public class GenerateGridFields : MonoBehaviour {
 
                 //Debug.Log("Instantiate(prefabField) " + counter.ToString());
                 Debug.Log("Inst Field => " + counter.ToString());
+                
+                //GameObject newFiled = (GameObject)Instantiate(prefabField);
+                //GameObject newFiled = (GameObject)Instantiate(prefabField, newPos * Time.deltaTime);
+                //GameObject newFiled = (GameObject)Instantiate(prefabField, prefabPanel.transform);
                 GameObject newFiled = (GameObject)Instantiate(prefabField);
+                //GameObject newFiled = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                //SpriteRenderer sr = newFiled.AddComponent<SpriteRenderer>();
+                //sr = prefabField.GetComponent<SpriteRenderer>();
+
                 //Debug.Log("newFiled.transform.position init");
                 //newFiled.transform.position = newPos * Time.deltaTime;
                 //newFiled.transform.position = new Vector2(prefabField.transform.position.x + offset.x * Time.deltaTime, prefabField.transform.position.y + offset.y * Time.deltaTime);
                     //newFiled.transform.position = new Vector2(offset.x * Time.deltaTime, offset.y * Time.deltaTime);
-                newFiled.transform.position = newPos * Time.deltaTime;
+
+                //newFiled.transform.position = newPos *Time.deltaTime;
+                newFiled.transform.position = new Vector2(offsetX, offsetY);
+                //newFiled.transform.position = newPos;
+                //newFiled.transform.position = new Vector2(offsetX * Time.deltaTime, offsetY * Time.deltaTime);
+                
+                
                 //newFiled.transform.position = new Vector2(prefabField.transform.position.x + offset.x, prefabField.transform.position.y + offset.y);
-                 Debug.Log("newFiled.transform.position =" + newFiled.transform.position.ToString());
+                Debug.Log("newFiled.transform.position =" + newFiled.transform.position.ToString());
 
                 //Fields.Add(counter, newFiled);
                 //offset.y += widthFiled;
@@ -223,6 +345,25 @@ public class GenerateGridFields : MonoBehaviour {
             offsetX = 0;
             offsetY -= heightFiled;
         }
+
+        //for (int y = 0; y < 15; y++)
+        //{
+        //    for (int x = 0; x < 15; x++)
+        //    {
+        //        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //        //cube.AddComponent<Rigidbody>();
+        //        cube.transform.position = new Vector3(x, y, 0);
+        //    }
+        //}
+
+
+       //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+       // cube.transform.position = new Vector3(1, 1);
+       // GameObject cube2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+       // cube2.transform.position = new Vector3(1, 0);
+       // GameObject cube3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+       // cube3.transform.position = new Vector3(2, 1);
+
 
        
     }
