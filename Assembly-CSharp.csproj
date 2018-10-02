@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\GenerateGridFields.cs" />
      <Compile Include="Assets\Scripts\MovementCamera.cs" />
      <Compile Include="Assets\Scripts\MovementUfo.cs" />
+     <Compile Include="Assets\Scripts\SaveLoadData.cs" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>F:/Projects/TheCell/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

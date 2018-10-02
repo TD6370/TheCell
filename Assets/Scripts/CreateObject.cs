@@ -6,10 +6,21 @@ public class CreateObject : MonoBehaviour {
 
     //Coroutine createObject;
     public GameObject prefabUfo;
+    public Camera MainCamera;
 
-	// Use this for initialization
-	void Start () {
+    private GenerateGridFields _scriptGrid;
+
+    void Start()
+    {
         StartCoroutine(CreateObjectUfo());
+
+        var camera = MainCamera;
+        if (camera == null)
+        {
+            Debug.Log("MainCamera null");
+            return;
+        }
+        _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
     }
 
     [ExecuteInEditMode]
@@ -33,6 +44,8 @@ public class CreateObject : MonoBehaviour {
                 //newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
                 newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add);
                 //newUfo.MovePosition(newUfo.position + movement * speed * Time.deltaTime);
+
+                //!!! _scriptGrid.ActiveGameObject(newUfo);
 
                 //print(newUfo.transform.position.ToString()); //Консоль
                 //Debug.Log("UFO pos=" + newUfo.transform.position.ToString());//Дебаг
