@@ -8,20 +8,25 @@ using UnityEngine.UI;
 public class CompletePlayerController : MonoBehaviour {
 
     [Header("Speed move hero")]
-	public float speed;				//Floating point variable to store the player's movement speed.
+	public float Speed;				//Floating point variable to store the player's movement speed.
 	[Space]
-    public Text countText;			//Store a reference to the UI Text component which will display the number of pickups collected.
-	public Text winText;			//Store a reference to the UI Text component which will display the 'You win' message.
-    public Text winTextLog;
+    public Text txtCount;			//Store a reference to the UI Text component which will display the number of pickups collected.
+	public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
+    public Text txtLog;
     public Camera MainCamera;
     public Color ColorCurrentField = Color.yellow;
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
 	[SerializeField]
-    private int count;				//Integer to store the number of pickups collected so far.
+    private int _count;				//Integer to store the number of pickups collected so far.
+    private int _posLastX = 0;
+    private int _posLastY = 0;
+    private int _limitHorizontalLook = 22;
+    private int _limitVerticalLook = 18;
 
-    int posLastX = 0;
-    int posLastY = 0;
+    Vector2 _movement;
+    //private HorizontalCompas _moveX = HorizontalCompas.Center;
+    //private VerticalCompas _moveY = VerticalCompas.Center;
 
 	// Use this for initialization
 	void Start()
@@ -30,10 +35,10 @@ public class CompletePlayerController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
 
 		//Initialize count to zero.
-		count = 0;
+		_count = 0;
 
 		//Initialze winText to a blank string since we haven't won yet at beginning.
-		winText.text = "";
+		txtMessage.text = "";
 
 		//Call our SetCountText function which will update the text with the current value for count.
 		SetCountText ();
@@ -49,13 +54,14 @@ public class CompletePlayerController : MonoBehaviour {
 		float moveVertical = Input.GetAxis ("Vertical");
 
 		//Use the two store floats to create a new Vector2 variable movement.
-		Vector2 movement = new Vector2 (moveHorizontal, moveVertical);
+		//Vector2 movement = new Vector2 (moveHorizontal, moveVertical);
+        _movement = new Vector2 (moveHorizontal, moveVertical);
 
 		//Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
 		//rb2d.AddForce (movement * speed);
-        rb2d.MovePosition(rb2d.position + movement * speed * Time.deltaTime);
+        rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
 
-        if (movement.x != 0 || movement.y != 0)
+        if (_movement.x != 0 || _movement.y != 0)
         {
             //GetpositionFiled();
             RestructGrid();
@@ -69,12 +75,21 @@ public class CompletePlayerController : MonoBehaviour {
         if (prefabFind != null)
         {
             //Debug.Log("Filed finded !!! " + prefabFind.name);
-            winTextLog.text = prefabFind.name.ToString();
+            txtLog.text = prefabFind.name.ToString();
             //prefabFind.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
             
         }
     }
+
+    //enum HorizontalCompas
+    //{
+    //    Left, Right, Center
+    //}
+    //enum VerticalCompas
+    //{
+    //    Up, Down, Center
+    //}
 
     GameObject FindFieldCurrent()
     {
@@ -83,13 +98,19 @@ public class CompletePlayerController : MonoBehaviour {
         posX = (int)((transform.position.x / 2) + 0.5);
         posY = (int)((transform.position.y / 2) - 0.5);
         posY = (int)(Mathf.Abs(posY));
-        if (posLastX == posX && posLastY == posY)
+
+        
+
+        if (_posLastX == posX && _posLastY == posY)
             return null;
-        posLastX = posX;
-        posLastY = posY;
+
+       
+
+        _posLastX = posX;
+        _posLastY = posY;
 
         string nameFiled = "Filed" + posX + "x" + posY;
-        winTextLog.text = "?" + nameFiled;
+        txtLog.text = "?" + nameFiled;
         
         //Debug.Log("MainCamera.GetComponent GenerateGridFields");
         var camera = MainCamera;
@@ -101,6 +122,14 @@ public class CompletePlayerController : MonoBehaviour {
 
         GenerateGridFields scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         var Fields = scriptGrid.Fields;
+
+         //angle move
+        //CalculateCompasMoveHero(posX, posY);
+        //_movement
+        Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
+        
+        scriptGrid.GenGrigLook(_movement, posX, _limitHorizontalLook,  posY, _limitVerticalLook);
+
         if (!Fields.ContainsKey(nameFiled))
             return null;
         GameObject prefabFind = Fields[nameFiled];
@@ -109,7 +138,32 @@ public class CompletePlayerController : MonoBehaviour {
         return prefabFind;
     }
 
-  
+    //void CalculateCompasMoveHero(int posX, int posY)
+    //{
+        
+    //    int moveXv = 0;
+    //    int moveYv = 0;
+    //    if (_posLastX > posX)
+    //    {
+    //        _moveX = HorizontalCompas.Left;
+    //        moveXv = -1;
+    //    }
+    //    else if (_posLastX < posX)
+    //    {
+    //        _moveX = HorizontalCompas.Right;
+    //        moveXv = 1;
+    //    }
+    //    if (_posLastY > posY)
+    //    {
+    //        _moveY = VerticalCompas.Up;
+    //        moveYv = 1;
+    //    }
+    //    else if (_posLastY < posY)
+    //    {
+    //        _moveY = VerticalCompas.Down;
+    //        moveYv = -1;
+    //    }
+    //}
 
 	//OnTriggerEnter2D is called whenever this object overlaps with a trigger collider.
 	void OnTriggerEnter2D(Collider2D other) 
@@ -122,7 +176,7 @@ public class CompletePlayerController : MonoBehaviour {
             Destroy(other.gameObject);
 			
 			//Add one to the current value of our count variable.
-			count = count + 1;
+			_count = _count + 1;
 			
 			//Update the currently displayed count by calling the SetCountText function.
 			SetCountText ();
@@ -142,12 +196,12 @@ public class CompletePlayerController : MonoBehaviour {
 	void SetCountText()
 	{
 		//Set the text property of our our countText object to "Count: " followed by the number stored in our count variable.
-		countText.text = "Count: " + count.ToString ();
+		txtCount.text = "Count: " + _count.ToString ();
 
 		//Check if we've collected all 12 pickups. If we have...
-		if (count >= 12)
+		if (_count >= 12)
 			//... then set the text property of our winText object to "You win!"
-			winText.text = "You win!";
+			txtMessage.text = "You win!";
 	}
 
     //void GetpositionFiled()

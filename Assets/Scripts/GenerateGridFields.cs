@@ -9,6 +9,12 @@ public class GenerateGridFields : MonoBehaviour {
     //public Dictionary<int, GameObject> Fields;
     public Dictionary<string, GameObject> Fields;
 
+    public float GridX = 5f;
+    public float GridY = 5f;
+    public float Spacing = 1f;
+
+    private int _counter;
+
 	// Use this for initialization
 	void Start () {
         //Fields = new Dictionary<int, GameObject>();
@@ -30,6 +36,263 @@ public class GenerateGridFields : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    void StartGenGrig()
+    {
+        int maxWidth = (int)GridY * -1;
+        int maxHeight = (int)GridX;
+        _counter = maxWidth * maxHeight;
+        Debug.Log("counter=" + _counter.ToString());
+        _counter = 0;
+        string _nameFiled = "";
+
+        for (int y = 0; y > maxWidth; y--)
+        {
+            for (int x = 0; x < maxHeight; x++)
+            {
+
+                Vector3 pos = new Vector3(x, y, 1) * Spacing;
+                //Vector2 pos = new Vector2(x, y) * spacing;
+                pos.z = 0;
+                //Instantiate(prefabField, pos, Quaternion.identity);
+                //Debug.Log("pos=" + pos);
+                GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+                //newFiled.tag = "Field";
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                //Debug.Log("Field name init : " + nameFiled);
+                newFiled.name = nameFiled;
+                _nameFiled = nameFiled;
+                //string nameFiled = "Field";
+                //string nameFiled = + x + "x" + Mathf.Abs(y);
+                //Debug.Log("newFiled.tag pre : " + newFiled.tag);
+                //Debug.Log("newFiled.tag init : " + nameFiled);
+                //newFiled.tag = nameFiled;
+                //Debug.Log("newFiled.tag=" + newFiled.tag.ToString());
+                //Fields.Add(counter, newFiled);
+                Fields.Add(nameFiled, newFiled);
+                _counter++;
+            }
+        }
+
+        Debug.Log("Field name init : " + _nameFiled);
+    }
+
+
+    //public void GenGrigLook(Vector2 _movement, int p_startPosY = 0, int p_HorizontalY = 0, int p_startPosX = 0, int p_VerticalX = 0)
+    public void GenGrigLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0)
+    {
+
+
+        int maxVertical = (int)p_limitVerticalLook;// *-1;
+        int maxHorizontal = (int)p_limitHorizontalLook;
+        //_counter = maxWidth * maxHeight;
+        //Debug.Log("counter=" + _counter.ToString());
+        //_counter = 0;
+
+        if (Fields.Count != _counter || _counter == 0)
+        {
+            Debug.Log("--------- Cancel GenGrigLook");
+            return;
+        }
+        else
+        {
+            Debug.Log("Start GenGrigLook count: " + Fields.Count);
+        }
+
+        if (_movement.x != 0)
+        {
+            
+
+            int p_startPosY = p_PosHeroY - (p_limitVerticalLook / 2);
+            //Validate
+            if (p_startPosY < 0)
+            {
+                //Debug.Log("GenGrigLook --!!!--- not validate startPosY=" + p_startPosY + 
+                //    " p_PosHeroY=" + p_PosHeroY  +
+                //    " p_limitVerticalLook=" + p_limitVerticalLook +
+                //    "        startPosY = p_PosHeroY + (p_limitVerticalLook / 2);");
+                p_startPosY = 0;
+            }
+            int limitVertical = p_startPosY + maxVertical;
+            if (limitVertical > GridY)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate limitVertical=" + limitVertical);
+                limitVertical = (int)GridY;
+            }
+
+            int x=0;
+            int LeftX = p_PosHeroX - (p_limitHorizontalLook / 2);
+            int RightX = p_PosHeroX + (p_limitHorizontalLook / 2);
+            //Validate
+            if (LeftX < 0)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate LeftX=" + LeftX);
+                LeftX = 0;
+            }
+            if (RightX > GridX)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate RightX=" + RightX);
+                RightX = (int)GridX;
+            }
+
+
+            Debug.Log("GenGrigLook movement X");
+            
+            x = _movement.x > 0 ?
+                //Remove Vertical
+                LeftX : 
+                RightX;
+
+            //Debug.Log("GenGrigLook >> Remove Vertical  p_startPosY=" + p_startPosY + "  >>>>>  limitVertical=" + limitVertical);
+            //Debug.Log("p_startPosY = p_PosHeroY - (p_limitVerticalLook / 2)" +
+            //    "  p_startPosY =" + p_startPosY +
+            //    "  p_PosHeroY =" + p_PosHeroY +
+            //    "  p_limitVerticalLook =" + p_limitVerticalLook);
+            //Debug.Log("limitVertical = p_startPosY + maxVertical" +
+            //    "  limitVertical =" + limitVertical +
+            //    "  p_startPosY=" + p_startPosY +
+            //    "  maxVertical=" + maxVertical);
+
+            for (int y = p_startPosY; y < limitVertical; y++)
+            {
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                //Debug.Log("GenGrigLook Remove Vertical --- " + nameFiled);
+                //Find
+                if (!Fields.ContainsKey(nameFiled))
+                {
+                    Debug.Log("GenGrigLook Remove Vertical not Field : " + nameFiled);
+                    continue;
+                }
+                GameObject findFiled = Fields[nameFiled];
+
+                //Destroy !!!
+                // Kills the game object in 5 seconds after loading the object
+                //Debug.Log("GenGrigLook Destroy");
+                Destroy(findFiled, 0.5f);
+                //Debug.Log("GenGrigLook Fields.Remove");
+                Fields.Remove(nameFiled);
+                _counter--;
+                Debug.Log("GenGrigLook Remove Vertical +++ " + nameFiled);
+            }
+
+            x = _movement.x > 0 ?
+                //Added Vertical
+                RightX : 
+                LeftX;
+            for (int y = p_startPosY; y <limitVertical; y++)
+            {
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                //Debug.Log("GenGrigLook Added Vertical --- " + nameFiled);
+
+                if (Fields.ContainsKey(nameFiled))
+                {
+                   // Debug.Log("GenGrigLook Added Vertical YES Field ))) : " + nameFiled);
+                    continue;
+                }
+                Vector3 pos = new Vector3(x, y, 1) * Spacing;
+                pos.z = 0;
+                GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+                Debug.Log("Field Added  name init : " + nameFiled);
+                newFiled.name = nameFiled;
+                Fields.Add(nameFiled, newFiled);
+                _counter++;
+                Debug.Log("GenGrigLook Added Vertical +++ " + nameFiled);
+            }
+        }
+
+        if (_movement.y != 0)
+        {
+            Debug.Log("GenGrigLook movement Y");
+
+            int p_startPosX = p_PosHeroX - (p_limitHorizontalLook / 2); //#
+            //Validate
+            if (p_startPosX < 0)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate startPosX=" + p_startPosX);
+                p_startPosX = 0;
+            }
+
+            int limitHorizontal = p_startPosX + maxHorizontal;
+            if (limitHorizontal > GridY)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate Horizontal=" + limitHorizontal);
+                limitHorizontal = (int)GridX;
+            }
+            //if (maxHorizontal + p_startPosX > GridX)
+            //{
+            //    Debug.Log("GenGrigLook --!!!--- not validate maxHorizontal=" + maxHorizontal);
+            //    maxHorizontal = (int)GridX;
+            //}
+
+
+            int y = 0;
+            int TopY = p_PosHeroY + (p_limitVerticalLook / 2); //#
+            int DownY = p_PosHeroY - (p_limitVerticalLook / 2); //#
+            //Validate
+            if (TopY < 0)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate TopY=" + TopY);
+                TopY = 0;
+            }
+            if (DownY > GridY)
+            {
+                Debug.Log("GenGrigLook --!!!--- not validate DownY=" + DownY);
+                DownY = (int)GridY;
+            }
+            
+            y = _movement.y > 0 ?
+                //Remove Horizontal //#
+                TopY : 
+                DownY; //#
+            for (int x = p_startPosX; x < limitHorizontal; x++) //#
+            {
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                //Debug.Log("GenGrigLook Remove Horizontal --- " + nameFiled);
+                //Find
+                if (!Fields.ContainsKey(nameFiled))
+                {
+                    Debug.Log("GenGrigLook Remove Vertical not Field : " + nameFiled + "   Fields cpont: " + Fields.Count);
+                    continue;
+                }
+                GameObject findFiled = Fields[nameFiled];
+                
+                //Destroy !!!
+                // Kills the game object in 5 seconds after loading the object
+                //Debug.Log("GenGrigLook Destroy");
+                Destroy(findFiled, 0.5f);
+                //Debug.Log("GenGrigLook Fields.Remove");
+                Fields.Remove(nameFiled);
+                _counter--;
+                Debug.Log("GenGrigLook Removed Horizontal +++ " + nameFiled);
+            }
+
+
+            
+            y = _movement.y > 0 ?
+                //Added Horizontal
+                DownY : 
+                TopY; //#
+            for (int x = p_startPosX; x < limitHorizontal; x++) //#
+            {
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                //Debug.Log("GenGrigLook Added Horizontal --- " + nameFiled);
+
+                if (Fields.ContainsKey(nameFiled))
+                {
+                    Debug.Log("GenGrigLook Added Vertical YES Field ))) : " + nameFiled + "   Fields cpont: " + Fields.Count);
+                    continue;
+                }
+                Vector3 pos = new Vector3(x, y, 1) * Spacing;
+                pos.z = 0;
+                GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+                //Debug.Log("Field Added name init : " + nameFiled);
+                newFiled.name = nameFiled;
+                Fields.Add(nameFiled, newFiled);
+                _counter++;
+                Debug.Log("Field Added name +++ " + nameFiled);
+            }
+        }
+    }
 
     IEnumerator CreateFieldsAsync_()
     {
@@ -419,51 +682,10 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    public float gridX = 5f;
-    public float gridY = 5f;
-    public float spacing = 1f;
 
-    private int counter;
     
 
-    void StartGenGrig()
-    {
-        int maxWidth = (int)gridY * -1;
-        int maxHeight = (int)gridX;
-        counter = maxWidth * maxHeight;
-        Debug.Log("counter=" + counter.ToString());
-        counter = 0;
-        //for (int y = 0; y > (gridY *-1); y--)
-        //{
-        //    for (int x = 0; x < gridX; x++)
-        //    {
-        for (int y = 0; y > maxWidth; y--)
-        {
-            for (int x = 0; x < maxHeight; x++)
-            {
-                
-                Vector3 pos = new Vector3(x, y, 1) * spacing;
-                //Vector2 pos = new Vector2(x, y) * spacing;
-                pos.z = 0;
-                //Instantiate(prefabField, pos, Quaternion.identity);
-                //Debug.Log("pos=" + pos);
-                GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-                //newFiled.tag = "Field";
-                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
-                Debug.Log("Field name init : " + nameFiled);
-                newFiled.name = nameFiled;
-                //string nameFiled = "Field";
-                //string nameFiled = + x + "x" + Mathf.Abs(y);
-                //Debug.Log("newFiled.tag pre : " + newFiled.tag);
-                //Debug.Log("newFiled.tag init : " + nameFiled);
-                //newFiled.tag = nameFiled;
-                //Debug.Log("newFiled.tag=" + newFiled.tag.ToString());
-                //Fields.Add(counter, newFiled);
-                Fields.Add(nameFiled, newFiled);
-                counter++;
-            }
-        }
-    }
+   
 
     void OnGUI()
     {

@@ -265,7 +265,7 @@ Camera:
   far clip plane: 1000
   field of view: 47
   orthographic: 1
-  orthographic size: 5.81
+  orthographic size: 8.1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -319,12 +319,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabField: {fileID: 1793526982}
   prefabPanel: {fileID: 1609899903}
+  GridX: 22
+  GridY: 18
+  Spacing: 2
   prefabCompas: {fileID: 2012676942}
   numberOfObjects: 10
   radius: 1
-  gridX: 22
-  gridY: 18
-  spacing: 2
 --- !u!114 &580250723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1342,13 +1342,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e6e8a25bd7cb44d94cbde11c06ac20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  countText: {fileID: 1171611291}
-  winText: {fileID: 1171611291}
-  winTextLog: {fileID: 1626881613}
+  Speed: 10
+  txtCount: {fileID: 1171611291}
+  txtMessage: {fileID: 1171611291}
+  txtLog: {fileID: 1626881613}
   MainCamera: {fileID: 580250719}
   ColorCurrentField: {r: 0.9716981, g: 0.9617622, b: 0.68293875, a: 1}
-  count: 0
+  _count: 0
 --- !u!1 &2012676942 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1191300187631092, guid: 56867aa7f68e3a243b1ea105d6bbce8c,
