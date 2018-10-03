@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212762101449004552}
   m_Layer: 0
   m_Name: PrefabField
+  m_TagString: Field
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

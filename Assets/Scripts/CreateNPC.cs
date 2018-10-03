@@ -32,6 +32,8 @@ public class CreateNPC : MonoBehaviour {
         int coutUfoReal = 0;
 
         while (true)
+        {
+            GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
             coutUfoReal = listPrefabUfo.Length;
             if(coutUfoReal<10)
             {
