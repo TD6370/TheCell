@@ -126,9 +126,10 @@ public class CompletePlayerController : MonoBehaviour {
          //angle move
         //CalculateCompasMoveHero(posX, posY);
         //_movement
-        Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
+        //Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
         
         scriptGrid.GenGrigLook(_movement, posX, _limitHorizontalLook,  posY, _limitVerticalLook);
+        //StartCoroutine(scriptGrid.GenGrigLookAsync(_movement, posX, _limitHorizontalLook, posY, _limitVerticalLook));
 
         if (!Fields.ContainsKey(nameFiled))
             return null;
