@@ -170,7 +170,7 @@ public class CompletePlayerController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) 
 	{
 		//Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-		if (other.gameObject.CompareTag ("Ufak")) 
+		if (other.gameObject.CompareTag ("PrefabUfo")) 
 		{
 			//... then set the other object we just collided with to inactive.
 			//other.gameObject.SetActive(false);

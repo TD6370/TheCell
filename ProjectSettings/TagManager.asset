@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Ufak
   - Field
+  - PrefabVood
+  - PrefabRock
+  - PrefabUfo
+  - PrefabPanel
   layers:
   - Default
   - TransparentFX

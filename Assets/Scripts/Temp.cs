@@ -1013,4 +1013,58 @@ public class TEmp : MonoBehaviour {
     //    }
     //}
 
+    //---------------------
+
+    //public void CreateFields()
+    //{
+    //    Vector2 sizeSpriteRendererField = prefabField.GetComponent<SpriteRenderer>().sprite.rect.size;
+    //    Debug.Log("size Field==" + sizeSpriteRendererField);
+
+    //    float widthFiled = sizeSpriteRendererField.x; // .Size.Width;
+    //    float heightFiled = sizeSpriteRendererField.y;
+
+    //    Vector2 sizeSpriteRendererprefabPanel = prefabPanel.GetComponent<SpriteRenderer>().sprite.rect.size;
+    //    Debug.Log("size Panel==" + sizeSpriteRendererField);
+
+    //    var scaleX = prefabPanel.transform.localScale.x;
+    //    var scaleY = prefabPanel.transform.localScale.y;
+
+    //    float widthPanel = sizeSpriteRendererprefabPanel.x * scaleX;
+    //    float heightPanel = sizeSpriteRendererprefabPanel.y * scaleY;
+
+    //    int widthLenght = (int)(widthPanel / widthFiled);
+    //    int heightLenght = (int)(heightPanel / heightFiled);
+
+    //    int maxLengthOfArray = widthLenght * heightLenght;
+    //    Debug.Log("maxLengthOfArray =" + maxLengthOfArray.ToString());
+    //    int counter = 0;
+
+    //    Vector2 panelLocation = prefabPanel.GetComponent<Renderer>().bounds.size;
+    //    Debug.Log("panelLocation =" + panelLocation.ToString());
+
+    //    prefabPanel.GetComponent<Renderer>().enabled = false;
+
+    //    widthFiled = 1f;
+    //    heightFiled = 1f;
+
+    //    float offsetX = 1;
+    //    float offsetY = 1;
+    //    for (int heig = 0; heig < widthLenght; heig++)
+    //    {
+    //        for (int wid = 0; wid < heightLenght; wid++)
+    //        {
+    //            counter++;
+    //            Vector2 newPos = new Vector2(offsetX, offsetY);
+    //            GameObject newFiled = (GameObject)Instantiate(prefabField);
+    //            newFiled.transform.position = new Vector2(offsetX, offsetY);
+    //            Debug.Log("newFiled.transform.position =" + newFiled.transform.position.ToString());
+    //            offsetX += widthFiled;
+
+    //            //Fields.Add(counter, newFiled);
+    //        }
+    //        offsetX = 0;
+    //        offsetY -= heightFiled;
+    //    }
+    //}
+
 }

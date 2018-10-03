@@ -9,6 +9,8 @@ public class MovementUfo : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	    //Coroutine moveObject =StartCoroutine(Move
+
+        
         moveObject = StartCoroutine(MoveObject());
 	}
 
