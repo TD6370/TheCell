@@ -54,8 +54,8 @@ public class SaveLoadData : MonoBehaviour {
     private void CreateGamesObjectsWorld()
     {
         Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
-        int maxWidth = 20;// (int)GridY * -1;
-        int maxHeight = 20; //(int)GridX;
+        int maxWidth = 100;// (int)GridY * -1;
+        int maxHeight = 100; //(int)GridX;
         int coutCreateObjects = 0;
         
 
@@ -78,10 +78,10 @@ public class SaveLoadData : MonoBehaviour {
                     //Type prefab
                     //int intTypePrefab = UnityEngine.Random.Range(1, 3);
                     int intTypePrefab = UnityEngine.Random.Range(1, 4);
-                    DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  intTypePrefab=" + intTypePrefab);
+                    //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  intTypePrefab=" + intTypePrefab);
                     
                     TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
-                    DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName);
+                    //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName);
 
                     int _y = y*(-1);
                     Vector3 pos = new Vector3(x, _y, 0) * Spacing;
@@ -111,6 +111,7 @@ public class SaveLoadData : MonoBehaviour {
             }
         }
         _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+        _scriptGrid.GridData = _gridData;
 
         Debug.Log("CreateGamesObject IN Data World COUNT====" + coutCreateObjects + "     count fields: " + _scriptGrid.GamesObjectsActive.Count);
 

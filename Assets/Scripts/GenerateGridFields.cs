@@ -10,6 +10,7 @@ public class GenerateGridFields : MonoBehaviour {
     public Dictionary<string, GameObject> Fields;
     public Dictionary<string, List<GameObject>> GamesObjectsActive;
     public Dictionary<string, List<GameObject>> GamesObjectsReal;
+    public SaveLoadData.GridData GridData;
 
     public float GridX = 5f;
     public float GridY = 5f;
@@ -86,6 +87,8 @@ public class GenerateGridFields : MonoBehaviour {
     //GamesObjectsActive -> listGameObjectReal
     private void LoadGameObjectActiveForLook(string p_nameFiled)
     {
+        //return;
+
         //DebugLog("# LoadGameObjectActiveForLook");
 
         if (!GamesObjectsActive.ContainsKey(p_nameFiled))
@@ -113,15 +116,63 @@ public class GenerateGridFields : MonoBehaviour {
         {
             //Debug.Log("# LoadGameObjectActiveForLook REAL ++++++++ " + gameObj.name + " " + gameObj.tag + "  in  " + p_nameFiled );
 
-            //gameObj
+            //#
             GameObject newFiled = (GameObject)Instantiate(gameObj, gameObj.transform.position, Quaternion.identity);
             newFiled.SetActive(true);
-            //newFiled.name = nameFiled;
+
+            //???!!!!
+            //GameObject newFiled = CreatePrefabByName(gameObj.tag, gameObj.name, gameObj.transform.position);
+
             //Fields.Add(nameFiled, newFiled);
             listGameObjectReal.Add(newFiled);
             _counter++;
             //Debug.Log("# LoadGameObjectActiveForLook " + newFiled.name + " " + newFiled.tag + "  in  " + p_nameFiled + "  pos=" + gameObj.transform.position);
         }
+    }
+
+    //загрузка из данныx объектов из памяти и создание их на поле
+    private void LoadGameObjectDataForLook(string p_nameFiled)
+    {
+        //GridData
+        if (GridData != null)
+        {
+            return;
+        }
+
+        if (GridData.Fields.Find(p=>p.NameField == p_nameFiled)==null)
+            return;
+
+        List<SaveLoadData.ObjectData> listGameObjectInField = GridData.Fields.Find(p => p.NameField == p_nameFiled).Objects;
+        List<GameObject> listGameObjectReal = new List<GameObject>();
+
+        bool isExistFieldReal = false;
+        if (!GamesObjectsReal.ContainsKey(p_nameFiled))
+        {
+             GamesObjectsReal.Add(p_nameFiled, listGameObjectReal);
+        }
+        else
+        {
+            listGameObjectReal = GamesObjectsReal[p_nameFiled];
+        }
+
+        foreach (var gameObj in listGameObjectInField)
+        {
+            GameObject newFiled = CreatePrefabByName(gameObj.TagObject, gameObj.NameObject, gameObj.Position);
+
+            listGameObjectReal.Add(newFiled);
+            _counter++;
+        }
+    }
+
+    private GameObject CreatePrefabByName(string typePrefab, string namePrefab, Vector3 pos = new Vector3())
+    {
+        //Debug.Log("# CreatePrefabByName REAL ++++++++ " + namePrefab + " " + typePrefab + "  in  pos=" + pos);
+
+        GameObject newPrefab = FindPrefab(typePrefab);
+        GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+        newObjGame.name = namePrefab;
+        //newObjGame.SetActive(false);
+        return newObjGame;
     }
 
     private void RemoveRealObject(string p_nameFiled)
@@ -142,12 +193,13 @@ public class GenerateGridFields : MonoBehaviour {
             List<GameObject> realObjects = GamesObjectsReal[p_nameFiled];
             foreach (var obj in realObjects)
             {
+                _counter--;
                 Destroy(obj);
                 //obj.SetActive(false);
             }
             GamesObjectsReal.Remove(p_nameFiled);
 
-            DebugLogT("RemoveRealObject objects in field ++++ " + p_nameFiled);
+            //DebugLogT("RemoveRealObject objects in field ++++ " + p_nameFiled);
         }
     }
 
@@ -471,6 +523,11 @@ public class GenerateGridFields : MonoBehaviour {
         //GUI.Label(new Rect(0, 0, 100, 100), (int)(1.0f / Time.smoothDeltaTime));
         GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
         GUI.Label(new Rect(0, 30, 100, 100), _counter.ToString());
+    }
+
+    private GameObject FindPrefab(string namePrefab)
+    {
+        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
     }
    
 }

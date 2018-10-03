@@ -13,8 +13,9 @@ public class CompletePlayerController : MonoBehaviour {
     public Text txtCount;			//Store a reference to the UI Text component which will display the number of pickups collected.
 	public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
-    public Camera MainCamera;
+    
     public Color ColorCurrentField = Color.yellow;
+    public Camera MainCamera;
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
 	[SerializeField]
@@ -67,7 +68,28 @@ public class CompletePlayerController : MonoBehaviour {
             RestructGrid();
             
         }
+
+        //OnMouseButton();
 	}
+
+    void Update()
+    {
+        
+    }
+
+    void OnMouseDown()
+    {
+        MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
+    }
+
+
+    private void OnMouseButton()
+    {
+        if(Input.GetMouseButton(1))
+        {
+            MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
+        }
+     }
 
     private void RestructGrid()
     {
