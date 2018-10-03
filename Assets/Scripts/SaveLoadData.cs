@@ -76,7 +76,8 @@ public class SaveLoadData : MonoBehaviour {
                 for(int i=0; i< maxObjectInField; i++){
 
                     //Type prefab
-                    int intTypePrefab = UnityEngine.Random.Range(1, 3);
+                    //int intTypePrefab = UnityEngine.Random.Range(1, 3);
+                    int intTypePrefab = UnityEngine.Random.Range(1, 4);
                     DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  intTypePrefab=" + intTypePrefab);
                     
                     TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
@@ -85,6 +86,9 @@ public class SaveLoadData : MonoBehaviour {
                     int _y = y*(-1);
                     Vector3 pos = new Vector3(x, _y, 0) * Spacing;
                     pos.z = -1;
+                    if (prefabName == TypePrefabs.PrefabUfo)
+                        pos.z = -2;
+
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
                     string nameOnject = prefabName.ToString() + "_" + nameFiled + "_" + i;
@@ -232,6 +236,7 @@ public class SaveLoadData : MonoBehaviour {
         GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
         newObjGame.name = nameFind;
         //Hide active object
+        newObjGame.SetActive(false);
 
         //Debug.Log("# CreatePrefabByObjectData Create GameObject TAG  : " + newObjGame.tag);
         //Debug.Log("# CreatePrefabByObjectData Create GameObject SET TAG !!! : " + tagFind);

@@ -111,15 +111,16 @@ public class GenerateGridFields : MonoBehaviour {
 
         foreach (var gameObj in listGameObjectInField)
         {
-            DebugLogT("# LoadGameObjectActiveForLook REAL ++++++++ " + gameObj.name + " " + gameObj.tag + "  in  " + p_nameFiled );
+            //Debug.Log("# LoadGameObjectActiveForLook REAL ++++++++ " + gameObj.name + " " + gameObj.tag + "  in  " + p_nameFiled );
 
             //gameObj
             GameObject newFiled = (GameObject)Instantiate(gameObj, gameObj.transform.position, Quaternion.identity);
+            newFiled.SetActive(true);
             //newFiled.name = nameFiled;
             //Fields.Add(nameFiled, newFiled);
             listGameObjectReal.Add(newFiled);
             _counter++;
-            Debug.Log("# LoadGameObjectActiveForLook " + newFiled.name + " " + newFiled.tag + "  in  " + p_nameFiled + "  pos=" + gameObj.transform.position);
+            //Debug.Log("# LoadGameObjectActiveForLook " + newFiled.name + " " + newFiled.tag + "  in  " + p_nameFiled + "  pos=" + gameObj.transform.position);
         }
     }
 
@@ -132,8 +133,21 @@ public class GenerateGridFields : MonoBehaviour {
         }
         else
         {
+            
+            List<GameObject> activeObjects = GamesObjectsActive[p_nameFiled];
+            foreach (var obj in activeObjects) 
+            {
+                obj.SetActive(false);
+            }
+            List<GameObject> realObjects = GamesObjectsReal[p_nameFiled];
+            foreach (var obj in realObjects)
+            {
+                Destroy(obj);
+                //obj.SetActive(false);
+            }
             GamesObjectsReal.Remove(p_nameFiled);
-            Debug.Log("RemoveRealObject objects in field ++++ " + p_nameFiled);
+
+            DebugLogT("RemoveRealObject objects in field ++++ " + p_nameFiled);
         }
     }
 
@@ -196,7 +210,8 @@ public class GenerateGridFields : MonoBehaviour {
         Debug.Log("Field name init : " + _nameFiled);
     }
 
-   
+
+    private bool m_onLoadFields = false;
     public void GenGrigLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0)
     {
         int gridWidth = 100;
@@ -206,11 +221,14 @@ public class GenerateGridFields : MonoBehaviour {
         int countFiled = (int)GridX * (int)GridY;
 
         //if (Fields.Count != _counter || _counter == 0)
-        if (Fields.Count < countFiled || countFiled == 0)
+        if (!m_onLoadFields && (Fields.Count < countFiled || countFiled == 0))
         {
             //Debug.Log("!!!!! Fields.Count =" + Fields.Count + "   _counter =" + _counter);
             Debug.Log("!!!!! Fields.Count =" + Fields.Count + "   countFiled =" + countFiled);
             return;
+        }
+        {
+            m_onLoadFields = true;
         }
 
         if (_movement.x != 0)
@@ -226,7 +244,7 @@ public class GenerateGridFields : MonoBehaviour {
             int RightRemoveX = RightX + 1;
             //Validate ValidateRemoveX
             bool isRemove = ValidateRemoveX(_movement, gridWidth, LeftRemoveX, RightRemoveX);
-            bool isAdded = ValidateAddedX( _movement, gridWidth, LeftX, RightX);
+            bool isAdded = ValidateAddedX(_movement, gridWidth, LeftX, RightX);
 
             if (isRemove)
             {
@@ -234,7 +252,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Remove Vertical
                 LeftRemoveX :
                 RightRemoveX;
-                
+
                 string _nameFiled = "";
                 for (int y = p_startPosY; y < limitVertical; y++)
                 {
@@ -293,7 +311,7 @@ public class GenerateGridFields : MonoBehaviour {
             int DownY = p_PosHeroY + (p_limitVerticalLook / 2); //#
             int TopRemoveY = TopY - 1;
             int DownRemoveY = DownY + 1;
-           
+
             //Validate
             bool isRemove = ValidateRemoveY(_movement, gridHeight, TopRemoveY, DownRemoveY);
             bool isAdded = ValidateAddedY(_movement, gridHeight, TopY, DownY);
@@ -334,7 +352,7 @@ public class GenerateGridFields : MonoBehaviour {
                     if (Fields.ContainsKey(nameFiled))
                         continue;
 
-                    Vector3 pos = new Vector3(x, y*(-1), 1) * Spacing;
+                    Vector3 pos = new Vector3(x, y * (-1), 1) * Spacing;
                     pos.z = 0;
                     GameObject newFiled = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
                     newFiled.name = nameFiled;
