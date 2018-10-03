@@ -15,6 +15,20 @@ public class SaveLoadData : MonoBehaviour {
     private GridData _gridData;
     private GenerateGridFields _scriptGrid;
 
+    private List<string> _namesPrefabs = new List<string>
+    {
+        "PrefabField","PrefabRock","PrefabVood","PrefabUfo" //,"","","",""
+    };
+
+    public enum TypePrefabs
+    {
+        PrefabField,
+        PrefabRock,
+        PrefabVood,
+        PrefabUfo
+    }
+    
+
     void Start()
     {
         var camera = MainCamera;
@@ -59,6 +73,42 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
+    private void CreateGameObjects()
+    {
+        Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
+        int maxWidth = 1000;// (int)GridY * -1;
+        int maxHeight = 1000; //(int)GridX;
+
+        for (int y = 0; y > maxWidth; y--)
+        {
+            for (int x = 0; x < maxHeight; x++)
+            {
+                int maxObjectInField = 1;
+                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
+                List<GameObject> ListNewObjects = new List<GameObject>();
+                for(int i=0; i< maxObjectInField; i++){
+
+                    //Type prefab
+                    int intTypePrefab = UnityEngine.Random.Range(0, 3);
+                    TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+
+                    ObjectData objGame = new ObjectData()
+                    {
+                        NameObject = prefabName.ToString(),
+                        TagObject = prefabName.ToString(), 
+                        Position = new Vector3(1,1,0)
+                    };
+                    GameObject newObjGame = CreatePrefabByObjectData(objGame);
+                    if (newObjGame != null)
+                        ListNewObjects.Add(newObjGame);
+                }
+                _gamesObjectsActive.Add(nameFiled, ListNewObjects);
+
+            }
+        }
+        _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+    }
+
     //public Dictionary<string, List<GameObject>> GamesObjectsActive;
     //public void SaveGrid(Dictionary<string, List<GameObject>> p_gamesObjectsActive)
     private void SaveGrid()
@@ -97,7 +147,14 @@ public class SaveLoadData : MonoBehaviour {
     }
 
 
-    public GameObject prefab1;
+    private GameObject FindPrefab(string namePrefab)
+    {
+        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+    }
+
+    
+
+    //public GameObject prefab1;
     private GameObject CreatePrefabByObjectData(ObjectData objGameData)
     {
         string nameFind = objGameData.NameObject;
@@ -106,14 +163,10 @@ public class SaveLoadData : MonoBehaviour {
         GameObject newPrefab = null;
         
         //Find prefab !!!
+        //var findPrefab = FindPrefab;
 
-
-        switch (nameFind)
-        {
-            case "1":
-                newPrefab = prefab1;
-                break;
-        }
+        string typeFind = String.IsNullOrEmpty(nameFind) ? tagFind : nameFind;
+        newPrefab = FindPrefab(typeFind);
         if (newPrefab == null)
             return null;
 
