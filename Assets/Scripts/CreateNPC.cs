@@ -13,9 +13,7 @@ public class CreateNPC : MonoBehaviour {
     void Start()
     {
         //#timeclose
-        return;
-
-        StartCoroutine(CreateObjectUfo());
+        //return;
 
         var camera = MainCamera;
         if (camera == null)
@@ -24,6 +22,8 @@ public class CreateNPC : MonoBehaviour {
             return;
         }
         _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+
+        StartCoroutine(CreateObjectUfo());
     }
 
     [ExecuteInEditMode]
@@ -35,19 +35,20 @@ public class CreateNPC : MonoBehaviour {
         {
             GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
             coutUfoReal = listPrefabUfo.Length;
-            if(coutUfoReal<10)
+            if (coutUfoReal < 10)
             {
                 if (coutUfoReal == 0) coutUfoReal = 2;
                 //if(listPrefabUfo.Length>0){
                 //    otherUfo = listPrefabUfo[0];
                 //}
-                
+
                 GameObject newUfo = (GameObject)Instantiate(prefabUfo);
                 int add = (coutUfoReal * 1);
+                //newUfo.name = "PrefabUfo";
                 newUfo.name = "PrefabUfo";
                 //newUfo.tag = "PrefabUfo";
-                //newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
                 newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
+                //newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -2);
                 //newUfo.MovePosition(newUfo.position + movement * speed * Time.deltaTime);
 
                 //!!! 
@@ -56,6 +57,10 @@ public class CreateNPC : MonoBehaviour {
                 //print(newUfo.transform.position.ToString()); //Консоль
                 //Debug.Log("UFO pos=" + newUfo.transform.position.ToString());//Дебаг
                 //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());//Дебаг
+            }
+            else
+            {
+                //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());
             }
             yield return new WaitForSeconds(3);
         }

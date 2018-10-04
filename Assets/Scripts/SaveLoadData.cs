@@ -111,7 +111,7 @@ public class SaveLoadData : MonoBehaviour {
                 int intRndCount = UnityEngine.Random.Range(0, 3);
 
                 int maxObjectInField = (intRndCount == 0) ? 1 : 0;
-                string nameFiled = GenerateGridFields.GetNameFiled(x, y);
+                string nameFiled = GenerateGridFields.GetNameField(x, y);
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
@@ -133,7 +133,7 @@ public class SaveLoadData : MonoBehaviour {
 
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
-                    string nameOnject = prefabName.ToString() + "_" + nameFiled + "_" + i;
+                    string nameOnject = CreateName(prefabName.ToString(), nameFiled);// prefabName.ToString() + "_" + nameFiled + "_" + i;
                     ObjectData objGameSave = new ObjectData()
                     {
                         NameObject = nameOnject,
@@ -212,7 +212,7 @@ public class SaveLoadData : MonoBehaviour {
 
                 int maxObjectInField = (intRndCount==0)? 1: 0;
                 //string nameFiled  = "Filed" + x + "x" + Mathf.Abs(y);
-                string nameFiled  = GenerateGridFields.GetNameFiled(x,y);
+                string nameFiled  = GenerateGridFields.GetNameField(x,y);
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for(int i=0; i< maxObjectInField; i++){
@@ -378,6 +378,8 @@ public class SaveLoadData : MonoBehaviour {
             GridData state = null;
             try
             {
+                Debug.Log("Loaded Xml GridData start...");
+
                 //Type[] extraTypes= { typeof(PositData), typeof(Lamp)};
                 //XmlSerializer serializer = new XmlSerializer(typeof(RoomState), extraTypes);
                 Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
@@ -478,7 +480,7 @@ public class SaveLoadData : MonoBehaviour {
 
     public static ObjectData CreateObjectData(GameObject p_gobject)
     {
-        Debug.Log("# CreateObjectData from " + p_gobject.name + " " + p_gobject.tag);
+        //Debug.Log("# CreateObjectData from " + p_gobject.name + " " + p_gobject.tag);
 
         ObjectData newObject = new ObjectData()
         {
@@ -518,6 +520,11 @@ public class SaveLoadData : MonoBehaviour {
     public static GameObject FindPrefab(string namePrefab)
     {
         return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+    }
+
+    public static string CreateName(string tag, string nameFiled, int i=0)
+    {
+        return tag + "_" + nameFiled + "_" + i;
     }
 
     //public static class DictionaryExtensions
