@@ -44,12 +44,110 @@ public class SaveLoadData : MonoBehaviour {
         //LoadDataGrid();
 
         CreateGamesObjectsWorld();
+
+        //#.D CreateDataGamesObjectsWorld()
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    //#.D 
+    private void CreateDataGamesObjectsWorld()
+    {
+        Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
+        int maxWidth = 100;// (int)GridY * -1;
+        int maxHeight = 100; //(int)GridX;
+        int coutCreateObjects = 0;
+
+
+        Debug.Log("# CreateDataGamesObjectsWorld...");
+
+        List<FieldData> listFields = new List<FieldData>();
+
+        for (int y = 0; y < maxWidth; y++)
+        {
+            for (int x = 0; x < maxHeight; x++)
+            {
+                int intRndCount = UnityEngine.Random.Range(0, 3);
+
+                int maxObjectInField = (intRndCount == 0) ? 1 : 0;
+                string nameFiled = GenerateGridFields.GetNameFiled(x, y);
+
+                List<GameObject> ListNewObjects = new List<GameObject>();
+                for (int i = 0; i < maxObjectInField; i++)
+                {
+
+                    //Type prefab
+                    //int intTypePrefab = UnityEngine.Random.Range(1, 3);
+                    int intTypePrefab = UnityEngine.Random.Range(1, 4);
+                    //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  intTypePrefab=" + intTypePrefab);
+
+                    TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+                    //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName);
+
+                    int _y = y * (-1);
+                    Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+                    pos.z = -1;
+                    if (prefabName == TypePrefabs.PrefabUfo)
+                        pos.z = -2;
+
+                    //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
+
+                    string nameOnject = prefabName.ToString() + "_" + nameFiled + "_" + i;
+                    ObjectData objGameSave = new ObjectData()
+                    {
+                        NameObject = nameOnject,
+                        TagObject = prefabName.ToString(),
+                        //Position = new Vector3(x, y*(-1), -1) 
+                        Position = pos
+                    };
+
+                    //-------------- #
+                    //GameObject newObjGame = CreatePrefabByObjectData(objGame);
+                    //if (newObjGame != null)
+                    //{
+                    //    ListNewObjects.Add(newObjGame);
+                    //    //Debug.Log("CreateGamesObject IN Data World ++++ " + nameFiled + "   " + nameOnject);
+                    //    coutCreateObjects++;
+                    //}
+                    //--------------
+
+                    FieldData fieldData;
+
+                    fieldData = listFields.Find(p => p.NameField == nameFiled);
+                    //create new Field in data
+                    if (fieldData == null)
+                    {
+                        fieldData = new FieldData() { NameField = nameFiled };
+                        listFields.Add(fieldData);
+                    }
+
+                    fieldData.Objects.Add(objGameSave);
+                }
+                //# _gamesObjectsActive.Add(nameFiled, ListNewObjects);
+            }
+        }
+        
+        //_scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+        GridData data = new GridData()
+        {
+            Fields = listFields
+        };
+        
+        _scriptGrid.GridData = _gridData;
+        Serializator.SaveXml(data, _datapath);
+
+        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects + "     count fields: " + _scriptGrid.GamesObjectsActive.Count);
+
+        //step 2.
+        //SaveGrid();
+        //Dictionary<string, List<GameObject>> p_gamesObjectsActive = _scriptGrid.GamesObjectsActive;
+
+        //step 3.
+        //LoadDataGrid();
+    }
 
     private void CreateGamesObjectsWorld()
     {
@@ -205,52 +303,6 @@ public class SaveLoadData : MonoBehaviour {
     }
 
 
-    private GameObject FindPrefab(string namePrefab)
-    {
-        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
-    }
-
-    //public GameObject prefab1;
-    private GameObject CreatePrefabByObjectData(ObjectData objGameData)
-    {
-        DebugLogT("# CreatePrefabByObjectData... " + objGameData.NameObject);
-
-        string nameFind = objGameData.NameObject;
-        string tagFind = objGameData.TagObject;
-        Vector3 pos = objGameData.Position;
-        GameObject newPrefab = null;
-        
-        //Find prefab !!!
-        //var findPrefab = FindPrefab;
-
-        //string typeFind = String.IsNullOrEmpty(nameFind) ? tagFind : nameFind;
-        string typeFind = String.IsNullOrEmpty(tagFind) ? nameFind : tagFind;
-        //Debug.Log("# CreatePrefabByObjectData typeFind =" + typeFind);
-
-        newPrefab = FindPrefab(typeFind);
-        if (newPrefab == null)
-        {
-            Debug.Log("# CreatePrefabByObjectData Not Find Prefab =" + typeFind);
-            return null;
-        }
-
-        GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
-        newObjGame.name = nameFind;
-        //Hide active object
-        newObjGame.SetActive(false);
-
-        //Debug.Log("# CreatePrefabByObjectData Create GameObject TAG  : " + newObjGame.tag);
-        //Debug.Log("# CreatePrefabByObjectData Create GameObject SET TAG !!! : " + tagFind);
-        //newObjGame.tag = null;
-        //newObjGame.tag = tagFind;
-
-        DebugLogT("# CreatePrefabByObjectData Create GameObject ++++ " + newObjGame.name);
-
-        return newObjGame;
-    }
-
-    
-
     public class Serializator {
 
         static public void SaveXml(GridData state, string datapath)
@@ -353,4 +405,37 @@ public class SaveLoadData : MonoBehaviour {
         return newObject;
     }
 
+    //public GameObject prefab1;
+    //private GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    public static GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    {
+        string nameFind = objGameData.NameObject;
+        string tagFind = objGameData.TagObject;
+        Vector3 pos = objGameData.Position;
+        GameObject newPrefab = null;
+
+        string typeFind = String.IsNullOrEmpty(tagFind) ? nameFind : tagFind;
+
+        newPrefab = FindPrefab(typeFind);
+        if (newPrefab == null)
+        {
+            Debug.Log("# CreatePrefabByObjectData Not Find Prefab =" + typeFind);
+            return null;
+        }
+
+        GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+        newObjGame.name = nameFind;
+        //Hide active object
+        newObjGame.SetActive(false);
+
+        return newObjGame;
+    }
+
+    public static GameObject FindPrefab(string namePrefab)
+    {
+        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+    }
+
 }
+
+

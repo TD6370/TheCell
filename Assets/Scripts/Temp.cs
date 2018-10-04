@@ -1066,5 +1066,151 @@ public class TEmp : MonoBehaviour {
     //        offsetY -= heightFiled;
     //    }
     //}
+    //----------------------
+    //#.D
+    //private void RemoveRealObjectD(string p_nameFiled)
+    //{
+    //    if (!GamesObjectsReal.ContainsKey(p_nameFiled))
+    //    {
+    //        //Debug.Log("RemoveRealObject Not in field : " + p_nameFiled);
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        //---------------------------
+    //        if (GridData != null)
+    //        {
+    //            Debug.Log("RemoveRealObjectD GridData -- EMPTY !!!!!!!");
+    //            return;
+    //        }
+    //        if (GridData.Fields.Find(p => p.NameField == p_nameFiled) == null)
+    //            return;
+
+    //        int indexFieldData = GridData.Fields.FindIndex(p => p.NameField == p_nameFiled);
+    //        if (indexFieldData == -1)
+    //        {
+    //            Debug.Log("RemoveRealObjectD Not field in Data: " + p_nameFiled);
+    //            return;
+    //        }
+    //        List<SaveLoadData.ObjectData> dataObjects = GridData.Fields[indexFieldData].Objects;
+
+    //        //int indexObjectData = listDataObjectInField.FindIndex(p => p.NameObject == p_saveObject.name);
+    //        //SaveLoadData.ObjectData objDataOld = listDataObjectInField[indexObjectData];
+
+    //        //var dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
+    //        //int indexNN = dataObjects.Count + 1;
+
+    //        //if (objDataOld == null)
+    //        //{
+    //        //    dataObjectSave.NameObject += indexNN;
+    //        //    dataObjects.Add(dataObjectSave);
+    //        //}
+    //        //else
+    //        //{
+    //        //    objDataOld = dataObjectSave;
+    //        //}
+    //        //-------------------------
+
+    //        //List<GameObject> activeObjects = GamesObjectsActive[p_nameFiled];
+    //        List<GameObject> realObjects = GamesObjectsReal[p_nameFiled];
+
+
+    //        for (int i = activeObjects.Count - 1; i >= 0; i--)
+    //        {
+
+
+    //            activeObjects[i].SetActive(false); //#
+
+    //            if (realObjects.Count <= i)
+    //                continue;
+    //            if (realObjects[i] == null)
+    //                continue;
+
+
+
+    //            var pos1 = activeObjects[i].transform.position;
+    //            var pos2 = realObjects[i].transform.position;
+
+    //            var f = pos1.y;
+    //            string posFieldOld = GetNameFiled(pos1.x, pos1.y);
+    //            string posFieldReal = GetNameFiled(pos2.x, pos2.y);
+
+    //            //---------------------------------------------
+    //            if (posFieldOld != posFieldReal)
+    //            {
+    //                Debug.Log("RemoveRealObject posFieldOld(" + posFieldOld + ") != posFieldReal(" + posFieldReal + ")      " + activeObjects[i].name + "    " + realObjects[i].name);
+
+    //                activeObjects.RemoveAt(i);
+    //                if (!GamesObjectsActive.ContainsKey(posFieldReal))
+    //                {
+    //                    Debug.Log("RemoveRealObject Not new posFieldReal =" + posFieldReal);
+    //                }
+    //                else
+    //                {
+    //                    //Add in new Filed
+    //                    List<GameObject> activeObjectsNew = GamesObjectsActive[posFieldReal];
+
+    //                    var realObj = realObjects[i];
+    //                    var coyObj = CreatePrefabByName(realObj.tag, realObj.name, realObj.transform.position);
+
+    //                    activeObjectsNew.Add(coyObj);
+
+    //                }
+    //            }
+    //            else
+    //            {
+    //                //---------------------------------------------
+    //                //Save Real value in memory
+    //                activeObjects[i] = Instantiate(realObjects[i]); //#
+    //                activeObjects[i].SetActive(false); //#
+    //            }
+    //        }
+
+    //        SaveToDataObject(p_nameFiled);
+
+    //        foreach (var obj in realObjects)
+    //        {
+    //            _counter--;
+    //            Destroy(obj);
+    //            //obj.SetActive(false);
+    //        }
+    //        GamesObjectsReal.Remove(p_nameFiled);
+
+    //        //DebugLogT("RemoveRealObject objects in field ++++ " + p_nameFiled);
+
+
+    //    }
+    //}
+
+    //---------------------
+
+    //private void DeactivateGameObjectForLook(string p_nameFiled)
+    //{
+    //    //DebugLog("# DeactivateGameObjectForLook");
+
+    //    if (!GamesObjectsActive.ContainsKey(p_nameFiled))
+    //    {
+    //        //DebugLog("DeactivateGameObjectForLook Not in field : " + p_nameFiled);
+    //        return;
+    //    }
+
+    //    Debug.Log("# CreateGameObjectActiveForLook : " + p_nameFiled);
+
+    //    List<GameObject> listGameObjectInField = GamesObjectsActive[p_nameFiled];
+    //    foreach (var gameObj in listGameObjectInField)
+    //    {
+    //        //Destroy();// gameObj.SetActive(false);
+    //        _counter--;
+    //        DebugLog("# CreateGameObjectActiveForLook " + newFiled.name + " " + newFiled.tag + "  in  " + p_nameFiled);
+    //    }
+    //}
+
+    //private void CreateGameObjectActive(string p_nameFiled)
+    //{
+
+    //}
+
+
+    //-----------------------------
 
 }
