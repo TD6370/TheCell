@@ -161,8 +161,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Fields.Add(nameFiled, newFiled);
                     _counter++;
 
-                    LoadGameObjectActiveForLook(nameFiled);
-                    //#.D  LoadGameObjectDataForLook(nameFiled);
+                    LoadObjectForLook(nameFiled);
                 }
             }
         }
@@ -194,6 +193,7 @@ public class GenerateGridFields : MonoBehaviour {
                 {
                     //string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
                     string nameFiled = GetNameFiled(x, y);
+
                     //Find
                     if (!Fields.ContainsKey(nameFiled))
                         continue;
@@ -228,11 +228,18 @@ public class GenerateGridFields : MonoBehaviour {
                     Fields.Add(nameFiled, newFiled);
                     _counter++;
 
-                    LoadGameObjectActiveForLook(nameFiled);
-                    //#.D  LoadGameObjectDataForLook(nameFiled);
+                    LoadObjectForLook(nameFiled);
                 }
             }
         }
+    }
+
+    private void LoadObjectForLook(string nameFiled)
+    {
+        //LoadGameObjectActiveForLook(nameFiled);
+        //#.D  
+        //LoadGameObjectDataForLook(nameFiled);
+        LoadGameObjectDataForLook_2(nameFiled);
     }
 
     //Загрузка объектов из стека памяти на поле ADDED FOR LOOK
@@ -242,6 +249,12 @@ public class GenerateGridFields : MonoBehaviour {
         //return;
 
         //DebugLog("# LoadGameObjectActiveForLook");
+        if (GamesObjectsActive == null)
+        {
+            Debug.Log("LoadGameObjectActiveForLook GamesObjectsActive is EMPTY ");
+            return;
+        }
+
 
         if (!GamesObjectsActive.ContainsKey(p_nameFiled))
         {
@@ -292,18 +305,24 @@ public class GenerateGridFields : MonoBehaviour {
     private void LoadGameObjectDataForLook(string p_nameFiled)
     {
         //GridData
-        if (GridData != null)
+        if (GridData == null)
         {
+            //Debug.Log(" LoadGameObjectDataForLook GridData IS EMPTY !!!");
             return;
         }
 
+        if (GridData.Fields == null) 
+            //Debug.Log(" LoadGameObjectDataForLook GridData.Fields IS EMPTY !!!");
+
         if (GridData.Fields.Find(p => p.NameField == p_nameFiled) == null)
+        {
+            //Debug.Log(" LoadGameObjectDataForLook GridData.Fields not find: " + p_nameFiled);
             return;
+        }
 
         List<SaveLoadData.ObjectData> listGameObjectInField = GridData.Fields.Find(p => p.NameField == p_nameFiled).Objects;
         List<GameObject> listGameObjectReal = new List<GameObject>();
 
-        bool isExistFieldReal = false;
         if (!GamesObjectsReal.ContainsKey(p_nameFiled))
         {
             GamesObjectsReal.Add(p_nameFiled, listGameObjectReal);
@@ -313,21 +332,26 @@ public class GenerateGridFields : MonoBehaviour {
             listGameObjectReal = GamesObjectsReal[p_nameFiled];
         }
 
+        int _count = _counter;
         foreach (var gameObj in listGameObjectInField)
         {
             GameObject newFiled = CreatePrefabByName(gameObj.TagObject, gameObj.NameObject, gameObj.Position);
 
             listGameObjectReal.Add(newFiled);
             _counter++;
+            //Debug.Log(" LoadGameObjectDataForLook added +++ : " + gameObj.NameObject);
         }
+
+        //Debug.Log(" LoadGameObjectDataForLook.... ADDED: " + (_counter - _count));
     }
 
     //загрузка из данныx объектов из памяти и создание их на поле  ADDED FOR LOOK - DATA 2
     private void LoadGameObjectDataForLook_2(string p_nameFiled)
     {
         //GridData
-        if (GridData != null)
+        if (GridData == null || GridData.FieldsD == null)
         {
+            Debug.Log(" LoadGameObjectDataForLook_2 GridData IS EMPTY !!!");
             return;
         }
 
@@ -337,7 +361,6 @@ public class GenerateGridFields : MonoBehaviour {
         List<SaveLoadData.ObjectData> listGameObjectInField = GridData.FieldsD[p_nameFiled].Objects;
         List<GameObject> listGameObjectReal = new List<GameObject>();
 
-        bool isExistFieldReal = false;
         if (!GamesObjectsReal.ContainsKey(p_nameFiled))
         {
             GamesObjectsReal.Add(p_nameFiled, listGameObjectReal);
@@ -350,14 +373,119 @@ public class GenerateGridFields : MonoBehaviour {
         foreach (var gameObj in listGameObjectInField)
         {
             GameObject newFiled = CreatePrefabByName(gameObj.TagObject, gameObj.NameObject, gameObj.Position);
-
+            //Debug.Log(" LoadGameObjectDataForLook_2 added +++ : " + gameObj.NameObject);
             listGameObjectReal.Add(newFiled);
             _counter++;
         }
     }
 
-    //REMOVE FOR LOOK
     private void RemoveRealObject(string p_nameFiled)
+    { 
+        RemoveRealObject_Active(p_nameFiled);
+        //RemoveRealObject_Data(p_nameFiled);
+    }
+
+
+    //REMOVE FOR LOOK
+    private void RemoveRealObject_Active(string p_nameFiled)
+    {
+        //Debug.Log("RemoveRealObject_Active..... ");
+
+        if (!GamesObjectsReal.ContainsKey(p_nameFiled))
+        {
+            //Debug.Log("RemoveRealObject Not in field : " + p_nameFiled);
+            return;
+        }
+        else
+        {
+            List<GameObject> activeObjects = null;
+            if (GamesObjectsActive.ContainsKey(p_nameFiled))
+                activeObjects = GamesObjectsActive[p_nameFiled];
+
+            List<GameObject> realObjects = GamesObjectsReal[p_nameFiled];
+
+            if (activeObjects != null)
+            {
+
+                for (int i = activeObjects.Count - 1; i >= 0; i--)
+                {
+                    //Debug.Log("RemoveRealObject_Active");
+
+                    activeObjects[i].SetActive(false); //#
+
+                    if (realObjects.Count <= i)
+                        continue;
+                    if (realObjects[i] == null)
+                        continue;
+
+                    //Debug.Log("RemoveRealObject TYPE.2 Save new position .3");
+
+                    var pos1 = activeObjects[i].transform.position;
+                    var pos2 = realObjects[i].transform.position;
+                    var f = pos1.y;
+                    string posFieldOld = GetNameFiled(pos1.x, pos1.y);
+                    string posFieldReal = GetNameFiled(pos2.x, pos2.y);
+
+                    //---------------------------------------------
+                    if (posFieldOld != posFieldReal)
+                    {
+                        Debug.Log("RemoveRealObject posFieldOld(" + posFieldOld + ") != posFieldReal(" + posFieldReal + ")      " + activeObjects[i].name + "    " + realObjects[i].name);
+                        //activeObjects[i].transform.position = realObjects[i].transform.position;
+
+                        //Debug.Log("RemoveRealObject ........... Remove in old Filed");
+                        //Remove in old Filed
+                        //activeObjects[i].SetActive(false);
+                        activeObjects.RemoveAt(i);
+                        //if (GamesObjectsActive[posFieldReal])
+                        if (!GamesObjectsActive.ContainsKey(posFieldReal))
+                        {
+                            Debug.Log("RemoveRealObject Not new posFieldReal =" + posFieldReal);
+                        }
+                        else
+                        {
+                            //Debug.Log("RemoveRealObject ........... Add in new Filed");
+
+                            //Add in new Filed
+                            List<GameObject> activeObjectsNew = GamesObjectsActive[posFieldReal];
+
+                            //Debug.Log("RemoveRealObject ........... Add in new Filed  pred=" + GamesObjectsActive[posFieldReal].Count);
+
+                            //realObjects[i].SetActive(false);
+                            //activeObjectsNew.Add(Instantiate(realObjects[i]));
+
+                            //## var coyObj = Instantiate(realObjects[i]);
+                            var realObj = realObjects[i];
+                            var coyObj = CreatePrefabByName(realObj.tag, realObj.name, realObj.transform.position);
+
+                            activeObjectsNew.Add(coyObj);
+                            //coyObj.SetActive(false);
+
+                            //Debug.Log("RemoveRealObject ........... Add in new Filed  post=" + GamesObjectsActive[posFieldReal].Count);
+                            //activeObjectsNew[activeObjectsNew.Count-1].SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        //---------------------------------------------
+                        //Save Real value in memory
+                        activeObjects[i] = Instantiate(realObjects[i]); //#
+                        activeObjects[i].SetActive(false); //#
+                    }
+                }
+            }
+            foreach (var obj in realObjects)
+            {
+                _counter--;
+                Destroy(obj);
+                //obj.SetActive(false);
+            }
+            //Debug.Log("RemoveRealObject_Active.....6");
+            GamesObjectsReal.Remove(p_nameFiled);
+        }
+    }
+
+    //REMOVE FOR LOOK
+    private void RemoveRealObject_Data(string p_nameFiled)
     {
         if (!GamesObjectsReal.ContainsKey(p_nameFiled))
         {
@@ -366,116 +494,19 @@ public class GenerateGridFields : MonoBehaviour {
         }
         else
         {
-
-            List<GameObject> activeObjects = GamesObjectsActive[p_nameFiled];
-            //foreach (var obj in activeObjects) 
-            //{
-            //    obj.SetActive(false);
-
-            //    //# TYPE.3
-            //    //_counter--;
-            //}
-
-            //# TYPE.3
-            //return;
-
             List<GameObject> realObjects = GamesObjectsReal[p_nameFiled];
-
-            //Debug.Log("RemoveRealObject TYPE.2 Save new position");
-            //# TYPE.2 Save new position
-            //for (int i = 0; i < activeObjects.Count; i++) 
-            for (int i = activeObjects.Count - 1; i >= 0; i--)
-            {
-                //Debug.Log("RemoveRealObject TYPE.2 Save new position .2");
-
-                activeObjects[i].SetActive(false); //#
-
-                if (realObjects.Count <= i)
-                    continue;
-                if (realObjects[i] == null)
-                    continue;
-
-                //Debug.Log("RemoveRealObject TYPE.2 Save new position .3");
-
-                var pos1 = activeObjects[i].transform.position;
-                var pos2 = realObjects[i].transform.position;
-                //if (pos1 != pos2)
-                //{
-                //    Debug.Log("RemoveRealObject pos1(" + pos1 + ") != pos2(" + pos2 + ") ");
-                //    activeObjects[i].transform.position = realObjects[i].transform.position;
-                //}
-                //string posFieldOld = "Field" + (int)pos1.x + "x" + (int)Mathf.Abs(pos1.y);
-                //string posFieldReal = "Field" + (int)pos2.x + "x" + (int)Mathf.Abs(pos2.y);
-                var f = pos1.y;
-                string posFieldOld = GetNameFiled(pos1.x, pos1.y);
-                string posFieldReal = GetNameFiled(pos2.x, pos2.y);
-
-                //---------------------------------------------
-                if (posFieldOld != posFieldReal)
-                {
-                    Debug.Log("RemoveRealObject posFieldOld(" + posFieldOld + ") != posFieldReal(" + posFieldReal + ")      " + activeObjects[i].name + "    " + realObjects[i].name);
-                    //activeObjects[i].transform.position = realObjects[i].transform.position;
-
-                    //Debug.Log("RemoveRealObject ........... Remove in old Filed");
-                    //Remove in old Filed
-                    //activeObjects[i].SetActive(false);
-                    activeObjects.RemoveAt(i);
-                    //if (GamesObjectsActive[posFieldReal])
-                    if (!GamesObjectsActive.ContainsKey(posFieldReal))
-                    {
-                        Debug.Log("RemoveRealObject Not new posFieldReal =" + posFieldReal);
-                    }
-                    else
-                    {
-                        //Debug.Log("RemoveRealObject ........... Add in new Filed");
-
-                        //Add in new Filed
-                        List<GameObject> activeObjectsNew = GamesObjectsActive[posFieldReal];
-
-                        //Debug.Log("RemoveRealObject ........... Add in new Filed  pred=" + GamesObjectsActive[posFieldReal].Count);
-
-                        //realObjects[i].SetActive(false);
-                        //activeObjectsNew.Add(Instantiate(realObjects[i]));
-
-                        //## var coyObj = Instantiate(realObjects[i]);
-                        var realObj = realObjects[i];
-                        var coyObj = CreatePrefabByName(realObj.tag, realObj.name, realObj.transform.position);
-
-                        activeObjectsNew.Add(coyObj);
-                        //coyObj.SetActive(false);
-
-                        //Debug.Log("RemoveRealObject ........... Add in new Filed  post=" + GamesObjectsActive[posFieldReal].Count);
-                        //activeObjectsNew[activeObjectsNew.Count-1].SetActive(false);
-                    }
-                }
-                else
-                {
-                    //---------------------------------------------
-                    //Save Real value in memory
-                    activeObjects[i] = Instantiate(realObjects[i]); //#
-                    activeObjects[i].SetActive(false); //#
-                }
-            }
-
-            //#.D
+             //#.D_2
             SaveListObjectsToData(p_nameFiled);
-
             foreach (var obj in realObjects)
             {
                 _counter--;
-                //# rem TYPE.3 
                 Destroy(obj);
-                //obj.SetActive(false);
             }
             GamesObjectsReal.Remove(p_nameFiled);
-
-            //DebugLogT("RemoveRealObject objects in field ++++ " + p_nameFiled);
-
-
         }
     }
 
-    //#.D //REMOVE FOR LOOK - DATA
+    //#.D //REMOVE FOR LOOK - DATA_2
     private void SaveListObjectsToData(string p_nameFiled)
     {
         //#timeclose
