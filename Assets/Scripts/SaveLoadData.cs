@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Xml.Serialization;
 using System;
-using System.IO; 
+using System.IO;
+using System.Linq;
 
 
 public class SaveLoadData : MonoBehaviour {
@@ -41,11 +42,14 @@ public class SaveLoadData : MonoBehaviour {
         _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         //Dictionary<string, GameObject> Fields = scriptGrid.Fields;
 
+        LoadPathData();
+
         //LoadDataGrid();
 
-        CreateGamesObjectsWorld();
-
-        //#.D CreateDataGamesObjectsWorld()
+        //CreateGamesObjectsWorld();
+        
+        //#.D 
+        CreateDataGamesObjectsWorld();
 	}
 	
 	// Update is called once per frame
@@ -53,9 +57,42 @@ public class SaveLoadData : MonoBehaviour {
 		
 	}
 
+    private void LoadPathData()
+    {
+        //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
+        _datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
+        Debug.Log("# LoadPathData... " + _datapath);
+
+        if (File.Exists(_datapath))
+        {
+            _gridData = Serializator.DeXml(_datapath);
+        }
+        else
+        {
+            Debug.Log("# LoadPathData not exist: " + _datapath);
+        }
+    }
+
     //#.D 
     private void CreateDataGamesObjectsWorld()
     {
+        //return; //Always geretate world now
+
+
+        //if (_gridData == null)
+        //{
+        //    Debug.Log("# CreateDataGamesObjectsWorld... gridData IS EMPTY");
+        //    return;
+        //}
+        if (_gridData != null)
+        {
+            Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded");
+            _scriptGrid.GridData = _gridData;
+            Debug.Log("CreateDataGamesObjectsWorld IN Data World");
+
+            return;
+        }
+
         Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
         int maxWidth = 100;// (int)GridY * -1;
         int maxHeight = 100; //(int)GridX;
@@ -65,6 +102,7 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("# CreateDataGamesObjectsWorld...");
 
         List<FieldData> listFields = new List<FieldData>();
+        Dictionary<string, FieldData> dictFields = new Dictionary<string, FieldData>();
 
         for (int y = 0; y < maxWidth; y++)
         {
@@ -104,18 +142,9 @@ public class SaveLoadData : MonoBehaviour {
                         Position = pos
                     };
 
-                    //-------------- #
-                    //GameObject newObjGame = CreatePrefabByObjectData(objGame);
-                    //if (newObjGame != null)
-                    //{
-                    //    ListNewObjects.Add(newObjGame);
-                    //    //Debug.Log("CreateGamesObject IN Data World ++++ " + nameFiled + "   " + nameOnject);
-                    //    coutCreateObjects++;
-                    //}
-                    //--------------
+                    coutCreateObjects++;
 
                     FieldData fieldData;
-
                     fieldData = listFields.Find(p => p.NameField == nameFiled);
                     //create new Field in data
                     if (fieldData == null)
@@ -123,8 +152,21 @@ public class SaveLoadData : MonoBehaviour {
                         fieldData = new FieldData() { NameField = nameFiled };
                         listFields.Add(fieldData);
                     }
-
                     fieldData.Objects.Add(objGameSave);
+
+                    //#.D_2 -------------------
+                    FieldData fieldData2;
+                    if (!dictFields.ContainsKey(nameFiled))
+                    {
+                        fieldData2 = new FieldData() { NameField = nameFiled };
+                        dictFields.Add(nameFiled, fieldData2);
+                    }
+                    else
+                    {
+                        fieldData2 = dictFields[nameFiled];
+                    }
+                    fieldData2.Objects.Add(objGameSave);
+                   //-------------------
                 }
                 //# _gamesObjectsActive.Add(nameFiled, ListNewObjects);
             }
@@ -133,13 +175,15 @@ public class SaveLoadData : MonoBehaviour {
         //_scriptGrid.GamesObjectsActive = _gamesObjectsActive;
         GridData data = new GridData()
         {
-            Fields = listFields
+            Fields = listFields,
+            FieldsD = dictFields
         };
-        
+
+        _gridData = data;
         _scriptGrid.GridData = _gridData;
         Serializator.SaveXml(data, _datapath);
 
-        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects + "     count fields: " + _scriptGrid.GamesObjectsActive.Count);
+        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects + "  count fields: " + _scriptGrid.GamesObjectsActive.Count);
 
         //step 2.
         //SaveGrid();
@@ -267,39 +311,34 @@ public class SaveLoadData : MonoBehaviour {
 
     private void LoadDataGrid()
     {
-        _datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
+        //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
+        if (_gridData == null)
+        {
+            Debug.Log("# LoadDataGrid... gridData IS EMPTY");
+            return;
+        }
 
         Debug.Log("# LoadDataGrid... " + _datapath);
 
-        if (File.Exists(_datapath))
+        Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
+        foreach (var field in _gridData.Fields)
         {
-            _gridData = Serializator.DeXml(_datapath);
-        }
-        else
-        {
-            Debug.Log("# LoadDataGrid not exist: " + _datapath);
-        }
-        if (_gridData != null)
-        {
-            Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
-            foreach (var field in _gridData.Fields)
+            Debug.Log("# LoadDataGrid field: " + field.NameField);
+
+            List<GameObject> ListNewObjects = new List<GameObject>();
+            foreach (ObjectData objGame in field.Objects)
             {
-                Debug.Log("# LoadDataGrid field: " + field.NameField);
+                Debug.Log("# LoadDataGrid objGame: " + objGame.NameObject + "   " + objGame.TagObject);
 
-                List<GameObject> ListNewObjects = new List<GameObject>();
-                foreach (ObjectData objGame in field.Objects)
-                {
-                    Debug.Log("# LoadDataGrid objGame: " + objGame.NameObject + "   " + objGame.TagObject);
-
-                    GameObject newObjGame = CreatePrefabByObjectData(objGame);
-                    if (newObjGame != null)
-                        ListNewObjects.Add(newObjGame);
-                }
-                _gamesObjectsActive.Add(field.NameField, ListNewObjects);
-
+                GameObject newObjGame = CreatePrefabByObjectData(objGame);
+                if (newObjGame != null)
+                    ListNewObjects.Add(newObjGame);
             }
-            _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+            _gamesObjectsActive.Add(field.NameField, ListNewObjects);
+
         }
+        _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+
     }
 
 
@@ -307,37 +346,72 @@ public class SaveLoadData : MonoBehaviour {
 
         static public void SaveXml(GridData state, string datapath)
         {
+            //D_2 
+            //Debug.Log("SaveXml GridData " + state.Fields.Count + "  " + state.FieldsD.Count + "     datapath=" + datapath);
+            //Debug.Log("SaveXml GridData " + state.Fields.Count + "       datapath=" + datapath);
+
 
             Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
+            //## 
+            //state.FieldsIXML = state.FieldsD;
+            state.FieldsXML = state.FieldsD.ToList();
 
+            //## 
+            Debug.Log("SaveXml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
 
             XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
-            //XmlSerializer serializer2 = new XmlSerializer(typeof(item[]),
-            //                     new XmlRootAttribute() { ElementName = "items" });
 
 		    FileStream fs = new FileStream(datapath, FileMode.Create);
 
-            //serializer.Serialize(fs,
-            //  state.FieldsD.Select(kv => new item() { id = kv.Key, value = kv.Value }).ToArray());
-
 		    serializer.Serialize(fs, state); 
-		    fs.Close(); 
+		    fs.Close();
 
+            //## 
+            state.FieldsXML = null;
+            //state.FieldsIXML = null;
+
+            //## 
+            //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
 	    }
 	
 	    static public GridData DeXml(string datapath){
+            GridData state = null;
+            try
+            {
+                //Type[] extraTypes= { typeof(PositData), typeof(Lamp)};
+                //XmlSerializer serializer = new XmlSerializer(typeof(RoomState), extraTypes);
+                Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
+                XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
 
-		    //Type[] extraTypes= { typeof(PositData), typeof(Lamp)};
-		    //XmlSerializer serializer = new XmlSerializer(typeof(RoomState), extraTypes);
-            Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
-            XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes); 
-		
-		    FileStream fs = new FileStream(datapath, FileMode.Open); 
-		    GridData state = (GridData)serializer.Deserialize(fs); 
-		    fs.Close(); 
+                FileStream fs = new FileStream(datapath, FileMode.Open);
+                state = (GridData)serializer.Deserialize(fs);
+                fs.Close();
+
+                //state.FieldsD = new Dictionary<string, FieldData>();
+                //state.FieldsD = ToDict(state.FieldsXML).ToDictionary(x => x.Key, x => x.Value);
+                //## 
+                state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+
+                Debug.Log("Loaded Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+                //## 
+                state.FieldsXML = null;
+            }
+            catch (Exception x)
+            {
+                state = null;
+                Debug.Log("Error DeXml: " + x.Message);
+            }
 
 		    return state;
 	    }
+
+        //public static IEnumerable<KeyValuePair<string, FieldData>> ToDict(IEnumerable<KeyValuePair<string, FieldData>> list)
+        //{
+        //    foreach (var item in list)
+        //    {
+        //        yield return new KeyValuePair<string, FieldData>(item.Key, item.Value);
+        //    }
+        //}
     }
 
     [XmlRoot("Grid")]
@@ -348,8 +422,18 @@ public class SaveLoadData : MonoBehaviour {
         [XmlArrayItem("FieldData")]
         public List<FieldData> Fields = new List<FieldData>();
 
-        [XmlArray("FieldsD")]
-        [XmlArrayItem("FieldDataD")]
+        //[XmlArray("FieldsD")]
+        //[XmlArrayItem("FieldDataD")]
+        //public Dictionary<string, FieldData> FieldsD = new Dictionary<string, FieldData>();
+        //public Dictionary<int, string> FieldsD = new Dictionary<int, string>();
+
+        public List<KeyValuePair<string, FieldData>> FieldsXML = new List<KeyValuePair<string, FieldData>>();
+        
+        //[XmlIgnore]
+        //public IEnumerable<KeyValuePair<string, FieldData>> FieldsIXML = new List<KeyValuePair<string, FieldData>>();
+        //public IEnumerable<KeyValuePair<int, String>> FieldsXML2 = new List<KeyValuePair<int, String>>();
+
+        [XmlIgnore]
         public Dictionary<string, FieldData> FieldsD = new Dictionary<string, FieldData>();
 
         public GridData() { }
@@ -435,6 +519,15 @@ public class SaveLoadData : MonoBehaviour {
     {
         return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
     }
+
+    //public static class DictionaryExtensions
+    //{
+    //    public static IEnumerable<KeyValuePair<int, string>> GetComponents(this IEnumerable<KeyValuePair<int, string>> thisObj)
+    //    {
+
+    //        yield return new KeyValuePair<int, string>(1111, "aaa");
+    //    }
+    //}
 
 }
 

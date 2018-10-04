@@ -1213,4 +1213,117 @@ public class TEmp : MonoBehaviour {
 
     //-----------------------------
 
+//NotSupportedException: The type System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] is not supported because it implements IDictionary.
+//System.Xml.Serialization.TypeData.get_ListItemType ()
+//System.Xml.Serialization.TypeData.get_ListItemTypeData ()
+//System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive, System.Xml.Serialization.TypeData mappedType, System.Xml.Schema.XmlSchemaPatternFacet facet)
+//System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive)
+//System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type runtimeType, System.String xmlDataType)
+//System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type type)
+//System.Xml.Serialization.XmlReflectionImporter.CreateMapMember (System.Type declaringType, System.Xml.Serialization.XmlReflectionMember rmember, System.String defaultNamespace)
+//System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//Rethrow as InvalidOperationException: There was an error reflecting field 'FieldsD'.
+//System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//Rethrow as InvalidOperationException: There was an error reflecting type 'SaveLoadData+GridData'.
+//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Type type, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Xml.Serialization.XmlAttributeOverrides overrides, System.Type[] extraTypes, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+//System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Type[] extraTypes)
+//SaveLoadData+Serializator.DeXml (System.String datapath) (at Assets/Scripts/SaveLoadData.cs:363)
+//SaveLoadData.LoadPathData () (at Assets/Scripts/SaveLoadData.cs:67)
+//SaveLoadData.Start () (at Assets/Scripts/SaveLoadData.cs:44)
+
+    //---------------------------------
+
+    ////public Dictionary(IDictionary<TKey, TValue> dictionary);
+    //        //public Dictionary(IEqualityComparer<TKey> comparer);
+    //        //public Dictionary(int capacity);
+    //        //public Dictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer);
+    //        //public Dictionary(int capacity, IEqualityComparer<TKey> comparer);
+    //        //protected Dictionary(SerializationInfo info, StreamingContext context);
+
+    //        //public class Dictionary<TKey, TValue> : IEnumerable, ISerializable, ICollection, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>, IDictionary, IDeserializationCallback
+    //        //Dictionary<string, FieldData>
+    //        IEnumerable<KeyValuePair<string, FieldData>> listXML = state.FieldsXML;
+    //        state.FieldsD = new Dictionary<string, FieldData>();
+    //        //IEnumerable<FieldData> source = listXML.Select(x => x.Value);
+    //        //Func<FieldData, string> selector = (fd) => {
+    //        //    FieldData data = fd;
+    //        //    //data
+    //        //    return "";
+    //        //};
+    //        //state.FieldsD = ToDict(state.FieldsXML).ToDictionary(x => x.Key, x => x.Value);
+    //        state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value); 
+    //        //-----------------------
+
+    //            //Dictionary<TKey, TSource>
+    //            //(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector);
+    //        //state.FieldsD = state.FieldsXML.ToDictionary<string, FieldData>(source, selector);
+    //        //state.FieldsD = state.FieldsXML.ToDictionary<string, FieldData>(source, new Func<TSource, TKey>);
+
+    //        //state.FieldsD = state.FieldsXML.ToDictionary<string, FieldData>(x => x.Key, y => y.Value);
+
+    //        //public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>
+    //        //            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector);
+    //        //public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>
+    //        //          (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector);
+    //        //public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>
+    //        //              (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer);
+    //        //public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>
+    //        //          (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer);
+            
+
+    //        //Dictionary<TKey, TSource>
+    //        //(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector);
+
+    //        IEnumerable<KeyValuePair<int, string>> listT = new List<KeyValuePair<int, string>>();
+    //        Dictionary<int, string> d1 = new Dictionary<int, string>();
+    //        //d1 = listT.ToDictionary<int, string>(x => x.Key, x => x.Value);
+    //        //d1 = listT.ToDictionary<int, string>(listT);
+    //        //d1 = listT.ToDictionary<int, string>(x => x.Value, x => x.Key);
+
+
+    //        IEnumerable<string> source2 = listT.Select(x => x.Value);
+    //        Func<string, string> selectorTest = str => str.ToUpper();
+    //        Func<string, int> selector2 = str => str.Length;
+    //        Func<int, string> selector3 = key => key.ToString();
+
+    //        // Dictionary<TKey, TSource> 
+    //        // ToDictionary<TSource, TKey>
+    //        //(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector);
+    //        //d1 = listT.ToDictionary<int, string>(source2, selector2);
+    //        //d1 = listT.ToDictionary<int, string>(source2, selector2);
+    //        //d1 = listT.ToDictionary<int, string>(x => x.ToString(), x => x.Value.Length);
+    //        //d1 = listT.ToDictionary<int, string>(x => x.Value.ToString(), c=>c.Key.ToString().Length);
+    //        //d1 = listT.ToDictionary<int, string>(x => x.Value.ToString(), x => x.Key.ToString());
+    //        //d1 = listT.ToDictionary<string, int>(x => x.Value.ToString(), x => x.Key.ToString());
+    //        //var ress = listT.ToDictionary<string, int>(key => key.ToString().Length); //
+    //        //var ress = listT.ToDictionary<string, int>(source2, selector2); //
+            
+    //        //var ress = listT.ToDictionary<string, int>(x => x.Key, ); //
+            
+    //        //d1 = listT.ToDictionary<int, string>(x => x.Value, x => x.Key);
+    //        //d1 = listT.ToDictionary<int, string>(key => key.ToString());
+    //        //var _d77 = listT.ToDictionary<int, string>(source2, selector2);
+    //        //d1 = listT.GetComponents().ToDictionary(x => x.Key, x => x.Value);
+    //        //d1 = listT.GetComponents().ToDictionary(x => x.Key, x => x.Value);
+    //        //d1 = GetComponents2().ToDictionary(x => x.Key, x => x.Value);
+    //        d1 = GetComponents3(listT).ToDictionary(x => x.Key, x => x.Value);
+    //        //var tt= (IEnumerable<KeyValuePair<int, string>>)listT;
+    //        //d1 = tt;
+
+
+    //XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
+    ////XmlSerializer serializer2 = new XmlSerializer(typeof(item[]),
+    ////                     new XmlRootAttribute() { ElementName = "items" });
+
+    ////List<KeyValuePair<K,V>>а затем (re) создайте ее в хэш-таблицу.
+
+    //FileStream fs = new FileStream(datapath, FileMode.Create);
+
+    ////serializer.Serialize(fs,
+    ////  state.FieldsD.Select(kv => new item() { id = kv.Key, value = kv.Value }).ToArray());
+
+    //----------------------------------
 }

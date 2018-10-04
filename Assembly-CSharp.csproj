@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\MovementUfo.cs" />
      <Compile Include="Assets\Scripts\SaveLoadData.cs" />
      <Compile Include="Assets\Scripts\Temp.cs" />
+     <None Include="Assets\SavedData0.xml" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>F:/Projects/TheCell/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
