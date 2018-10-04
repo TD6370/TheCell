@@ -6,12 +6,13 @@ using UnityEngine;
 public class GenerateGridFields : MonoBehaviour {
 
     public GameObject prefabField;
-    public GameObject prefabPanel;
+    
     //public Dictionary<int, GameObject> Fields;
     public Dictionary<string, GameObject> Fields;
     public Dictionary<string, List<GameObject>> GamesObjectsActive;
     public Dictionary<string, List<GameObject>> GamesObjectsReal;
     public SaveLoadData.GridData GridData;
+    private SaveLoadData _sctiptData;
 
     public float GridX = 5f;
     public float GridY = 5f;
@@ -30,6 +31,11 @@ public class GenerateGridFields : MonoBehaviour {
         Fields = new Dictionary<string, GameObject>();
         GamesObjectsActive = new Dictionary<string, List<GameObject>>();
         GamesObjectsReal = new Dictionary<string, List<GameObject>>();
+
+        _sctiptData = GetComponent<SaveLoadData>();
+        if (_sctiptData == null)
+            Debug.Log("GenerateGridFields.Start : sctiptData not load !!!");
+
         //StartGenCircle();
         StartGenGrig();
     }
@@ -329,7 +335,6 @@ public class GenerateGridFields : MonoBehaviour {
         List<SaveLoadData.ObjectData> dataObjects = GridData.FieldsD[p_nameField].Objects;
 
         //Debug.Log("SaveListObjectsToData realObjects.Count=" + realObjects.Count);
-
         try
         {
 
@@ -589,7 +594,13 @@ public class GenerateGridFields : MonoBehaviour {
 
     private GameObject FindPrefab(string namePrefab)
     {
-        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+        //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+        
+        //return sctiptData.FindPrefabHieracly(namePrefab);
+        if (_sctiptData == null)
+            return null; 
+
+        return _sctiptData.FindPrefab(namePrefab);
     }
 
     const string FieldKey = "Field";
@@ -623,8 +634,15 @@ public class GenerateGridFields : MonoBehaviour {
     {
         //Debug.Log("# CreatePrefabByName REAL ++++++++ " + namePrefab + " " + typePrefab + "  in  pos=" + pos);
 
-        GameObject newPrefab = FindPrefab(typePrefab);
-        GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+        //#TEST #PREFABF
+        //---------------- 1.
+        //GameObject newPrefab = FindPrefab(typePrefab);
+        //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+        //----------------2.
+        GameObject newObjGame = FindPrefab(typePrefab);
+        newObjGame.transform.position = pos;
+        //----------------
+
         newObjGame.name = namePrefab;
         //newObjGame.SetActive(false);
         return newObjGame;

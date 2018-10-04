@@ -10,6 +10,9 @@ using System.Linq;
 public class SaveLoadData : MonoBehaviour {
 
     //public GenerateGridFields ScriptGridGeneric;
+    public GameObject prefabVood;
+    public GameObject prefabRock;
+    public GameObject prefabUfo;
     public Camera MainCamera;
 
     private string _datapath;
@@ -491,9 +494,9 @@ public class SaveLoadData : MonoBehaviour {
         return newObject;
     }
 
-    //public GameObject prefab1;
-    //private GameObject CreatePrefabByObjectData(ObjectData objGameData)
-    public static GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    //#TEST
+    //public static GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    public GameObject CreatePrefabByObjectData(ObjectData objGameData)
     {
         string nameFind = objGameData.NameObject;
         string tagFind = objGameData.TagObject;
@@ -503,6 +506,7 @@ public class SaveLoadData : MonoBehaviour {
         string typeFind = String.IsNullOrEmpty(tagFind) ? nameFind : tagFind;
 
         newPrefab = FindPrefab(typeFind);
+
         if (newPrefab == null)
         {
             Debug.Log("# CreatePrefabByObjectData Not Find Prefab =" + typeFind);
@@ -517,9 +521,45 @@ public class SaveLoadData : MonoBehaviour {
         return newObjGame;
     }
 
-    public static GameObject FindPrefab(string namePrefab)
+    public GameObject FindPrefab(string namePrefab)
     {
-        return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+        //#TEST #PREFABF.1
+        //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+        //#TEST #PREFABF.2
+        return FindPrefabHieracly(namePrefab);
+    }
+
+    private GameObject FindPrefabHieracly(string namePrefab)
+    {
+        try
+        {
+            TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+            GameObject resPrefab = null;
+
+            switch (prefabType)
+            {
+                case TypePrefabs.PrefabRock:
+                    resPrefab = Instantiate(prefabRock);
+                    break;
+                case TypePrefabs.PrefabVood:
+                    resPrefab = Instantiate(prefabVood);
+                    break;
+                case TypePrefabs.PrefabUfo:
+                    resPrefab = Instantiate(prefabUfo);
+                    break;
+                default:
+                    Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
+                    break;
+
+            }
+            //Debug.Log("FindPrefabHieracly: " + prefabType.ToString());
+            return resPrefab;
+        }
+        catch (Exception x)
+        {
+            Debug.Log("Error FindPrefabHieracly: " + x.Message);
+        }
+        return null;
     }
 
     public static string CreateName(string tag, string nameFiled, int i=0)

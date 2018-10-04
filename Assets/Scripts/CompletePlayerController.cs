@@ -273,9 +273,9 @@ public class CompletePlayerController : MonoBehaviour {
 		txtCount.text = "Count: " + _count.ToString ();
 
 		//Check if we've collected all 12 pickups. If we have...
-		if (_count >= 12)
+		if (_count >= 222)
 			//... then set the text property of our winText object to "You win!"
-			txtMessage.text = "You win!";
+            txtMessage.text = "You win! :" + _count;
 	}
 
     //void GetpositionFiled()
