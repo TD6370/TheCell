@@ -69,8 +69,8 @@ public class SaveLoadData : MonoBehaviour {
                 //Debug.Log("CreateGamesObjectsWorld intRndCount intRndCount=" + intRndCount);
 
                 int maxObjectInField = (intRndCount==0)? 1: 0;
-                string nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
-                
+                //string nameFiled  = "Filed" + x + "x" + Mathf.Abs(y);
+                string nameFiled  = GenerateGridFields.GetNameFiled(x,y);
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for(int i=0; i< maxObjectInField; i++){
@@ -249,18 +249,7 @@ public class SaveLoadData : MonoBehaviour {
         return newObjGame;
     }
 
-    private ObjectData CreateObjectData(GameObject p_gobject)
-    {
-        Debug.Log("# CreateObjectData from " + p_gobject.name + " " + p_gobject.tag);
-
-        ObjectData newObject = new ObjectData()
-        {
-            NameObject = p_gobject.name,
-            TagObject = p_gobject.tag,
-            Position = p_gobject.transform.position
-        };
-        return newObject;
-    }
+    
 
     public class Serializator {
 
@@ -268,9 +257,17 @@ public class SaveLoadData : MonoBehaviour {
         {
 
             Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
-            XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes); 
 
-		    FileStream fs = new FileStream(datapath, FileMode.Create); 
+
+            XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
+            //XmlSerializer serializer2 = new XmlSerializer(typeof(item[]),
+            //                     new XmlRootAttribute() { ElementName = "items" });
+
+		    FileStream fs = new FileStream(datapath, FileMode.Create);
+
+            //serializer.Serialize(fs,
+            //  state.FieldsD.Select(kv => new item() { id = kv.Key, value = kv.Value }).ToArray());
+
 		    serializer.Serialize(fs, state); 
 		    fs.Close(); 
 
@@ -298,6 +295,10 @@ public class SaveLoadData : MonoBehaviour {
         [XmlArray("Fields")]
         [XmlArrayItem("FieldData")]
         public List<FieldData> Fields = new List<FieldData>();
+
+        [XmlArray("FieldsD")]
+        [XmlArrayItem("FieldDataD")]
+        public Dictionary<string, FieldData> FieldsD = new Dictionary<string, FieldData>();
 
         public GridData() { }
     }
@@ -337,6 +338,19 @@ public class SaveLoadData : MonoBehaviour {
     {
         return;
         Debug.Log(log);
+    }
+
+    public static ObjectData CreateObjectData(GameObject p_gobject)
+    {
+        Debug.Log("# CreateObjectData from " + p_gobject.name + " " + p_gobject.tag);
+
+        ObjectData newObject = new ObjectData()
+        {
+            NameObject = p_gobject.name,
+            TagObject = p_gobject.tag,
+            Position = p_gobject.transform.position
+        };
+        return newObject;
     }
 
 }
