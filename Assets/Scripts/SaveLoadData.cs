@@ -184,15 +184,11 @@ public class SaveLoadData : MonoBehaviour {
 
     public class Serializator {
 
+        static Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+
         static public void SaveXml(GridData state, string datapath)
         {
-            //D_2 
-            //Debug.Log("SaveXml GridData " + state.Fields.Count + "  " + state.FieldsD.Count + "     datapath=" + datapath);
-            //Debug.Log("SaveXml GridData " + state.Fields.Count + "       datapath=" + datapath);
-
-
-            //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
-            Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+            //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
             //## 
             //state.FieldsIXML = state.FieldsD;
             state.FieldsXML = state.FieldsD.ToList();
@@ -216,25 +212,31 @@ public class SaveLoadData : MonoBehaviour {
 	    }
 	
 	    static public GridData DeXml(string datapath){
+            string stepErr = "start";
             GridData state = null;
             try
             {
                 Debug.Log("Loaded Xml GridData start...");
 
+                stepErr = ".1";
                 //Type[] extraTypes= { typeof(PositData), typeof(Lamp)};
                 //XmlSerializer serializer = new XmlSerializer(typeof(RoomState), extraTypes);
-                Type[] extraTypes = { typeof(FieldData), typeof(ObjectData) };
+                //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+                stepErr = ".2";
                 XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
-
+                stepErr = ".3";
                 FileStream fs = new FileStream(datapath, FileMode.Open);
+                stepErr = ".4";
                 state = (GridData)serializer.Deserialize(fs);
+                stepErr = ".5";
                 fs.Close();
 
                 //state.FieldsD = new Dictionary<string, FieldData>();
                 //state.FieldsD = ToDict(state.FieldsXML).ToDictionary(x => x.Key, x => x.Value);
                 //## 
+                stepErr = ".6";
                 state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
-
+                stepErr = ".7";
                 Debug.Log("Loaded Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
                 //## 
                 state.FieldsXML = null;
@@ -242,7 +244,7 @@ public class SaveLoadData : MonoBehaviour {
             catch (Exception x)
             {
                 state = null;
-                Debug.Log("Error DeXml: " + x.Message);
+                Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
             }
 
 		    return state;

@@ -293,8 +293,14 @@ public class GenerateGridFields : MonoBehaviour {
 
     public void DestroyRealObject(GameObject gObj)
     {
+        if (gObj == null)
+            return;
+
         //Debug.Log("DestroyRealObject... ");
         string nameField = GenerateGridFields.GetNameFieldByName(gObj.name);
+        if (nameField == null)
+            return;
+
         List<GameObject> listObjInField = GamesObjectsReal[nameField];
 
         for (int i = listObjInField.Count - 1; i >= 0; i--)
@@ -752,7 +758,7 @@ public class GenerateGridFields : MonoBehaviour {
         if (start == -1)
         {
             Debug.Log("# GetNameFieldByName " + nameGameObject + " key 'Field' not found!");
-            return "ErrorName";
+            return null;
         }
         start += "Field".Length;
 

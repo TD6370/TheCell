@@ -208,22 +208,45 @@ public class CompletePlayerController : MonoBehaviour {
 	//OnTriggerEnter2D is called whenever this object overlaps with a trigger collider.
 	void OnTriggerEnter2D(Collider2D other) 
 	{
+        //Debug.Log("OnTriggerEnter2D.............................................");
+
 		//Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
 		if (other.gameObject.CompareTag ("PrefabUfo")) 
 		{
-            DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
-
-            //Add one to the current value of our count variable.
-			_count = _count + 1;
-			
-			//Update the currently displayed count by calling the SetCountText function.
-			SetCountText ();
+            //DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
+            StartCoroutine(DestroyObjectC(other.gameObject));
 		}
 	}
 
-    private void DestroyObject(GameObject gObj)
+
+    void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("OnCollisionEnter.............................................");
+    }
+
+    //private void DestroyObject(GameObject gObj)
+    //{
+    //    m_scriptGrid.DestroyRealObject(gObj);
+    //}
+
+    IEnumerator DestroyObjectC(GameObject gObj)
+    {
+        yield return new WaitForSeconds(0.5f);
+
         m_scriptGrid.DestroyRealObject(gObj);
+
+        BeforeDestroyUfo();
+
+        yield break;
+    }
+
+    private void BeforeDestroyUfo()
+    {
+        //Add one to the current value of our count variable.
+        _count = _count + 1;
+
+        //Update the currently displayed count by calling the SetCountText function.
+        SetCountText();
     }
 
 	//This function updates the text displaying the number of objects we've collected and displays our victory message if we've collected all of them.
