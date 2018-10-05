@@ -16,13 +16,18 @@ public class TEmp : MonoBehaviour {
 
 
     //G
-    //LoadObjectForLook:  DATA -->> PERSONA #P#
+    //LoadObjectToReal:  DATA -->> PERSONA #P#
     //+++ CreateObjectData +++ LoadObjectForLook
     //private GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
 
     //G
+    //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
+        //private void SaveListObjectsToData(string p_nameField)
+            //S -- CreateObjectData
+
+    //G
     //private void SaveNewGameObjectToData(string p_nameField, GameObject p_saveObject)
-    //---> SaveLoadData.CreateObjectData(p_saveObject, true);
+    //---> SaveLoadData.CreateObjectData(p_saveObject, true); NEW DATA  -------->>>>  PERSONA  #P#
 
     //S
     //+++ CreatePrefabByName +++
@@ -1808,5 +1813,31 @@ public class TEmp : MonoBehaviour {
     //    //LoadDataGrid();
     //}
     //------------------------------------------
+    //#TEST
+    //public static GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    //public GameObject CreatePrefabByObjectData(ObjectData objGameData)
+    //{
+    //    string nameFind = objGameData.NameObject;
+    //    string tagFind = objGameData.TagObject;
+    //    Vector3 pos = objGameData.Position;
+    //    GameObject newPrefab = null;
+
+    //    string typeFind = String.IsNullOrEmpty(tagFind) ? nameFind : tagFind;
+
+    //    newPrefab = FindPrefab(typeFind);
+
+    //    if (newPrefab == null)
+    //    {
+    //        Debug.Log("# CreatePrefabByObjectData Not Find Prefab =" + typeFind);
+    //        return null;
+    //    }
+
+    //    GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+    //    newObjGame.name = nameFind;
+    //    //Hide active object
+    //    newObjGame.SetActive(false);
+
+    //    return newObjGame;
+    //}
 
 }

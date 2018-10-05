@@ -171,7 +171,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Fields.Add(nameField, newField);
                     Counter++;
 
-                    LoadObjectForLook(nameField);
+                    LoadObjectToReal(nameField);
                 }
             }
         }
@@ -238,13 +238,13 @@ public class GenerateGridFields : MonoBehaviour {
                     Fields.Add(nameField, newField);
                     Counter++;
 
-                    LoadObjectForLook(nameField);
+                    LoadObjectToReal(nameField);
                 }
             }
         }
     }
 
-    private void LoadObjectForLook(string nameField)
+    private void LoadObjectToReal(string nameField)
     {
         //LoadGameObjectActiveForLook(nameFiled);
         //#.D  
@@ -368,14 +368,15 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    private void RemoveRealObjects(string p_nameField)
-    { 
-        //RemoveRealObject_Active(p_nameFiled);
-        RemoveRealObjects_Data(p_nameField);
-    }
+    //private void RemoveRealObjects(string p_nameField)
+    //{ 
+    //    //RemoveRealObject_Active(p_nameFiled);
+    //    RemoveRealObjects_Data(p_nameField);
+    //}
 
     //REMOVE FOR LOOK
-    private void RemoveRealObjects_Data(string p_nameField)
+    //private void RemoveRealObjects_Data(string p_nameField)
+    private void RemoveRealObjects(string p_nameField)
     {
         if (!GamesObjectsReal.ContainsKey(p_nameField))
         {
@@ -782,6 +783,25 @@ public class GenerateGridFields : MonoBehaviour {
         result = FieldKey + result;
         //Debug.Log("# GetNameFieldByName " + nameGameObject + " >> " + result + "     text: " + resultInfo + "   start=" + start);
         return result;
+    }
+
+    public void SaveAllRealGameObjects()
+    {
+        foreach (var realObjGame in GamesObjectsReal)
+        {
+            string nameField = realObjGame.Key;
+            //RemoveRealObjects(nameField);
+            SaveListObjectsToData(nameField);
+        }
+    }
+
+    public void LoadObjectsNearHero()
+    {
+        foreach (var field in Fields)
+        {
+            string nameField = field.Key;
+            LoadObjectToReal(nameField);
+        }
     }
 
     ////-----------temp----------------------

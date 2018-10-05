@@ -9,18 +9,27 @@ public class MovementUfo : MonoBehaviour {
 
     Material m_material;
     SpriteRenderer m_spriteRenderer;
+    PersonalData m_scriptPersonal;
 
 	// Use this for initialization
 	void Start () {
 	    //Coroutine moveObject =StartCoroutine(Move
         m_material = this.GetComponent<Renderer>().material;
         m_spriteRenderer = this.GetComponent<SpriteRenderer>();
+        m_scriptPersonal = this.GetComponent<PersonalData>();
 
         //ChangeRandomColor();
         //StartCoroutine(ChangeColor());
         
-        moveObject = StartCoroutine(MoveObject());
+        //moveObject = StartCoroutine(MoveObject());
+        StartCoroutine(MoveObjectToPosition());
+        
 	}
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
 
     IEnumerator ChangeColor(){
         
@@ -60,10 +69,64 @@ public class MovementUfo : MonoBehaviour {
             //yield return new WaitForSeconds(1);
         }
     }
+
+    IEnumerator MoveObjectToPosition()
+    {
+        Vector3 lastPosition = transform.position;
+        int stepTest = 0;
+        int stepLimitTest = 10;
+        float minDist = 0.001f;  //0.01f;
+
+        int speed = 2;
+        float step = speed * Time.deltaTime;
+        var objUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.ObjectDataUfo;
+
+        if (objUfo == null)
+        {
+            Debug.Log("Error UFO MoveObjectToPosition objUfo is Empty !!!!");
+            yield break;
+        }
+
+        if (objUfo.TargetPosition == new Vector3(0, 0, 0))
+        {
+            Debug.Log("Error UFO objUfo.TargetPosition is zero !!!!");
+            yield break;
+        }
+
+        while (true)
+        {
+            stepTest++;
+            if (stepTest > stepLimitTest)
+            {
+                float distLock = Vector3.Distance(lastPosition, transform.position);
+                if (distLock < minDist)
+                {
+                    //Debug.Log("MoveObjectToPosition ------ UFO LOCK !!!!  > " + distLock);
+                    objUfo.SetTargetPosition();
+                }
+                lastPosition = transform.position;
+                stepTest = 0;
+            }
+
+            Vector3 targetPosition  = objUfo.TargetPosition;
+
+            // Move our position a step closer to the target.
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+
+
+            float dist = Vector3.Distance(targetPosition, transform.position);
+            //Debug.Log("MoveObjectToPosition ------ UFO distance to point  > " + dist);
+            if (dist < minDist)
+            {
+                //Debug.Log("MoveObjectToPosition ------ UFO IN POINT  > " + dist);
+                objUfo.SetTargetPosition();
+            }
+
+            yield return null;
+        }
+    }
 	
-	// Update is called once per frame
-	void Update () {
-	}
+
 
 
 }

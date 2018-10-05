@@ -57,6 +57,8 @@ public class SaveLoadData : MonoBehaviour {
 
         //#.D 
         CreateDataGamesObjectsWorld();
+
+        LoadObjectsNearHero();
 	}
 	
 	// Update is called once per frame
@@ -84,7 +86,10 @@ public class SaveLoadData : MonoBehaviour {
     //#.D 
     private void CreateDataGamesObjectsWorld()
     {
-        if (_gridData != null)
+        //# On/Off
+        bool isAlwaysCreate = true;
+
+        if (_gridData != null && !isAlwaysCreate)
         {
             Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded");
             _scriptGrid.GridData = _gridData;
@@ -303,7 +308,8 @@ public class SaveLoadData : MonoBehaviour {
 
         public string TagObject { get; set; }
 
-        public Vector3 Position { get; set; }
+        //public Vector3 Position { get; set; }
+        public virtual Vector3 Position { get; set; }
 
         public ObjectData() {
         }
@@ -336,10 +342,51 @@ public class SaveLoadData : MonoBehaviour {
     {
         [XmlIgnore]
         public Color ColorRender = Color.black;
+        [XmlIgnore]
+        public Vector3 TargetPosition;
+
+        private Vector3 m_Position = new Vector3(0, 0, 0);
+        public override Vector3 Position 
+        {
+            get { return m_Position; }
+            set { 
+                m_Position = value;
+                if (IsCanSetTargetPosition)
+                    SetTargetPosition();
+            }
+        }
+
+        private bool IsCanSetTargetPosition {
+            get {
+                return (TargetPosition == null || TargetPosition == new Vector3(0, 0, 0)) && m_Position != null && m_Position != new Vector3(0, 0, 0);
+            }
+        }
 
         public ObjectDataUfo() : base()
         {
             ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+
+            //if (IsCanSetTargetPosition)
+            //{
+            //    //Debug.Log("UFO set TargetPosition after init");
+            //    SetTargetPosition();
+            //}
+        }
+
+        public void SetTargetPosition()
+        {
+            int distX = UnityEngine.Random.Range(-15, 15);
+            int distY = UnityEngine.Random.Range(-15, 15);
+
+            float x = m_Position.x + distX;
+            float y = m_Position.y + distY;
+            if (y > -1)
+                y = m_Position.y - distY;
+            if (x < 1)
+                x = m_Position.x - distX;
+
+            TargetPosition = new Vector3(x, y, -1);
+            //Debug.Log("UFO SetTargetPosition ==== " + TargetPosition);
         }
 
         public override void UpdateGameObject(GameObject objGame)
@@ -381,6 +428,25 @@ public class SaveLoadData : MonoBehaviour {
                 break;
         }
         return objGameBild;
+    }
+
+    public void SaveLevel()
+    {
+        _scriptGrid.SaveAllRealGameObjects();
+        //Fields.Remove(nameField);
+        //RemoveRealObjects(nameField);
+
+        if (_gridData == null)
+        {
+            Debug.Log("Error SaveLevel gridData is null !!!");
+            return;
+        }
+        Serializator.SaveXml(_gridData, _datapath);
+    }
+
+    private void LoadObjectsNearHero()
+    {
+        _scriptGrid.LoadObjectsNearHero();
     }
 
     //+++ CreatePrefabByName +++
@@ -444,38 +510,6 @@ public class SaveLoadData : MonoBehaviour {
         return newObject;
     }
 
-    ////+++ CreatePrefabByName +++
-    //public static ObjectData FindObjectData(GameObject p_gobject)
-    //{
-    //}
-
-    //#TEST
-    //public static GameObject CreatePrefabByObjectData(ObjectData objGameData)
-    public GameObject CreatePrefabByObjectData(ObjectData objGameData)
-    {
-        string nameFind = objGameData.NameObject;
-        string tagFind = objGameData.TagObject;
-        Vector3 pos = objGameData.Position;
-        GameObject newPrefab = null;
-
-        string typeFind = String.IsNullOrEmpty(tagFind) ? nameFind : tagFind;
-
-        newPrefab = FindPrefab(typeFind);
-
-        if (newPrefab == null)
-        {
-            Debug.Log("# CreatePrefabByObjectData Not Find Prefab =" + typeFind);
-            return null;
-        }
-
-        GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
-        newObjGame.name = nameFind;
-        //Hide active object
-        newObjGame.SetActive(false);
-
-        return newObjGame;
-    }
-
     public GameObject FindPrefab(string namePrefab)
     {
         //#TEST #PREFABF.1
@@ -516,6 +550,9 @@ public class SaveLoadData : MonoBehaviour {
         }
         return null;
     }
+
+  
+    
 
     public static string CreateName(string tag, string nameFiled, int i=0)
     {

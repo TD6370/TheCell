@@ -26,7 +26,8 @@ public class CompletePlayerController : MonoBehaviour {
     private int _posLastY = 0;
     private int _limitHorizontalLook = 22;
     private int _limitVerticalLook = 18;
-    private GenerateGridFields m_scriptGrid; 
+    private GenerateGridFields m_scriptGrid;
+    private SaveLoadData m_scriptData;
 
     Vector2 _movement;
     //private HorizontalCompas _moveX = HorizontalCompas.Center;
@@ -47,6 +48,12 @@ public class CompletePlayerController : MonoBehaviour {
 		//Call our SetCountText function which will update the text with the current value for count.
 		SetCountText ();
 
+        
+	}
+
+
+    void Awake()
+    {
         var camera = MainCamera;
         if (camera == null)
         {
@@ -54,10 +61,27 @@ public class CompletePlayerController : MonoBehaviour {
             return;
         }
         m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+        if (m_scriptGrid == null)
+        {
+            Debug.Log("Error scriptGrid is null !!!");
+            return;
+        }
+
+        m_scriptData = MainCamera.GetComponent<SaveLoadData>();
+        if (m_scriptData == null)
+        {
+            Debug.Log("Error scriptData is null !!!");
+            return;
+        }
 
         //btnExit.onClick.AddListener(TaskOnClick);
-        btnExit.onClick.AddListener(delegate { Application.Quit(); }); 
-	}
+        btnExit.onClick.AddListener(delegate
+        {
+            m_scriptData.SaveLevel();
+            txtCount.text = "Level saved...";
+            ExitGame();
+        }); 
+    }
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
 	void FixedUpdate()
@@ -98,7 +122,26 @@ public class CompletePlayerController : MonoBehaviour {
 
     void OnMouseDown()
     {
-        MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
+        float nextSize = 8.0f;
+        float size = MainCamera.orthographicSize;
+        //switch (size)
+        //{
+        //    case 8.0f:
+        //        break;
+        //    case 22.0f:
+        //        break;
+        //    case 35.0f:
+        //        break;
+        //}
+        if(size==8.0f)
+            nextSize = 22.0f;
+        else if(size==22.0f)
+            nextSize = 35.0f;
+        else 
+            nextSize = 8.0f;
+
+        MainCamera.orthographicSize = nextSize;
+        //MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
     }
 
 
@@ -275,6 +318,12 @@ public class CompletePlayerController : MonoBehaviour {
             txtMessage.text = "END GAME";
             Application.Quit();
         }
+    }
+
+    private void ExitGame()
+    {
+
+        Application.Quit(); 
     }
 
     //void GetpositionFiled()
