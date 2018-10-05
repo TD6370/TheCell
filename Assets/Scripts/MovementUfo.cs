@@ -10,9 +10,18 @@ public class MovementUfo : MonoBehaviour {
 	void Start () {
 	    //Coroutine moveObject =StartCoroutine(Move
 
+        StartCoroutine(ChangeColor());
         
         moveObject = StartCoroutine(MoveObject());
 	}
+
+    IEnumerator ChangeColor(){
+        Material material = this.GetComponent<Renderer>().material;
+        while(true){
+                material.color = new Color(Random.value, Random.value, Random.value, 1);
+                yield return new WaitForSeconds(2f);
+        }
+    }
 
     IEnumerator MoveObject()
     {

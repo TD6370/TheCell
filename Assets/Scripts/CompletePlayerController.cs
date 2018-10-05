@@ -14,7 +14,8 @@ public class CompletePlayerController : MonoBehaviour {
     public Text txtCount;			//Store a reference to the UI Text component which will display the number of pickups collected.
 	public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
-    
+    public Button btnExit;
+
     public Color ColorCurrentField = Color.yellow;
     public Camera MainCamera;
 
@@ -53,6 +54,9 @@ public class CompletePlayerController : MonoBehaviour {
             return;
         }
         m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+
+        //btnExit.onClick.AddListener(TaskOnClick);
+        btnExit.onClick.AddListener(delegate { Application.Quit(); }); 
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -77,6 +81,11 @@ public class CompletePlayerController : MonoBehaviour {
             //GetpositionFiled();
             RestructGrid();
             
+        }
+
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
         }
 
         //OnMouseButton();
@@ -206,77 +215,48 @@ public class CompletePlayerController : MonoBehaviour {
 		//Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
 		if (other.gameObject.CompareTag ("PrefabUfo")) 
 		{
-			
-            
-            //List<GameObject> ll = m_scriptGrid.GamesObjectsReal[""].Find(p=>p.name=="");
-            var gObj = other.gameObject;
-            //string nameField = GenerateGridFields.GetNameFiledPosit(gObj.transform.position.x, gObj.transform.position.y);
-            string nameField = GenerateGridFields.GetNameFieldByName(gObj.name);
-            if (m_scriptGrid.GamesObjectsReal != null)
-            {
-                if (m_scriptGrid.GamesObjectsReal.ContainsKey(nameField))
-                {
-                    List<GameObject> listObjInField = m_scriptGrid.GamesObjectsReal[nameField];
-                    for (int i = listObjInField.Count -1; i >= 0; i--)
-                    {
-                        if (listObjInField[i] == null)
-                        {
-                            Debug.Log("Hero destroy Ufo >>>     Clear destroy object");
-                            listObjInField.RemoveAt(i);
-                        }
-                    }
-                    if (listObjInField.Count > 0)
-                    {
-                        //GameObject objRealData = m_scriptGrid.GamesObjectsReal[""].Find(p => p.name == gObj.name);
-                        int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
-                        if (indRealData == -1)
-                        {
-                            Debug.Log("Hero destroy Ufo >>> Not find GamesObjectsReal : " + gObj.name);
-                        }
-                        else
-                        {
-                            //Debug.Log("Hero destroy Ufo >>>  REMOVE GamesObjectsReal : " + listObjInField[indRealData].name);
-                            m_scriptGrid.GamesObjectsReal[nameField].RemoveAt(indRealData);
-                        }
-                    }
-                }
-                else {
-                    Debug.Log("Hero destroy Ufo >>> GamesObjectsReal Not field : " + nameField);
-                }
-            }
+            DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
 
-            //... then set the other object we just collided with to inactive.
-            //other.gameObject.SetActive(false);
-            Destroy(other.gameObject);
-			
-			//Add one to the current value of our count variable.
+            //Add one to the current value of our count variable.
 			_count = _count + 1;
 			
 			//Update the currently displayed count by calling the SetCountText function.
 			SetCountText ();
 		}
-
-        //if (other.gameObject.CompareTag("Field"))
-        //{
-
-        //    winTextLog.text = other.gameObject.transform.position.ToString();
-
-            
-        //}
-        
 	}
+
+    private void DestroyObject(GameObject gObj)
+    {
+        m_scriptGrid.DestroyRealObject(gObj);
+    }
 
 	//This function updates the text displaying the number of objects we've collected and displays our victory message if we've collected all of them.
 	void SetCountText()
-	{
-		//Set the text property of our our countText object to "Count: " followed by the number stored in our count variable.
-		txtCount.text = "Count: " + _count.ToString ();
+    {
+        int limit = 150;
+        //int limit = 10;
 
-		//Check if we've collected all 12 pickups. If we have...
-		if (_count >= 222)
-			//... then set the text property of our winText object to "You win!"
+        txtCount.text = "Count: " + _count.ToString() + " / " + limit;
+
+        if (_count >= limit)
+        {
             txtMessage.text = "You win! :" + _count;
-	}
+            //Application.Quit();
+            StartCoroutine(EndGame());
+            //_count = 0;
+        }
+    }
+
+    IEnumerator EndGame()
+    {
+        while(true)
+        {
+            //Application.Quit();
+            yield return new WaitForSeconds(5);
+            txtMessage.text = "END GAME";
+            Application.Quit();
+        }
+    }
 
     //void GetpositionFiled()
     //{

@@ -141,7 +141,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Destroy(findField, 0.5f);
                     Destroy(findField);
                     Fields.Remove(nameField);
-                    RemoveRealObject(nameField);
+                    RemoveRealObjects(nameField);
                     Counter--;
                 }
             }
@@ -210,7 +210,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Destroy !!!
                     Destroy(findField);
                     Fields.Remove(nameField);
-                    RemoveRealObject(nameField);
+                    RemoveRealObjects(nameField);
                     Counter--;
                 }
             }
@@ -284,14 +284,14 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    private void RemoveRealObject(string p_nameField)
+    private void RemoveRealObjects(string p_nameField)
     { 
         //RemoveRealObject_Active(p_nameFiled);
-        RemoveRealObject_Data(p_nameField);
+        RemoveRealObjects_Data(p_nameField);
     }
 
     //REMOVE FOR LOOK
-    private void RemoveRealObject_Data(string p_nameField)
+    private void RemoveRealObjects_Data(string p_nameField)
     {
         if (!GamesObjectsReal.ContainsKey(p_nameField))
         {
@@ -309,6 +309,76 @@ public class GenerateGridFields : MonoBehaviour {
                 Destroy(obj);
             }
             GamesObjectsReal.Remove(p_nameField);
+        }
+    }
+
+    public void DestroyRealObject(GameObject gObj)
+    {
+        //Debug.Log("DestroyRealObject... ");
+        string nameField = GenerateGridFields.GetNameFieldByName(gObj.name);
+        List<GameObject> listObjInField = GamesObjectsReal[nameField];
+            
+        for (int i = listObjInField.Count - 1; i >= 0; i--)
+        {
+            if (listObjInField[i] == null)
+            {
+                listObjInField.RemoveAt(i);
+            }
+        }
+        if (listObjInField.Count > 0)
+        {
+            int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
+            if (indRealData == -1)
+            {
+                Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+            }
+            else
+            {
+                GamesObjectsReal[nameField].RemoveAt(indRealData);
+            }
+        }
+        Destroy(gObj);
+        //-----------------------------------------------
+
+        //Destrot to Data
+        if (!GridData.FieldsD.ContainsKey(nameField))
+        {
+            Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
+            return;
+        }
+        List<SaveLoadData.ObjectData> dataObjects = GridData.FieldsD[nameField].Objects;
+        int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
+
+        //@KOSTIL
+        //if (indObj == -1)
+        //{
+        //    int len1 = gObj.name.Length;
+        //    string leftNameFind = gObj.name.Substring(0, len1 - 2);
+        //    for (int i = 0; i < dataObjects.Count; i++ )
+        //    {
+        //        Debug.Log("!!>> DestroyRealObject FIND...");
+        //        int len = dataObjects[i].NameObject.Length;
+        //        string leftNameItem = dataObjects[i].NameObject.Substring(0, len - 2);
+        //        Debug.Log("!!>> DestroyRealObject FIND: " + leftNameFind + " <> " + leftNameItem);
+        //        if (leftNameFind == leftNameItem)
+        //        {
+        //            indObj = i;
+        //            break;
+        //        }
+        //    }
+        //}
+
+        if (indObj == -1)
+        {
+            Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
+            //foreach (var item in dataObjects) 
+            //{
+            //    Debug.Log(":::: DestroyRealObject GridData Exist objects : " + item.NameObject);
+            //}
+        }
+        else {
+            dataObjects.RemoveAt(indObj);
+            //Debug.Log("DestroyRealObject +++ " + gObj.name);
         }
     }
 
@@ -343,7 +413,8 @@ public class GenerateGridFields : MonoBehaviour {
             {
                 GameObject gobj = realObjects[i];
                 //SaveLoadData.ObjectData objData = SaveLoadData.CreateObjectData(gobj);
-                if (dataObjects.Count >= i)
+                //if (dataObjects.Count >= i)
+                if (dataObjects.Count > i)
                 {
                     var pos1 = dataObjects[i].Position;
                     if (dataObjects[i] == null)
@@ -355,6 +426,7 @@ public class GenerateGridFields : MonoBehaviour {
                     if (realObjects[i] == null)
                     {
                         //Debug.Log("SaveListObjectsToData REMOVE realObjects[i] == null");
+                        //realObjects.RemoveAt(i);
                         continue;
                     }
 
