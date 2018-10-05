@@ -4,23 +4,38 @@ using UnityEngine;
 
 public class MovementUfo : MonoBehaviour {
 
+
     Coroutine moveObject;
+
+    Material m_material;
+    SpriteRenderer m_spriteRenderer;
 
 	// Use this for initialization
 	void Start () {
 	    //Coroutine moveObject =StartCoroutine(Move
+        m_material = this.GetComponent<Renderer>().material;
+        m_spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-        StartCoroutine(ChangeColor());
+        //ChangeRandomColor();
+        //StartCoroutine(ChangeColor());
         
         moveObject = StartCoroutine(MoveObject());
 	}
 
     IEnumerator ChangeColor(){
-        Material material = this.GetComponent<Renderer>().material;
+        
         while(true){
-                material.color = new Color(Random.value, Random.value, Random.value, 1);
-                yield return new WaitForSeconds(2f);
+
+            ChangeRandomColor();
+
+            yield return new WaitForSeconds(2f);
         }
+    }
+
+    private void ChangeRandomColor()
+    {
+        //material.color = new Color(Random.value, Random.value, Random.value, 1);
+        m_spriteRenderer.color = new Color(Random.value, Random.value, Random.value, 1);
     }
 
     IEnumerator MoveObject()

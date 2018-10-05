@@ -9,3 +9,5 @@ TheCell.sln
 TheCell/
 
 *.suo
+.suo
+.[suo]

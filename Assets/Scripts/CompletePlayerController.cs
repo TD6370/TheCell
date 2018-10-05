@@ -140,12 +140,8 @@ public class CompletePlayerController : MonoBehaviour {
         posY = (int)((transform.position.y / 2) - 0.5);
         posY = (int)(Mathf.Abs(posY));
 
-        
-
         if (_posLastX == posX && _posLastY == posY)
             return null;
-
-       
 
         _posLastX = posX;
         _posLastY = posY;

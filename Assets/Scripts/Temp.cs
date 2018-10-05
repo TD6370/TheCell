@@ -14,6 +14,28 @@ public class TEmp : MonoBehaviour {
 		
 	}
 
+
+    //G
+    //LoadObjectForLook:  DATA -->> PERSONA #P#
+    //+++ CreateObjectData +++ LoadObjectForLook
+    //private GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
+
+    //G
+    //private void SaveNewGameObjectToData(string p_nameField, GameObject p_saveObject)
+    //---> SaveLoadData.CreateObjectData(p_saveObject, true);
+
+    //S
+    //+++ CreatePrefabByName +++
+    //public static ObjectData CreateObjectData(GameObject p_gobject, bool isNewGen = false)
+        //NEW DATA  -------->>>>  PERSONA  #P#
+            //newObject.UpdateGameObject(p_gobject);
+        //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
+            //newObject = personalData.PersonalObjectData.Clone() as ObjectDataUfo;
+
+
+
+    //------------------------------------------
+
     //public void GenGrigLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0)
     //{
     //    int gridWidth = 100;
@@ -1326,4 +1348,465 @@ public class TEmp : MonoBehaviour {
     ////  state.FieldsD.Select(kv => new item() { id = kv.Key, value = kv.Value }).ToArray());
 
     //----------------------------------
+
+    ////Загрузка объектов из стека памяти на поле ADDED FOR LOOK
+    ////GamesObjectsActive -> listGameObjectReal
+    //private void LoadGameObjectActiveForLook(string p_nameField)
+    //{
+    //    //return;
+
+    //    //DebugLog("# LoadGameObjectActiveForLook");
+    //    if (GamesObjectsActive == null)
+    //    {
+    //        Debug.Log("LoadGameObjectActiveForLook GamesObjectsActive is EMPTY ");
+    //        return;
+    //    }
+
+
+    //    if (!GamesObjectsActive.ContainsKey(p_nameField))
+    //    {
+    //        //Debug.Log("LoadGameObjectActiveForLook Not in field : " + p_nameFiled);
+    //        return;
+    //    }
+
+    //    //# Debug.Log("# LoadGameObjectActiveForLook : " + p_nameFiled);
+
+    //    List<GameObject> listGameObjectInField = GamesObjectsActive[p_nameField];
+    //    List<GameObject> listGameObjectReal = new List<GameObject>();
+
+    //    bool isExistFieldReal = false;
+    //    if (!GamesObjectsReal.ContainsKey(p_nameField))
+    //    {
+    //        //# Debug.Log("LoadGameObjectActiveForLook GamesObjectsReal add field - " + p_nameFiled);
+    //        GamesObjectsReal.Add(p_nameField, listGameObjectReal);
+    //    }
+    //    else
+    //    {
+    //        listGameObjectReal = GamesObjectsReal[p_nameField];
+    //    }
+
+    //    foreach (var gameObj in listGameObjectInField)
+    //    {
+    //        //Debug.Log("# LoadGameObjectActiveForLook REAL ++++++++ " + gameObj.name + " " + gameObj.tag + "  in  " + p_nameFiled );
+
+    //        //# TYPE.1
+    //        //GameObject newFiled = (GameObject)Instantiate(gameObj, gameObj.transform.position, Quaternion.identity);
+    //        //newFiled.SetActive(true);
+
+    //        //# TYPE.3
+    //        //gameObj.SetActive(true);
+    //        //GameObject newFiled = gameObj;
+
+    //        //# TYPE.2
+    //        GameObject newField = CreatePrefabByName(gameObj.tag, gameObj.name, gameObj.transform.position);
+
+    //        //Fields.Add(nameFiled, newFiled);
+    //        //# rem TYPE.3 
+    //        listGameObjectReal.Add(newField);
+    //        Counter++;
+    //        //Debug.Log("# LoadGameObjectActiveForLook " + newFiled.name + " " + newFiled.tag + "  in  " + p_nameFiled + "  pos=" + gameObj.transform.position);
+    //    }
+    //}
+
+    ////#.D загрузка из данныx объектов из памяти и создание их на поле  ADDED FOR LOOK - DATA
+    //private void LoadGameObjectDataForLook(string p_nameField)
+    //{
+    //    //GridData
+    //    if (GridData == null)
+    //    {
+    //        //Debug.Log(" LoadGameObjectDataForLook GridData IS EMPTY !!!");
+    //        return;
+    //    }
+
+    //    if (GridData.Fields == null)
+    //        //Debug.Log(" LoadGameObjectDataForLook GridData.Fields IS EMPTY !!!");
+
+    //        if (GridData.Fields.Find(p => p.NameField == p_nameField) == null)
+    //        {
+    //            //Debug.Log(" LoadGameObjectDataForLook GridData.Fields not find: " + p_nameFiled);
+    //            return;
+    //        }
+
+    //    List<SaveLoadData.ObjectData> listGameObjectInField = GridData.Fields.Find(p => p.NameField == p_nameField).Objects;
+    //    List<GameObject> listGameObjectReal = new List<GameObject>();
+
+    //    if (!GamesObjectsReal.ContainsKey(p_nameField))
+    //    {
+    //        GamesObjectsReal.Add(p_nameField, listGameObjectReal);
+    //    }
+    //    else
+    //    {
+    //        listGameObjectReal = GamesObjectsReal[p_nameField];
+    //    }
+
+    //    int _count = Counter;
+    //    foreach (var gameObj in listGameObjectInField)
+    //    {
+    //        GameObject newField = CreatePrefabByName(gameObj.TagObject, gameObj.NameObject, gameObj.Position);
+
+    //        listGameObjectReal.Add(newField);
+    //        Counter++;
+    //        //Debug.Log(" LoadGameObjectDataForLook added +++ : " + gameObj.NameObject);
+    //    }
+
+    //    //Debug.Log(" LoadGameObjectDataForLook.... ADDED: " + (_counter - _count));
+    //}
+
+    ////REMOVE FOR LOOK
+    //private void RemoveRealObject_Active(string p_nameField)
+    //{
+    //    //Debug.Log("RemoveRealObject_Active..... ");
+
+    //    if (!GamesObjectsReal.ContainsKey(p_nameField))
+    //    {
+    //        //Debug.Log("RemoveRealObject Not in field : " + p_nameFiled);
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        List<GameObject> activeObjects = null;
+    //        if (GamesObjectsActive.ContainsKey(p_nameField))
+    //            activeObjects = GamesObjectsActive[p_nameField];
+
+    //        List<GameObject> realObjects = GamesObjectsReal[p_nameField];
+
+    //        if (activeObjects != null)
+    //        {
+
+    //            for (int i = activeObjects.Count - 1; i >= 0; i--)
+    //            {
+    //                //Debug.Log("RemoveRealObject_Active");
+
+    //                activeObjects[i].SetActive(false); //#
+
+    //                if (realObjects.Count <= i)
+    //                    continue;
+    //                if (realObjects[i] == null)
+    //                    continue;
+
+    //                //Debug.Log("RemoveRealObject TYPE.2 Save new position .3");
+
+    //                var pos1 = activeObjects[i].transform.position;
+    //                var pos2 = realObjects[i].transform.position;
+    //                var f = pos1.y;
+    //                string posFieldOld = GetNameFieldPosit(pos1.x, pos1.y);
+    //                string posFieldReal = GetNameFieldPosit(pos2.x, pos2.y);
+
+    //                //---------------------------------------------
+    //                if (posFieldOld != posFieldReal)
+    //                {
+    //                    Debug.Log("RemoveRealObject posFieldOld(" + posFieldOld + ") != posFieldReal(" + posFieldReal + ")      " + activeObjects[i].name + "    " + realObjects[i].name);
+    //                    //activeObjects[i].transform.position = realObjects[i].transform.position;
+
+    //                    //Debug.Log("RemoveRealObject ........... Remove in old Filed");
+    //                    //Remove in old Filed
+    //                    //activeObjects[i].SetActive(false);
+    //                    activeObjects.RemoveAt(i);
+    //                    //if (GamesObjectsActive[posFieldReal])
+    //                    if (!GamesObjectsActive.ContainsKey(posFieldReal))
+    //                    {
+    //                        Debug.Log("RemoveRealObject Not new posFieldReal =" + posFieldReal);
+    //                    }
+    //                    else
+    //                    {
+    //                        //Debug.Log("RemoveRealObject ........... Add in new Filed");
+
+    //                        //Add in new Filed
+    //                        List<GameObject> activeObjectsNew = GamesObjectsActive[posFieldReal];
+
+    //                        //Debug.Log("RemoveRealObject ........... Add in new Filed  pred=" + GamesObjectsActive[posFieldReal].Count);
+
+    //                        //realObjects[i].SetActive(false);
+    //                        //activeObjectsNew.Add(Instantiate(realObjects[i]));
+
+    //                        //## var coyObj = Instantiate(realObjects[i]);
+    //                        var realObj = realObjects[i];
+    //                        var coyObj = CreatePrefabByName(realObj.tag, realObj.name, realObj.transform.position);
+
+    //                        activeObjectsNew.Add(coyObj);
+    //                        //coyObj.SetActive(false);
+
+    //                        //Debug.Log("RemoveRealObject ........... Add in new Filed  post=" + GamesObjectsActive[posFieldReal].Count);
+    //                        //activeObjectsNew[activeObjectsNew.Count-1].SetActive(false);
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    //---------------------------------------------
+    //                    //Save Real value in memory
+    //                    activeObjects[i] = Instantiate(realObjects[i]); //#
+    //                    activeObjects[i].SetActive(false); //#
+    //                }
+    //            }
+    //        }
+    //        foreach (var obj in realObjects)
+    //        {
+    //            Counter--;
+    //            Destroy(obj);
+    //            //obj.SetActive(false);
+    //        }
+    //        //Debug.Log("RemoveRealObject_Active.....6");
+    //        GamesObjectsReal.Remove(p_nameField);
+    //    }
+    //}
+
+    ////ADD NEW GEN GAME OBJECT -- ACTIVE
+    //private void AddNewActiveGameObject(string p_nameField, GameObject p_saveObject)
+    //{
+    //    DebugLog("# AddNewActiveGameObject " + p_saveObject.name + "  " + p_saveObject.tag);
+
+    //    int index = 0;
+
+    //    List<GameObject> gobjects = new List<GameObject>();
+    //    //List<GameObject> gobjects;
+    //    if (GamesObjectsActive.ContainsKey(p_nameField))
+    //    {
+    //        gobjects = GamesObjectsActive[p_nameField];
+    //        index = gobjects.Count + 1; //.Find(p => p.tag == p_saveObject.tag);
+    //        //var index = gobjects.Where(p => p.tag == p_saveObject.tag).Count;
+    //    }
+    //    else
+    //    {
+    //        gobjects = new List<GameObject>();
+    //        GamesObjectsActive.Add(p_nameField, gobjects);
+    //        gobjects = GamesObjectsActive[p_nameField]; //???
+    //        index = 1;
+    //    }
+
+    //    p_saveObject.name = p_saveObject.tag + "_" + p_nameField + index;
+
+    //    gobjects.Add(p_saveObject);
+    //    DebugLog("# AddNewActiveGameObject Init +++ " + p_saveObject.name);
+    //}
+
+    ////#.D ADD --NEW GEN-- GAME OBJECT -- DATA
+    //private void SaveNewGameObjectToData(string p_nameField, GameObject p_saveObject)
+    //{
+    //    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //    return;
+
+    //    DebugLog("# SaveNewAGameObjectInData " + p_saveObject.name + "  " + p_saveObject.tag);
+
+    //    if (GridData == null)
+    //    {
+    //        return;
+    //    }
+
+    //    if (GridData.Fields.Find(p => p.NameField == p_nameField) == null)
+    //        return;
+
+    //    int indexFieldData = GridData.Fields.FindIndex(p => p.NameField == p_nameField);
+    //    List<SaveLoadData.ObjectData> listDataObjectInField = GridData.Fields[indexFieldData].Objects;
+    //    //List<SaveLoadData.ObjectData> listDataObjectInField = GridData.Fields.Find(p => p.NameField == p_nameFiled).Objects;
+
+
+    //    List<GameObject> listGameObjectReal = new List<GameObject>();
+
+    //    int indexObjectData = listDataObjectInField.FindIndex(p => p.NameObject == p_saveObject.name);
+    //    //SaveLoadData.ObjectData objData = listDataObjectInField.Find(p => p.NameObject == p_saveObject.name);
+    //    SaveLoadData.ObjectData objDataOld = listDataObjectInField[indexObjectData];
+
+
+    //    var dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
+    //    int indexNN = listDataObjectInField.Count + 1;
+
+    //    if (objDataOld == null)
+    //    {
+    //        //new object
+    //        //Name prefab in design game
+    //        // p_saveObject.tag + "_" + p_saveObject.name + "_" + p_nameFiled + indexNN;
+    //        dataObjectSave.NameObject += indexNN;
+    //        listDataObjectInField.Add(dataObjectSave);
+    //    }
+    //    else
+    //    {
+    //        //update object
+    //        objDataOld = dataObjectSave;
+    //    }
+    //    Counter++;
+
+    //}
+
+    //-------------------------------------------
+
+    //private GameObject CreatePrefabByName(string typePrefab, string namePrefab, Vector3 pos = new Vector3())
+    //{
+    //    //Debug.Log("# CreatePrefabByName REAL ++++++++ " + namePrefab + " " + typePrefab + "  in  pos=" + pos);
+
+    //    //#TEST #PREFABF
+    //    //---------------- 1.
+    //    //GameObject newPrefab = FindPrefab(typePrefab);
+    //    //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+    //    //----------------2.
+    //    GameObject newObjGame = FindPrefab(typePrefab);
+    //    newObjGame.transform.position = pos;
+    //    //----------------
+
+    //    newObjGame.name = namePrefab;
+    //    //newObjGame.SetActive(false);
+    //    return newObjGame;
+    //}
+    //------------------------
+    //public static ObjectData CreateObjectData_(GameObject p_gobject)
+    //{
+    //    //Debug.Log("# CreateObjectData from " + p_gobject.name + " " + p_gobject.tag);
+    //    ObjectData newObject = new ObjectData()
+    //    {
+    //        NameObject = p_gobject.name,
+    //        TagObject = p_gobject.tag,
+    //        Position = p_gobject.transform.position
+    //    };
+    //    return newObject;
+    //}
+    //----------------------------
+    //public Dictionary<string, List<GameObject>> GamesObjectsActive;
+    //public void SaveGrid(Dictionary<string, List<GameObject>> p_gamesObjectsActive)
+    //private void SaveGrid()
+    //{
+    //    Debug.Log("# SaveGrid...");
+
+    //    Dictionary<string, List<GameObject>> p_gamesObjectsActive = _scriptGrid.GamesObjectsActive;
+
+    //    List<FieldData> listFields = new List<FieldData>();
+
+    //    Debug.Log("# SaveGrid count object=" + p_gamesObjectsActive.Count);
+
+    //    foreach (var item in p_gamesObjectsActive)
+    //    {
+    //        List<GameObject> gobjects = item.Value;
+    //        var nameFiled = item.Key;
+
+    //        FieldData fieldData;
+
+    //        fieldData = listFields.Find(p => p.NameField == nameFiled);
+    //        //create new Field in data
+    //        if (fieldData == null)
+    //        {
+    //            fieldData = new FieldData() { NameField = nameFiled};
+    //            listFields.Add(fieldData);
+    //        }
+
+    //        if(gobjects.Count>0)
+    //            Debug.Log("# SaveGrid " + nameFiled + " add object=" + gobjects.Count);
+
+    //        foreach (var obj in gobjects)
+    //        {
+    //            ObjectData objectSave = CreateObjectData(obj);
+    //            fieldData.Objects.Add(objectSave);
+    //        }
+    //    }
+
+    //    GridData data = new GridData()
+    //    {
+    //        Fields = listFields
+    //    };
+
+    //    Serializator.SaveXml(data, _datapath);
+    //}
+
+    //private void LoadDataGrid()
+    //{
+    //    //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
+    //    if (_gridData == null)
+    //    {
+    //        Debug.Log("# LoadDataGrid... gridData IS EMPTY");
+    //        return;
+    //    }
+
+    //    Debug.Log("# LoadDataGrid... " + _datapath);
+
+    //    Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
+    //    foreach (var field in _gridData.Fields)
+    //    {
+    //        Debug.Log("# LoadDataGrid field: " + field.NameField);
+
+    //        List<GameObject> ListNewObjects = new List<GameObject>();
+    //        foreach (ObjectData objGame in field.Objects)
+    //        {
+    //            Debug.Log("# LoadDataGrid objGame: " + objGame.NameObject + "   " + objGame.TagObject);
+
+    //            GameObject newObjGame = CreatePrefabByObjectData(objGame);
+    //            if (newObjGame != null)
+    //                ListNewObjects.Add(newObjGame);
+    //        }
+    //        _gamesObjectsActive.Add(field.NameField, ListNewObjects);
+
+    //    }
+    //    _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+
+    //}
+    //--------------------------------------
+
+    //private void CreateGamesObjectsWorld()
+    //{
+    //    Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
+    //    int maxWidth = 100;// (int)GridY * -1;
+    //    int maxHeight = 100; //(int)GridX;
+    //    int coutCreateObjects = 0;
+
+
+    //    Debug.Log("# CreateGamesObjectsWorld...");
+
+    //    for (int y = 0; y < maxWidth; y++)
+    //    {
+    //        for (int x = 0; x < maxHeight; x++)
+    //        {
+    //            int intRndCount = UnityEngine.Random.Range(0, 3);
+    //            //Debug.Log("CreateGamesObjectsWorld intRndCount intRndCount=" + intRndCount);
+
+    //            int maxObjectInField = (intRndCount==0)? 1: 0;
+    //            //string nameFiled  = "Filed" + x + "x" + Mathf.Abs(y);
+    //            string nameFiled  = GenerateGridFields.GetNameField(x,y);
+
+    //            List<GameObject> ListNewObjects = new List<GameObject>();
+    //            for(int i=0; i< maxObjectInField; i++){
+
+    //                //Type prefab
+    //                //int intTypePrefab = UnityEngine.Random.Range(1, 3);
+    //                int intTypePrefab = UnityEngine.Random.Range(1, 4);
+    //                //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  intTypePrefab=" + intTypePrefab);
+
+    //                TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+    //                //DebugLogT("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName);
+
+    //                int _y = y*(-1);
+    //                Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+    //                pos.z = -1;
+    //                if (prefabName == TypePrefabs.PrefabUfo)
+    //                    pos.z = -2;
+
+    //                //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
+
+    //                string nameOnject = prefabName.ToString() + "_" + nameFiled + "_" + i;
+    //                ObjectData objGame = new ObjectData()
+    //                {
+    //                    NameObject = nameOnject,
+    //                    TagObject = prefabName.ToString(),
+    //                    //Position = new Vector3(x, y*(-1), -1) 
+    //                    Position = pos 
+    //                };
+    //                GameObject newObjGame = CreatePrefabByObjectData(objGame);
+    //                if (newObjGame != null)
+    //                {
+    //                    ListNewObjects.Add(newObjGame);
+    //                    //Debug.Log("CreateGamesObject IN Data World ++++ " + nameFiled + "   " + nameOnject);
+    //                    coutCreateObjects++;
+    //                }
+    //            }
+    //            _gamesObjectsActive.Add(nameFiled, ListNewObjects);
+    //        }
+    //    }
+    //    _scriptGrid.GamesObjectsActive = _gamesObjectsActive;
+    //    _scriptGrid.GridData = _gridData;
+
+    //    Debug.Log("CreateGamesObject IN Data World COUNT====" + coutCreateObjects + "     count fields: " + _scriptGrid.GamesObjectsActive.Count);
+
+    //    //step 2.
+    //    //SaveGrid();
+
+    //    //step 3.
+    //    //LoadDataGrid();
+    //}
+    //------------------------------------------
+
 }
