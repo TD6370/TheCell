@@ -3,6 +3,9 @@ Library/EditorInstance.json
 Library/obj/Debug
 Library/
 obj/Debug/
+Assets/Levels/
 
 TheCell.sln
 TheCell/
+
+*.suo
