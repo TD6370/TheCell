@@ -43,6 +43,8 @@ public class CompletePlayerController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
 
         InitData();
+        //InitData();
+        FindFieldCurrent();
 
 		//Initialize count to zero.
 		_count = 0;
@@ -56,7 +58,6 @@ public class CompletePlayerController : MonoBehaviour {
 
     void Awake()
     {
-        //InitData();
     }
 
   	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -219,6 +220,12 @@ public class CompletePlayerController : MonoBehaviour {
         //_movement
         //Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
 
+
+        if (m_scriptStorage == null)
+        {
+            Debug.Log("scriptStorage null");
+            return null;
+        }
         m_scriptStorage.SetHeroPosition(posX, posY, transform.position.x, transform.position.y); 
 
         //_heroPositionY = posY;
@@ -288,6 +295,11 @@ public class CompletePlayerController : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.5f);
 
+        if (m_scriptGrid == null)
+        {
+            Debug.Log("scriptGrid null");
+            yield break;
+        }
         m_scriptGrid.DestroyRealObject(gObj);
 
         BeforeDestroyUfo();

@@ -1840,4 +1840,84 @@ public class TEmp : MonoBehaviour {
     //    return newObjGame;
     //}
 
+    //---------------------------
+
+    //#PPP
+    //[XmlType("Ufo")]
+    //public class ObjectDataUfo : ObjectData
+    //{
+    //    [XmlIgnore]
+    //    public Color ColorRender = Color.black;
+    //    [XmlIgnore]
+    //    public Vector3 TargetPosition;
+
+    //    private Vector3 m_Position = new Vector3(0, 0, 0);
+    //    public override Vector3 Position 
+    //    {
+    //        get { return m_Position; }
+    //        set { 
+    //            m_Position = value;
+    //            if (IsCanSetTargetPosition)
+    //                SetTargetPosition();
+    //        }
+    //    }
+
+    //    private bool IsCanSetTargetPosition {
+    //        get {
+    //            return (TargetPosition == null || TargetPosition == new Vector3(0, 0, 0)) && m_Position != null && m_Position != new Vector3(0, 0, 0);
+    //        }
+    //    }
+
+    //    public PersonDataUfo() : base()
+    //    {
+    //        ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+
+    //        //if (IsCanSetTargetPosition)
+    //        //{
+    //        //    //Debug.Log("UFO set TargetPosition after init");
+    //        //    SetTargetPosition();
+    //        //}
+    //    }
+
+    //    public void SetTargetPosition()
+    //    {
+    //        int distX = UnityEngine.Random.Range(-15, 15);
+    //        int distY = UnityEngine.Random.Range(-15, 15);
+
+    //        float x = m_Position.x + distX;
+    //        float y = m_Position.y + distY;
+    //        if (y > -1)
+    //            y = m_Position.y - distY;
+    //        if (x < 1)
+    //            x = m_Position.x - distX;
+
+    //        TargetPosition = new Vector3(x, y, -1);
+    //        //Debug.Log("UFO SetTargetPosition ==== " + TargetPosition);
+    //    }
+
+    //    public override void UpdateGameObject(GameObject objGame)
+    //    {
+    //        objGame.GetComponent<SpriteRenderer>().color = ColorRender;
+    //        //Debug.Log("UPDATE CLONE THIS " + ((ObjectDataUfo)this).ToString());
+    //        objGame.GetComponent<PersonalData>().PersonalObjectData = (PersonDataUfo)this.Clone();
+    //    }
+
+    //    public override string ToString()
+    //    {
+    //        return NameObject + " " + TagObject + " " + Position + " " + ColorRender;
+    //        //return base.ToString();
+    //    }
+    //}
+
+    //-----------------------------------------------
+    //private void DebugLog(string log)
+    //{
+    //    Debug.Log(log);
+    //}
+
+    //private void DebugLogT(string log)
+    //{
+    //    return;
+    //    Debug.Log(log);
+    //}
 }
