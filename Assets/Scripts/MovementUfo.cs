@@ -4,24 +4,20 @@ using UnityEngine;
 
 public class MovementUfo : MonoBehaviour {
 
+    public GameObject DataStorage;
+    //private Storage m_scriptStorage;
 
-    Coroutine moveObject;
-
-    Material m_material;
-    SpriteRenderer m_spriteRenderer;
-    PersonalData m_scriptPersonal;
+    private Coroutine moveObject;
+    private Material m_material;
+    private SpriteRenderer m_spriteRenderer;
+    private PersonalData m_scriptPersonal;
+    //private int _lmitHorizontalLook = 0;
+    //private int _limitVerticalLook = 0;
 
 	// Use this for initialization
 	void Start () {
-	    //Coroutine moveObject =StartCoroutine(Move
-        m_material = this.GetComponent<Renderer>().material;
-        m_spriteRenderer = this.GetComponent<SpriteRenderer>();
-        m_scriptPersonal = this.GetComponent<PersonalData>();
 
-        //ChangeRandomColor();
-        //StartCoroutine(ChangeColor());
-        
-        //moveObject = StartCoroutine(MoveObject());
+        InitData();
         StartCoroutine(MoveObjectToPosition());
         
 	}
@@ -29,6 +25,28 @@ public class MovementUfo : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+    }
+
+    private void InitData()
+    {
+        m_material = this.GetComponent<Renderer>().material;
+        m_spriteRenderer = this.GetComponent<SpriteRenderer>();
+        m_scriptPersonal = this.GetComponent<PersonalData>();
+
+        var storage = DataStorage;
+        if (storage == null)
+        {
+            Debug.Log("DataStorage null");
+            return;
+        }
+        //m_scriptStorage = storage.GetComponent<Storage>();
+        //if (m_scriptStorage == null)
+        //{
+        //    Debug.Log("Error scriptStorage is null !!!");
+        //    return;
+        //}
+        //_lmitHorizontalLook = m_scriptStorage.LimitHorizontalLook;
+        //_limitVerticalLook = m_scriptStorage.LimitVerticalLook;
     }
 
     IEnumerator ChangeColor(){
@@ -75,11 +93,11 @@ public class MovementUfo : MonoBehaviour {
         Vector3 lastPosition = transform.position;
         int stepTest = 0;
         int stepLimitTest = 10;
-        float minDist = 0.001f;  //0.01f;
+        float minDist = 0.005f;  //0.01f;
 
         int speed = 2;
         float step = speed * Time.deltaTime;
-        var objUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.ObjectDataUfo;
+        var objUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
 
         if (objUfo == null)
         {
@@ -102,6 +120,8 @@ public class MovementUfo : MonoBehaviour {
                 if (distLock < minDist)
                 {
                     //Debug.Log("MoveObjectToPosition ------ UFO LOCK !!!!  > " + distLock);
+                    //objUfo.SetTargetPosition(_lmitHorizontalLook, _limitVerticalLook);
+                    //SetTargetPosition(objUfo);
                     objUfo.SetTargetPosition();
                 }
                 lastPosition = transform.position;
@@ -119,12 +139,19 @@ public class MovementUfo : MonoBehaviour {
             if (dist < minDist)
             {
                 //Debug.Log("MoveObjectToPosition ------ UFO IN POINT  > " + dist);
+                //objUfo.SetTargetPosition();
+                //SetTargetPosition(objUfo);
                 objUfo.SetTargetPosition();
             }
 
             yield return null;
         }
     }
+
+    //private void SetTargetPosition(SaveLoadData.GameDataUfo objUfo) 
+    //{
+    //    objUfo.SetTargetPosition(m_scriptStorage.ZonaField);
+    //}
 	
 
 

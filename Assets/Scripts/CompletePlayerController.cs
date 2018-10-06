@@ -8,27 +8,30 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider2D))]
 public class CompletePlayerController : MonoBehaviour {
 
+    public Camera MainCamera;
+    public GameObject DataStorage;
+
     [Header("Speed move hero")]
 	public float Speed;				//Floating point variable to store the player's movement speed.
 	[Space]
-    public Text txtCount;			//Store a reference to the UI Text component which will display the number of pickups collected.
+    //public Text txtCount;			//Store a reference to the UI Text component which will display the number of pickups collected.
 	public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
-    public Button btnExit;
-
+    //public Button btnExit;
     public Color ColorCurrentField = Color.yellow;
-    public Camera MainCamera;
+
+    private Storage m_scriptStorage;
+
+    private int _limitHorizontalLook =0;
+    private int _limitVerticalLook = 0;
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
-	[SerializeField]
+	//[SerializeField]
     private int _count;				//Integer to store the number of pickups collected so far.
     private int _posLastX = 0;
     private int _posLastY = 0;
-    private int _limitHorizontalLook = 22;
-    private int _limitVerticalLook = 18;
     private GenerateGridFields m_scriptGrid;
-    private SaveLoadData m_scriptData;
-
+    
     Vector2 _movement;
     //private HorizontalCompas _moveX = HorizontalCompas.Center;
     //private VerticalCompas _moveY = VerticalCompas.Center;
@@ -39,6 +42,8 @@ public class CompletePlayerController : MonoBehaviour {
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
 
+        InitData();
+
 		//Initialize count to zero.
 		_count = 0;
 
@@ -47,43 +52,14 @@ public class CompletePlayerController : MonoBehaviour {
 
 		//Call our SetCountText function which will update the text with the current value for count.
 		SetCountText ();
-
-        
 	}
-
 
     void Awake()
     {
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("MainCamera null");
-            return;
-        }
-        m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
-        if (m_scriptGrid == null)
-        {
-            Debug.Log("Error scriptGrid is null !!!");
-            return;
-        }
-
-        m_scriptData = MainCamera.GetComponent<SaveLoadData>();
-        if (m_scriptData == null)
-        {
-            Debug.Log("Error scriptData is null !!!");
-            return;
-        }
-
-        //btnExit.onClick.AddListener(TaskOnClick);
-        btnExit.onClick.AddListener(delegate
-        {
-            m_scriptData.SaveLevel();
-            txtCount.text = "Level saved...";
-            ExitGame();
-        }); 
+        //InitData();
     }
 
-	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
+  	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
 	void FixedUpdate()
 	{
 		//Store the current horizontal input in the float moveHorizontal.
@@ -119,6 +95,38 @@ public class CompletePlayerController : MonoBehaviour {
     {
         
     }
+
+    private void InitData()
+    {
+        var camera = MainCamera;
+        if (camera == null)
+        {
+            Debug.Log("MainCamera null");
+            return;
+        }
+        m_scriptGrid = camera.GetComponent<GenerateGridFields>();
+        if (m_scriptGrid == null)
+        {
+            Debug.Log("Error scriptGrid is null !!!");
+            return;
+        }
+        var storage = DataStorage;
+        if (storage == null)
+        {
+            Debug.Log("DataStorage null");
+            return;
+        }
+        m_scriptStorage = storage.GetComponent<Storage>();
+        if (m_scriptStorage == null)
+        {
+            Debug.Log("Error scriptStorage is null !!!");
+            return;
+        }
+
+        _limitHorizontalLook = m_scriptStorage.LimitHorizontalLook;
+        _limitVerticalLook = m_scriptStorage.LimitVerticalLook;
+    }
+
 
     void OnMouseDown()
     {
@@ -177,10 +185,11 @@ public class CompletePlayerController : MonoBehaviour {
 
     GameObject FindFieldCurrent()
     {
+        int scale = 2;
         int posX = 0;
         int posY = 0;
-        posX = (int)((transform.position.x / 2) + 0.5);
-        posY = (int)((transform.position.y / 2) - 0.5);
+        posX = (int)((transform.position.x / scale) + 0.5);
+        posY = (int)((transform.position.y / scale) - 0.5);
         posY = (int)(Mathf.Abs(posY));
 
         if (_posLastX == posX && _posLastY == posY)
@@ -209,7 +218,10 @@ public class CompletePlayerController : MonoBehaviour {
         //CalculateCompasMoveHero(posX, posY);
         //_movement
         //Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
-        
+
+        m_scriptStorage.SetHeroPosition(posX, posY, transform.position.x, transform.position.y); 
+
+        //_heroPositionY = posY;
         scriptGrid.GenGrigLook(_movement, posX, _limitHorizontalLook,  posY, _limitVerticalLook);
         //StartCoroutine(scriptGrid.GenGrigLookAsync(_movement, posX, _limitHorizontalLook, posY, _limitVerticalLook));
 
@@ -298,7 +310,7 @@ public class CompletePlayerController : MonoBehaviour {
         int limit = 150;
         //int limit = 10;
 
-        txtCount.text = "Count: " + _count.ToString() + " / " + limit;
+        txtMessage.text = "Count: " + _count.ToString() + " / " + limit;
 
         if (_count >= limit)
         {
@@ -320,12 +332,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-    private void ExitGame()
-    {
-
-        Application.Quit(); 
-    }
-
+   
     //void GetpositionFiled()
     //{
     //    int posX = 0;

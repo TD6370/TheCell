@@ -9,7 +9,7 @@ public class GenerateGridFields : MonoBehaviour {
     
     //public Dictionary<int, GameObject> Fields;
     public Dictionary<string, GameObject> Fields;
-    public Dictionary<string, List<GameObject>> GamesObjectsActive;
+    //public Dictionary<string, List<GameObject>> GamesObjectsActive;
     public Dictionary<string, List<GameObject>> GamesObjectsReal;
     public Dictionary<string, List<SaveLoadData.ObjectData>> GamesObjectsPersonalData;
     public SaveLoadData.GridData GridData;
@@ -30,7 +30,7 @@ public class GenerateGridFields : MonoBehaviour {
 	void Start () {
         //Fields = new Dictionary<int, GameObject>();
         Fields = new Dictionary<string, GameObject>();
-        GamesObjectsActive = new Dictionary<string, List<GameObject>>();
+        //GamesObjectsActive = new Dictionary<string, List<GameObject>>();
         GamesObjectsReal = new Dictionary<string, List<GameObject>>();
         GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
 
@@ -729,7 +729,7 @@ public class GenerateGridFields : MonoBehaviour {
         switch (prefabType)
         {
             case SaveLoadData.TypePrefabs.PrefabUfo:
-                var objUfo = objData as SaveLoadData.ObjectDataUfo;
+                var objUfo = objData as SaveLoadData.GameDataUfo;
                 if (objUfo != null)
                 {
                     //LoadObjectForLook:  DATA -->> PERSONA #P#
