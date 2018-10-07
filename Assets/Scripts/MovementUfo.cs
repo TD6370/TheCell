@@ -11,6 +11,7 @@ public class MovementUfo : MonoBehaviour {
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
     private PersonalData m_scriptPersonal;
+    private Rigidbody2D _rb2d;
     //private int _lmitHorizontalLook = 0;
     //private int _limitVerticalLook = 0;
 
@@ -32,6 +33,7 @@ public class MovementUfo : MonoBehaviour {
         m_material = this.GetComponent<Renderer>().material;
         m_spriteRenderer = this.GetComponent<SpriteRenderer>();
         m_scriptPersonal = this.GetComponent<PersonalData>();
+        _rb2d = this.GetComponent<Rigidbody2D>();
 
         var storage = DataStorage;
         if (storage == null)
@@ -129,9 +131,23 @@ public class MovementUfo : MonoBehaviour {
             }
 
             Vector3 targetPosition  = objUfo.TargetPosition;
+            Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step); 
 
-            // Move our position a step closer to the target.
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+
+            // Move our position a step closer to the target. @!@
+            //var _rb2d = GetComponent<Rigidbody2D>();
+            if (_rb2d != null)
+            {
+                //Debug.Log("UFO MoveObjectToPosition Set position 2........");
+                _rb2d.MovePosition(pos);
+            }
+            else
+            {
+                //@!@.2
+                Debug.Log("UFO MoveObjectToPosition Set position 2 original........");
+                transform.position = pos; 
+            }
+            
 
 
             float dist = Vector3.Distance(targetPosition, transform.position);

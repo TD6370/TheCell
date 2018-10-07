@@ -9,7 +9,7 @@ public class CreateNPC : MonoBehaviour {
     public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
-    private int m_LimitUfo = 10;
+    private int m_LimitUfo = 100;
 
     void Start()
     {
@@ -53,7 +53,21 @@ public class CreateNPC : MonoBehaviour {
                 GameObject newUfo = (GameObject)Instantiate(prefabUfo);
                 int add = (coutUfoReal * 1);
                 newUfo.name = "PrefabUfo";
-                newUfo.transform.position = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
+
+                //var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
+                var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
+                //var _rb2d = newUfo.GetComponent<Rigidbody2D>();
+                //if (_rb2d != null)
+                //{
+                //    Debug.Log("CreateObjectUfo Set position 3........");
+                //    _rb2d.MovePosition(pos);
+                //}
+                //else
+                //{
+                //    Debug.Log("CreateObjectUfo Set position 3 original........");
+                //    //@!@.3
+                    newUfo.transform.position = pos; 
+                //}
 
                 _scriptGrid.ActiveGameObject(newUfo);
             }

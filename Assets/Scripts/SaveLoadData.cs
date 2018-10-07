@@ -483,7 +483,7 @@ public class SaveLoadData : MonoBehaviour {
             if (zona != null)
             {
                 //Debug.Log("........Validate zone limit for target position");
-                Storage.ValidPiontInZona(ref xT,ref yT);
+                Storage.ValidPiontInZona(ref xT, ref yT, distX);
             }
             //else
                 //Debug.Log("........Validate zone limit for target position: ZonaReal is NULL !!!");

@@ -501,12 +501,14 @@ public class GenerateGridFields : MonoBehaviour {
     {
         int x = 0;
         int y = 0;
+        int i = UnityEngine.Random.Range(0, 100);
+
         x = (int)p_saveObject.transform.position.x;
         y = (int)Mathf.Abs(p_saveObject.transform.position.y);
         //string p_nameFiled = "Filed" + x + "x" + Mathf.Abs(y);
         string p_nameField = GetNameFieldPosit(x, y);
 
-        p_saveObject.name = SaveLoadData.CreateName(p_saveObject.tag, p_nameField);
+        p_saveObject.name = SaveLoadData.CreateName(p_saveObject.tag, p_nameField,i);
         SaveNewGameObjectToData(p_nameField, p_saveObject);
     }
 
@@ -719,7 +721,17 @@ public class GenerateGridFields : MonoBehaviour {
         //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
         //----------------2.
         GameObject newObjGame = FindPrefab(typePrefab);
-        newObjGame.transform.position = pos;
+
+        //var rb = newObjGame.GetComponent<Rigidbody2D>();
+        //if (rb != null)
+        //{
+        //    Debug.Log("CreatePrefabByName CreatePrefabByName Set position 1........");
+        //    rb.MovePosition(pos);
+        //}
+        //else
+        //{
+            newObjGame.transform.position = pos; //@!@.1
+        //}
         //----------------
         SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
 

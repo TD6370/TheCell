@@ -152,16 +152,18 @@ public class Storage : MonoBehaviour {
         lineRenderer.SetPosition(4, pos5);
     }
 
-    public static Vector2 ValidPiontInZona(ref float x,ref float y)
+    public static Vector2 ValidPiontInZona(ref float x,ref float y, float offset=0)
     {
+        offset = Mathf.Abs(offset);
+
         if (x < ZonaReal.X)
-            x = ZonaReal.X;
+            x = ZonaReal.X + offset;
         if (y > ZonaReal.Y) //*-1
-            y = ZonaReal.Y;
+            y = ZonaReal.Y - offset;
         if (x > ZonaReal.X2)
-            x = ZonaReal.X2;
+            x = ZonaReal.X2 - offset;
         if (y < ZonaReal.Y2) //*-1
-            y = ZonaReal.Y;
+            y = ZonaReal.Y + offset;
         Vector2 result = new Vector2(x, y);
         return result;
     }
