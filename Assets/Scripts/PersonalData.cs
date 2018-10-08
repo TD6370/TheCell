@@ -10,9 +10,13 @@ public class PersonalData : MonoBehaviour {
         get {
             if (m_personalObjectData != null)
             {
+                //#+FIX ---------------------
                 //Debug.Log(" GET :: old pos" + this.transform.position);
-                m_personalObjectData.Position = this.transform.position;
+                //m_personalObjectData.Position = this.transform.position;
+                //Debug.Log(" GET :: old pos FIXED" + this.transform.position);
             }
+
+
             //string log = (m_personalObjectData==null) ? "null" : m_personalObjectData.ToString();
             //Debug.Log("........ PersonalObjectData .... GET " + log);
             return m_personalObjectData; 

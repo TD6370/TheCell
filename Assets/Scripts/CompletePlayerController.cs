@@ -200,7 +200,7 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastY = posY;
 
         //# string nameFiled = "Filed" + posX + "x" + posY;
-        string nameFiled = GenerateGridFields.GetNameField(posX, posY);
+        string nameFiled = Storage.GetNameField(posX, posY);
 
         txtLog.text = "?" + nameFiled;
         

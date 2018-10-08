@@ -14,6 +14,13 @@ public class TEmp : MonoBehaviour {
 		
 	}
 
+    //-------------
+    //123456789
+     //private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
+     //       _scriptNPC.SartCrateNPC();
+    //LoadObjectsNearHero();
+    //---------------
+
 
     //G
     //LoadObjectToReal:  DATA -->> PERSONA #P#
