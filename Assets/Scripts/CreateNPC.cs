@@ -9,7 +9,7 @@ public class CreateNPC : MonoBehaviour {
     public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
-    private int m_LimitUfo = 6;//100;
+    private int m_LimitUfo = 0;//100;
 
     void Start()
     {

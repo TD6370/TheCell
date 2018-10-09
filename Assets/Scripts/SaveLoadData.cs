@@ -127,7 +127,7 @@ public class SaveLoadData : MonoBehaviour {
     private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
     {
         //# On/Off
-        isAlwaysCreate = true;
+        //isAlwaysCreate = true;
 
         if (_gridData != null && !isAlwaysCreate)
         {
@@ -162,9 +162,9 @@ public class SaveLoadData : MonoBehaviour {
                 {
 
                     //Type prefab
-                    //int intTypePrefab = UnityEngine.Random.Range(1, 4);
+                    int intTypePrefab = UnityEngine.Random.Range(1, 4);
                     //#TT NOT UFO
-                    int intTypePrefab = UnityEngine.Random.Range(1, 3);
+                    //int intTypePrefab = UnityEngine.Random.Range(1, 3);
 
                     TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
 
@@ -897,7 +897,20 @@ public class SaveLoadData : MonoBehaviour {
                     var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
                     if (index==-1)
                     {
-                        Debug.Log("!!!!!!!!! Error CreateObjectData OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                        Debug.Log("################# Error CreateObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                        Storage.DebugKill(p_gobject.name);
+
+                        //@KOSTIL@ --------------------------------------------------------------
+                        //newObject = new GameDataUfo()
+                        //{
+                        //    NameObject = p_gobject.name,
+                        //    TagObject = p_gobject.tag,
+                        //    Position = p_gobject.transform.position
+                        //};
+                        //newObject.UpdateGameObject(p_gobject);
+                        //--------------------------------------------------------------
+
+                        //# 
                         return null;
                     }
                     newObject = objects[index] as GameDataUfo;

@@ -10,6 +10,7 @@ public class Storage : MonoBehaviour {
 
     public static ZonaFieldLook ZonaField { get; set; }
     public static ZonaRealLook ZonaReal { get; set; }
+    public static List<string> KillObject = new List<string>();
 
     public static int WidthLevel
     {
@@ -329,7 +330,7 @@ public class Storage : MonoBehaviour {
 
         if(!_GamesObjectsReal.ContainsKey(p_OldField))
         {
-            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("********** UpdatePosition      GamesObjectsReal not found OldField = " + p_OldField);
             return "";
         }
@@ -656,5 +657,19 @@ public class Storage : MonoBehaviour {
             return false;
         }
         return true;
+    }
+
+    public static void DebugKill(string findObj)
+    {
+        var res = KillObject.Find(p => p == findObj);
+        if (res != null)
+            Debug.Log("FIND KILLED : " + findObj);
+        else
+        {
+            foreach (var obj in KillObject)
+            {
+                Debug.Log("killed --------------------------------:" + obj);
+            }
+        }
     }
 }
