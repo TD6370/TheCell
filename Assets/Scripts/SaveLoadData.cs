@@ -378,18 +378,22 @@ public class SaveLoadData : MonoBehaviour {
         //public Vector3 Position { get; set; }
         public virtual Vector3 Position { get; set; }
 
+        [XmlIgnore]
+        public bool IsReality = false;
+
         public ObjectData() {
         }
 
         public virtual void UpdateGameObject(GameObject objGame)
         {
-            var tempData = objGame.GetComponent<PersonalData>();
-            if (tempData != null)
-            {
-                Debug.Log(">>>> UpdateGameObject  SAVE PERSONAL DATA ");
+            //@PD@
+            //var tempData = objGame.GetComponent<PersonalData>();
+            //if (tempData != null)
+            //{
+            //    Debug.Log(">>>> UpdateGameObject  SAVE PERSONAL DATA ");
 
-                tempData.PersonalObjectData = (ObjectData)this.Clone();
-            }
+            //    tempData.PersonalObjectData = (ObjectData)this.Clone();
+            //}
         }
 
         //public virtual void NextPosition(Vector3 p_newPosition)
@@ -441,8 +445,11 @@ public class SaveLoadData : MonoBehaviour {
     {
         [XmlIgnore]
         public Vector3 TargetPosition;
-        [XmlIgnore]
-        public Vector3 NewPosition;
+        //[XmlIgnore]
+        //public Vector3 NewPosition;
+
+        //[XmlIgnore]
+        //public bool IsReality = false;
 
         //-----------------------------------for Ufo
         private Vector3 m_Position = new Vector3(0, 0, 0);
@@ -451,9 +458,10 @@ public class SaveLoadData : MonoBehaviour {
             get { return m_Position; }
             set
             {
-                Debug.Log("GameDataNPC --- SET Position (" + m_Position + ") = " + value);
-                //m_Position = value;
-                m_Position = Storage.ConvVector3(value);
+                //@POS@ 
+                //@POS@ Debug.Log("GameDataNPC (" + NameObject + ") --- SET Position (" + m_Position + ") = " + value);
+                m_Position = value;
+                //m_Position = Storage.ConvVector3(value);
 
                 if (IsCanSetTargetPosition)
                     SetTargetPosition();
@@ -471,7 +479,7 @@ public class SaveLoadData : MonoBehaviour {
 
         public GameDataNPC() : base()
         {
-            NewPosition = new Vector3(0, 0, 0);
+            //NewPosition = new Vector3(0, 0, 0);
         }
 
         public void SetTargetPosition()
@@ -496,52 +504,77 @@ public class SaveLoadData : MonoBehaviour {
 
             TargetPosition = new Vector3(xT, yT, -1);
         }
-        
-        const string FieldKey = "Field";
-        private string GetNameFieldPosit_2(System.Single p_x, System.Single p_y)
+
+        public virtual string TestNextPosition(GameObject gobj, string lastNewName) //, Vector3 p_newPosition)
         {
-            int x = (int)p_x;
-            int y = (int)p_y;
-            //x = (int)(x / 2);
-            //y = (int)(y / 2);
-            x = (int)(x / 2);
-            y = (int)(y / 2);
-            return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
+            Debug.Log("***** lastNewName: " + lastNewName);
+            var res = NextPosition(gobj);
+            return res;
         }
 
-        public virtual void NextPosition(Vector3 p_newPosition)
+        //public virtual void NextPosition(GameObject gobj) //, Vector3 p_newPosition)
+        public virtual string NextPosition(GameObject gobj) //, Vector3 p_newPosition)
         {
-            //string posFieldOld = Storage.GetNameFieldPosit(Position.x, Position.y);
-            //string posFieldReal = Storage.GetNameFieldPosit(p_newPosition.x, p_newPosition.y);
-            string posFieldOld = GetNameFieldPosit_2(Position.x, Position.y);
-            string posFieldReal = GetNameFieldPosit_2(p_newPosition.x, p_newPosition.y);
+            Vector3 _newPosition = gobj.transform.position;
+            Vector3 _oldPosition = Position;
+            string nameObject = gobj.name;
+            string posFieldName = Storage.GetNameFieldByName(nameObject);
 
-            ////!!!!!!!!!!!! p_nameField === posFieldOld
-            //if (posFieldOld != posFieldReal && NewPosition != p_newPosition)
+            string posFieldOld = Storage.GetNameFieldPosit(_oldPosition.x, _oldPosition.y);
+            string posFieldReal = Storage.GetNameFieldPosit(_newPosition.x, _newPosition.y);
+            string newName = "";
+
             if (posFieldOld != posFieldReal)
             {
-                string posFieldOld_2 = GetNameFieldPosit_2(Position.x, Position.y);
-                string posFieldReal_2 = GetNameFieldPosit_2(p_newPosition.x, p_newPosition.y);
+                newName = "?";
+
+                if (posFieldName != posFieldOld)
+                {
+                    //Create dublicate
+                    Debug.Log("Error NextPosition (" + gobj.name + ")**************************** Field name: " + posFieldName + "   posFieldOld: " + posFieldOld + "   posFieldReal: " + posFieldReal);
+                    //gobj.name = SaveLoadData.CreateName(TagObject, posFieldOld, "", gobj.name);
+                    //nameObject = gobj.name;
+
+                    //gobj.PlayAnimation();
+                    //Destroy(gobj, 3f);
+                    Destroy(gobj);
+                    return "";
+                }
+
+                bool isInZona = true;
+
+                if (!Storage.IsValidPiontInZona(_newPosition.x, _newPosition.y))
+                {
+                    //@POS@ Debug.Log("######### NextPosition object (" + gobj.name + ") Not in RealZona.....");
+                    //SetTargetPosition();
+                    isInZona = false;
+                }
 
                 //-------------------
-                int p_x = (int)p_newPosition.x;
-                int p_y = (int)p_newPosition.y;
-                int x = (int)(p_x / 2);
-                int y = (int)(p_y / 2);
-                string fieldR = FieldKey + (int)x + "x" + Mathf.Abs((int)y);
-                string strX = "  x: " + p_newPosition.x + " -> " + p_x + " -> " + (p_x / 2) + " -> " + x;
-                string strY = "  y: " + p_newPosition.y + " -> " + p_y + " -> " + (p_y / 2) + " -> " + y;
-                fieldR += strX + strY;
+                //int p_x = (int)_newPosition.x;
+                //int p_y = (int)_newPosition.y;
+                //int x = (int)(p_x / 2);
+                //int y = (int)(p_y / 2);
+                //string fieldR = "Field" + (int)x + "x" + Mathf.Abs((int)y);
+                //string strX = "  x: " + _newPosition.x + " -> " + p_x + " -> " + (p_x / 2) + " -> " + x;
+                //string strY = "  y: " + _newPosition.y + " -> " + p_y + " -> " + (p_y / 2) + " -> " + y;
+                //fieldR += strX + strY;
                 //------------------
 
-                //123456789
-                //NewPosition = p_newPosition;
-                Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + NameObject + "          " + posFieldOld + " > " + posFieldReal + "     " + Position + "  >>  " + p_newPosition + "          " + posFieldOld_2 + " > " + posFieldReal_2);
-                Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + fieldR);
-                Storage.UpdateGamePosition(posFieldOld, posFieldReal, NameObject, p_newPosition);
-                //123456789
-                //NewPosition = p_newPosition;
+                //@POS@ Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + nameObject + "          " + posFieldOld + " > " + posFieldReal + "     " + _oldPosition + "  >>  " + _newPosition);
+                //Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + fieldR);
+
+                newName = Storage.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
+                //newName = Storage.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this);
+
+                if (!isInZona && !string.IsNullOrEmpty(newName))
+                {
+                    //@POS@ Debug.Log("######### NextPosition Destroy on not in RealZona....");
+                    Destroy(gobj);
+                }
+
             }
+            return newName;
         }
     }
 
@@ -617,14 +650,24 @@ public class SaveLoadData : MonoBehaviour {
             string nameObjData = ((GameDataUfo)this).NameObject;
             if (nameObjData != objGame.name)
             {
-                Debug.Log("Error UpdateGameObject DATA:" + nameObjData + "  OBJECT: " + objGame.name);
-                Debug.Log("-------------------------------------------------------------------/" + nameObjData + "/ " + objGame.name + "/");
-                return;
+                //Debug.Log("Error UpdateGameObject DATA:" + nameObjData + "  OBJECT: " + objGame.name);
+                //Debug.Log("-------------------------------------------------------------------/" + nameObjData + "/ " + objGame.name + "/");
+                //return;
+                objGame.name = nameObjData;
             }
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
+
+            //@PD@
+             /*
             Debug.Log("UPDATE CLONE THIS " + ((GameDataUfo)this).NameObject + "     TO  " + objGame.name);
             objGame.GetComponent<PersonalData>().PersonalObjectData = (GameDataUfo)this.Clone();
+            
+             //test ---
+             var personD = objGame.GetComponent<PersonalData>().PersonalObjectData;
+             if(personD==null)
+                Debug.Log("UPDATE CLONE THIS   gobj  PersonalObjectData = is ENPTY");
+             */
         }
 
         public override string ToString()
@@ -766,7 +809,7 @@ public class SaveLoadData : MonoBehaviour {
             Debug.Log("______________________UpdateGameObject BOSS.1__________________");
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
-            objGame.GetComponent<PersonalData>().PersonalObjectData = (GameDataUfo)this.Clone();
+            //objGame.GetComponent<PersonalData>().PersonalObjectData = (GameDataUfo)this.Clone();
         }
     }
     //-----------------------------------
@@ -831,7 +874,7 @@ public class SaveLoadData : MonoBehaviour {
 
                     //Debug.Log("_______________________UpdateGameObject DATA_____________: " + p_gobject.name);
                     //NEW DATA  -------->>>>  PERSONA  #P#
-                    Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name);
+                    Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
                     newObject.UpdateGameObject(p_gobject);
 
                     //Debug.Log("_______________________UpdateGameObject DATA_____________ updated.    :" + p_gobject.name);
@@ -842,23 +885,41 @@ public class SaveLoadData : MonoBehaviour {
                     //Debug.Log("_______________________GameDataUfo_____________Update... " + p_gobject.name);
 
                     newObject = new GameDataUfo();
-                    var personalData = p_gobject.GetComponent<PersonalData>();
-                    if (personalData == null)
-                    {
-                        Debug.Log("ERROR CreateObjectData " + prefabType.ToString() + " not Personal Data !!!!");
-                        break;
-                    }
-                    if (personalData.PersonalObjectData == null){
-                        Debug.Log("ERROR CreateObjectData Personal Data is Empty !!!!");
-                        break;
-                    }
+                    //string idObject = Storage.GetGameObjectID(p_gobject);
+                    string nameField =  Storage.GetNameFieldByName(p_gobject.name);
 
-                    //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
-                    newObject = personalData.PersonalObjectData.Clone() as GameDataUfo;
-                    if (newObject == null){
-                        Debug.Log("ERROR CreateObjectData PrefabUfo not is  ObjectDataUfo !!!!");
-                        break;
+                    if(!Storage.GridData.FieldsD.ContainsKey(nameField))
+                    {
+                        Debug.Log("!!!!!!!!! Error CreateObjectData FIELD NOT FOUND :" + nameField);
+                        return null;
                     }
+                    var objects = Storage.GridData.FieldsD[nameField].Objects;
+                    var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
+                    if (index==-1)
+                    {
+                        Debug.Log("!!!!!!!!! Error CreateObjectData OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                        return null;
+                    }
+                    newObject = objects[index] as GameDataUfo;
+
+                    //@PD@
+                    //var personalData = p_gobject.GetComponent<PersonalData>();
+                    //if (personalData == null)
+                    //{
+                    //    Debug.Log("ERROR CreateObjectData " + prefabType.ToString() + " not Personal Data !!!!");
+                    //    break;
+                    //}
+                    //if (personalData.PersonalObjectData == null){
+                    //    Debug.Log("ERROR CreateObjectData Personal Data is Empty !!!!");
+                    //    break;
+                    //}
+
+                    ////RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
+                    //newObject = personalData.PersonalObjectData.Clone() as GameDataUfo;
+                    //if (newObject == null){
+                    //    Debug.Log("ERROR CreateObjectData PrefabUfo not is  ObjectDataUfo !!!!");
+                    //    break;
+                    //}
 
                     //Debug.Log("DATA... UPDATE!!  PrefabUfo (" + p_gobject.name + ") SAVE Color =========== " + ((ObjectDataUfo)newObject).ColorRender);
                 }
@@ -938,14 +999,16 @@ public class SaveLoadData : MonoBehaviour {
             }
             else
             {
-                //int i = nameObjOld.IndexOf("_");
+                
                 int i = nameObjOld.LastIndexOf("_");
+                int i2 = nameObjOld.IndexOf("_");
                 if (i != -1)
                 {
                     //123456789
-                    //Debug.Log("_______________________CREATE NAME i=" + i + " len=" + nameObjOld.Length + "      :" + nameObjOld);
+                    //Debug.Log("_______________________CREATE NAME i_l=" + i + "     i=" + i2 + "     len=" + nameObjOld.Length + "      :" + nameObjOld);
                     id = nameObjOld.Substring(i + 1, nameObjOld.Length - i -1);
-                    //Debug.Log("_______________________CREATE NAME :" + id);
+                    //id = nameObjOld.Substring(nameObjOld.Length - i, i);
+                    //Debug.Log("_______________________CREATE NAME  ID:" + id);
                 }
                 else
                     Debug.Log("!!!!!! Error create name prefix !!!!!!!!!!");

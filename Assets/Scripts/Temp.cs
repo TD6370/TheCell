@@ -19,6 +19,7 @@ public class TEmp : MonoBehaviour {
      //private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
      //       _scriptNPC.SartCrateNPC();
     //LoadObjectsNearHero();
+    //@POS@
     //---------------
 
 

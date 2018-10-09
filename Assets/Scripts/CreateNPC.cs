@@ -9,7 +9,7 @@ public class CreateNPC : MonoBehaviour {
     public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
-    private int m_LimitUfo = 2;//100;
+    private int m_LimitUfo = 6;//100;
 
     void Start()
     {
@@ -30,122 +30,70 @@ public class CreateNPC : MonoBehaviour {
     public void SartCrateNPC()
     {
         //Debug.Log(".............SartCrateNPC -- CreateObjectUfo()");
-        //StartCoroutine(CreateObjectUfo());
-        TestCreateObjectUfo();
+        StartCoroutine(CreateObjectUfo());
+        //TestCreateObjectUfo();
     }
 
     [ExecuteInEditMode]
-    //IEnumerator CreateObjectUfo()
-    //{
-    //    int coutUfoReal = 0;
+    IEnumerator CreateObjectUfo()
+    {
+        int coutUfoReal = 0;
 
-    //    bool isTest = false;
+        bool isTest = false;
 
-    //    while (true)
-    //    {
-    //        GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
-    //        coutUfoReal = listPrefabUfo.Length;
-    //        //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString() + " < " + m_LimitUfo);//Дебаг
+        while (true)
+        {
+            //GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
+            //coutUfoReal = listPrefabUfo.Length;
+            //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString() + " < " + m_LimitUfo);//Дебаг
 
-    //        if (coutUfoReal < m_LimitUfo && !isTest)
-    //        {
-    //            if (coutUfoReal == 0) coutUfoReal = 2;
+            if (coutUfoReal < m_LimitUfo && !isTest)
+            {
+                if (coutUfoReal == 0) coutUfoReal = 2;
 
-    //            GameObject newUfo = (GameObject)Instantiate(prefabUfo);
-    //            int add = (coutUfoReal * 1);
+                coutUfoReal++; //TEST
 
-    //            string id = System.Guid.NewGuid().ToString().Substring(1,4);
-    //            newUfo.name = "PrefabUfo_" + id;
+                var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
+                if (Storage.ZonaReal == null)
+                {
+                    Debug.Log("CreateObjectUfo not create Ufo ! ZonaReal not init....");
+                    yield return null;
+                }
 
-    //            Debug.Log("CREATE NEW UFO :" + newUfo.name);
+                if (Storage.IsValidPiontInZona(pos.x, pos.y))
+                {
+                    GameObject newUfo = (GameObject)Instantiate(prefabUfo);
+                    int add = (coutUfoReal * 1);
 
-    //            //var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
-    //            var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
-    //            //var _rb2d = newUfo.GetComponent<Rigidbody2D>();
-    //            //if (_rb2d != null)
-    //            //{
-    //            //    Debug.Log("CreateObjectUfo Set position 3........");
-    //            //    _rb2d.MovePosition(pos);
-    //            //}
-    //            //else
-    //            //{
-    //            //    Debug.Log("CreateObjectUfo Set position 3 original........");
-    //            //    //@!@.3
-    //                newUfo.transform.position = pos; 
-    //            //}
+                    string id = System.Guid.NewGuid().ToString().Substring(1, 4);
+                    newUfo.name = "PrefabUfo_" + id;
 
-    //            _scriptGrid.ActiveGameObject(newUfo);
-    //        }
-    //        else
-    //        {
-    //            //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString());
-    //        }
-    //        yield return new WaitForSeconds(5);
-    //    }
-    //}
+                    Debug.Log("CREATE NEW UFO :" + newUfo.name);
 
-    //IEnumerator CreateObjectUfo()
-    //{
-    //    int coutUfoReal = 0;
 
-    //    bool isTest = false;
+                    newUfo.transform.position = pos;
 
-    //        GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
-    //        coutUfoReal = listPrefabUfo.Length;
-    //        //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString() + " < " + m_LimitUfo);//Дебаг
-
-    //        if (!isTest)
-    //        {
-    //            isTest = true;
-
-    //            GameObject newUfo = (GameObject)Instantiate(prefabUfo);
-    //            int add = (coutUfoReal * 1);
-
-    //            //string id = System.Guid.NewGuid().ToString().Substring(1, 4);
-    //            //newUfo.name = "PrefabUfo_" + id;
-
-    //            Debug.Log("CREATE NEW UFO :" + newUfo.name);
-
-    //            //var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
-    //            var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
-    //            //var _rb2d = newUfo.GetComponent<Rigidbody2D>();
-    //            //if (_rb2d != null)
-    //            //{
-    //            //    Debug.Log("CreateObjectUfo Set position 3........");
-    //            //    _rb2d.MovePosition(pos);
-    //            //}
-    //            //else
-    //            //{
-    //            //    Debug.Log("CreateObjectUfo Set position 3 original........");
-    //            //    //@!@.3
-    //            newUfo.transform.position = pos;
-    //            //}
-
-    //            _scriptGrid.ActiveGameObject(newUfo);
-    //        }
-    //        yield return;
-        
-    //}
+                    _scriptGrid.ActiveGameObject(newUfo);
+                }
+                else
+                {
+                    //Debug.Log("CreateObjectUfo not create Ufo in zona....");
+                }
+            }
+            yield return new WaitForSeconds(3);
+        }
+    }
 
     private void TestCreateObjectUfo()
     {
         GameObject newUfo = (GameObject)Instantiate(prefabUfo);
+        
+        string id = System.Guid.NewGuid().ToString().Substring(1, 4);
+        newUfo.name = "PrefabUfo_" + id;
         Debug.Log("CREATE NEW UFO :" + newUfo.name);
-
-        //var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - add, -1);
         var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
-        //var _rb2d = newUfo.GetComponent<Rigidbody2D>();
-        //if (_rb2d != null)
-        //{
-        //    Debug.Log("CreateObjectUfo Set position 3........");
-        //    _rb2d.MovePosition(pos);
-        //}
-        //else
-        //{
-        //    Debug.Log("CreateObjectUfo Set position 3 original........");
-        //    //@!@.3
         newUfo.transform.position = pos;
-        //}
+
         _scriptGrid.ActiveGameObject(newUfo);
     }
 	

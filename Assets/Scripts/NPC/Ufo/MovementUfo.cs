@@ -11,7 +11,7 @@ public class MovementUfo : MonoBehaviour {
     private Coroutine moveObject;
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
-    private PersonalData m_scriptPersonal;
+    //@PD@ private PersonalData m_scriptPersonal;
     private Rigidbody2D _rb2d;
     //private int _lmitHorizontalLook = 0;
     //private int _limitVerticalLook = 0;
@@ -20,9 +20,10 @@ public class MovementUfo : MonoBehaviour {
 
     void Awake()
     {
-        testId = Guid.NewGuid().ToString().Substring(1, 4);
-        Debug.Log("UFO create ID ++++++++++++++++++++++ " + testId);
-        this.name = "PrefabUfo_" + testId;
+        //@44@
+        ///testId = Guid.NewGuid().ToString().Substring(1, 4);
+        //Debug.Log("UFO create ID ++++++++++++++++++++++ " + testId);
+        //this.name = "PrefabUfo_" + testId;
     }
 
 	// Use this for initialization
@@ -42,7 +43,7 @@ public class MovementUfo : MonoBehaviour {
     {
         m_material = this.GetComponent<Renderer>().material;
         m_spriteRenderer = this.GetComponent<SpriteRenderer>();
-        m_scriptPersonal = this.GetComponent<PersonalData>();
+        //@PD@ m_scriptPersonal = this.GetComponent<PersonalData>();
         _rb2d = this.GetComponent<Rigidbody2D>();
 
         var storage = DataStorage;
@@ -105,21 +106,38 @@ public class MovementUfo : MonoBehaviour {
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
 
+        string newName = "";
+
         int stepTest = 0;
         int stepLimitTest = 10;
         float minDist = 0.005f;  //0.01f;
 
         int speed = 2;
         float step = speed * Time.deltaTime;
-        var objUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
 
-        if (objUfo == null)
+        //int start = this.gameObject.name.IndexOf("Field");
+        //if (start == -1)
+        //{
+        //    Debug.Log("# GetNameFieldByName " + this.gameObject.name + " key 'Field' not found!");
+        //    yield return null;
+        //}
+        if (!Storage.IsDataInit(this.gameObject))
+        {
+            //yield return null;
+            yield break;
+        }
+
+        //@PD@ var dataUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
+        //Debug.Log("______________________________________CALL CreateObjectData 5._________________________" + this.gameObject.name);
+        var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo; ;
+
+        if (dataUfo == null)
         {
             Debug.Log("Error UFO MoveObjectToPosition objUfo is Empty !!!!");
             yield break;
         }
 
-        if (objUfo.TargetPosition == new Vector3(0, 0, 0))
+        if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
         {
             Debug.Log("Error UFO objUfo.TargetPosition is zero !!!!");
             yield break;
@@ -136,13 +154,13 @@ public class MovementUfo : MonoBehaviour {
                     //Debug.Log("MoveObjectToPosition ------ UFO LOCK !!!!  > " + distLock);
                     //objUfo.SetTargetPosition(_lmitHorizontalLook, _limitVerticalLook);
                     //SetTargetPosition(objUfo);
-                    objUfo.SetTargetPosition();
+                    dataUfo.SetTargetPosition();
                 }
                 lastPositionForLock = transform.position;
                 stepTest = 0;
             }
 
-            Vector3 targetPosition  = objUfo.TargetPosition;
+            Vector3 targetPosition  = dataUfo.TargetPosition;
             Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step); 
 
 
@@ -160,36 +178,51 @@ public class MovementUfo : MonoBehaviour {
                 transform.position = pos; 
             }
 
-            //+FIX ----------------------------
-            //string posFieldOld = Storage.GetNameFieldPosit(lastPositionForMoveField.x, lastPositionForMoveField.y);
-            //string posFieldReal = Storage.GetNameFieldPosit(pos.x, pos.y);
+            if (!string.IsNullOrEmpty(newName) && newName != this.gameObject.name)
+            {
+                Debug.Log("ERROR =================================== MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + newName);
+            }
 
-            ////!!!!!!!!!!!! p_nameField === posFieldOld
-            //if (posFieldOld != posFieldReal)
+            //if (!string.IsNullOrEmpty(newName))
             //{
-            //    lastPositionForMoveField = pos;
-                //Debug.Log("UFO  MoveObjectToPosition " + posFieldOld + " >> " + posFieldReal + "   PersonalObjectData=" + objUfo.NameObject + "   testId=" + testId);
-
-                //var lastNewePos = ((SaveLoadData.GameDataNPC)objUfo).NewPosition;
-                //var lastNewePosUfo = ((SaveLoadData.GameDataUfo)objUfo).NewPosition;
-                //123456789
-                //Debug.Log("UFO  MoveObjectToPosition lastNewePos=" + lastNewePos + "  New pos:" + pos + "       lastNewePosUfo=" + lastNewePosUfo);
-                //if (lastNewePos != pos)
-                //{
-                    
-                    //objUfo.NextPosition(pos);
-                    objUfo.NextPosition(transform.position); //NOT NEW POSITION, YES REAL POSITION
-                    
-
-
-                    //123456789
-                    //((SaveLoadData.GameDataNPC)objUfo).NewPosition = Storage.ConvVector3(pos);;
-                    //((SaveLoadData.GameDataUfo)objUfo).NewPosition = Storage.ConvVector3(pos); ;
-                //}
-            
+            //    Debug.Log("TEST ==== MoveObjectToPosition PRED ==== rael name: " + this.gameObject.name + "  last new name: " + newName);
             //}
-            //-----------------------------------
 
+            string oldName = this.name;
+
+
+            //string resName = dataUfo.TestNextPosition(this.gameObject, newName);
+            //+++++++++++++++++++++++
+            string resName = dataUfo.NextPosition(this.gameObject);
+            //+++++++++++++++++++++++
+
+            if (!string.IsNullOrEmpty(resName))
+                newName = resName;
+
+            if (!string.IsNullOrEmpty(resName))
+            {
+                if (this.gameObject.name != newName)
+                {
+                    Debug.Log("ERROR **** MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
+                    this.gameObject.name = newName;
+                }
+                else
+                {
+                    //@POS@ Debug.Log("TEST ==== MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
+                }
+            }
+            if (!string.IsNullOrEmpty(resName) && resName != this.gameObject.name)
+            {
+                Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
+            }
+            //if (!string.IsNullOrEmpty(newName))
+            //{
+            //    Debug.Log("TEST ==== MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
+            //}
+            //if (!string.IsNullOrEmpty(newName) && newName != this.gameObject.name)
+            //{
+            //    Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
+            //}
 
             float dist = Vector3.Distance(targetPosition, transform.position);
             //Debug.Log("MoveObjectToPosition ------ UFO distance to point  > " + dist);
@@ -198,7 +231,7 @@ public class MovementUfo : MonoBehaviour {
                 //Debug.Log("MoveObjectToPosition ------ UFO IN POINT  > " + dist);
                 //objUfo.SetTargetPosition();
                 //SetTargetPosition(objUfo);
-                objUfo.SetTargetPosition();
+                dataUfo.SetTargetPosition();
             }
 
             yield return null;

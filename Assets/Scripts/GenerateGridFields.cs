@@ -273,7 +273,7 @@ public class GenerateGridFields : MonoBehaviour {
         if (!GridData.FieldsD.ContainsKey(p_nameField))
             return;
 
-        List<SaveLoadData.ObjectData> listGameObjectInField = GridData.FieldsD[p_nameField].Objects;
+        List<SaveLoadData.ObjectData> listDataObjectInField = GridData.FieldsD[p_nameField].Objects;
         List<GameObject> listGameObjectReal = new List<GameObject>();
 
         if (!GamesObjectsReal.ContainsKey(p_nameField))
@@ -285,13 +285,38 @@ public class GenerateGridFields : MonoBehaviour {
             listGameObjectReal = GamesObjectsReal[p_nameField];
         }
 
-        foreach (var gameObj in listGameObjectInField)
+        //#TEST
+        string saveNextName = "";
+
+        foreach (var dataObj in listDataObjectInField)
         {
+            //TEST -------
+            if (saveNextName != dataObj.NameObject)
+            {
+                saveNextName = dataObj.NameObject;
+            }
+            else
+            {
+                Debug.Log("LoadGameObjectDataForLook ********************** " + saveNextName + " is dublicate !!!!");
+                foreach (var obj in listDataObjectInField)
+                {
+                    Debug.Log("listDataObjectInField: --- " + obj.ToString());
+                }
+            }
+            //--------------
+
+            if (dataObj.IsReality)
+            {
+                Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already IsReality !!!!");
+                continue;
+            }
+            dataObj.IsReality = true;
+
             //#PPP TEST
             //Debug.Log("TEST ########### LoadGameObjectDataForLook_2 added +++ : " + gameObj.NameObject);
 
             //GameObject newField = CreatePrefabByName(gameObj.TagObject, gameObj.NameObject, gameObj.Position);
-            GameObject newField = CreatePrefabByName(gameObj);
+            GameObject newField = CreatePrefabByName(dataObj);
 
             //Debug.Log(" LoadGameObjectDataForLook_2 added +++ : " + gameObj.NameObject);
             listGameObjectReal.Add(newField);
@@ -394,7 +419,7 @@ public class GenerateGridFields : MonoBehaviour {
         else
         {
              //#.D_2
-            SaveListObjectsToData(p_nameField);
+            SaveListObjectsToData(p_nameField, true);
 
             List<GameObject> realObjects = GamesObjectsReal[p_nameField];
             foreach (var obj in realObjects)
@@ -408,7 +433,7 @@ public class GenerateGridFields : MonoBehaviour {
 
     //#.D //UPDATE FOR LOOK - DATA_2
     //private void SaveListObjectsToData(string p_nameField)
-    private void SaveListObjectsToData(string p_nameField)
+    private void SaveListObjectsToData(string p_nameField, bool isDestroy = false)
     {
         //#timeclose
         //return;
@@ -483,6 +508,7 @@ public class GenerateGridFields : MonoBehaviour {
                             GridData.FieldsD.Add(posFieldReal, new SaveLoadData.FieldData());
                         }
 
+                        Debug.Log("______________________________________CALL CreateObjectData 1._________________________");
                         SaveLoadData.ObjectData objDataNow = SaveLoadData.CreateObjectData(gobj);
 
                         //int pp = GridData.FieldsD[posFieldReal].Objects.Count;
@@ -491,6 +517,9 @@ public class GenerateGridFields : MonoBehaviour {
                         info += "  New Name: " + objDataNow.NameObject;
 
                         //Debug.Log(info);
+
+                        if (isDestroy)
+                            objDataNow.IsReality = false;
 
                         //var otherObjects = GridData.FieldsD[posFieldReal].Objects;
                         //otherObjects.Add(objData);
@@ -511,8 +540,12 @@ public class GenerateGridFields : MonoBehaviour {
                     else
                     {
                         //Create on Game Object
+                        //Debug.Log("______________________________________CALL CreateObjectData 2._________________________");
                         SaveLoadData.ObjectData objData = SaveLoadData.CreateObjectData(gobj);
                         //update
+                        if (isDestroy)
+                            objData.IsReality = false;
+
                         dataObjects[i] = objData;
                     }
                 }
@@ -634,21 +667,39 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         List<SaveLoadData.ObjectData> listDataObjectInField = GridData.FieldsD[p_nameField].Objects;
+        if (listDataObjectInField == null)
+        {
+            Debug.Log("******************* Error SaveNewGameObjectToDat for field: " + p_nameField + " ---  Data Objects  is NULL");
+            return;
+        }
 
+        //Debug.Log("______________________________________CALL CreateObjectData 3._________________________");
         SaveLoadData.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject, true);
+
+        if (dataObjectSave == null)
+        {
+            Debug.Log("******************* Error SaveNewGameObjectToDat  --- CreateObjectData NEW is NULL ---- for gobj: " + p_saveObject);
+            return;
+        }
+
         //dataObjectSave.NameObject = SaveLoadData.CreateName(dataObjectSave.TagObject, p_nameField, listDataObjectInField.Count);
         //p_saveObject.name = dataObjectSave.NameObject;  //+FIX
         //dataObjectSave.UpdateGameObject(p_saveObject);
 
         SaveLoadData.ObjectData objDataOld = null;
-        int indexObjectData = listDataObjectInField.FindIndex(p => p.NameObject == dataObjectSave.NameObject);
-        if (indexObjectData!=-1)
-            objDataOld = listDataObjectInField[indexObjectData];
+
+        int indexObjectData = -1;
+
+        if (listDataObjectInField.Count > 0)
+        {
+            indexObjectData = listDataObjectInField.FindIndex(p => p.NameObject == dataObjectSave.NameObject);
+            if (indexObjectData != -1)
+                objDataOld = listDataObjectInField[indexObjectData];
+        }
 
         if (objDataOld == null)
         {
             //Debug.Log("ActiveGameObject PRED lost count=" + GridData.FieldsD[p_nameField].Objects.Count);
-
             //-------------------------- Add object in Data
             listDataObjectInField.Add(dataObjectSave);
             
@@ -677,14 +728,19 @@ public class GenerateGridFields : MonoBehaviour {
         List<GameObject> objectsReal = GamesObjectsReal[p_nameField];
         objectsReal.Add(p_saveObject);
 
+        //@TEST
+        var objG = objectsReal[objectsReal.Count() -1 ];
+        //objG.name = "NAME_TEST_TEST";
+        //@POS@ Debug.Log("ActiveGameObjec. =================== TEST SAVE REAL OBJ        objectsReal: " + objG.name + "       GameObject: " + p_saveObject.name);
+
         Counter++;
 
         //Debug.Log("ActiveGameObject 9." + p_saveObject.name + "   [" + dataObjectSave.NameObject + "]   FIELD: " + p_nameField);
     }
-    private void SavePersonalData()
-    {
+    //private void SavePersonalData()
+    //{
 
-    }
+    //}
     //-------------------------- 
 
     private static void InitRange(int p_PosHero, int p_limitLook, int gridSize, out int p_startPos, out int limit)
@@ -865,7 +921,7 @@ public class GenerateGridFields : MonoBehaviour {
                 if (objUfo != null)
                 {
                     //LoadObjectForLook:  DATA -->> PERSONA #P#
-                    Debug.Log("______________________UpdateGameObject .1__________________");
+                    //@POS@ Debug.Log("CreatePrefab ______________________LOAD DATA __________________" + newObjGame.name + "       DATA:" + objUfo.ToString());
                     objUfo.UpdateGameObject(newObjGame);
                 }
                 else
