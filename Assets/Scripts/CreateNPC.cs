@@ -6,7 +6,7 @@ public class CreateNPC : MonoBehaviour {
 
     //Coroutine createObject;
     public GameObject prefabUfo;
-    public Camera MainCamera;
+    //@ST@ public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
     private int m_LimitUfo = 0;//100;
@@ -14,17 +14,20 @@ public class CreateNPC : MonoBehaviour {
     void Start()
     {
         //StartCoroutine(CreateObjectUfo());
+
+        _scriptGrid = GetComponent<GenerateGridFields>();
     }
 
     void Awake()
     {
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("MainCamera null");
-            return;
-        }
-        _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+        //@ST@
+        //var camera = MainCamera;
+        //if (camera == null)
+        //{
+        //    Debug.Log("MainCamera null");
+        //    return;
+        //}
+        //_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
     }
 
     public void SartCrateNPC()
@@ -54,13 +57,13 @@ public class CreateNPC : MonoBehaviour {
                 coutUfoReal++; //TEST
 
                 var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
-                if (Storage.ZonaReal == null)
+                if (Storage.Instance.ZonaReal == null)
                 {
                     Debug.Log("CreateObjectUfo not create Ufo ! ZonaReal not init....");
                     yield return null;
                 }
 
-                if (Storage.IsValidPiontInZona(pos.x, pos.y))
+                if (Storage.Instance.IsValidPiontInZona(pos.x, pos.y))
                 {
                     GameObject newUfo = (GameObject)Instantiate(prefabUfo);
                     int add = (coutUfoReal * 1);

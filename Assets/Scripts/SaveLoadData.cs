@@ -13,17 +13,21 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabRock;
     public GameObject PrefabUfo;
     public GameObject PrefabBoss;
-    public Camera MainCamera;
-    public GameObject DataStorage;
+    //public Camera MainCamera;
+    //@ST@
+    //public GameObject DataStorage;
     
 
-    private string _datapathLevel;
-    private string _datapathPerson;
-    private GridData _gridData;
-    private LevelData _personsData;
+    //private string _datapathLevel;
+    //private string _datapathPerson;
+    //@ST@ private GridData _gridData;
+    //@ST@ 
+    //private LevelData _personsData;
+    
     private GenerateGridFields _scriptGrid;
-    private CreateNPC _scriptNPC;
-    private Storage _scriptStorage;
+    //@ST@ private CreateNPC _scriptNPC;
+    //@ST@
+    //private Storage _scriptStorage;
 
     private float Spacing = 2f;
     int _lmitHorizontalLook = 0;
@@ -48,14 +52,13 @@ public class SaveLoadData : MonoBehaviour {
     {
         InitData();
 
-        LoadData();
+        //@ST@ LoadData();
 
-        //#.D 
-        CreateDataGamesObjectsWorld();
-
-        LoadObjectsNearHero();
-
-        _scriptNPC.SartCrateNPC();
+        //@ST@ -----------
+        //CreateDataGamesObjectsWorld();
+        //LoadObjectsNearHero();
+        //_scriptNPC.SartCrateNPC();
+        //----------------------
 	}
 	
 	// Update is called once per frame
@@ -65,76 +68,61 @@ public class SaveLoadData : MonoBehaviour {
 
     private void InitData()
     {
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("MainCamera null");
-            return;
-        }
-        _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+        //var camera = MainCamera;
+        //if (camera == null)
+        //{
+        //    Debug.Log("MainCamera null");
+        //    return;
+        //}
+        //_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+        _scriptGrid = GetComponent<GenerateGridFields>();
+
         //Dictionary<string, GameObject> Fields = scriptGrid.Fields;
 
-        _scriptNPC = GetComponent<CreateNPC>();
-        if (_scriptNPC == null)
-        {
-            Debug.Log("StarLoadData     scriptNPC==null !!!!!");
-        }
+        //@ST@ 
+        //_scriptNPC = GetComponent<CreateNPC>();
+        //if (_scriptNPC == null)
+        //{
+        //    Debug.Log("StarLoadData     scriptNPC==null !!!!!");
+        //}
 
-        var storage = DataStorage;
-        if (storage == null)
-        {
-            Debug.Log("DataStorage null");
-            return;
-        }
-        _scriptStorage = storage.GetComponent<Storage>();
-        if (_scriptStorage == null)
-        {
-            Debug.Log("Error scriptStorage is null !!!");
-            return;
-        }
-        _lmitHorizontalLook = _scriptStorage.LimitHorizontalLook;
-        _limitVerticalLook = _scriptStorage.LimitVerticalLook;
+
+        //var storage = DataStorage;
+        //if (storage == null)
+        //{
+        //    Debug.Log("DataStorage null");
+        //    return;
+        //}
+        //_scriptStorage = storage.GetComponent<Storage>();
+        //if (_scriptStorage == null)
+        //{
+        //    Debug.Log("Error scriptStorage is null !!!");
+        //    return;
+        //}
+        //_lmitHorizontalLook = _scriptStorage.LimitHorizontalLook;
+        //_limitVerticalLook = _scriptStorage.LimitVerticalLook;
+
+        _lmitHorizontalLook = Storage.Instance.LimitHorizontalLook;
+        _limitVerticalLook = Storage.Instance.LimitVerticalLook;
+        
     }
 
-    private void LoadData()
-    {
-        //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
-        //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
-        _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
-        Debug.Log("# LoadPathData... " + _datapathLevel);
-
-        if (File.Exists(_datapathLevel))
-        {
-            _gridData = Serializator.LoadGridXml(_datapathLevel);
-        }
-        else
-        {
-            Debug.Log("# LoadPathData not exist: " + _datapathLevel);
-        }
-
-        _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
-        if (File.Exists(_datapathPerson))
-        {
-            _personsData = Serializator.LoadPersonXml(_datapathPerson);
-        }
-        else
-        {
-            Debug.Log("# LoadPathData not exist: " + _datapathPerson);
-        }
-    }
+    
 
     //#.D 
-    private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
+    public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
     {
         //# On/Off
         //isAlwaysCreate = true;
+        var _gridData = Storage.Instance.GridDataG;
 
-        if (_gridData != null && !isAlwaysCreate)
+        //if (_gridData != null && !isAlwaysCreate)
+        if (Storage.Instance.GridDataG != null && !isAlwaysCreate)
         {
             Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded");
-            _scriptGrid.GridData = _gridData;
+            //@ST@ _scriptGrid.GridData = _gridData;
             //_scriptNPC.SartCrateNPC();
-            Storage.SetGridData(_gridData);
+            //@ST@ Storage.SetGridData(_gridData);
             return;
         }
 
@@ -208,9 +196,11 @@ public class SaveLoadData : MonoBehaviour {
         };
 
         _gridData = data;
-        _scriptGrid.GridData = _gridData;
-        Storage.SetGridData(_gridData);
-        Serializator.SaveGridXml(data, _datapathLevel);
+        //@ST@ _scriptGrid.GridData = _gridData;
+        //@ST@ Storage.SetGridData(_gridData);
+        //Serializator.SaveGridXml(data, _datapathLevel);
+        Serializator.SaveGridXml(data, Storage.Instance.DataPathLevel);
+        
 
         //Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects + "  count fields: " + _scriptGrid.GamesObjectsActive.Count);
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
@@ -498,9 +488,9 @@ public class SaveLoadData : MonoBehaviour {
                 xT = _position.x - distX;
 
             //----------------------------- valid Limit look hero
-            Storage.ZonaRealLook zona = Storage.ZonaReal;
+            Storage.ZonaRealLook zona = Storage.Instance.ZonaReal;
             if (zona != null)
-                Storage.ValidPiontInZona(ref xT, ref yT, distX);
+                Storage.Instance.ValidPiontInZona(ref xT, ref yT, distX);
 
             TargetPosition = new Vector3(xT, yT, -1);
         }
@@ -543,7 +533,7 @@ public class SaveLoadData : MonoBehaviour {
 
                 bool isInZona = true;
 
-                if (!Storage.IsValidPiontInZona(_newPosition.x, _newPosition.y))
+                if (!Storage.Instance.IsValidPiontInZona(_newPosition.x, _newPosition.y))
                 {
                     //@POS@ Debug.Log("######### NextPosition object (" + gobj.name + ") Not in RealZona.....");
                     //SetTargetPosition();
@@ -564,7 +554,7 @@ public class SaveLoadData : MonoBehaviour {
                 //@POS@ Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + nameObject + "          " + posFieldOld + " > " + posFieldReal + "     " + _oldPosition + "  >>  " + _newPosition);
                 //Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + fieldR);
 
-                newName = Storage.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
+                newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
                 //newName = Storage.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this);
 
                 if (!isInZona && !string.IsNullOrEmpty(newName))
@@ -836,18 +826,20 @@ public class SaveLoadData : MonoBehaviour {
         //Fields.Remove(nameField);
         //RemoveRealObjects(nameField);
 
-        if (_gridData == null)
+        //#ST@ if (_gridData == null)
+        if (Storage.Instance.GridDataG == null)
         {
             Debug.Log("Error SaveLevel gridData is null !!!");
             return;
         }
-        Serializator.SaveGridXml(_gridData, _datapathLevel);
+
+        Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel);
     }
 
-    private void LoadObjectsNearHero()
-    {
-        _scriptGrid.LoadObjectsNearHero();
-    }
+    //public void LoadObjectsNearHero()
+    //{
+    //    _scriptGrid.LoadObjectsNearHero();
+    //}
 
     //+++ CreatePrefabByName +++
     public static ObjectData CreateObjectData(GameObject p_gobject, bool isNewGen = false)
@@ -888,17 +880,17 @@ public class SaveLoadData : MonoBehaviour {
                     //string idObject = Storage.GetGameObjectID(p_gobject);
                     string nameField =  Storage.GetNameFieldByName(p_gobject.name);
 
-                    if(!Storage.GridData.FieldsD.ContainsKey(nameField))
+                    if(!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                     {
                         Debug.Log("!!!!!!!!! Error CreateObjectData FIELD NOT FOUND :" + nameField);
                         return null;
                     }
-                    var objects = Storage.GridData.FieldsD[nameField].Objects;
+                    var objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
                     var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
                     if (index==-1)
                     {
                         Debug.Log("################# Error CreateObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                        Storage.DebugKill(p_gobject.name);
+                        Storage.Instance.DebugKill(p_gobject.name);
 
                         //@KOSTIL@ --------------------------------------------------------------
                         //newObject = new GameDataUfo()

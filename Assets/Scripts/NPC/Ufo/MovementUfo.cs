@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MovementUfo : MonoBehaviour {
 
-    public GameObject DataStorage;
+    //public GameObject DataStorage;
     //private Storage m_scriptStorage;
 
     private Coroutine moveObject;
@@ -46,12 +46,12 @@ public class MovementUfo : MonoBehaviour {
         //@PD@ m_scriptPersonal = this.GetComponent<PersonalData>();
         _rb2d = this.GetComponent<Rigidbody2D>();
 
-        var storage = DataStorage;
-        if (storage == null)
-        {
-            Debug.Log("DataStorage null");
-            return;
-        }
+        //var storage = DataStorage;
+        //if (storage == null)
+        //{
+        //    Debug.Log("DataStorage null");
+        //    return;
+        //}
         //m_scriptStorage = storage.GetComponent<Storage>();
         //if (m_scriptStorage == null)
         //{

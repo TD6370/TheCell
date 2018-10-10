@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class CompletePlayerController : MonoBehaviour {
 
     public Camera MainCamera;
-    public GameObject DataStorage;
+    //@ST@ public GameObject DataStorage;
 
     [Header("Speed move hero")]
 	public float Speed;				//Floating point variable to store the player's movement speed.
@@ -20,10 +20,11 @@ public class CompletePlayerController : MonoBehaviour {
     //public Button btnExit;
     public Color ColorCurrentField = Color.yellow;
 
-    private Storage m_scriptStorage;
+    //@ST@ private Storage m_scriptStorage;
 
-    private int _limitHorizontalLook =0;
-    private int _limitVerticalLook = 0;
+    //@ST@
+    //private int _limitHorizontalLook =0;
+    //private int _limitVerticalLook = 0;
 
 	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
 	//[SerializeField]
@@ -111,21 +112,21 @@ public class CompletePlayerController : MonoBehaviour {
             Debug.Log("Error scriptGrid is null !!!");
             return;
         }
-        var storage = DataStorage;
-        if (storage == null)
-        {
-            Debug.Log("DataStorage null");
-            return;
-        }
-        m_scriptStorage = storage.GetComponent<Storage>();
-        if (m_scriptStorage == null)
-        {
-            Debug.Log("Error scriptStorage is null !!!");
-            return;
-        }
+        //var storage = DataStorage;
+        //if (storage == null)
+        //{
+        //    Debug.Log("DataStorage null");
+        //    return;
+        //}
+        //m_scriptStorage = storage.GetComponent<Storage>();
+        //if (m_scriptStorage == null)
+        //{
+        //    Debug.Log("Error scriptStorage is null !!!");
+        //    return;
+        //}
 
-        _limitHorizontalLook = m_scriptStorage.LimitHorizontalLook;
-        _limitVerticalLook = m_scriptStorage.LimitVerticalLook;
+        //_limitHorizontalLook = m_scriptStorage.LimitHorizontalLook;
+        //_limitVerticalLook = m_scriptStorage.LimitVerticalLook;
     }
 
 
@@ -212,8 +213,9 @@ public class CompletePlayerController : MonoBehaviour {
             return null;
         }
 
+        
         GenerateGridFields scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
-        var Fields = scriptGrid.Fields;
+        //@ST@ var Fields = scriptGrid.Fields;
 
          //angle move
         //CalculateCompasMoveHero(posX, posY);
@@ -221,20 +223,21 @@ public class CompletePlayerController : MonoBehaviour {
         //Debug.Log("FindFieldCurrent .scriptGrid.GenGrigLook...");
 
 
-        if (m_scriptStorage == null)
+        //@ST@ if (m_scriptStorage == null)
+        if (Storage.Instance == null)
         {
             Debug.Log("scriptStorage null");
             return null;
         }
-        m_scriptStorage.SetHeroPosition(posX, posY, transform.position.x, transform.position.y); 
+        Storage.Instance.SetHeroPosition(posX, posY, transform.position.x, transform.position.y); 
 
         //_heroPositionY = posY;
-        scriptGrid.GenGrigLook(_movement, posX, _limitHorizontalLook,  posY, _limitVerticalLook);
+        scriptGrid.GenGrigLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
         //StartCoroutine(scriptGrid.GenGrigLookAsync(_movement, posX, _limitHorizontalLook, posY, _limitVerticalLook));
 
-        if (!Fields.ContainsKey(nameFiled))
+        if (! Storage.Instance.Fields.ContainsKey(nameFiled))
             return null;
-        GameObject prefabFind = Fields[nameFiled];
+        GameObject prefabFind = Storage.Instance.Fields[nameFiled];
 
         //GameObject prefabFind = GameObject.Find(nameFiled);
         return prefabFind;

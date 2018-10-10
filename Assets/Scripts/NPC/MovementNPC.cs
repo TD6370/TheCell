@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovementNPC : MonoBehaviour {
 
-    public GameObject DataStorage;
+    //public GameObject DataStorage;
 
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
@@ -32,12 +32,12 @@ public class MovementNPC : MonoBehaviour {
         //@PD@ m_scriptPersonal = this.GetComponent<PersonalData>();
         _rb2d = this.GetComponent<Rigidbody2D>();
 
-        var storage = DataStorage;
-        if (storage == null)
-        {
-            Debug.Log("DataStorage null");
-            return;
-        }
+        //var storage = DataStorage;
+        //if (storage == null)
+        //{
+        //    Debug.Log("DataStorage null");
+        //    return;
+        //}
     }
 
     IEnumerator MoveObjectToPosition()

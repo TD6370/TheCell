@@ -477,7 +477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabUfo: {fileID: 134454365}
-  MainCamera: {fileID: 580250719}
 --- !u!114 &580250722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,7 +489,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabField: {fileID: 1793526982}
-  PoolGamesObjects: []
   GridX: 22
   GridY: 18
   Spacing: 2
@@ -523,8 +521,6 @@ MonoBehaviour:
   PrefabRock: {fileID: 587225620}
   PrefabUfo: {fileID: 134454365}
   PrefabBoss: {fileID: 1702813132}
-  MainCamera: {fileID: 580250719}
-  DataStorage: {fileID: 1577116426}
 --- !u!1 &587225620 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1736101719947554, guid: 0d70e830e2198f0428159dad41177765,
@@ -1642,6 +1638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6d9ce6bbfe466489e0807cac57f321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  KillObject: []
+  MainCamera: {fileID: 580250719}
 --- !u!120 &1577116429
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1965,7 +1963,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9745800c0d5e674c81ca0b0eb999c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DataStorage: {fileID: 1577116426}
 --- !u!114 &1702813134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2218,7 +2215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 580250719}
-  DataStorage: {fileID: 1577116426}
   Speed: 20
   txtMessage: {fileID: 1171611291}
   txtLog: {fileID: 1626881613}
