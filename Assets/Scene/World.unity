@@ -1638,6 +1638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6d9ce6bbfe466489e0807cac57f321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HeroObject: {fileID: 1798573864}
   KillObject: []
   MainCamera: {fileID: 580250719}
 --- !u!120 &1577116429

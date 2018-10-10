@@ -9,16 +9,12 @@ public class Storage : MonoBehaviour {
 
     const string FieldKey = "Field";
 
+    public GameObject HeroObject;
     public ZonaFieldLook ZonaField { get; set; }
     public ZonaRealLook ZonaReal { get; set; }
     public List<string> KillObject = new List<string>();
 
     public static Storage Instance { get; private set; }
-
-    public void Awake()
-    {
-        Instance = this;
-    }
 
     private int _limitHorizontalLook = 22;
     public int LimitHorizontalLook
@@ -50,14 +46,14 @@ public class Storage : MonoBehaviour {
 
     public Dictionary<string, GameObject> Fields;
 
-    private Dictionary<string, List<SaveLoadData.ObjectData>> _GamesObjectsPersonalData;
-    public Dictionary<string, List<SaveLoadData.ObjectData>> GamesObjectsPersonalData
-    {
-        get
-        {
-            return _GamesObjectsPersonalData;
-        }
-    }
+    //private Dictionary<string, List<SaveLoadData.ObjectData>> _GamesObjectsPersonalData;
+    //public Dictionary<string, List<SaveLoadData.ObjectData>> GamesObjectsPersonalData
+    //{
+    //    get
+    //    {
+    //        return _GamesObjectsPersonalData;
+    //    }
+    //}
 
     private Dictionary<string, List<GameObject>> _GamesObjectsReal;
     public Dictionary<string, List<GameObject>> GamesObjectsReal
@@ -86,18 +82,28 @@ public class Storage : MonoBehaviour {
     public Camera MainCamera;
     private SaveLoadData _scriptData;
     private GenerateGridFields _scriptGrid;
+    private CompletePlayerController _screiptHero;
     private CreateNPC _scriptNPC;
+    private List<HistoryGameObject> _listHistoryGameObject;
+
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
 	// Use this for initialization
 	void Start () {
         ZonaField = null;
         ZonaReal = null;
-
-        //Fields = new Dictionary<int, GameObject>();
+        
         Fields = new Dictionary<string, GameObject>();
-        //GamesObjectsActive = new Dictionary<string, List<GameObject>>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        _GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
+        _GridDataG = new SaveLoadData.GridData();
+        _personsData = new SaveLoadData.LevelData();
+        _listHistoryGameObject = new List<HistoryGameObject>();
+
+        //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
 
         //var camera = MainCamera;
         if (MainCamera == null)
@@ -118,6 +124,11 @@ public class Storage : MonoBehaviour {
         if (_scriptNPC == null)
         {
             Debug.Log("Storage.Start scriptNPC not load !!!!!");
+        }
+        _screiptHero = HeroObject.GetComponent<CompletePlayerController>();
+        if (_screiptHero == null)
+        {
+            Debug.Log("Storage.Start scriptHero not load !!!!!");
         }
 
         //StartGenGrigField();
@@ -141,9 +152,12 @@ public class Storage : MonoBehaviour {
         //SaveLoadData:
         _scriptData.CreateDataGamesObjectsWorld();
 
-        //_scriptData.LoadObjectsNearHero();
+        Debug.Log("....Init Position HERO......");
+        _screiptHero.FindFieldCurrent();
+
         _scriptGrid.LoadObjectsNearHero();
 
+        Debug.Log("....Sart Crate NPC......");
         _scriptNPC.SartCrateNPC();
     }
 	
@@ -448,13 +462,13 @@ public class Storage : MonoBehaviour {
 
         if (p_newPosition != gobj.transform.position)
         {
-            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("********** ERROR UpdatePosition 1.     GOBJ UPDATE POSITOIN : NEW POS: " + p_newPosition + "       REAL POS: " + gobj.transform.position + "  REAL FIELD: " + Storage.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
             return "";
         }
 
         //Debug.Log("--------------------PRED NAME :" + objDataNow.NameObject);
-        objData.NameObject = SaveLoadData.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        objData.NameObject = CreateName(objData.TagObject, p_NewField, "", p_NameObject);
         gobj.name = objData.NameObject;
         //Debug.Log("--------------------POST NAME :" + objDataNow.NameObject);
 
@@ -516,7 +530,169 @@ public class Storage : MonoBehaviour {
         }
     }
 
+    //----- Data Object
+    bool _isSaveHistory = true;
+
+    public void ClearGridData()
+    {
+        _GridDataG = new SaveLoadData.GridData();
+    }
+
+    public void SaveGridGameObjectsXml(bool isNewWorld = false)
+    {
+        SaveLoadData.Serializator.SaveGridXml(_GridDataG, DataPathLevel, isNewWorld);
+    }
+
+    public SaveLoadData.FieldData AddNewFieldInGrid(string newField, string callFunc)
+    {
+        SaveLoadData.FieldData fieldData = new SaveLoadData.FieldData() { NameField = newField };
+        _GridDataG.FieldsD.Add(newField, fieldData);
+
+        //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
+
+        return fieldData;
+    }
+
+    public void AddDataObjectInGrid(SaveLoadData.ObjectData objDataSave, string nameField, string callFunc)
+    {
+        SaveLoadData.FieldData fieldData;
+        if (!_GridDataG.FieldsD.ContainsKey(nameField))
+        {
+            fieldData = AddNewFieldInGrid(nameField, callFunc);
+        }
+        else
+        {
+            fieldData = _GridDataG.FieldsD[nameField];
+        }
+        fieldData.Objects.Add(objDataSave);
+
+        SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
+    }
+
+    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc)
+    {
+        SaveLoadData.ObjectData histData = null;
+        if (_isSaveHistory)
+            histData = _GridDataG.FieldsD[nameField].Objects[index];
+
+        _GridDataG.FieldsD[nameField].Objects.RemoveAt(index);
+
+        if (_isSaveHistory)
+        {
+            if (histData == null)
+            {
+                Debug.Log("##################### Error RemoveDataObjectInGrid save SaveHistory  histData == null ");
+                return;
+            }
+            SaveHistory(histData.NameObject, "RemoveDataObjectInGrid", callFunc, nameField, "", histData);
+        }
+    }
+
+    public void UpdateDataObect(string nameField, int index, SaveLoadData.ObjectData setObject, string callFunc)
+    {
+        if (_isSaveHistory)
+        {
+            SaveLoadData.ObjectData oldObj = _GridDataG.FieldsD[nameField].Objects[index];
+            SaveHistory(setObject.NameObject, "UpdateDataObect", callFunc, nameField, "", oldObj, setObject);
+            SaveHistory(oldObj.NameObject, "UpdateDataObect", callFunc, nameField, "RESAVE", oldObj, setObject);
+        }
+
+        //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
+        _GridDataG.FieldsD[nameField].Objects[index] = setObject;
+    }
+    //----- Real Object
+
+    public List<GameObject> AddNewFieldInRealObject(string newField, string callFunc)
+    {
+        List<GameObject> listRealObjects = new List<GameObject>();
+
+        _GamesObjectsReal.Add(newField, listRealObjects);
+
+        SaveHistory("", "AddNewFieldInRealObject", callFunc, newField);
+
+        return listRealObjects;
+    }
+
+    public void AddRealObject(GameObject p_saveObject, string nameField, string callFunc)
+    {
+        _GamesObjectsReal[nameField].Add(p_saveObject);
+
+        SaveHistory(p_saveObject.name, "AddRealObject", callFunc, nameField);
+    }
+
+    public void RemoveFieldRealObject(string nameField, string callFunc)
+    {
+        _GamesObjectsReal.Remove(nameField);
+
+        //! SaveHistory("", "RemoveFieldRealObject", callFunc, nameField);
+    }
+
+    //--------------- History
+
+    public void GetHistory(string nameObj)
+    {
+        Debug.Log("History --------------------------------------------");
+        var resList = _listHistoryGameObject.Where(p => p.Name == nameObj || p.Name=="").OrderBy(p => p.TimeSave);
+        int i=0;
+        foreach (var obj in resList)
+        {
+            i++;
+            Debug.Log(i + ". " + obj.ToString());
+        }
+    }
+
+    public void SaveHistory(string name, string actionName, string callFunc, string field = "", string comment = "", SaveLoadData.ObjectData oldDataObj = null, SaveLoadData.ObjectData newDataObj = null)
+    {
+        if (!_isSaveHistory)
+            return;
+
+        _listHistoryGameObject.Add(new HistoryGameObject()
+        {
+            Name = name,
+            ActionName = actionName,
+            CallFunc = callFunc,
+            Comment = comment, 
+            Field = field, 
+            NewDataObj = newDataObj, 
+            OldDataObj = oldDataObj, 
+            TimeSave = DateTime.Now
+        });
+    }
+
 #region Helper
+
+    public static string CreateName(string tag, string nameFiled, string id = "", string nameObjOld = "")
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            if (string.IsNullOrEmpty(nameObjOld))
+            {
+                Debug.Log("!!!!!! Error create name !!!!!!!!!!");
+            }
+            else
+            {
+
+                int i = nameObjOld.LastIndexOf("_");
+                int i2 = nameObjOld.IndexOf("_");
+                if (i != -1)
+                {
+                    //123456789
+                    //Debug.Log("_______________________CREATE NAME i_l=" + i + "     i=" + i2 + "     len=" + nameObjOld.Length + "      :" + nameObjOld);
+                    id = nameObjOld.Substring(i + 1, nameObjOld.Length - i - 1);
+                    //id = nameObjOld.Substring(nameObjOld.Length - i, i);
+                    //Debug.Log("_______________________CREATE NAME  ID:" + id);
+                }
+                else
+                    Debug.Log("!!!!!! Error create name prefix !!!!!!!!!!");
+            }
+        }
+        if (id == "-1")
+        {
+            id = Guid.NewGuid().ToString().Substring(1, 4);
+        }
+
+        return tag + "_" + nameFiled + "_" + id;
+    }
 
     public static string GetGameObjectID(GameObject gobj)
     {
@@ -657,6 +833,29 @@ public class Storage : MonoBehaviour {
         public ZonaRealLook() { }
     }
 
+    public class HistoryGameObject
+    {
+        public string Name { get; set; }
+        public string Field { get; set; }
+        public string ActionName { get; set; }
+        public string CallFunc { get; set; }
+        public string Comment { get; set; }
+        public DateTime TimeSave { get; set; }
+        public SaveLoadData.ObjectData OldDataObj { get; set; }
+        public SaveLoadData.ObjectData NewDataObj { get; set; }
+
+        public HistoryGameObject() {}
+
+        public override string ToString()
+        {
+            string oldData = (OldDataObj==null) ? "" : " [" + OldDataObj.ToString() + "]";
+            string newData = (NewDataObj == null) ? "" : " [" + NewDataObj.ToString() + "]";
+
+            //return TimeSave + " " + ActionName + " " +  Name + "  " + OldDataObj + NewDataObj + "  >>" + CallFunc + "  " + Field  + "  '" + Comment + "'";
+            return ActionName + " " + Name + "  " + oldData + newData + "  >>" + CallFunc + "  " + Field + "  '" + Comment + "'";
+            //return base.ToString();
+        }
+    }
 
 #endregion
 

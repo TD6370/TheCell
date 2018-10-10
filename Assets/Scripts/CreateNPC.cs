@@ -9,7 +9,8 @@ public class CreateNPC : MonoBehaviour {
     //@ST@ public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
-    private int m_LimitUfo = 0;//100;
+    private int m_LimitUfo = 6;//100;
+    private float _periodCreateNPC = 2;//3;
 
     void Start()
     {
@@ -83,7 +84,7 @@ public class CreateNPC : MonoBehaviour {
                     //Debug.Log("CreateObjectUfo not create Ufo in zona....");
                 }
             }
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(_periodCreateNPC);
         }
     }
 

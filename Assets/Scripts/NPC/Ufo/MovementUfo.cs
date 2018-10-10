@@ -16,6 +16,8 @@ public class MovementUfo : MonoBehaviour {
     //private int _lmitHorizontalLook = 0;
     //private int _limitVerticalLook = 0;
 
+    //public SaveLoadData.GameDataUfo DataUfo { get; set; }
+
     string testId;
 
     void Awake()
@@ -128,23 +130,22 @@ public class MovementUfo : MonoBehaviour {
         }
 
         //@PD@ var dataUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
-        //Debug.Log("______________________________________CALL CreateObjectData 5._________________________" + this.gameObject.name);
-        var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo; ;
-
-        if (dataUfo == null)
-        {
-            Debug.Log("Error UFO MoveObjectToPosition objUfo is Empty !!!!");
-            yield break;
-        }
-
-        if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
-        {
-            Debug.Log("Error UFO objUfo.TargetPosition is zero !!!!");
-            yield break;
-        }
+        //Debug.Log("______________________________________CALL CreateObjectData 5. FIND_________________________" + this.gameObject.name);
+        //var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo ;
+        var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
+       
 
         while (true)
         {
+            //@@@@
+            //dataUfo = DataUfo;
+
+            if (dataUfo == null)
+            {
+                Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
+                yield break;
+            }
+
             stepTest++;
             if (stepTest > stepLimitTest)
             {
@@ -197,6 +198,19 @@ public class MovementUfo : MonoBehaviour {
             //+++++++++++++++++++++++
 
             if (!string.IsNullOrEmpty(resName))
+            {
+                if (oldName != resName)
+                {
+                    //Debug.Log("UFO MoveObjectToPosition >>> Update DATA .....................");
+                    dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
+                    if (dataUfo == null)
+                    {
+                        yield break;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(resName))
                 newName = resName;
 
             if (!string.IsNullOrEmpty(resName))
@@ -236,6 +250,32 @@ public class MovementUfo : MonoBehaviour {
 
             yield return null;
         }
+    }
+
+    private SaveLoadData.GameDataUfo FindObjectData()
+    {
+        var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataUfo;
+
+
+        if (dataUfo == null)
+        {
+            Debug.Log("#################### rror UFO MoveObjectToPosition dataUfo is Empty !!!!");
+            return null;
+        }
+
+        if (dataUfo.NameObject != this.name)
+        {
+            Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + dataUfo.NameObject + "  GO: " + this.name);
+            return null;
+        }
+
+        if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
+        {
+            Debug.Log("#################### Error UFO dataUfo.TargetPosition is zero !!!!");
+            return null;
+        }
+
+        return dataUfo;
     }
 
     //private void SetTargetPosition(SaveLoadData.GameDataUfo objUfo) 

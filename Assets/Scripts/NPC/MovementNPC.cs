@@ -56,8 +56,9 @@ public class MovementNPC : MonoBehaviour {
             yield break;
         }
 
-        Debug.Log("______________________________________CALL CreateObjectData 4._________________________");
-        SaveLoadData.GameDataNPC objNPC = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataNPC;
+        Debug.Log("______________________________________CALL CreateObjectData 4. FIND_________________________");
+        //SaveLoadData.GameDataNPC objNPC = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataNPC;
+        SaveLoadData.GameDataNPC objNPC = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataNPC;
 
         if (objNPC == null)
         {

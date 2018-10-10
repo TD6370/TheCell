@@ -68,9 +68,10 @@
      <Compile Include="Assets\UIEvents.cs" />
      <None Include="Assets\Levels\LevelData03.xml" />
      <None Include="Assets\SavedData0_t.xml" />
-     <None Include="Assets\Levels\LevelData0.xml" />
+     <None Include="Assets\Levels\LevelData05.xml" />
      <None Include="Assets\Levels\LevelData02.xml" />
      <None Include="Assets\Levels\LevelData04.xml" />
+     <None Include="Assets\Levels\LevelData0.xml" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>F:/Projects/TheCell/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

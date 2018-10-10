@@ -45,7 +45,9 @@ public class CompletePlayerController : MonoBehaviour {
 
         InitData();
         //InitData();
-        FindFieldCurrent();
+
+        //Debug.Log("....Init Position HERO......");
+        //FindFieldCurrent();
 
 		//Initialize count to zero.
 		_count = 0;
@@ -185,7 +187,7 @@ public class CompletePlayerController : MonoBehaviour {
     //    Up, Down, Center
     //}
 
-    GameObject FindFieldCurrent()
+    public GameObject FindFieldCurrent()
     {
         int scale = 2;
         int posX = 0;
