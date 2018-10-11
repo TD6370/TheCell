@@ -340,11 +340,25 @@ public class GenerateGridFields : MonoBehaviour {
                 }
                 //--------------
                 indErr = "13.";
+                //TEST -------
                 if (dataObj.IsReality)
                 {
                     Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already IsReality !!!!");
+
+                    int indTest = listGameObjectReal.FindIndex(p => p.name == dataObj.NameObject);
+                    if (indTest != -1)
+                    {
+                        Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already EXIST !!!!");
+                    }
+                    else
+                    {
+                        Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " not EXIST %)");
+                    }
+                    Storage.Instance.GetHistory(dataObj.NameObject);
                     continue;
                 }
+                //--------------
+
                 indErr = "14.";
                 dataObj.IsReality = true;
 
@@ -581,34 +595,6 @@ public class GenerateGridFields : MonoBehaviour {
                     }
 
                     indErr = "13.";
-                    //---------------------------------------------
-                    /*
-                        Debug.Log("______________________________________CALL CreateObjectData 1. @@NEW_________________________");
-                        SaveLoadData.ObjectData objDataNow = SaveLoadData.CreateObjectData(gobj);
-
-                        indErr = "14.";
-                        objDataNow.NameObject = Storage.CreateName(objDataNow.TagObject, posFieldReal, gobj.name);
-
-                        //Debug.Log(info);
-                        indErr = "15.";
-                        if (isDestroy)
-                            objDataNow.IsReality = false;
-
-                        indErr = "16.";
-                        //#TEST -----------------
-                        var objTest = _gridData.FieldsD[posFieldReal].Objects.Find(p => p.NameObject == objDataNow.NameObject);
-                        if (objTest != null)
-                        {
-                            Debug.Log("################# Error SaveListObjectsToData GridData.FieldsD[" + posFieldReal + "].Objects already Exist : " + objTest);
-                            continue;
-                        }
-                        //-----------------------------------
-
-                        indErr = "17.";
-                        //@<<@ _gridData.FieldsD[posFieldReal].Objects.Add(objDataNow);
-                        Storage.Instance.AddDataObjectInGrid(objDataNow, posFieldReal); //@<<@ 
-                     */
-                    //---------------------------------------------
                     Debug.Log("______________________________________CALL CreateObjectData 1. @@NEW_________________________");
 
                     indErr = "14.";
@@ -666,10 +652,8 @@ public class GenerateGridFields : MonoBehaviour {
                     //update
                     if (isDestroy)
                         dataObj.IsReality = false;
-
-                    //@<<@ dataObjects[i] = objData;
-                    //Storage.Instance.UpdateDataObect(p_nameField, i, dataObj, "SaveListObjectsToData"); //@<<@ 
-                    Storage.Instance.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData"); //@<<@ 
+                   
+                    //@@@TEST Storage.Instance.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData"); //@<<@ 
                     //------------------------------------
                 }
                
@@ -681,196 +665,6 @@ public class GenerateGridFields : MonoBehaviour {
             Debug.Log("ERROR SaveListObjectsToData : " + x.Message + "  #" + indErr);
         }
     }
-
-
-    ////#.D //UPDATE FOR LOOK - DATA_2
-    ////private void SaveListObjectsToData(string p_nameField)
-    //private void SaveListObjectsToData(string p_nameField, bool isDestroy = false)
-    //{
-    //    var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
-    //    var _gridData = Storage.Instance.GridDataG;
-
-    //    string indErr = "start";
-
-    //    //#timeclose
-    //    //return;
-
-    //    if (!_gamesObjectsReal.ContainsKey(p_nameField))
-    //    {
-    //        Debug.Log("################# SaveListObjectsToData GamesObjectsReal Not field=" + p_nameField);
-    //        return;
-    //    }
-
-    //    indErr = "start";
-    //    List<GameObject> realObjects = _gamesObjectsReal[p_nameField];
-    //    //GridData
-    //    if (_gridData == null)
-    //    {
-    //        Debug.Log("SaveListObjectsToData GridData is EMPTY");
-    //        return;
-    //    }
-
-    //    if (!_gridData.FieldsD.ContainsKey(p_nameField))
-    //    {
-    //        Debug.Log("SaveListObjectsToData !GridData.FieldsD not field=" + p_nameField);
-    //        return;
-    //    }
-
-    //    //@<<@ 
-    //    List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
-
-    //    //Debug.Log("SaveListObjectsToData realObjects.Count=" + realObjects.Count);
-    //    try
-    //    {
-    //        indErr = "1.";
-
-    //        //for (int i = 0; i < realObjects.Count; i++)
-    //        for (int i = realObjects.Count - 1; i >= 0; i--)  //+FIX
-    //        {
-
-    //            indErr = "3.";
-    //            GameObject gobj = realObjects[i];
-    //            //SaveLoadData.ObjectData objData = SaveLoadData.CreateObjectData(gobj);
-    //            //if (dataObjects.Count >= i)
-    //            if (dataObjects.Count > i)
-    //            {
-    //                indErr = "3.";
-    //                var posD = dataObjects[i].Position;
-    //                if (dataObjects[i] == null)
-    //                {
-    //                    Debug.Log("SaveListObjectsToData REMOVE dataObjects[i] == null");
-    //                    continue;
-    //                }
-    //                indErr = "4.";
-    //                if (realObjects[i] == null)
-    //                {
-    //                    //Debug.Log("SaveListObjectsToData REMOVE realObjects[i] == null");
-    //                    //realObjects.RemoveAt(i);
-    //                    continue;
-    //                }
-    //                indErr = "5.";
-    //                var posR = realObjects[i].transform.position; //!!!!
-    //                indErr = "6.";
-    //                string posFieldOld = Storage.GetNameFieldPosit(posD.x, posD.y);
-    //                indErr = "7.";
-    //                string posFieldReal = Storage.GetNameFieldPosit(posR.x, posR.y);
-
-
-    //                //!!!!!!!!!!!! p_nameField === posFieldOld
-    //                if (posFieldOld != p_nameField)
-    //                {
-    //                    Debug.Log("SaveListObjectsToData !!!!!!!!!!!! posFieldOld != p_nameField");
-    //                }
-    //                indErr = "8.";
-    //                //---------------------------------------------
-    //                if (posFieldOld != posFieldReal)
-    //                {
-    //                    indErr = "9.";
-    //                    string info = "SaveListObjectsToData posFieldOld(" + posFieldOld + ") != posFieldReal(" + posFieldReal + ")      " + dataObjects[i].NameObject + "    " + realObjects[i].name;
-
-    //                    indErr = "10.";
-    //                    //remove in Old Field
-    //                    //Debug.Log("SaveListObjectsToData REMOVE :" + dataObjects[i].NameObject);
-                        
-    //                    //@<<@ dataObjects.RemoveAt(i);
-    //                    Storage.Instance.RemoveDataObjectInGrid(p_nameField, i); ////@<<@ 
-
-    //                    indErr = "11.";
-    //                    //add to new Field
-    //                    if (!_gridData.FieldsD.ContainsKey(posFieldReal))
-    //                    {
-    //                        indErr = "12.";
-    //                        //#!!!!  Debug.Log("SaveListObjectsToData GridData ADD new FIELD : " + posFieldReal);
-
-    //                        //@<<@ _gridData.FieldsD.Add(posFieldReal, new SaveLoadData.FieldData());
-    //                        Storage.Instance.AddNewFieldInGrid(posFieldReal); //@<<@ 
-    //                    }
-
-    //                    indErr = "13.";
-    //                    Debug.Log("______________________________________CALL CreateObjectData 1._________________________");
-    //                    SaveLoadData.ObjectData objDataNow = SaveLoadData.CreateObjectData(gobj);
-
-    //                    indErr = "14.";
-
-    //                    //int pp = GridData.FieldsD[posFieldReal].Objects.Count;
-    //                    //objDataNow.NameObject = SaveLoadData.CreateName(objDataNow.TagObject, posFieldReal, pp);
-    //                    objDataNow.NameObject = Storage.CreateName(objDataNow.TagObject, posFieldReal, gobj.name);
-    //                    info += "  New Name: " + objDataNow.NameObject;
-
-    //                    //Debug.Log(info);
-    //                    indErr = "15.";
-    //                    if (isDestroy)
-    //                        objDataNow.IsReality = false;
-
-
-    //                    indErr = "16.";
-    //                    //#TEST -----------------
-    //                    var objTest = _gridData.FieldsD[posFieldReal].Objects.Find(p => p.NameObject == objDataNow.NameObject);
-    //                    if (objTest != null)
-    //                    {
-    //                        Debug.Log("################# Error SaveListObjectsToData GridData.FieldsD[" + posFieldReal + "].Objects already Exist : " + objTest);
-    //                        continue;
-    //                    }
-    //                    //-----------------------------------
-
-    //                    indErr = "17.";
-
-    //                    //@<<@ _gridData.FieldsD[posFieldReal].Objects.Add(objDataNow);
-    //                    Storage.Instance.AddDataObjectInGrid(objDataNow, posFieldReal); //@<<@ 
-
-    //                    //++++++++++++++++++++++++++ //+FIX
-    //                    //if (!GamesObjectsReal.ContainsKey(posFieldReal))
-    //                    //{
-    //                    //    GamesObjectsReal.Add(posFieldReal, new List<GameObject>());
-    //                    //}
-    //                    //Debug.Log("SaveListObjectsToData   MOVE RealObject -> " + posFieldOld + " -> " + posFieldReal + "  (Real PRED)  NewPos=" + GamesObjectsReal[posFieldReal].Count + " OldPos=" + GamesObjectsReal[posFieldOld].Count);
-    //                    //gobj.name = objDataNow.NameObject;
-    //                    //GamesObjectsReal[posFieldReal].Add(gobj);
-    //                    //realObjects.RemoveAt(i);
-    //                    //Debug.Log("SaveListObjectsToData   MOVE RealObject -> " + posFieldOld + " -> " + posFieldReal + "  (Real NEW)  NewPos=" + GamesObjectsReal[posFieldReal].Count + " OldPos=" + GamesObjectsReal[posFieldOld].Count);
-    //                    //++++++++++++++++++++++++++
-    //                }
-    //                else
-    //                {
-    //                    indErr = "18.";
-    //                    //Create on Game Object
-    //                    //Debug.Log("______________________________________CALL CreateObjectData 2._________________________");
-    //                    //@@@@@@@ NEW
-    //                    SaveLoadData.ObjectData objData = SaveLoadData.CreateObjectData(gobj);
-
-    //                    indErr = "18.5";
-    //                    if (objData == null)
-    //                    {
-    //                        //Debug.Log("################# Error SaveListObjectsToData objData is NULL for : " + gobj.name);
-    //                        continue;
-    //                    }
-
-    //                    indErr = "19.";
-    //                    //update
-    //                    if (isDestroy)
-    //                    {
-    //                        //indErr = "19.4";
-    //                        //Debug.Log("..... objData.IsReality==false  " + objData.ToString());
-    //                        //indErr = "19.5";
-    //                        objData.IsReality = false;
-    //                    }
-
-    //                    indErr = "20.";
-
-    //                    //@<<@ dataObjects[i] = objData;
-    //                    Storage.Instance.UpdateDataObect(p_nameField, i, objData); //@<<@ 
-    //                }
-    //            }
-    //        }
-
-    //    }
-    //    catch(Exception x)
-    //    {
-    //        Debug.Log("ERROR SaveListObjectsToData : " + x.Message + "  #" + indErr);
-    //    }
-    // }
-
-   
 
     //ADD NEW GEN GAME OBJECT 
     public void ActiveGameObject(GameObject p_saveObject)
@@ -918,7 +712,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         //Debug.Log("______________________________________CALL CreateObjectData 3. @@Create_________________________");
-        SaveLoadData.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject, true);
+        SaveLoadData.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
 
         if (dataObjectSave == null)
         {
@@ -1092,12 +886,7 @@ public class GenerateGridFields : MonoBehaviour {
     //    Debug.Log(log);
     //}
 
-    void OnGUI()
-    {
-        //GUI.Label(new Rect(0, 0, 100, 100), (int)(1.0f / Time.smoothDeltaTime));
-        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
-        GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
-    }
+    
 
     private GameObject FindPrefab(string namePrefab)
     {
@@ -1358,6 +1147,11 @@ public class GenerateGridFields : MonoBehaviour {
 
     ////-----------temp----------------------
 
-    
+    void OnGUI()
+    {
+        //GUI.Label(new Rect(0, 0, 100, 100), (int)(1.0f / Time.smoothDeltaTime));
+        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
+        GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
+    }
 
 }

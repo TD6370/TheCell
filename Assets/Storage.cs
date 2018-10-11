@@ -80,6 +80,8 @@ public class Storage : MonoBehaviour {
     }
 
     public Camera MainCamera;
+    public string SelectGameObjectID="?";
+
     private SaveLoadData _scriptData;
     private GenerateGridFields _scriptGrid;
     private CompletePlayerController _screiptHero;
@@ -631,7 +633,7 @@ public class Storage : MonoBehaviour {
 
     public void GetHistory(string nameObj)
     {
-        Debug.Log("History --------------------------------------------");
+        Debug.Log("******** History (" + _listHistoryGameObject.Count + ") --------------------------------------------FIND: " + nameObj);
         var resList = _listHistoryGameObject.Where(p => p.Name == nameObj || p.Name=="").OrderBy(p => p.TimeSave);
         int i=0;
         foreach (var obj in resList)
@@ -639,6 +641,19 @@ public class Storage : MonoBehaviour {
             i++;
             Debug.Log(i + ". " + obj.ToString());
         }
+        if(resList == null || resList.Count() == 0)
+        {
+            string id = GetID(nameObj);
+            //resList = _listHistoryGameObject.Where(p => p.Name.StartsWith(id)).OrderBy(p => p.TimeSave);
+            resList = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id)!=-1; }).OrderBy(p => p.TimeSave);
+            foreach (var obj in resList)
+            {
+                i++;
+                Debug.Log(i + ". " + obj.ToString());
+            }
+        }
+
+        Debug.Log("*******************************************************************************************"); 
     }
 
     public void SaveHistory(string name, string actionName, string callFunc, string field = "", string comment = "", SaveLoadData.ObjectData oldDataObj = null, SaveLoadData.ObjectData newDataObj = null)
@@ -660,6 +675,8 @@ public class Storage : MonoBehaviour {
     }
 
 #region Helper
+
+    
 
     public static string CreateName(string tag, string nameFiled, string id = "", string nameObjOld = "")
     {
@@ -697,6 +714,11 @@ public class Storage : MonoBehaviour {
     public static string GetGameObjectID(GameObject gobj)
     {
         string nameObj = gobj.name;
+        return GetID(nameObj);
+    }
+
+    public static string GetID(string nameObj)
+    {
         string id = "";
         int i = nameObj.LastIndexOf("_");
         //int i2 = nameObjOld.IndexOf("_");
@@ -705,14 +727,13 @@ public class Storage : MonoBehaviour {
             //123456789
             //Debug.Log("_______________________CREATE NAME i_l=" + i + "     i=" + i2 + "     len=" + nameObjOld.Length + "      :" + nameObjOld);
             id = nameObj.Substring(i + 1, nameObj.Length - i - 1);
-            Debug.Log("_______________________GetGameObjectID  ID:" + id);
+            //Debug.Log("_______________________GetGameObjectID  ID:" + id);
         }
         else
             Debug.Log("!!!!!! GetGameObjectID Error create name prefix !!!!!!!!!!");
 
         return id;
     }
-
 
     public static string GetNameField(int x, int y)
     {

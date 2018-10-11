@@ -10,6 +10,7 @@ TagManager:
   - PrefabRock
   - PrefabUfo
   - PrefabPanel
+  - UI
   layers:
   - Default
   - TransparentFX

@@ -103,9 +103,9 @@ public class SaveLoadData : MonoBehaviour {
                 {
 
                     //Type prefab
-                    //int intTypePrefab = UnityEngine.Random.Range(1, 4);
+                    int intTypePrefab = UnityEngine.Random.Range(1, 4);
                     //#TT NOT UFO
-                    int intTypePrefab = UnityEngine.Random.Range(1, 3);
+                    //int intTypePrefab = UnityEngine.Random.Range(1, 3);
 
                     TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
 
@@ -136,88 +136,7 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
 
-    //+++ CreatePrefabByName +++
-    //public static ObjectData CreateObjectData(GameObject p_gobject, bool isNewGen = false)
-    //{
-    //    ObjectData newObject;
-    //    //#PPPP
-    //    TypePrefabs prefabType = TypePrefabs.PrefabField;
-
-    //    if (!String.IsNullOrEmpty(p_gobject.tag))
-    //        prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), p_gobject.tag.ToString()); ;
-
-    //    switch (prefabType)
-    //    {
-    //        case TypePrefabs.PrefabUfo:
-    //            if (isNewGen)
-    //            {
-    //                //Debug.Log("_______________________GameDataUfo_____________: " + p_gobject.name);
-    //                newObject = new GameDataUfo()
-    //                {
-    //                    NameObject = p_gobject.name,
-    //                    TagObject = p_gobject.tag,
-    //                    Position = p_gobject.transform.position
-    //                };
-
-    //                //Debug.Log("_______________________UpdateGameObject DATA_____________: " + p_gobject.name);
-    //                //NEW DATA  -------->>>>  PERSONA  #P#
-    //                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-    //                newObject.UpdateGameObject(p_gobject);
-
-    //                //Debug.Log("_______________________UpdateGameObject DATA_____________ updated.    :" + p_gobject.name);
-    //                //Debug.Log("DATA NewGen PrefabUfo (" + p_gobject.name + ") SAVE : " + testC + " to:" + newObject.ToString());
-    //            }
-    //            else
-    //            {
-    //                //Debug.Log("_______________________GameDataUfo_____________Update... " + p_gobject.name);
-
-    //                newObject = new GameDataUfo();
-    //                //string idObject = Storage.GetGameObjectID(p_gobject);
-    //                string nameField = Storage.GetNameFieldByName(p_gobject.name);
-
-    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
-    //                {
-    //                    Debug.Log("!!!!!!!!! Error CreateObjectData FIELD NOT FOUND :" + nameField);
-    //                    return null;
-    //                }
-    //                var objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-    //                var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
-    //                if (index == -1)
-    //                {
-    //                    Debug.Log("################# Error CreateObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-    //                    Storage.Instance.DebugKill(p_gobject.name);
-
-    //                    //@KOSTIL@ --------------------------------------------------------------
-    //                    //newObject = new GameDataUfo()
-    //                    //{
-    //                    //    NameObject = p_gobject.name,
-    //                    //    TagObject = p_gobject.tag,
-    //                    //    Position = p_gobject.transform.position
-    //                    //};
-    //                    //newObject.UpdateGameObject(p_gobject);
-    //                    //--------------------------------------------------------------
-
-    //                    //# 
-    //                    return null;
-    //                }
-    //                newObject = objects[index] as GameDataUfo;
-
-    //            }
-    //            break;
-    //        default:
-    //            //Debug.Log("_______________________CreateObjectData_____________default " + prefabType);
-    //            newObject = new ObjectData()
-    //            {
-    //                NameObject = p_gobject.name,
-    //                TagObject = p_gobject.tag,
-    //                Position = p_gobject.transform.position
-    //            };
-    //            break;
-    //    }
-    //    return newObject;
-    //}
-
-    public static ObjectData CreateObjectData(GameObject p_gobject, bool isNewGen = false)
+    public static ObjectData CreateObjectData(GameObject p_gobject)
     {
         ObjectData newObject;
         //#PPPP
@@ -229,51 +148,14 @@ public class SaveLoadData : MonoBehaviour {
         switch (prefabType)
         {
             case TypePrefabs.PrefabUfo:
-                if (isNewGen)
+                newObject = new GameDataUfo()
                 {
-                    newObject = new GameDataUfo()
-                    {
-                        NameObject = p_gobject.name,
-                        TagObject = p_gobject.tag,
-                        Position = p_gobject.transform.position
-                    };
-                    Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-                    newObject.UpdateGameObject(p_gobject);
-                }
-                else
-                {
-                    newObject = new GameDataUfo()
-                    {
-                        NameObject = p_gobject.name,
-                        TagObject = p_gobject.tag,
-                        Position = p_gobject.transform.position
-                    };
-
-                    //++++
-                    //MovementUfo movementUfo = p_gobject.GetComponent<MovementUfo>();
-                    //if (movementUfo == null)
-                    //{
-                    //    Debug.Log("####################  CreateObjectData (" + p_gobject.name + ")  movementUfo is EMPTY");
-                    //    return null;
-                    //}
-                    //GameDataUfo newObjectClone = (GameDataUfo)movementUfo.DataUfo.Clone();
-                    //if (newObjectClone == null)
-                    //{
-                    //    Debug.Log("####################  CreateObjectData (" + p_gobject.name + ")  movementUfo DataUfo is EMPTY");
-                    //    return null;
-                    //}
-                    //if(newObjectClone.NameObject != newObject.NameObject)
-                    //    Debug.Log("####################  CreateObjectData DataUfoClone(" + newObjectClone.NameObject + ")  DataUfo GO: (" + newObject.NameObject + ")");
-                    //if (newObjectClone.Position != newObject.Position)
-                    //    Debug.Log("####################  CreateObjectData  Position>> DataUfoClone(" + newObjectClone.Position + ")  DataUfo GO: (" + newObject.Position + ")");
-                    //if (newObjectClone.TagObject != newObject.TagObject)
-                    //    Debug.Log("####################  CreateObjectData DataUfoClone(" + newObjectClone.TagObject + ")  DataUfo GO: (" + newObject.TagObject + ")");
-                    //if (newObjectClone.TargetPosition != ((GameDataUfo)newObject).TargetPosition)
-                    //    Debug.Log("####################  CreateObjectData TargetPosition>>  DataUfoClone(" + newObjectClone.TagObject + ")  DataUfo GO: (" + ((GameDataUfo)newObject).TargetPosition + ")");
-                    //++++
-
-                    newObject.UpdateGameObject(p_gobject);
-                }
+                    NameObject = p_gobject.name,
+                    TagObject = p_gobject.tag,
+                    Position = p_gobject.transform.position
+                };
+                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
+                newObject.UpdateGameObject(p_gobject);
                 break;
             default:
                 //Debug.Log("_______________________CreateObjectData_____________default " + prefabType);

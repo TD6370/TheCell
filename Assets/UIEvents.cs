@@ -9,6 +9,7 @@ public class UIEvents : MonoBehaviour {
     public Text txtLog;
     public Button btnExit;
     public Button btnTest;
+    public InputField tbxTest;
 
     public Camera MainCamera;
     
@@ -57,7 +58,13 @@ public class UIEvents : MonoBehaviour {
 
     private void LoadTest()
     {
-        txtMessage.text = "Text not work...";
+        txtMessage.text = "Selected: [" + tbxTest.text + "]"; 
+        Storage.Instance.SelectGameObjectID = tbxTest.text;
+    }
+
+    public void SetTestText(string text)
+    {
+        tbxTest.text = text;
     }
 
 }

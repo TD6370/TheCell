@@ -13,10 +13,11 @@ public class MovementUfo : MonoBehaviour {
     private SpriteRenderer m_spriteRenderer;
     //@PD@ private PersonalData m_scriptPersonal;
     private Rigidbody2D _rb2d;
-    //private int _lmitHorizontalLook = 0;
-    //private int _limitVerticalLook = 0;
-
+    private string objID;
     //public SaveLoadData.GameDataUfo DataUfo { get; set; }
+
+    //private GameObject UIcontroller;
+    private UIEvents _scriptUIEvents;
 
     string testId;
 
@@ -33,7 +34,16 @@ public class MovementUfo : MonoBehaviour {
 
         InitData();
         StartCoroutine(MoveObjectToPosition());
-        
+        objID = Storage.GetID(this.name);
+        if (string.IsNullOrEmpty(objID))
+            objID = "Empty";
+
+        GameObject UIcontroller = GameObject.FindWithTag("UI");
+        if (UIcontroller == null)
+            Debug.Log("########### MovementUfo UIcontroller is Empty");
+        _scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
+        if (_scriptUIEvents == null)
+            Debug.Log("########### MovementUfo scriptUIEvents is Empty");
 	}
 
     // Update is called once per frame
@@ -117,12 +127,7 @@ public class MovementUfo : MonoBehaviour {
         int speed = 2;
         float step = speed * Time.deltaTime;
 
-        //int start = this.gameObject.name.IndexOf("Field");
-        //if (start == -1)
-        //{
-        //    Debug.Log("# GetNameFieldByName " + this.gameObject.name + " key 'Field' not found!");
-        //    yield return null;
-        //}
+
         if (!Storage.IsDataInit(this.gameObject))
         {
             //yield return null;
@@ -133,13 +138,9 @@ public class MovementUfo : MonoBehaviour {
         //Debug.Log("______________________________________CALL CreateObjectData 5. FIND_________________________" + this.gameObject.name);
         //var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo ;
         var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
-       
 
         while (true)
         {
-            //@@@@
-            //dataUfo = DataUfo;
-
             if (dataUfo == null)
             {
                 Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
@@ -153,8 +154,6 @@ public class MovementUfo : MonoBehaviour {
                 if (distLock < minDist)
                 {
                     //Debug.Log("MoveObjectToPosition ------ UFO LOCK !!!!  > " + distLock);
-                    //objUfo.SetTargetPosition(_lmitHorizontalLook, _limitVerticalLook);
-                    //SetTargetPosition(objUfo);
                     dataUfo.SetTargetPosition();
                 }
                 lastPositionForLock = transform.position;
@@ -162,8 +161,7 @@ public class MovementUfo : MonoBehaviour {
             }
 
             Vector3 targetPosition  = dataUfo.TargetPosition;
-            Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step); 
-
+            Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
 
             // Move our position a step closer to the target. @!@
             //var _rb2d = GetComponent<Rigidbody2D>();
@@ -184,15 +182,8 @@ public class MovementUfo : MonoBehaviour {
                 Debug.Log("ERROR =================================== MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + newName);
             }
 
-            //if (!string.IsNullOrEmpty(newName))
-            //{
-            //    Debug.Log("TEST ==== MoveObjectToPosition PRED ==== rael name: " + this.gameObject.name + "  last new name: " + newName);
-            //}
-
             string oldName = this.name;
 
-
-            //string resName = dataUfo.TestNextPosition(this.gameObject, newName);
             //+++++++++++++++++++++++
             string resName = dataUfo.NextPosition(this.gameObject);
             //+++++++++++++++++++++++
@@ -229,22 +220,12 @@ public class MovementUfo : MonoBehaviour {
             {
                 Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
             }
-            //if (!string.IsNullOrEmpty(newName))
-            //{
-            //    Debug.Log("TEST ==== MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
-            //}
-            //if (!string.IsNullOrEmpty(newName) && newName != this.gameObject.name)
-            //{
-            //    Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
-            //}
+
 
             float dist = Vector3.Distance(targetPosition, transform.position);
             //Debug.Log("MoveObjectToPosition ------ UFO distance to point  > " + dist);
             if (dist < minDist)
             {
-                //Debug.Log("MoveObjectToPosition ------ UFO IN POINT  > " + dist);
-                //objUfo.SetTargetPosition();
-                //SetTargetPosition(objUfo);
                 dataUfo.SetTargetPosition();
             }
 
@@ -278,12 +259,76 @@ public class MovementUfo : MonoBehaviour {
         return dataUfo;
     }
 
-    //private void SetTargetPosition(SaveLoadData.GameDataUfo objUfo) 
+
+    
+    //--------------------
+    //public string text = "TTTTTTTTTTTTTTTTTTTTTTTTTTT1";
+    //public int textSize = 14;
+    //public Font textFont;
+    //public Color textColor = Color.white;
+    //public float textHeight = 1.15f;
+    //public bool showShadow = true;
+    //public Color shadowColor = new Color(0, 0, 0, 0.5f);
+    //public Vector2 shadowOffset = new Vector2(1, 1);
+    //--------------------
+
+    void OnGUI()
+    {
+        //-------------------------
+        //GUI.depth = 9999;
+
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 13;
+        //style.richText = true;
+        //if (textFont) style.font = textFont;
+        style.normal.textColor = Color.black;
+        //style.alignment = TextAnchor.MiddleCenter;
+
+        //GUIStyle shadow = new GUIStyle();
+        //shadow.fontSize = textSize;
+        //shadow.richText = true;
+        //if (textFont) shadow.font = textFont;
+        //shadow.normal.textColor = shadowColor;
+        //shadow.alignment = TextAnchor.MiddleCenter;
+
+        //Vector3 worldPosition = new Vector3(transform.position.x, transform.position.y + 50, transform.position.z);
+        //Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
+        //screenPosition.y = Screen.height - screenPosition.y;
+
+        //if (showShadow) GUI.Label(new Rect(screenPosition.x + shadowOffset.x, screenPosition.y + shadowOffset.y, 0, 0), textShadow, shadow);
+        //GUI.Label(new Rect(screenPosition.x, screenPosition.y, 0, 0), text, style);
+        //-------------------------
+
+        if (objID == Storage.Instance.SelectGameObjectID)
+        {
+            style.fontSize = 15;
+            style.fontStyle = FontStyle.Bold;
+            style.normal.textColor = Color.yellow;
+        }
+
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
+        //GUI.Label(position1, objID);
+        GUI.Label(position1, objID, style);
+    }
+
+    //void OnBecameVisible()
     //{
-    //    objUfo.SetTargetPosition(m_scriptStorage.ZonaField);
+    //    enabled = true;
     //}
-	
 
+    //void OnBecameInvisible()
+    //{
+    //    enabled = false;
+    //}
 
+    private void OnMouseDown()
+    {
+        SelectIdFromTextBox();
+    }
 
+    private void SelectIdFromTextBox()
+    {
+        _scriptUIEvents.SetTestText(objID);
+    }
 }

@@ -9,7 +9,7 @@ public class CreateNPC : MonoBehaviour {
     //@ST@ public Camera MainCamera;
 
     private GenerateGridFields _scriptGrid;
-    private int m_LimitUfo = 6;//100;
+    private int m_LimitUfo = 0;//100;
     private float _periodCreateNPC = 2;//3;
 
     void Start()
@@ -29,6 +29,12 @@ public class CreateNPC : MonoBehaviour {
         //    return;
         //}
         //_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
     public void SartCrateNPC()
@@ -101,8 +107,5 @@ public class CreateNPC : MonoBehaviour {
         _scriptGrid.ActiveGameObject(newUfo);
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

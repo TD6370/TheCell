@@ -157,13 +157,13 @@ public class CompletePlayerController : MonoBehaviour {
     }
 
 
-    private void OnMouseButton()
-    {
-        if(Input.GetMouseButton(1))
-        {
-            MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
-        }
-     }
+    //private void OnMouseButton()
+    //{
+    //    if(Input.GetMouseButton(1))
+    //    {
+    //        MainCamera.orthographicSize = MainCamera.orthographicSize == 8.0f ? 22.0f : 8.0f;
+    //    }
+    // }
 
     private void RestructGrid()
     {
