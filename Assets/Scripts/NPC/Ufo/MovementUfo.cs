@@ -5,28 +5,18 @@ using UnityEngine;
 
 public class MovementUfo : MonoBehaviour {
 
-    //public GameObject DataStorage;
-    //private Storage m_scriptStorage;
-
     private Coroutine moveObject;
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
-    //@PD@ private PersonalData m_scriptPersonal;
     private Rigidbody2D _rb2d;
     private string objID;
-    //public SaveLoadData.GameDataUfo DataUfo { get; set; }
 
-    //private GameObject UIcontroller;
     private UIEvents _scriptUIEvents;
 
     string testId;
 
     void Awake()
     {
-        //@44@
-        ///testId = Guid.NewGuid().ToString().Substring(1, 4);
-        //Debug.Log("UFO create ID ++++++++++++++++++++++ " + testId);
-        //this.name = "PrefabUfo_" + testId;
     }
 
 	// Use this for initialization
@@ -57,21 +47,6 @@ public class MovementUfo : MonoBehaviour {
         m_spriteRenderer = this.GetComponent<SpriteRenderer>();
         //@PD@ m_scriptPersonal = this.GetComponent<PersonalData>();
         _rb2d = this.GetComponent<Rigidbody2D>();
-
-        //var storage = DataStorage;
-        //if (storage == null)
-        //{
-        //    Debug.Log("DataStorage null");
-        //    return;
-        //}
-        //m_scriptStorage = storage.GetComponent<Storage>();
-        //if (m_scriptStorage == null)
-        //{
-        //    Debug.Log("Error scriptStorage is null !!!");
-        //    return;
-        //}
-        //_lmitHorizontalLook = m_scriptStorage.LimitHorizontalLook;
-        //_limitVerticalLook = m_scriptStorage.LimitVerticalLook;
     }
 
     IEnumerator ChangeColor(){
@@ -107,7 +82,6 @@ public class MovementUfo : MonoBehaviour {
             }
 
             transform.Translate(compas * Time.deltaTime, 0, 0);
-            //transform.Translate(1, 0, 0);
             yield return null;
             //yield return new WaitForSeconds(1);
         }
@@ -138,10 +112,6 @@ public class MovementUfo : MonoBehaviour {
             yield break;
         }
 
-        //@PD@ var dataUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
-        //Debug.Log("______________________________________CALL CreateObjectData 5. FIND_________________________" + this.gameObject.name);
-        //var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo ;
-        
         //@SAVE@  var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
         dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
 
@@ -169,11 +139,8 @@ public class MovementUfo : MonoBehaviour {
             Vector3 targetPosition  = dataUfo.TargetPosition;
             Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
 
-            // Move our position a step closer to the target. @!@
-            //var _rb2d = GetComponent<Rigidbody2D>();
             if (_rb2d != null)
             {
-                //Debug.Log("UFO MoveObjectToPosition Set position 2........");
                 _rb2d.MovePosition(pos);
             }
             else
@@ -185,7 +152,7 @@ public class MovementUfo : MonoBehaviour {
 
             if (!string.IsNullOrEmpty(newName) && newName != this.gameObject.name)
             {
-                Debug.Log("ERROR =================================== MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + newName);
+                Debug.Log("################## ERROR MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + newName);
             }
 
             string oldName = this.name;
@@ -194,16 +161,14 @@ public class MovementUfo : MonoBehaviour {
             string resName = dataUfo.NextPosition(this.gameObject);
             //+++++++++++++++++++++++
 
-
-
             if (!string.IsNullOrEmpty(resName))
             {
                 if (oldName != resName)
                 {
-                    //Debug.Log("UFO MoveObjectToPosition >>> Update DATA .....................");
                     dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
                     if (dataUfo == null)
                     {
+                        Debug.Log("################## ERROR MoveObjectToPosition dataUfo is Empty   GO:" + this.gameObject.name);
                         yield break;
                     }
                 }
@@ -214,21 +179,16 @@ public class MovementUfo : MonoBehaviour {
 
             if (!string.IsNullOrEmpty(resName))
             {
+                if (resName != this.gameObject.name)
+                {
+                    Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
+                }
                 if (this.gameObject.name != newName)
                 {
                     Debug.Log("ERROR **** MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
                     this.gameObject.name = newName;
                 }
-                else
-                {
-                    //@POS@ Debug.Log("TEST ==== MoveObjectToPosition POST ==== rael name: " + this.gameObject.name + "  new name: " + newName + "      old name:" + oldName);
-                }
             }
-            if (!string.IsNullOrEmpty(resName) && resName != this.gameObject.name)
-            {
-                Debug.Log("ERROR =================================== MoveObjectToPosition ===========POST========= rael name: " + this.gameObject.name + "  new name: " + newName);
-            }
-
 
             float dist = Vector3.Distance(targetPosition, transform.position);
             //Debug.Log("MoveObjectToPosition ------ UFO distance to point  > " + dist);

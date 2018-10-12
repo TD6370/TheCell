@@ -21,27 +21,17 @@ public class CreateNPC : MonoBehaviour {
 
     void Awake()
     {
-        //@ST@
-        //var camera = MainCamera;
-        //if (camera == null)
-        //{
-        //    Debug.Log("MainCamera null");
-        //    return;
-        //}
-        //_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     public void SartCrateNPC()
     {
         //Debug.Log(".............SartCrateNPC -- CreateObjectUfo()");
         StartCoroutine(CreateObjectUfo());
-        //TestCreateObjectUfo();
     }
 
     [ExecuteInEditMode]
@@ -53,10 +43,6 @@ public class CreateNPC : MonoBehaviour {
 
         while (true)
         {
-            //GameObject[] listPrefabUfo = GameObject.FindGameObjectsWithTag("PrefabUfo");
-            //coutUfoReal = listPrefabUfo.Length;
-            //Debug.Log("Count Ufo Real =" + coutUfoReal.ToString() + " < " + m_LimitUfo);//Дебаг
-
             if (coutUfoReal < m_LimitUfo && !isTest)
             {
                 if (coutUfoReal == 0) coutUfoReal = 2;
