@@ -113,12 +113,16 @@ public class MovementUfo : MonoBehaviour {
         }
     }
 
+    //@SAVE@
+    SaveLoadData.GameDataUfo dataUfo;
+    string newName = "";
+
     IEnumerator MoveObjectToPosition()
     {
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
 
-        string newName = "";
+        
 
         int stepTest = 0;
         int stepLimitTest = 10;
@@ -137,7 +141,9 @@ public class MovementUfo : MonoBehaviour {
         //@PD@ var dataUfo = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataUfo;
         //Debug.Log("______________________________________CALL CreateObjectData 5. FIND_________________________" + this.gameObject.name);
         //var dataUfo = SaveLoadData.CreateObjectData(this.gameObject) as SaveLoadData.GameDataUfo ;
-        var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
+        
+        //@SAVE@  var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
+        dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
 
         while (true)
         {
@@ -187,6 +193,8 @@ public class MovementUfo : MonoBehaviour {
             //+++++++++++++++++++++++
             string resName = dataUfo.NextPosition(this.gameObject);
             //+++++++++++++++++++++++
+
+
 
             if (!string.IsNullOrEmpty(resName))
             {
@@ -259,7 +267,13 @@ public class MovementUfo : MonoBehaviour {
         return dataUfo;
     }
 
-
+    //@SAVE@
+    public void UpdateData()
+    {
+        //Debug.Log("_____________GameObject.UpdateData ________________" + this.name);
+        dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
+        newName = dataUfo.NameObject;
+    }
     
     //--------------------
     //public string text = "TTTTTTTTTTTTTTTTTTTTTTTTTTT1";

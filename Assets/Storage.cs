@@ -87,7 +87,7 @@ public class Storage : MonoBehaviour {
     private CompletePlayerController _screiptHero;
     private CreateNPC _scriptNPC;
     private List<HistoryGameObject> _listHistoryGameObject;
-
+    private bool _isSaveHistory = true;
 
     public void Awake()
     {
@@ -104,7 +104,6 @@ public class Storage : MonoBehaviour {
         _GridDataG = new SaveLoadData.GridData();
         _personsData = new SaveLoadData.LevelData();
         _listHistoryGameObject = new List<HistoryGameObject>();
-
         //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
 
         //var camera = MainCamera;
@@ -144,7 +143,6 @@ public class Storage : MonoBehaviour {
     {
 
     }
-
     
     private void LoadGameObjects()
     {
@@ -201,37 +199,6 @@ public class Storage : MonoBehaviour {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
     }
-
-    //void StartGenGrigField()
-    //{
-    //    int maxWidth = (int)GridY * -1;
-    //    int maxHeight = (int)GridX;
-    //    Counter = maxWidth * maxHeight;
-    //    Debug.Log("counter=" + Counter.ToString());
-    //    Counter = 0;
-    //    string _nameField = "";
-
-    //    for (int y = 0; y > maxWidth; y--)
-    //    {
-    //        for (int x = 0; x < maxHeight; x++)
-    //        {
-
-    //            Vector3 pos = new Vector3(x, y, 1) * Spacing;
-    //            //Vector2 pos = new Vector2(x, y) * spacing;
-    //            pos.z = 0;
-    //            //Debug.Log("Gen field pos=" + pos + "   Spacing=" + Spacing);
-    //            GameObject newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-    //            newField.tag = "Field";
-    //            string nameField = Storage.GetNameField(x, y);
-    //            newField.name = nameField;
-    //            _nameField = nameField;
-    //            Fields.Add(nameField, newField);
-    //            Counter++;
-    //        }
-    //    }
-
-    //    Debug.Log("Pole Field name init : " + _nameField);
-    //}
 
     public void SetHeroPosition(int x, int y, float xH, float yH)
     {
@@ -518,23 +485,9 @@ public class Storage : MonoBehaviour {
         return gobj.name;
     }
 
-    public void DebugKill(string findObj)
-    {
-        var res = KillObject.Find(p => p == findObj);
-        if (res != null)
-            Debug.Log("FIND KILLED : " + findObj);
-        else
-        {
-            foreach (var obj in KillObject)
-            {
-                Debug.Log("killed --------------------------------:" + obj);
-            }
-        }
-    }
+    
 
     //----- Data Object
-    bool _isSaveHistory = true;
-
     public void ClearGridData()
     {
         _GridDataG = new SaveLoadData.GridData();
@@ -615,6 +568,13 @@ public class Storage : MonoBehaviour {
         return listRealObjects;
     }
 
+    public void RemoveFieldRealObject(string nameField, string callFunc)
+    {
+        _GamesObjectsReal.Remove(nameField);
+
+        //! SaveHistory("", "RemoveFieldRealObject", callFunc, nameField);
+    }
+
     public void AddRealObject(GameObject p_saveObject, string nameField, string callFunc)
     {
         _GamesObjectsReal[nameField].Add(p_saveObject);
@@ -622,11 +582,41 @@ public class Storage : MonoBehaviour {
         SaveHistory(p_saveObject.name, "AddRealObject", callFunc, nameField);
     }
 
-    public void RemoveFieldRealObject(string nameField, string callFunc)
+    public void RemoveRealObject(int indexDel, string nameField, string callFunc)
     {
-        _GamesObjectsReal.Remove(nameField);
+        //List<GameObject> objects = _GamesObjectsReal[nameField];
+        if (!_GamesObjectsReal.ContainsKey(nameField))
+        {
+            Debug.Log("################ RemoveRealObject    Not Filed: " + nameField);
+            return;
+        }
+        if (_GamesObjectsReal[nameField].Count-1 < indexDel)
+        {
+            Debug.Log("################ RemoveRealObject  " + nameField + "  Not indexDel: " + indexDel);
+            return;
+        }
+        SaveHistory(_GamesObjectsReal[nameField][indexDel].name, "RemoveRealObject", callFunc, nameField);
+        
+        _GamesObjectsReal[nameField].RemoveAt(indexDel);
+    }
 
-        //! SaveHistory("", "RemoveFieldRealObject", callFunc, nameField);
+ #region Log
+
+    public void DebugKill(string findObj)
+    {
+        if (!_isSaveHistory)
+            return;
+
+        var res = KillObject.Find(p => p == findObj);
+        if (res != null)
+            Debug.Log("FIND KILLED : " + findObj);
+        else
+        {
+            foreach (var obj in KillObject)
+            {
+                Debug.Log("killed --------------------------------:" + obj);
+            }
+        }
     }
 
     //--------------- History
@@ -673,10 +663,11 @@ public class Storage : MonoBehaviour {
             TimeSave = DateTime.Now
         });
     }
+ #endregion
 
-#region Helper
+    #region Helper
 
-    
+
 
     public static string CreateName(string tag, string nameFiled, string id = "", string nameObjOld = "")
     {
@@ -690,19 +681,24 @@ public class Storage : MonoBehaviour {
             {
 
                 int i = nameObjOld.LastIndexOf("_");
-                int i2 = nameObjOld.IndexOf("_");
+                //int i2 = nameObjOld.IndexOf("_");
                 if (i != -1)
                 {
                     //123456789
                     //Debug.Log("_______________________CREATE NAME i_l=" + i + "     i=" + i2 + "     len=" + nameObjOld.Length + "      :" + nameObjOld);
                     id = nameObjOld.Substring(i + 1, nameObjOld.Length - i - 1);
                     //id = nameObjOld.Substring(nameObjOld.Length - i, i);
-                    //Debug.Log("_______________________CREATE NAME  ID:" + id);
+                    //Debug.Log("_______________________CREATE NAME  ID:" + id + "       nameObjOld: " + nameObjOld);
                 }
                 else
                     Debug.Log("!!!!!! Error create name prefix !!!!!!!!!!");
             }
         }
+        else
+        {
+            //Debug.Log("__CreateName old id=" + id);
+        }
+
         if (id == "-1")
         {
             id = Guid.NewGuid().ToString().Substring(1, 4);

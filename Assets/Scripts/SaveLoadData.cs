@@ -8,26 +8,11 @@ using System.Linq;
 
 public class SaveLoadData : MonoBehaviour {
 
-    //public GenerateGridFields ScriptGridGeneric;
     public GameObject PrefabVood;
     public GameObject PrefabRock;
     public GameObject PrefabUfo;
     public GameObject PrefabBoss;
-    //public Camera MainCamera;
-    //@ST@
-    //public GameObject DataStorage;
-    
-
-    //private string _datapathLevel;
-    //private string _datapathPerson;
-    //@ST@ private GridData _gridData;
-    //@ST@ 
-    //private LevelData _personsData;
-    
     private GenerateGridFields _scriptGrid;
-    //@ST@ private CreateNPC _scriptNPC;
-    //@ST@
-    //private Storage _scriptStorage;
 
     private float Spacing = 2f;
   
@@ -67,25 +52,17 @@ public class SaveLoadData : MonoBehaviour {
     {
         //# On/Off
         isAlwaysCreate = true;
-        //var _gridData = Storage.Instance.GridDataG;
 
-        //if (_gridData != null && !isAlwaysCreate)
         if (Storage.Instance.GridDataG != null && !isAlwaysCreate)
         {
             Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded");
-            //@ST@ _scriptGrid.GridData = _gridData;
-            //_scriptNPC.SartCrateNPC();
-            //@ST@ Storage.SetGridData(_gridData);
             return;
         }
 
-        //Dictionary<string, List<GameObject>> _gamesObjectsActive = new Dictionary<string, List<GameObject>>();
         int coutCreateObjects = 0;
 
         Debug.Log("# CreateDataGamesObjectsWorld...");
 
-        //#D- 
-        //@ST@ Dictionary<string, FieldData> dictFields = new Dictionary<string, FieldData>();
         Storage.Instance.ClearGridData();
         
 
@@ -132,7 +109,6 @@ public class SaveLoadData : MonoBehaviour {
 
         Storage.Instance.SaveGridGameObjectsXml(true);
 
-        //Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects + "  count fields: " + _scriptGrid.GamesObjectsActive.Count);
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
 
@@ -194,19 +170,9 @@ public class SaveLoadData : MonoBehaviour {
                 if (index == -1)
                 {
                     Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                    Storage.Instance.DebugKill(p_gobject.name);
-
-                    //@KOSTIL@ --------------------------------------------------------------
-                    //newObject = new GameDataUfo()
-                    //{
-                    //    NameObject = p_gobject.name,
-                    //    TagObject = p_gobject.tag,
-                    //    Position = p_gobject.transform.position
-                    //};
-                    //newObject.UpdateGameObject(p_gobject);
-                    //--------------------------------------------------------------
-
-                    //# 
+                    //Storage.Instance.DebugKill(p_gobject.name);
+                    Storage.Instance.GetHistory(p_gobject.name);
+                    
                     return null;
                 }
                 newObject = objects[index] as GameDataUfo;
@@ -361,13 +327,7 @@ public class SaveLoadData : MonoBehaviour {
             return state;
         }
 
-        //public static IEnumerable<KeyValuePair<string, FieldData>> ToDict(IEnumerable<KeyValuePair<string, FieldData>> list)
-        //{
-        //    foreach (var item in list)
-        //    {
-        //        yield return new KeyValuePair<string, FieldData>(item.Key, item.Value);
-        //    }
-        //}
+        
     }
 
     [XmlRoot("Level")]
@@ -405,18 +365,7 @@ public class SaveLoadData : MonoBehaviour {
         public List<ObjectData> Objects = new List<ObjectData>();
         public FieldData() { }
     }
-    //#D+
-    //[XmlRoot("Grid")]
-    //[XmlInclude(typeof(ObjectData))]
-    //public class GridData
-    //{
-    //    [XmlArray("Fields")]
-    //    [XmlArrayItem("Field")]
-    //    public List<KeyValuePair<string, List<ObjectData>>> FieldsXML = new List<KeyValuePair<string, List<ObjectData>>>();
-    //    [XmlIgnore]
-    //    public Dictionary<string, List<ObjectData>> FieldsD = new Dictionary<string, List<ObjectData>>();
-    //    public GridData() { }
-    //}
+    
 
     //++++
     [XmlType("Object")] //++
@@ -438,28 +387,10 @@ public class SaveLoadData : MonoBehaviour {
 
         public virtual void UpdateGameObject(GameObject objGame)
         {
-            //@PD@
-            //var tempData = objGame.GetComponent<PersonalData>();
-            //if (tempData != null)
-            //{
-            //    Debug.Log(">>>> UpdateGameObject  SAVE PERSONAL DATA ");
-
-            //    tempData.PersonalObjectData = (ObjectData)this.Clone();
-            //}
+            
         }
 
-        //public virtual void NextPosition(Vector3 p_newPosition)
-        //{
-        //    string posFieldOld = Storage.GetNameFieldPosit(Position.x, Position.y);
-        //    string posFieldReal = Storage.GetNameFieldPosit(p_newPosition.x, p_newPosition.y);
-
-        //    //!!!!!!!!!!!! p_nameField === posFieldOld
-        //    if (posFieldOld != posFieldReal)
-        //    {
-        //        Debug.Log("NextPosition " + NameObject);
-        //        Storage.UpdateGamePosition(posFieldOld, posFieldReal, NameObject);
-        //    }
-        //}
+        
 
         public object Clone()
         {
@@ -469,20 +400,10 @@ public class SaveLoadData : MonoBehaviour {
         public override string ToString()
         {
             return NameObject + " " + TagObject + " " + Position;
-            //return base.ToString();
         }
     }
 
-    //[XmlType("Person")]
-    //public class PersonData : ObjectData
-    //{
-    //    public string Id { get; set; }
-
-    //    public PersonData() : base()
-    //    {
-    //        Id = Guid.NewGuid().ToString();
-    //    }
-    //}
+   
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -497,11 +418,7 @@ public class SaveLoadData : MonoBehaviour {
     {
         [XmlIgnore]
         public Vector3 TargetPosition;
-        //[XmlIgnore]
-        //public Vector3 NewPosition;
-
-        //[XmlIgnore]
-        //public bool IsReality = false;
+        
 
         //-----------------------------------for Ufo
         private Vector3 m_Position = new Vector3(0, 0, 0);
@@ -510,10 +427,9 @@ public class SaveLoadData : MonoBehaviour {
             get { return m_Position; }
             set
             {
-                //@POS@ 
-                //@POS@ Debug.Log("GameDataNPC (" + NameObject + ") --- SET Position (" + m_Position + ") = " + value);
+                
                 m_Position = value;
-                //m_Position = Storage.ConvVector3(value);
+                
 
                 if (IsCanSetTargetPosition)
                     SetTargetPosition();
@@ -531,7 +447,7 @@ public class SaveLoadData : MonoBehaviour {
 
         public GameDataNPC() : base()
         {
-            //NewPosition = new Vector3(0, 0, 0);
+            
         }
 
         public void SetTargetPosition()
@@ -564,7 +480,7 @@ public class SaveLoadData : MonoBehaviour {
             return res;
         }
 
-        //public virtual void NextPosition(GameObject gobj) //, Vector3 p_newPosition)
+        
         public virtual string NextPosition(GameObject gobj) //, Vector3 p_newPosition)
         {
             Vector3 _newPosition = gobj.transform.position;
@@ -584,8 +500,7 @@ public class SaveLoadData : MonoBehaviour {
                 {
                     //Create dublicate
                     Debug.Log("Error NextPosition (" + gobj.name + ")**************************** Field name: " + posFieldName + "   posFieldOld: " + posFieldOld + "   posFieldReal: " + posFieldReal + "   DN:" + NameObject );
-                    //gobj.name = SaveLoadData.CreateName(TagObject, posFieldOld, "", gobj.name);
-                    //nameObject = gobj.name;
+                    
 
                     Storage.Instance.GetHistory(gobj.name);
 
@@ -599,31 +514,18 @@ public class SaveLoadData : MonoBehaviour {
 
                 if (!Storage.Instance.IsValidPiontInZona(_newPosition.x, _newPosition.y))
                 {
-                    //@POS@ Debug.Log("######### NextPosition object (" + gobj.name + ") Not in RealZona.....");
-                    //SetTargetPosition();
+                    
                     isInZona = false;
                 }
 
-                //-------------------
-                //int p_x = (int)_newPosition.x;
-                //int p_y = (int)_newPosition.y;
-                //int x = (int)(p_x / 2);
-                //int y = (int)(p_y / 2);
-                //string fieldR = "Field" + (int)x + "x" + Mathf.Abs((int)y);
-                //string strX = "  x: " + _newPosition.x + " -> " + p_x + " -> " + (p_x / 2) + " -> " + x;
-                //string strY = "  y: " + _newPosition.y + " -> " + p_y + " -> " + (p_y / 2) + " -> " + y;
-                //fieldR += strX + strY;
-                //------------------
-
-                //@POS@ Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + nameObject + "          " + posFieldOld + " > " + posFieldReal + "     " + _oldPosition + "  >>  " + _newPosition);
-                //Debug.Log("~~~~~~~~~~~~~~~~~~~~~~~~~~ NextPosition " + fieldR);
+               
 
                 newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
-                //newName = Storage.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this);
+                
 
                 if (!isInZona && !string.IsNullOrEmpty(newName))
                 {
-                    //@POS@ Debug.Log("######### NextPosition Destroy on not in RealZona....");
+                    
                     Destroy(gobj);
                 }
 
@@ -644,16 +546,7 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
-    //#P
-    //[XmlType("Ufo")]
-    //public class PersonDataUfo : PersonData
-    //{
-    //    public PersonDataUfo() : base()
-    //    {
-    //    }
-    //}
-
-    //#P public class GameDataUfo :  PersonDataUfo
+    
 
     //-----------------
     [XmlType("Ufo")] //?
@@ -667,11 +560,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
 
-            //if (IsCanSetTargetPosition)
-            //{
-            //    //Debug.Log("UFO set TargetPosition after init");
-            //    SetTargetPosition();
-            //}
+            
         }
 
          public override void UpdateGameObject(GameObject objGame)
@@ -679,28 +568,20 @@ public class SaveLoadData : MonoBehaviour {
             string nameObjData = ((GameDataUfo)this).NameObject;
             if (nameObjData != objGame.name)
             {
-                //Debug.Log("Error UpdateGameObject DATA:" + nameObjData + "  OBJECT: " + objGame.name);
-                //Debug.Log("-------------------------------------------------------------------/" + nameObjData + "/ " + objGame.name + "/");
-                //return;
+                
                 objGame.name = nameObjData;
             }
 
-            //MovementUfo movementUfo = objGame.GetComponent<MovementUfo>();
-            //if (movementUfo == null)
-            //{
-            //    Debug.Log("#################### UpdateGameObject (" + objGame.name + ")  movementUfo is EMPTY");
-            //    return;
-            //}
-            //movementUfo.DataUfo = (GameDataUfo)this.Clone();
+            
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
         }
 
         public override string ToString()
         {
-            //return NameObject + " " + TagObject + " " + Position + " " + ColorRender;
+            
             return NameObject + " " + TagObject + " " + Position.x + " " + Position.y;
-            //return base.ToString();
+            
         }
     }
 
@@ -722,7 +603,7 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
-    //public class ObjectDataUfo : ObjectData
+    
     public class GameDataBoss : PersonDataBoss
     {
         [XmlIgnore]
@@ -746,7 +627,7 @@ public class SaveLoadData : MonoBehaviour {
             Debug.Log("______________________UpdateGameObject BOSS.1__________________");
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
-            //objGame.GetComponent<PersonalData>().PersonalObjectData = (GameDataUfo)this.Clone();
+            
         }
     }
     //-----------------------------------
@@ -770,10 +651,6 @@ public class SaveLoadData : MonoBehaviour {
     public void SaveLevel()
     {
         _scriptGrid.SaveAllRealGameObjects();
-        //Fields.Remove(nameField);
-        //RemoveRealObjects(nameField);
-
-        //#ST@ if (_gridData == null)
         if (Storage.Instance.GridDataG == null)
         {
             Debug.Log("Error SaveLevel gridData is null !!!");
@@ -783,21 +660,7 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel);
     }
 
-    //public void LoadObjectsNearHero()
-    //{
-    //    _scriptGrid.LoadObjectsNearHero();
-    //}
-
     
-    //public static class DictionaryExtensions
-    //{
-    //    public static IEnumerable<KeyValuePair<int, string>> GetComponents(this IEnumerable<KeyValuePair<int, string>> thisObj)
-    //    {
-
-    //        yield return new KeyValuePair<int, string>(1111, "aaa");
-    //    }
-    //}
-
     
 
 }
