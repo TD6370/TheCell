@@ -321,7 +321,7 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("##################### Error LoadGameObjectDataForLook ****** " + dataObj + " not EXIST %)");
+                        Debug.Log("##################### Error LoadGameObjectDataForLook ****** DO:" + dataObj + " not EXIST in Real %)");
                         Storage.Instance.GetHistory(dataObj.NameObject);
                     }
                     continue;
@@ -346,60 +346,119 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    public void DestroyRealObject(GameObject gObj)
-    {
-        if (gObj == null)
-            return;
+    //public void DestroyRealObject(GameObject gObj)
+    //{
+    //    if (gObj == null)
+    //        return;
 
         
-        string nameField = Storage.GetNameFieldByName(gObj.name);
-        if (nameField == null)
-            return;
+    //    string nameField = Storage.GetNameFieldByName(gObj.name);
+    //    if (nameField == null)
+    //        return;
 
-        List<GameObject> listObjInField = Storage.Instance.GamesObjectsReal[nameField];
+    //    List<GameObject> listObjInField = Storage.Instance.GamesObjectsReal[nameField];
 
-        for (int i = listObjInField.Count - 1; i >= 0; i--)
-        {
-            if (listObjInField[i] == null)
-            {
-                listObjInField.RemoveAt(i);
-            }
-        }
-        if (listObjInField.Count > 0)
-        {
-            int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
-            if (indRealData == -1)
-            {
-                Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
-            }
-            else
-            {
-                Storage.Instance.GamesObjectsReal[nameField].RemoveAt(indRealData);
-            }
-        }
+    //    for (int i = listObjInField.Count - 1; i >= 0; i--)
+    //    {
+    //        if (listObjInField[i] == null)
+    //        {
+    //            listObjInField.RemoveAt(i);
+    //        }
+    //    }
+    //    if (listObjInField.Count > 0)
+    //    {
+    //        int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
+    //        if (indRealData == -1)
+    //        {
+    //            Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+    //        }
+    //        else
+    //        {
+    //            Storage.Instance.GamesObjectsReal[nameField].RemoveAt(indRealData);
+    //        }
+    //    }
 
-        Destroy(gObj);
+    //    Destroy(gObj);
 
-        Storage.Instance.KillObject.Add(gObj.name);
-        //-----------------------------------------------
+    //    Storage.Instance.KillObject.Add(gObj.name);
+    //    //-----------------------------------------------
 
-        //Destrot to Data
-        if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
-        {
-            Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
-            return;
-        }
-        List<SaveLoadData.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-        int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
-        if (indObj == -1)
-        {
-            Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
-        }
-        else
-        {
-            dataObjects.RemoveAt(indObj);
-        }
-    }
+    //    //Destrot to Data
+    //    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //    {
+    //        Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
+    //        return;
+    //    }
+    //    List<SaveLoadData.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+    //    int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
+    //    if (indObj == -1)
+    //    {
+    //        Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
+    //    }
+    //    else
+    //    {
+    //        dataObjects.RemoveAt(indObj);
+    //    }
+    //}
+
+    //public void DestroyRealObject(GameObject gObj)
+    //{
+    //    if (gObj == null)
+    //        return;
+
+
+    //    string nameField = Storage.GetNameFieldByName(gObj.name);
+    //    if (nameField == null)
+    //        return;
+
+    //    List<GameObject> listObjInField = Storage.Instance.GamesObjectsReal[nameField];
+
+    //    for (int i = listObjInField.Count - 1; i >= 0; i--)
+    //    {
+    //        if (listObjInField[i] == null)
+    //        {
+    //            //@DD@ listObjInField.RemoveAt(i);
+    //            Storage.Instance.RemoveRealObject(i, nameField, "DestroyRealObject");
+    //        }
+    //    }
+    //    if (listObjInField.Count > 0)
+    //    {
+    //        int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
+    //        if (indRealData == -1)
+    //        {
+    //            Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+    //        }
+    //        else
+    //        {
+    //            //@DD@ 
+    //            //Storage.Instance.GamesObjectsReal[nameField].RemoveAt(indRealData);
+    //            Storage.Instance.RemoveRealObject(indRealData, nameField, "DestroyRealObject");
+    //        }
+    //    }
+
+    //    Destroy(gObj);
+
+    //    Storage.Instance.KillObject.Add(gObj.name);
+    //    //-----------------------------------------------
+
+    //    //Destrot to Data
+    //    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //    {
+    //        Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
+    //        return;
+    //    }
+    //    List<SaveLoadData.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+    //    int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
+    //    if (indObj == -1)
+    //    {
+    //        Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
+    //    }
+    //    else
+    //    {
+    //        //@DD@ dataObjects.RemoveAt(indObj);
+    //        Storage.Instance.RemoveDataObjectInGrid(nameField, indObj,"DestroyRealObject");
+    //    }
+    //}
 
     
     //REMOVE FOR LOOK
@@ -469,7 +528,8 @@ public class GenerateGridFields : MonoBehaviour {
                 GameObject gobj = realObjects[i];
                 if (gobj == null)
                 {
-                    Debug.Log("################# SaveListObjectsToData   REMOVE  GameObject   field:" + p_nameField + "  ind:" + i);
+                    //Debug.Log("################# SaveListObjectsToData   REMOVE  GameObject   field:" + p_nameField + "  ind:" + i);
+                    Debug.Log("***************** SaveListObjectsToData DESTROY GameObject field:" + p_nameField + "  ind:" + i);
                     continue;
                 }
 
@@ -610,7 +670,7 @@ public class GenerateGridFields : MonoBehaviour {
         {
             case SaveLoadData.TypePrefabs.PrefabUfo:
                 MovementUfo _movementUfo = gobj.GetComponent<MovementUfo>();
-                _movementUfo.UpdateData();
+                _movementUfo.UpdateData("GameObjectUpdatePersonData");
                 break;
             default:
                 break;

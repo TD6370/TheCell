@@ -51,7 +51,7 @@ public class SaveLoadData : MonoBehaviour {
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
     {
         //# On/Off
-        isAlwaysCreate = true;
+        //isAlwaysCreate = true;
 
         if (Storage.Instance.GridDataG != null && !isAlwaysCreate)
         {
@@ -60,11 +60,8 @@ public class SaveLoadData : MonoBehaviour {
         }
 
         int coutCreateObjects = 0;
-
         Debug.Log("# CreateDataGamesObjectsWorld...");
-
         Storage.Instance.ClearGridData();
-        
 
         for (int y = 0; y < Storage.WidthLevel; y++)
         {
@@ -473,12 +470,12 @@ public class SaveLoadData : MonoBehaviour {
             TargetPosition = new Vector3(xT, yT, -1);
         }
 
-        public virtual string TestNextPosition(GameObject gobj, string lastNewName) //, Vector3 p_newPosition)
-        {
-            Debug.Log("***** lastNewName: " + lastNewName);
-            var res = NextPosition(gobj);
-            return res;
-        }
+        //public virtual string TestNextPosition(GameObject gobj, string lastNewName) //, Vector3 p_newPosition)
+        //{
+        //    Debug.Log("***** lastNewName: " + lastNewName);
+        //    var res = NextPosition(gobj);
+        //    return res;
+        //}
 
         
         public virtual string NextPosition(GameObject gobj) //, Vector3 p_newPosition)
@@ -499,15 +496,116 @@ public class SaveLoadData : MonoBehaviour {
                 if (posFieldName != posFieldOld)
                 {
                     //Create dublicate
-                    Debug.Log("Error NextPosition (" + gobj.name + ")**************************** Field name: " + posFieldName + "   posFieldOld: " + posFieldOld + "   posFieldReal: " + posFieldReal + "   DN:" + NameObject );
-                    
-
+                    Debug.Log("################ Error NextPosition (" + gobj.name + ")   ERROR NAMES:  Old Field name: " + posFieldName + " !=  posFieldOld: " + posFieldOld + "  ------  posFieldReal: " + posFieldReal + "   DN:" + NameObject );
                     Storage.Instance.GetHistory(gobj.name);
-
                     //gobj.PlayAnimation();
                     //Destroy(gobj, 3f);
-                    Destroy(gobj);
+
+                    Storage.Instance.AddDestroyRealObject(gobj);
                     return "";
+
+
+                    //TEST --------------------------
+                    Debug.Log("****** NextPosition (" + gobj.name + ") IsReality=" + IsReality);
+
+                    string idObj = Storage.GetID(gobj.name);
+                    //GameObject gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => p.name == gobj.name);
+
+                    //-----------------------FIND In REAL DATA
+                    GameObject gobjRealName = null;
+                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldName))
+                        gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => { return p.name.IndexOf(idObj) != -1; });
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldName);
+
+                    GameObject gobjOldPos = null;// Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
+                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldOld))
+                        gobjOldPos = Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldOld);
+
+                    if(gobjRealName!=null)
+                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldName);
+                    if (gobjOldPos != null)
+                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldOld);
+                    if (gobjRealName != null && gobjOldPos != null)
+                    {
+                        Debug.Log("******** Destroy dublicat : " + gobj.name);
+                        Storage.Instance.KillObject.Add(gobj.name);
+                        Destroy(gobj);
+                        //Storage.Instance.AddDestroyRealObject(gobj);
+                    }
+
+                    //return "";
+
+                    if (gobjRealName == null && gobjOldPos == null)
+                    {
+                        Debug.Log("******** (" + idObj + ") NOT FOUND Real in Fields: " + posFieldName + "  &  " + posFieldOld);
+                        if (IsReality)
+                        {
+                            //-----------------------FIXED Correct
+                            Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in Real Object Fields: " + posFieldName);
+                            Storage.Instance.AddRealObject(gobj, posFieldName, "NextPosition");
+                        }
+                    }
+                    //-----------------------FIND In DATA
+
+                    SaveLoadData.ObjectData dataObjRealName = null;
+                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldName))
+                    {
+                        dataObjRealName = Storage.Instance.GridDataG.FieldsD[posFieldName].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                        if (dataObjRealName != null)
+                            Debug.Log("******** NextPosition (" + idObj + ") RealName Exist Data in field: " + posFieldName);
+                    }
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ")  RealName Not DATA Field : " + posFieldName);
+                    SaveLoadData.ObjectData dataObjOldPos = null;
+                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldOld))
+                    {
+                        dataObjOldPos = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                        if (dataObjOldPos != null)
+                            Debug.Log("******** NextPosition (" + idObj + ") OldPos Exist Data in field: " + posFieldOld);
+                    }
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") OldPos Not DATA Field : " + posFieldOld);
+
+                    //-----------------------FIXED Correct
+                    foreach (var item in Storage.Instance.GridDataG.FieldsD)
+                    {
+                        string nameField = item.Key;
+                        List<SaveLoadData.ObjectData> resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+                        if (resListData != null)
+                        {
+                            //foreach (var obj in resListData)
+                            for(int i=0; i< resListData.Count() ; i++)
+                            {
+                                var obj =  resListData[i];
+                                //Debug.Log("----------- Exist " + idObj + " in Data Field: " + nameField + " --- " + obj.NameObject);
+                                if (nameField != posFieldName)
+                                {
+                                    //if (obj.NameObject != nameObject)
+                                    //{
+                                        Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DTA Object Fields: " + nameField + "     obj=" + obj);
+                                        Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition");
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                    //---------------------
+                                        
+                    if (dataObjRealName == null)
+                    {
+                        IsReality = true;
+                        //-----------------------FIXED Correct
+                        Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in DTA Object Fields: " + posFieldName);
+                        Storage.Instance.AddDataObjectInGrid(this, posFieldName, "NextPosition");
+                    }
+
+                    Debug.Log("+++++ CORRECT ++++  (" + gobj.name + ")  Update This DATA -->  Position and Name");
+                    this.NameObject = gobj.name;
+                    this.Position = gobj.transform.position;
+                    return "Update";
                 }
 
                 bool isInZona = true;

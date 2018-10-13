@@ -176,12 +176,14 @@ public class CompletePlayerController : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (m_scriptGrid == null)
-        {
-            Debug.Log("scriptGrid null");
-            yield break;
-        }
-        m_scriptGrid.DestroyRealObject(gObj);
+        //if (m_scriptGrid == null)
+        //{
+        //    Debug.Log("scriptGrid null");
+        //    yield break;
+        //}
+        //m_scriptGrid.DestroyRealObject(gObj);
+        //@DESTROY@
+        Storage.Instance.DestroyRealObject(gObj);
 
         BeforeDestroyUfo();
 

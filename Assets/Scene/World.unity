@@ -1309,11 +1309,11 @@ RectTransform:
   m_Father: {fileID: 1047051827}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -299, y: 197}
-  m_SizeDelta: {x: 340.7, y: 78.2}
-  m_Pivot: {x: 0.59731096, y: 0.49999952}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 55, y: 237}
+  m_SizeDelta: {x: 340.7, y: 78.20001}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1171611291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1979,6 +1979,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroObject: {fileID: 1798573864}
   KillObject: []
+  DestroyObjectList: []
   MainCamera: {fileID: 580250719}
   SelectGameObjectID: '?'
 --- !u!120 &1577116429

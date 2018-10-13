@@ -13,6 +13,7 @@ public class Storage : MonoBehaviour {
     public ZonaFieldLook ZonaField { get; set; }
     public ZonaRealLook ZonaReal { get; set; }
     public List<string> KillObject = new List<string>();
+    public List<GameObject> DestroyObjectList;
 
     public static Storage Instance { get; private set; }
 
@@ -104,6 +105,7 @@ public class Storage : MonoBehaviour {
         _GridDataG = new SaveLoadData.GridData();
         _personsData = new SaveLoadData.LevelData();
         _listHistoryGameObject = new List<HistoryGameObject>();
+        DestroyObjectList = new List<GameObject>();
         //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
 
         //var camera = MainCamera;
@@ -141,7 +143,7 @@ public class Storage : MonoBehaviour {
 
     void Update()
     {
-
+        DestroyRealObjectInList();
     }
     
     private void LoadGameObjects()
@@ -432,7 +434,7 @@ public class Storage : MonoBehaviour {
         if (p_newPosition != gobj.transform.position)
         {
             Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** ERROR UpdatePosition 1.     GOBJ UPDATE POSITOIN : NEW POS: " + p_newPosition + "       REAL POS: " + gobj.transform.position + "  REAL FIELD: " + Storage.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
+            Debug.Log("********** ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Storage.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
             return "";
         }
 
@@ -447,7 +449,7 @@ public class Storage : MonoBehaviour {
         if (p_newPosition != gobj.transform.position)
         {
             Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** ERROR UpdatePosition 2.     GOBJ UPDATE POSITOIN : NEW POS: " + p_newPosition + "       REAL POS: " + gobj.transform.position);
+            Debug.Log("********** ERROR UpdatePosition 2.   ERROR POSITOIN :  GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position);
             return "";
         }
         objData.Position = gobj.transform.position;
@@ -485,7 +487,131 @@ public class Storage : MonoBehaviour {
         return gobj.name;
     }
 
-    
+    public void AddDestroyRealObject(GameObject gObj)
+    {
+        DestroyObjectList.Add(gObj);
+    }
+
+    private void DestroyRealObjectInList()
+    {
+        if (DestroyObjectList.Count == 0)
+            return;
+
+        for (int i = DestroyObjectList.Count - 1; i >= 0; i--)
+        {
+            GameObject gObj = DestroyObjectList[i];
+            if (gObj != null)
+            {
+                Debug.Log("*** POOL DESTROY GAME OBJECt INCORRECT : " + gObj.name);
+                DestroyRealObject(gObj);
+            }
+        }
+    }
+
+    //@DESTROY@
+    public void DestroyRealObject(GameObject gObj)
+    {
+        if (gObj == null)
+            return;
+
+
+        string nameField = GetNameFieldByName(gObj.name);
+        if (nameField == null)
+            return;
+
+        List<GameObject> listObjInField = _GamesObjectsReal[nameField];
+
+        for (int i = listObjInField.Count - 1; i >= 0; i--)
+        {
+            if (listObjInField[i] == null)
+            {
+                RemoveRealObject(i, nameField, "DestroyRealObject");
+            }
+        }
+        if (listObjInField.Count > 0)
+        {
+            int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
+            if (indRealData == -1)
+            {
+                Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+            }
+            else
+            {
+                RemoveRealObject(indRealData, nameField, "DestroyRealObject");
+            }
+        }
+
+        Destroy(gObj);
+
+        KillObject.Add(gObj.name);
+        //-----------------------------------------------
+
+        //Destrot to Data
+        if (!_GridDataG.FieldsD.ContainsKey(nameField))
+        {
+            Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
+            return;
+        }
+        List<SaveLoadData.ObjectData> dataObjects = _GridDataG.FieldsD[nameField].Objects;
+        int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
+        if (indObj == -1)
+        {
+            Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
+            //RemoveAllFindRealObject(gObj.name);
+            RemoveAllFindDataObject(gObj.name);
+        }
+        else
+        {
+            //@DD@ dataObjects.RemoveAt(indObj);
+            RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
+        }
+    }
+
+    public void RemoveAllFindRealObject(string nameObj)
+    {
+        string idObj = GetID(nameObj);
+        //-----------------------FIXED Correct
+        foreach (var item in _GamesObjectsReal)
+        {
+            string nameField = item.Key;
+            List<GameObject> resListData = _GamesObjectsReal[nameField].Where(p => { return p.name.IndexOf(idObj) != -1; }).ToList();
+            if (resListData != null)
+            {
+                for (int i = 0; i < resListData.Count(); i++)
+                {
+                    var obj = resListData[i];
+                    Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in Real Object Fields: " + nameField + "     obj=" + obj);
+                    Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition", true);
+                }
+            }
+        }
+        //---------------------
+
+    }
+
+    public void RemoveAllFindDataObject(string nameObj)
+    {
+        string idObj = GetID(nameObj);
+        //-----------------------FIXED Correct
+        foreach (var item in GridDataG.FieldsD)
+        {
+            string nameField = item.Key;
+            List<SaveLoadData.ObjectData> resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+            if (resListData != null)
+            {
+                //foreach (var obj in resListData)
+                for (int i = 0; i < resListData.Count(); i++)
+                {
+                    var obj = resListData[i];
+                    //Debug.Log("----------- Exist " + idObj + " in Data Field: " + nameField + " --- " + obj.NameObject);
+                    
+                    Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DATA Object Fields: " + nameField + "     obj=" + obj);
+                    Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition");
+                }
+            }
+        }
+
+    }
 
     //----- Data Object
     public void ClearGridData()
@@ -524,11 +650,13 @@ public class Storage : MonoBehaviour {
         SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
     }
 
-    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc)
+    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false)
     {
         SaveLoadData.ObjectData histData = null;
         if (_isSaveHistory)
             histData = _GridDataG.FieldsD[nameField].Objects[index];
+        if(isDebug)
+            Debug.Log("****** RemoveDataObjectInGrid : " + histData);
 
         _GridDataG.FieldsD[nameField].Objects.RemoveAt(index);
 
@@ -595,7 +723,10 @@ public class Storage : MonoBehaviour {
             Debug.Log("################ RemoveRealObject  " + nameField + "  Not indexDel: " + indexDel);
             return;
         }
-        SaveHistory(_GamesObjectsReal[nameField][indexDel].name, "RemoveRealObject", callFunc, nameField);
+        if(_GamesObjectsReal[nameField][indexDel]==null)
+            SaveHistory("Destroy real obj", "RemoveRealObject", callFunc, nameField);
+        else
+            SaveHistory(_GamesObjectsReal[nameField][indexDel].name, "RemoveRealObject", callFunc, nameField);
         
         _GamesObjectsReal[nameField].RemoveAt(indexDel);
     }
@@ -607,16 +738,26 @@ public class Storage : MonoBehaviour {
         if (!_isSaveHistory)
             return;
 
+
+        string id = GetID(findObj);
+        
         var res = KillObject.Find(p => p == findObj);
         if (res != null)
             Debug.Log("FIND KILLED : " + findObj);
         else
         {
-            foreach (var obj in KillObject)
-            {
-                Debug.Log("killed --------------------------------:" + obj);
-            }
+            var res2 = KillObject.Find(p => { return p.IndexOf(id) != -1; });
+            if (res2 != null)
+                Debug.Log("FIND KILLED : " + findObj + "    -- " + res2);
         }
+
+        //{
+        //    Debug.Log("All killed --------------------------------:");
+        //    foreach (var obj in KillObject)
+        //    {
+        //        Debug.Log("killed --------------------------------:" + obj);
+        //    }
+        //}
     }
 
     //--------------- History
@@ -634,6 +775,8 @@ public class Storage : MonoBehaviour {
         if(resList == null || resList.Count() == 0)
         {
             string id = GetID(nameObj);
+            Debug.Log("--- Find hyst: " + id + " ---------------------");
+
             //resList = _listHistoryGameObject.Where(p => p.Name.StartsWith(id)).OrderBy(p => p.TimeSave);
             resList = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id)!=-1; }).OrderBy(p => p.TimeSave);
             foreach (var obj in resList)
@@ -641,7 +784,25 @@ public class Storage : MonoBehaviour {
                 i++;
                 Debug.Log(i + ". " + obj.ToString());
             }
+            if (resList == null || resList.Count() == 0)
+            {
+                //var listKey = GridDataG.FieldsD.Select(p => p.Key).ToList();
+                foreach (var item in GridDataG.FieldsD)
+                {
+                    string nameField = item.Key;
+                    var resListData = GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(id) != -1; });
+                    if(resListData!=null)
+                    {
+                        foreach (var obj in resListData)
+                        {
+                            Debug.Log("Exist " + id + " in Data Field: " + nameField + " --- " + obj.NameObject);
+                        }
+                    }
+                }
+            }
         }
+
+        DebugKill(nameObj);
 
         Debug.Log("*******************************************************************************************"); 
     }
