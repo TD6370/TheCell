@@ -183,7 +183,7 @@ public class CompletePlayerController : MonoBehaviour {
         //}
         //m_scriptGrid.DestroyRealObject(gObj);
         //@DESTROY@
-        Storage.Instance.DestroyRealObject(gObj);
+        Storage.Instance.DestroyFullObject(gObj);
 
         BeforeDestroyUfo();
 

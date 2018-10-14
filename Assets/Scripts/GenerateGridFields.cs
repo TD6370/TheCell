@@ -243,6 +243,12 @@ public class GenerateGridFields : MonoBehaviour {
         var _gridData = Storage.Instance.GridDataG;
         var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
 
+        if(Storage.Instance.IsCorrectData)
+        {
+            Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
+            return;
+        }
+
         //#TEST
         string indErr = "";
         try
@@ -323,6 +329,10 @@ public class GenerateGridFields : MonoBehaviour {
                     {
                         Debug.Log("##################### Error LoadGameObjectDataForLook ****** DO:" + dataObj + " not EXIST in Real %)");
                         Storage.Instance.GetHistory(dataObj.NameObject);
+                        //@CD@
+                        Storage.Instance.CorrectData(dataObj.NameObject);
+                        //Storage.Instance.IsCorrectData = true;
+                        return;
                     }
                     continue;
                 }

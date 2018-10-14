@@ -166,10 +166,10 @@ public class SaveLoadData : MonoBehaviour {
                 var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
                 if (index == -1)
                 {
-                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                    //Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
                     //Storage.Instance.DebugKill(p_gobject.name);
                     Storage.Instance.GetHistory(p_gobject.name);
-                    
+                    Storage.Instance.CorrectData(null, p_gobject, "FindObjectData");
                     return null;
                 }
                 newObject = objects[index] as GameDataUfo;
@@ -477,9 +477,22 @@ public class SaveLoadData : MonoBehaviour {
         //    return res;
         //}
 
-        
+        [XmlIgnore]
+        private bool _isError = false;
+
         public virtual string NextPosition(GameObject gobj) //, Vector3 p_newPosition)
         {
+            if(_isError)
+            {
+                Debug.Log("################ Error NextPosition (" + gobj.name + ")   already IS ERROR ");
+                return "Error";
+            }
+            if (Storage.Instance.IsCorrectData)
+            {
+                Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+                return "Error";
+            }
+
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;
             string nameObject = gobj.name;
@@ -501,8 +514,11 @@ public class SaveLoadData : MonoBehaviour {
                     //gobj.PlayAnimation();
                     //Destroy(gobj, 3f);
 
-                    Storage.Instance.AddDestroyRealObject(gobj);
-                    return "";
+                    //Storage.Instance.AddDestroyRealObject(gobj);
+                    //@CD@
+                    _isError = true;
+                    Storage.Instance.CorrectData(null, gobj, "NextPosition");
+                    return "Error";
 
 
                     //TEST --------------------------
@@ -616,10 +632,12 @@ public class SaveLoadData : MonoBehaviour {
                     isInZona = false;
                 }
 
-               
 
-                newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
-                
+
+                //newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
+                //@CD@ 
+                newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+                //
 
                 if (!isInZona && !string.IsNullOrEmpty(newName))
                 {

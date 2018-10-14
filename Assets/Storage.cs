@@ -14,6 +14,7 @@ public class Storage : MonoBehaviour {
     public ZonaRealLook ZonaReal { get; set; }
     public List<string> KillObject = new List<string>();
     public List<GameObject> DestroyObjectList;
+    public bool IsCorrectData = false;
 
     public static Storage Instance { get; private set; }
 
@@ -335,8 +336,14 @@ public class Storage : MonoBehaviour {
     //public static void UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition)
     //public static void UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData)
     //public static string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData)
-    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, bool isDestroy = false)
+    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, GameObject thisGameOobject, bool isDestroy = false)
     {
+        if (Storage.Instance.IsCorrectData)
+        {
+            Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
+            return "Error";
+        }
+
         if (_GamesObjectsReal == null || _GamesObjectsReal.Count == 0)
         {
             Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -406,7 +413,10 @@ public class Storage : MonoBehaviour {
         {
             //--------------------
             Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("^^^^ UpfatePosition Not DATA object (" + p_NameObject + ") in field: " + p_OldField);
+            var posI = thisGameOobject.transform.position;
+            string info = " >>>>>> thisGameOobject : " + thisGameOobject.name + "       pos = " + Storage.GetNameFieldPosit(posI.x, posI.y);
+
+            Debug.Log("^^^^ UpfatePosition Not DATA object (" + p_NameObject + ") in field: " + p_OldField + "     " + info);
             foreach (var itemObj in dataObjectsOldField)
             {
                 Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- object : " + itemObj.NameObject);
@@ -424,6 +434,16 @@ public class Storage : MonoBehaviour {
             return "";
         }
 
+        if (!gobj.Equals(thisGameOobject))
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("################ ERROR Not Equals thisGameOobject (" + thisGameOobject + ")  and RealObject (" + gobj + ")");
+            //@CD@
+            CorrectData(gobj, thisGameOobject, "UpdateGamePosition");
+            return "Error";
+        }
+            
+
         //add to new Field
         if (!_GridDataG.FieldsD.ContainsKey(p_NewField))
         {
@@ -434,7 +454,10 @@ public class Storage : MonoBehaviour {
         if (p_newPosition != gobj.transform.position)
         {
             Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Storage.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
+            Debug.Log("############### ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Storage.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
+
+
+
             return "";
         }
 
@@ -487,7 +510,7 @@ public class Storage : MonoBehaviour {
         return gobj.name;
     }
 
-    public void AddDestroyRealObject(GameObject gObj)
+    public void AddDestroyGameObject(GameObject gObj)
     {
         DestroyObjectList.Add(gObj);
     }
@@ -503,19 +526,26 @@ public class Storage : MonoBehaviour {
             if (gObj != null)
             {
                 Debug.Log("*** POOL DESTROY GAME OBJECt INCORRECT : " + gObj.name);
-                DestroyRealObject(gObj);
+                DestroyFullObject(gObj);
             }
         }
     }
 
     //@DESTROY@
-    public void DestroyRealObject(GameObject gObj)
+    public void DestroyFullObject(GameObject gObj, bool isCorrect = false)
     {
         if (gObj == null)
+        {
+            Debug.Log("+++ DestroyFullObject ++++ object is null");
             return;
+        }
 
+        //if (isCorrect)
+        //    Debug.Log("++++++++++++ DestroyFullObject ++++ : " + gObj);
 
-        string nameField = GetNameFieldByName(gObj.name);
+        string setName = gObj.name;
+
+        string nameField = GetNameFieldByName(setName);
         if (nameField == null)
             return;
 
@@ -530,10 +560,10 @@ public class Storage : MonoBehaviour {
         }
         if (listObjInField.Count > 0)
         {
-            int indRealData = listObjInField.FindIndex(p => p.name == gObj.name);
+            int indRealData = listObjInField.FindIndex(p => p.name == setName);
             if (indRealData == -1)
             {
-                Debug.Log("Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+                Debug.Log("+++ ------  DestroyFullObject: ------  Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
             }
             else
             {
@@ -541,31 +571,55 @@ public class Storage : MonoBehaviour {
             }
         }
 
-        Destroy(gObj);
+        if (gObj != null)
+        {
+            Destroy(gObj);
+        }
+        else
+        {
+            Debug.Log("+++ DestroyFullObject ++++ Destroy ---- object is null");
+        }
 
-        KillObject.Add(gObj.name);
+        KillObject.Add(setName);
         //-----------------------------------------------
+        if(isCorrect)
+            RemoveAllFindRealObject(setName);
 
-        //Destrot to Data
+        //Destroy to Data
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
         {
-            Debug.Log("!!!! DestroyRealObject !GridData.FieldsD not field=" + nameField);
+            Debug.Log("+++++ ------- DestroyRealObject ----- !GridData.FieldsD not field=" + nameField);
             return;
         }
         List<SaveLoadData.ObjectData> dataObjects = _GridDataG.FieldsD[nameField].Objects;
         int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
-        if (indObj == -1)
+        if (!isCorrect)
         {
-            Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
-            //RemoveAllFindRealObject(gObj.name);
-            RemoveAllFindDataObject(gObj.name);
+            if (indObj == -1)
+            {
+                Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
+                //RemoveAllFindRealObject(gObj.name);
+                RemoveAllFindDataObject(gObj.name);
+            }
+            else
+            {
+                //@DD@ dataObjects.RemoveAt(indObj);
+                RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
+            }
         }
         else
         {
-            //@DD@ dataObjects.RemoveAt(indObj);
-            RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
+            if (indObj != -1)
+            {
+                //@DD@ dataObjects.RemoveAt(indObj);
+                RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
+            }
+            RemoveAllFindDataObject(setName);
         }
     }
+
+    //RemoveAllFindRealObject
+    //RemoveAllFindDataObject
 
     public void RemoveAllFindRealObject(string nameObj)
     {
@@ -573,6 +627,8 @@ public class Storage : MonoBehaviour {
         //-----------------------FIXED Correct
         foreach (var item in _GamesObjectsReal)
         {
+            
+
             string nameField = item.Key;
             List<GameObject> resListData = _GamesObjectsReal[nameField].Where(p => { return p.name.IndexOf(idObj) != -1; }).ToList();
             if (resListData != null)
@@ -580,8 +636,14 @@ public class Storage : MonoBehaviour {
                 for (int i = 0; i < resListData.Count(); i++)
                 {
                     var obj = resListData[i];
+                    if (obj == null)
+                    {
+                        Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in Real Object Fields: " + nameField + "     obj is null");
+                        continue;
+                    }
                     Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in Real Object Fields: " + nameField + "     obj=" + obj);
-                    Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition", true);
+                    //Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition", true);
+                    Storage.Instance.RemoveRealObject(i, nameField, "NextPosition");
                 }
             }
         }
@@ -591,25 +653,56 @@ public class Storage : MonoBehaviour {
 
     public void RemoveAllFindDataObject(string nameObj)
     {
-        string idObj = GetID(nameObj);
+        //Debug.Log("+++++ RemoveAllFindDataObject +++ start :" + nameObj);
+
+
+       string idObj = GetID(nameObj);
+
+        //Debug.Log("+++++ RemoveAllFindDataObject +++ start :" + idObj);
         //-----------------------FIXED Correct
         foreach (var item in GridDataG.FieldsD)
         {
             string nameField = item.Key;
-            List<SaveLoadData.ObjectData> resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+            List<SaveLoadData.ObjectData> resListData = GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
             if (resListData != null)
             {
+                var resListDataTest = GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                if(resListDataTest.Count() != resListData.Count())
+                {
+                    Debug.Log("+++++ RemoveAllFindDataObject: resListDataTest.Count(" + resListDataTest.Count() + ") != resListData.Count(" + resListData.Count() + ")");
+                }
                 //foreach (var obj in resListData)
                 for (int i = 0; i < resListData.Count(); i++)
                 {
                     var obj = resListData[i];
-                    //Debug.Log("----------- Exist " + idObj + " in Data Field: " + nameField + " --- " + obj.NameObject);
-                    
+                    if (obj == null)
+                    {
+                        Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DATA Object Fields: " + nameField + "     obj is null");
+                        continue;
+                    }
                     Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DATA Object Fields: " + nameField + "     obj=" + obj);
                     Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition");
                 }
             }
         }
+
+        //---------------
+
+        //string id = GetID(nameObj);
+        //Debug.Log("--- Find hyst: " + id + " ---------------------");
+        //foreach (var item in GridDataG.FieldsD)
+        //{
+        //    string nameField = item.Key;
+        //    var resListData = GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(id) != -1; });
+        //    if (resListData != null)
+        //    {
+        //        foreach (var obj in resListData)
+        //        {
+        //            Debug.Log("Exist " + id + " in Data Field: " + nameField + " --- " + obj.NameObject);
+        //        }
+        //    }
+        //}
+        
 
     }
 
@@ -656,7 +749,7 @@ public class Storage : MonoBehaviour {
         if (_isSaveHistory)
             histData = _GridDataG.FieldsD[nameField].Objects[index];
         if(isDebug)
-            Debug.Log("****** RemoveDataObjectInGrid : " + histData);
+            Debug.Log("****** RemoveDataObjectInGrid : start " + histData);
 
         _GridDataG.FieldsD[nameField].Objects.RemoveAt(index);
 
@@ -731,7 +824,98 @@ public class Storage : MonoBehaviour {
         _GamesObjectsReal[nameField].RemoveAt(indexDel);
     }
 
- #region Log
+    //@CD@
+    public void CorrectData(string nameObj)
+    {
+        if (Storage.Instance.IsCorrectData)
+        {
+            Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+            return;
+        }
+        Storage.Instance.IsCorrectData = true;
+
+        Debug.Log("++++++++++++++++++++ CorrectData BY NAME : " + nameObj);
+
+        RemoveAllFindRealObject(nameObj);
+        RemoveAllFindDataObject(nameObj);
+
+        GameObject findGO = GameObject.Find(nameObj);
+        if (findGO != null)
+        {
+            Debug.Log("--- CorrectData : yes find GameObject by Name: " + findGO.name);
+            //Debug.Log("--- CorrectData : DESTROY FGO:");
+            Destroy(findGO);
+            //Debug.Log("--- CorrectData : DESTROY REAL FGO:");
+            DestroyFullObject(findGO, true);
+        }
+        else
+        {
+            Debug.Log("--- CorrectData : NOT find GameObject by Name: " + nameObj);
+        }
+        Storage.Instance.IsCorrectData = false;
+    }
+    //@CD@
+    public void CorrectData(GameObject realGO, GameObject thisGO, string callFunc)
+    {
+        if (Storage.Instance.IsCorrectData)
+        {
+            Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+            return;
+        }
+
+        Storage.Instance.IsCorrectData = true;
+        
+        Debug.Log("++++++++++++++++++++ CorrectData : " + callFunc);
+
+        bool isExistRealObj = false;
+        if (realGO != null)
+            isExistRealObj = true;
+
+        //@DESTROY@
+        string nameT = GetID(thisGO.name);
+        string name = nameT;
+
+        if(isExistRealObj)
+            name = GetID(realGO.name);
+        
+        if (isExistRealObj && name != nameT)
+        {
+            Debug.Log("--- CorrectData : names not equals: " + name + "     <>  " + nameT);
+            GameObject findGO1 = GameObject.Find(nameT);
+            if (findGO1 != null)
+            {
+                Debug.Log("--- CorrectData : yes find GameObject by Name: " + findGO1.name);
+                Destroy(findGO1);
+                DestroyFullObject(findGO1, true);
+            }
+            else
+            {
+                Debug.Log("--- CorrectData : NOT find GameObject by Name: " + findGO1.name);
+            }
+        }
+
+        GameObject findGO = GameObject.Find(name);
+        if (findGO != null)
+        {
+            Debug.Log("--- CorrectData : yes find GameObject by Name: " + findGO.name);
+            Debug.Log("--- CorrectData : DESTROY FGO:");
+            Destroy(findGO);
+            Debug.Log("--- CorrectData : DESTROY REAL FGO:");
+            DestroyFullObject(findGO, true);
+            Debug.Log("--- CorrectData : DESTROY DATA FGO:");
+            
+        }
+        //else{
+        //    Debug.Log("--- CorrectData : NOT find GameObject by Name: " + name);
+        //}
+        DestroyFullObject(thisGO, true);
+        if(isExistRealObj)
+            DestroyFullObject(realGO, true);
+
+        Storage.Instance.IsCorrectData = false;
+    }
+
+    #region Log
 
     public void DebugKill(string findObj)
     {

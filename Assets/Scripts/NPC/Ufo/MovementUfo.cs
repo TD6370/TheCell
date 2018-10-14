@@ -118,11 +118,20 @@ public class MovementUfo : MonoBehaviour {
 
         while (true)
         {
+            if (Storage.Instance.IsCorrectData)
+            {
+                Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+                yield return null;
+            }
+
             if (_dataUfo == null)
             {
                 Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
-                Debug.Log("*** DESTROY : " + this.gameObject.name);
-                Storage.Instance.AddDestroyRealObject(this.gameObject);
+                //Debug.Log("*** DESTROY : " + this.gameObject.name);
+                //Storage.Instance.AddDestroyRealObject(this.gameObject);
+                //@CD@
+                Storage.Instance.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+
                 yield break;
             }
 
@@ -154,7 +163,14 @@ public class MovementUfo : MonoBehaviour {
             }
 
             //+++++++++++ RESAVE Next Position ++++++++++++
-            ResavePositionData();
+            bool res = ResavePositionData();
+
+            if (!res)
+            {
+                Debug.Log("########### STOP MOVE ON ERROR MOVE");
+                Destroy(this.gameObject);
+                yield break;
+            }
 
             float dist = Vector3.Distance(targetPosition, transform.position);
             //Debug.Log("MoveObjectToPosition ------ UFO distance to point  > " + dist);
@@ -167,7 +183,7 @@ public class MovementUfo : MonoBehaviour {
         }
     }
 
-    private void ResavePositionData()
+    private bool ResavePositionData()
     {
         //+++++++++++ RESAVE Next Position ++++++++++++
         if (!string.IsNullOrEmpty(_resName) && _resName != this.gameObject.name)
@@ -177,13 +193,17 @@ public class MovementUfo : MonoBehaviour {
 
         string oldName = this.gameObject.name;
         _resName = _dataUfo.NextPosition(this.gameObject);
-        if (_resName == "Update")
-        {
-            //CORRECT
-            Debug.Log("++++ ResavePositionData CORRECT +++ (" + this.gameObject.name + ")-- call FindObjectData");
-            _dataUfo = FindObjectData("ResavePositionData >> CORRECT") as SaveLoadData.GameDataUfo;
-            oldName = this.gameObject.name;
-        }
+
+        if (_resName == "Error")
+            return false;
+
+        //if (_resName == "Update")
+        //{
+        //    //CORRECT
+        //    Debug.Log("++++ ResavePositionData CORRECT +++ (" + this.gameObject.name + ")-- call FindObjectData");
+        //    _dataUfo = FindObjectData("ResavePositionData >> CORRECT") as SaveLoadData.GameDataUfo;
+        //    oldName = this.gameObject.name;
+        //}
 
         if (!string.IsNullOrEmpty(_resName))
         {
@@ -194,7 +214,7 @@ public class MovementUfo : MonoBehaviour {
                 if (_dataUfo == null)
                 {
                     Debug.Log("################## ERROR MoveObjectToPosition dataUfo is Empty   GO:" + this.gameObject.name);
-                    //yield break;
+                    return false;
                 }
             }
             if (_resName != this.gameObject.name)
@@ -203,6 +223,8 @@ public class MovementUfo : MonoBehaviour {
                 this.gameObject.name = _resName;
             }
         }
+
+        return true;
         //+++++++++++++++++++++++
     }
 
