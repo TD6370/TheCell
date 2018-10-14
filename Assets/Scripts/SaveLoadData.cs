@@ -13,8 +13,7 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabUfo;
     public GameObject PrefabBoss;
     private GenerateGridFields _scriptGrid;
-
-    private float Spacing = 2f;
+    public static float Spacing = 2f;
   
 
     private List<string> _namesPrefabs = new List<string>
@@ -108,6 +107,17 @@ public class SaveLoadData : MonoBehaviour {
 
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
+
+    //private void CreateNewCorrectObject(string idObj, TypePrefabs prefabName, string nameField)
+    //{
+    //    string nameObject = Storage.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+    //    ObjectData objDataSave = BildObjectData(prefabName);
+    //    objDataSave.NameObject = nameObject;
+    //    objDataSave.TagObject = prefabName.ToString();
+    //    Vector3 pos = new Vector3(0, 0, 0);
+    //    objDataSave.Position = pos;
+    //    Storage.Instance.AddDataObjectInGrid(objDataSave, nameField, "CreateNewCorrectObject");
+    //}
 
     public static ObjectData CreateObjectData(GameObject p_gobject)
     {
@@ -520,108 +530,7 @@ public class SaveLoadData : MonoBehaviour {
                     Storage.Instance.CorrectData(null, gobj, "NextPosition");
                     return "Error";
 
-
-                    //TEST --------------------------
-                    Debug.Log("****** NextPosition (" + gobj.name + ") IsReality=" + IsReality);
-
-                    string idObj = Storage.GetID(gobj.name);
-                    //GameObject gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => p.name == gobj.name);
-
-                    //-----------------------FIND In REAL DATA
-                    GameObject gobjRealName = null;
-                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldName))
-                        gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => { return p.name.IndexOf(idObj) != -1; });
-                    else
-                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldName);
-
-                    GameObject gobjOldPos = null;// Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
-                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldOld))
-                        gobjOldPos = Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
-                    else
-                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldOld);
-
-                    if(gobjRealName!=null)
-                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldName);
-                    if (gobjOldPos != null)
-                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldOld);
-                    if (gobjRealName != null && gobjOldPos != null)
-                    {
-                        Debug.Log("******** Destroy dublicat : " + gobj.name);
-                        Storage.Instance.KillObject.Add(gobj.name);
-                        Destroy(gobj);
-                        //Storage.Instance.AddDestroyRealObject(gobj);
-                    }
-
-                    //return "";
-
-                    if (gobjRealName == null && gobjOldPos == null)
-                    {
-                        Debug.Log("******** (" + idObj + ") NOT FOUND Real in Fields: " + posFieldName + "  &  " + posFieldOld);
-                        if (IsReality)
-                        {
-                            //-----------------------FIXED Correct
-                            Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in Real Object Fields: " + posFieldName);
-                            Storage.Instance.AddRealObject(gobj, posFieldName, "NextPosition");
-                        }
-                    }
-                    //-----------------------FIND In DATA
-
-                    SaveLoadData.ObjectData dataObjRealName = null;
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldName))
-                    {
-                        dataObjRealName = Storage.Instance.GridDataG.FieldsD[posFieldName].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
-                        if (dataObjRealName != null)
-                            Debug.Log("******** NextPosition (" + idObj + ") RealName Exist Data in field: " + posFieldName);
-                    }
-                    else
-                        Debug.Log("****** NextPosition (" + gobj.name + ")  RealName Not DATA Field : " + posFieldName);
-                    SaveLoadData.ObjectData dataObjOldPos = null;
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldOld))
-                    {
-                        dataObjOldPos = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
-                        if (dataObjOldPos != null)
-                            Debug.Log("******** NextPosition (" + idObj + ") OldPos Exist Data in field: " + posFieldOld);
-                    }
-                    else
-                        Debug.Log("****** NextPosition (" + gobj.name + ") OldPos Not DATA Field : " + posFieldOld);
-
-                    //-----------------------FIXED Correct
-                    foreach (var item in Storage.Instance.GridDataG.FieldsD)
-                    {
-                        string nameField = item.Key;
-                        List<SaveLoadData.ObjectData> resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
-                        if (resListData != null)
-                        {
-                            //foreach (var obj in resListData)
-                            for(int i=0; i< resListData.Count() ; i++)
-                            {
-                                var obj =  resListData[i];
-                                //Debug.Log("----------- Exist " + idObj + " in Data Field: " + nameField + " --- " + obj.NameObject);
-                                if (nameField != posFieldName)
-                                {
-                                    //if (obj.NameObject != nameObject)
-                                    //{
-                                        Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DTA Object Fields: " + nameField + "     obj=" + obj);
-                                        Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition");
-                                    //}
-                                }
-                            }
-                        }
-                    }
-                    //---------------------
-                                        
-                    if (dataObjRealName == null)
-                    {
-                        IsReality = true;
-                        //-----------------------FIXED Correct
-                        Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in DTA Object Fields: " + posFieldName);
-                        Storage.Instance.AddDataObjectInGrid(this, posFieldName, "NextPosition");
-                    }
-
-                    Debug.Log("+++++ CORRECT ++++  (" + gobj.name + ")  Update This DATA -->  Position and Name");
-                    this.NameObject = gobj.name;
-                    this.Position = gobj.transform.position;
-                    return "Update";
+                    
                 }
 
                 bool isInZona = true;
@@ -748,7 +657,23 @@ public class SaveLoadData : MonoBehaviour {
     }
     //-----------------------------------
 
-    private ObjectData BildObjectData(TypePrefabs prefabType)
+    //private ObjectData BildObjectData(TypePrefabs prefabType)
+    //{
+    //    ObjectData objGameBild;
+
+    //    switch (prefabType)
+    //    {
+    //        case SaveLoadData.TypePrefabs.PrefabUfo:
+    //            objGameBild = new GameDataUfo();
+    //            break;
+    //        default:
+    //            objGameBild = new ObjectData();
+    //            break;
+    //    }
+    //    return objGameBild;
+    //}
+
+    public static ObjectData BildObjectData(TypePrefabs prefabType)
     {
         ObjectData objGameBild;
 

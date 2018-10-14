@@ -16,8 +16,8 @@ public class TEmp : MonoBehaviour {
 
     //-------------
     //123456789
-     //private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
-     //       _scriptNPC.SartCrateNPC();
+    //private void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
+    //       _scriptNPC.SartCrateNPC();
     //LoadObjectsNearHero();
     //@POS@
     //---------------
@@ -30,8 +30,8 @@ public class TEmp : MonoBehaviour {
 
     //G
     //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
-        //private void SaveListObjectsToData(string p_nameField)
-            //S -- CreateObjectData
+    //private void SaveListObjectsToData(string p_nameField)
+    //S -- CreateObjectData
 
     //G
     //private void SaveNewGameObjectToData(string p_nameField, GameObject p_saveObject)
@@ -40,10 +40,10 @@ public class TEmp : MonoBehaviour {
     //S
     //+++ CreatePrefabByName +++
     //public static ObjectData CreateObjectData(GameObject p_gobject, bool isNewGen = false)
-        //NEW DATA  -------->>>>  PERSONA  #P#
-            //newObject.UpdateGameObject(p_gobject);
-        //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
-            //newObject = personalData.PersonalObjectData.Clone() as ObjectDataUfo;
+    //NEW DATA  -------->>>>  PERSONA  #P#
+    //newObject.UpdateGameObject(p_gobject);
+    //RemoveRealObjects Update DATA <<<<------- PERSONA  #P#
+    //newObject = personalData.PersonalObjectData.Clone() as ObjectDataUfo;
 
 
 
@@ -1248,26 +1248,26 @@ public class TEmp : MonoBehaviour {
 
     //-----------------------------
 
-//NotSupportedException: The type System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] is not supported because it implements IDictionary.
-//System.Xml.Serialization.TypeData.get_ListItemType ()
-//System.Xml.Serialization.TypeData.get_ListItemTypeData ()
-//System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive, System.Xml.Serialization.TypeData mappedType, System.Xml.Schema.XmlSchemaPatternFacet facet)
-//System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive)
-//System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type runtimeType, System.String xmlDataType)
-//System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type type)
-//System.Xml.Serialization.XmlReflectionImporter.CreateMapMember (System.Type declaringType, System.Xml.Serialization.XmlReflectionMember rmember, System.String defaultNamespace)
-//System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//Rethrow as InvalidOperationException: There was an error reflecting field 'FieldsD'.
-//System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//Rethrow as InvalidOperationException: There was an error reflecting type 'SaveLoadData+GridData'.
-//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Type type, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Xml.Serialization.XmlAttributeOverrides overrides, System.Type[] extraTypes, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
-//System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Type[] extraTypes)
-//SaveLoadData+Serializator.DeXml (System.String datapath) (at Assets/Scripts/SaveLoadData.cs:363)
-//SaveLoadData.LoadPathData () (at Assets/Scripts/SaveLoadData.cs:67)
-//SaveLoadData.Start () (at Assets/Scripts/SaveLoadData.cs:44)
+    //NotSupportedException: The type System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] is not supported because it implements IDictionary.
+    //System.Xml.Serialization.TypeData.get_ListItemType ()
+    //System.Xml.Serialization.TypeData.get_ListItemTypeData ()
+    //System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive, System.Xml.Serialization.TypeData mappedType, System.Xml.Schema.XmlSchemaPatternFacet facet)
+    //System.Xml.Serialization.TypeData..ctor (System.Type type, System.String elementName, Boolean isPrimitive)
+    //System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type runtimeType, System.String xmlDataType)
+    //System.Xml.Serialization.TypeTranslator.GetTypeData (System.Type type)
+    //System.Xml.Serialization.XmlReflectionImporter.CreateMapMember (System.Type declaringType, System.Xml.Serialization.XmlReflectionMember rmember, System.String defaultNamespace)
+    //System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //Rethrow as InvalidOperationException: There was an error reflecting field 'FieldsD'.
+    //System.Xml.Serialization.XmlReflectionImporter.ImportClassMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //Rethrow as InvalidOperationException: There was an error reflecting type 'SaveLoadData+GridData'.
+    //System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Xml.Serialization.TypeData typeData, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //System.Xml.Serialization.XmlReflectionImporter.ImportTypeMapping (System.Type type, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Xml.Serialization.XmlAttributeOverrides overrides, System.Type[] extraTypes, System.Xml.Serialization.XmlRootAttribute root, System.String defaultNamespace)
+    //System.Xml.Serialization.XmlSerializer..ctor (System.Type type, System.Type[] extraTypes)
+    //SaveLoadData+Serializator.DeXml (System.String datapath) (at Assets/Scripts/SaveLoadData.cs:363)
+    //SaveLoadData.LoadPathData () (at Assets/Scripts/SaveLoadData.cs:67)
+    //SaveLoadData.Start () (at Assets/Scripts/SaveLoadData.cs:44)
 
     //---------------------------------
 
@@ -1307,7 +1307,7 @@ public class TEmp : MonoBehaviour {
     //        //              (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer);
     //        //public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>
     //        //          (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer);
-            
+
 
     //        //Dictionary<TKey, TSource>
     //        //(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector);
@@ -1335,9 +1335,9 @@ public class TEmp : MonoBehaviour {
     //        //d1 = listT.ToDictionary<string, int>(x => x.Value.ToString(), x => x.Key.ToString());
     //        //var ress = listT.ToDictionary<string, int>(key => key.ToString().Length); //
     //        //var ress = listT.ToDictionary<string, int>(source2, selector2); //
-            
+
     //        //var ress = listT.ToDictionary<string, int>(x => x.Key, ); //
-            
+
     //        //d1 = listT.ToDictionary<int, string>(x => x.Value, x => x.Key);
     //        //d1 = listT.ToDictionary<int, string>(key => key.ToString());
     //        //var _d77 = listT.ToDictionary<int, string>(source2, selector2);
@@ -1928,4 +1928,112 @@ public class TEmp : MonoBehaviour {
     //    return;
     //    Debug.Log(log);
     //}
+
+    //-------------------------------
+
+    /*
+                    //TEST --------------------------
+                    Debug.Log("****** NextPosition (" + gobj.name + ") IsReality=" + IsReality);
+
+                    string idObj = Storage.GetID(gobj.name);
+                    //GameObject gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => p.name == gobj.name);
+
+                    //-----------------------FIND In REAL DATA
+                    GameObject gobjRealName = null;
+                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldName))
+                        gobjRealName = Storage.Instance.GamesObjectsReal[posFieldName].Find(p => { return p.name.IndexOf(idObj) != -1; });
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldName);
+
+                    GameObject gobjOldPos = null;// Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
+                    if(Storage.Instance.GamesObjectsReal.ContainsKey(posFieldOld))
+                        gobjOldPos = Storage.Instance.GamesObjectsReal[posFieldOld].Find(p => p.name == gobj.name);
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") Not Real Field : " + posFieldOld);
+
+                    if(gobjRealName!=null)
+                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldName);
+                    if (gobjOldPos != null)
+                        Debug.Log("******** NextPosition (" + gobj.name + ")  Exist real object in field: " + posFieldOld);
+                    if (gobjRealName != null && gobjOldPos != null)
+                    {
+                        Debug.Log("******** Destroy dublicat : " + gobj.name);
+                        Storage.Instance.KillObject.Add(gobj.name);
+                        Destroy(gobj);
+                        //Storage.Instance.AddDestroyRealObject(gobj);
+                    }
+
+                    //return "";
+
+                    if (gobjRealName == null && gobjOldPos == null)
+                    {
+                        Debug.Log("******** (" + idObj + ") NOT FOUND Real in Fields: " + posFieldName + "  &  " + posFieldOld);
+                        if (IsReality)
+                        {
+                            //-----------------------FIXED Correct
+                            Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in Real Object Fields: " + posFieldName);
+                            Storage.Instance.AddRealObject(gobj, posFieldName, "NextPosition");
+                        }
+                    }
+                    //-----------------------FIND In DATA
+
+                    SaveLoadData.ObjectData dataObjRealName = null;
+                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldName))
+                    {
+                        dataObjRealName = Storage.Instance.GridDataG.FieldsD[posFieldName].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                        if (dataObjRealName != null)
+                            Debug.Log("******** NextPosition (" + idObj + ") RealName Exist Data in field: " + posFieldName);
+                    }
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ")  RealName Not DATA Field : " + posFieldName);
+                    SaveLoadData.ObjectData dataObjOldPos = null;
+                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldOld))
+                    {
+                        dataObjOldPos = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                        if (dataObjOldPos != null)
+                            Debug.Log("******** NextPosition (" + idObj + ") OldPos Exist Data in field: " + posFieldOld);
+                    }
+                    else
+                        Debug.Log("****** NextPosition (" + gobj.name + ") OldPos Not DATA Field : " + posFieldOld);
+
+                    //-----------------------FIXED Correct
+                    foreach (var item in Storage.Instance.GridDataG.FieldsD)
+                    {
+                        string nameField = item.Key;
+                        List<SaveLoadData.ObjectData> resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+                        if (resListData != null)
+                        {
+                            //foreach (var obj in resListData)
+                            for(int i=0; i< resListData.Count() ; i++)
+                            {
+                                var obj =  resListData[i];
+                                //Debug.Log("----------- Exist " + idObj + " in Data Field: " + nameField + " --- " + obj.NameObject);
+                                if (nameField != posFieldName)
+                                {
+                                    //if (obj.NameObject != nameObject)
+                                    //{
+                                        Debug.Log("+++++ CORRECT ++++  DELETE (" + idObj + ") >>>> in DTA Object Fields: " + nameField + "     obj=" + obj);
+                                        Storage.Instance.RemoveDataObjectInGrid(nameField, i, "NextPosition");
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                    //---------------------
+                                        
+                    if (dataObjRealName == null)
+                    {
+                        IsReality = true;
+                        //-----------------------FIXED Correct
+                        Debug.Log("+++++ CORRECT ++++  (" + idObj + ") >>>>  Add in DTA Object Fields: " + posFieldName);
+                        Storage.Instance.AddDataObjectInGrid(this, posFieldName, "NextPosition");
+                    }
+
+                    Debug.Log("+++++ CORRECT ++++  (" + gobj.name + ")  Update This DATA -->  Position and Name");
+                    this.NameObject = gobj.name;
+                    this.Position = gobj.transform.position;
+                    return "Update";
+                    */
+
+    //----------------------------
 }

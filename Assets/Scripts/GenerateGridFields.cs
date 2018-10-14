@@ -647,8 +647,9 @@ public class GenerateGridFields : MonoBehaviour {
                     //update
                     if (isDestroy)
                         dataObj.IsReality = false;
-                   
-                    //@@@TEST Storage.Instance.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData"); //@<<@ 
+
+                    //@@@TEST 
+                    Storage.Instance.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR); //@<<@ 
                     //------------------------------------
                 }
                
@@ -856,13 +857,14 @@ public class GenerateGridFields : MonoBehaviour {
         //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
         //return sctiptData.FindPrefabHieracly(namePrefab);
         if (_sctiptData == null)
-            return null; 
+            return null;
 
         return _sctiptData.FindPrefab(namePrefab);
     }
 
     //+++ CreateObjectData +++ LoadObjectForLook
-    private GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
+    //private GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
+    public GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
     {
         string typePrefab = objData.TagObject;
         string namePrefab = objData.NameObject;
@@ -875,7 +877,7 @@ public class GenerateGridFields : MonoBehaviour {
         //----------------2.
         GameObject newObjGame = FindPrefab(typePrefab);
         newObjGame.transform.position = pos; //@!@.1
-        
+
         SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
 
         if (!String.IsNullOrEmpty(newObjGame.tag))
@@ -892,7 +894,7 @@ public class GenerateGridFields : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.Log("CreatePrefabByName... (" +  objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+                    Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
                 }
                 break;
             default:
@@ -903,6 +905,50 @@ public class GenerateGridFields : MonoBehaviour {
         newObjGame.name = namePrefab;
         return newObjGame;
     }
+
+    //public static GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
+    //{
+    //    string typePrefab = objData.TagObject;
+    //    string namePrefab = objData.NameObject;
+    //    Vector3 pos = objData.Position;
+
+    //    //#TEST #PREFABF
+    //    //---------------- 1.
+    //    //GameObject newPrefab = FindPrefab(typePrefab);
+    //    //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
+    //    //----------------2.
+    //    GameObject newObjGame = FindPrefab(typePrefab);
+    //    //GameObject newObjGame = SaveLoadData.FindPrefabHieracly(typePrefab);
+
+    //    newObjGame.transform.position = pos; //@!@.1
+
+    //    SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+
+    //    if (!String.IsNullOrEmpty(newObjGame.tag))
+    //        prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), newObjGame.tag.ToString()); ;
+
+    //    switch (prefabType)
+    //    {
+    //        case SaveLoadData.TypePrefabs.PrefabUfo:
+    //            var objUfo = objData as SaveLoadData.GameDataUfo;
+    //            if (objUfo != null)
+    //            {
+    //                //LoadObjectForLook:  DATA -->> PERSONA #P#
+    //                objUfo.UpdateGameObject(newObjGame);
+    //            }
+    //            else
+    //            {
+    //                Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //    //.............
+
+    //    newObjGame.name = namePrefab;
+    //    return newObjGame;
+    //}
 
     public void SaveAllRealGameObjects()
     {
