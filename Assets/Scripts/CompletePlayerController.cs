@@ -144,7 +144,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
         Storage.Instance.SetHeroPosition(posX, posY, transform.position.x, transform.position.y); 
 
-        scriptGrid.GenGrigLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
+        scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
 
         if (! Storage.Instance.Fields.ContainsKey(nameFiled))
             return null;

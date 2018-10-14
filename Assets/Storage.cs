@@ -100,14 +100,15 @@ public class Storage : MonoBehaviour {
 	void Start () {
         ZonaField = null;
         ZonaReal = null;
-        
-        Fields = new Dictionary<string, GameObject>();
-        _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        _GridDataG = new SaveLoadData.GridData();
-        _personsData = new SaveLoadData.LevelData();
-        _listHistoryGameObject = new List<HistoryGameObject>();
-        DestroyObjectList = new List<GameObject>();
+
+        //Fields = new Dictionary<string, GameObject>();
+        //_GamesObjectsReal = new Dictionary<string, List<GameObject>>();
+        //_GridDataG = new SaveLoadData.GridData();
+        //_personsData = new SaveLoadData.LevelData();
+        //_listHistoryGameObject = new List<HistoryGameObject>();
+        //DestroyObjectList = new List<GameObject>();
         //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
+        InitObjectsGrid();
 
         //var camera = MainCamera;
         if (MainCamera == null)
@@ -140,17 +141,40 @@ public class Storage : MonoBehaviour {
         LoadData();
 
         LoadGameObjects();
-	}
+    }
 
     void Update()
     {
         DestroyRealObjectInList();
     }
-    
-    private void LoadGameObjects()
+
+    private void InitObjectsGrid()
+    {
+        Fields = new Dictionary<string, GameObject>();
+        _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
+        _GridDataG = new SaveLoadData.GridData();
+        _personsData = new SaveLoadData.LevelData();
+        _listHistoryGameObject = new List<HistoryGameObject>();
+        DestroyObjectList = new List<GameObject>();
+    }
+
+    public void LoadLevels()
+    {
+        //---
+        DestroyAllGamesObjects();
+
+        //return;
+        InitObjectsGrid();
+
+        LoadData();
+
+        LoadGameObjects(true);
+    }
+
+    private void LoadGameObjects(bool isLoadLevel = false)
     {
         //GenerateGridFields
-        _scriptGrid.StartGenGrigField();
+        _scriptGrid.StartGenGrigField(isLoadLevel);
 
         //SaveLoadData:
         _scriptData.CreateDataGamesObjectsWorld();
@@ -511,6 +535,33 @@ public class Storage : MonoBehaviour {
     }
 
     #region Destroy
+
+    private void DestroyAllGamesObjects()
+    {
+        foreach (var item in _GamesObjectsReal)
+        {
+            string nameField = item.Key;
+            List<GameObject> resListData = _GamesObjectsReal[nameField];
+            if (resListData != null)
+            {
+                for (int i = 0; i < resListData.Count(); i++)
+                {
+                    GameObject objDel = resListData[i];
+                    Destroy(objDel);
+                }
+            }
+        }
+
+        foreach (var item in Fields)
+        {
+            string nameField2 = item.Key;
+            GameObject resField = Fields[nameField2];
+            if (resField != null)
+            {
+                Destroy(resField);
+            }
+        }
+    }
 
     public void AddDestroyGameObject(GameObject gObj)
     {
@@ -889,7 +940,11 @@ public class Storage : MonoBehaviour {
         }
 
         Storage.Instance.IsCorrectData = true;
-        
+#if UNITY_EDITOR
+        Debug.Log("UNITY_EDITOR ++++++++++++++++++++ CorrectData : " + callFunc);
+#else
+    Debug.Log("Booo..");
+#endif
         Debug.Log("++++++++++++++++++++ CorrectData : " + callFunc);
 
         bool isExistRealObj = false;

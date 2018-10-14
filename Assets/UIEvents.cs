@@ -10,6 +10,8 @@ public class UIEvents : MonoBehaviour {
     public Button btnExit;
     public Button btnTest;
     public InputField tbxTest;
+    [Header("Menu Command")]
+    public Dropdown dpnMenuCommandTest;
 
     public Camera MainCamera;
     
@@ -42,8 +44,7 @@ public class UIEvents : MonoBehaviour {
 
         btnExit.onClick.AddListener(delegate
         {
-            m_scriptData.SaveLevel();
-            txtMessage.text = "Level saved...";
+            
             ExitGame();
         });
 
@@ -58,7 +59,45 @@ public class UIEvents : MonoBehaviour {
 
     private void LoadTest()
     {
-        txtMessage.text = "Selected: [" + tbxTest.text + "]"; 
+        int selIndex = dpnMenuCommandTest.value;
+        var menuCommands = dpnMenuCommandTest.options.ToArray();
+
+        //var selText = dpnMenuCommandTest.itemText.text;
+        //var selTag = dpnMenuCommandTest.itemText.tag;
+
+
+        List<string> messages = new List<string>();
+
+        messages.Add("Sel GO: [" + tbxTest.text + "]");
+        //messages.Add("Sel comm: value " + selVal.ToString() );
+        //messages.Add("Sel comm: text " + selText.ToString());
+        //messages.Add("Sel comm: Tag " + selTag.ToString());
+        //foreach (var item in options)
+        //{
+        //    messages.Add("options: " + item.text.ToString());
+        //}
+
+        string selectCommand = menuCommands[selIndex].text.ToString();
+        switch (selectCommand)
+        {
+            case "None":
+                txtMessage.text = "...";
+                break;
+            case "SaveWorld":
+                txtMessage.text = "Level saving...";
+                m_scriptData.SaveLevel();
+                txtMessage.text = "Level saved.";
+                break;
+            case "LoadWorld":
+                //m_scriptData
+                txtMessage.text = "Level loading...";
+                Storage.Instance.LoadLevels();
+                txtMessage.text = "Level loaded.";
+                break;
+        }
+
+        //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
+        txtLog.text = string.Join("\n", messages.ToArray());
         Storage.Instance.SelectGameObjectID = tbxTest.text;
     }
 

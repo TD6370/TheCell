@@ -16,10 +16,34 @@ public class SaveLoadData : MonoBehaviour {
     public static float Spacing = 2f;
   
 
-    private List<string> _namesPrefabs = new List<string>
-    {
-        "PrefabField","PrefabRock","PrefabVood","PrefabUfo" //,"","","",""
-    };
+    //private List<string> _namesPrefabs = new List<string>
+    //{
+    //    "PrefabField","PrefabRock","PrefabVood","PrefabUfo" //,"","","",""
+    //};
+
+    //private IEnumerable<string> _namesPrefabs
+    //{   get
+    //    {
+    //        return new List<string>{
+    //            TypePrefabs.PrefabField.ToString(),
+    //            TypePrefabs.PrefabRock.ToString(),
+    //            TypePrefabs.PrefabVood.ToString(),
+    //            TypePrefabs.PrefabUfo.ToString()
+    //        };
+    //    }
+    //}
+
+    private IEnumerable<string> _namesPrefabs
+    {   get
+        {
+            var list = new List<string>();
+            foreach (var nextType in Enum.GetValues(typeof(TypePrefabs)))
+            {
+                list.Add(nextType.ToString());
+            }
+            return list;
+        }
+    }
 
     public enum TypePrefabs
     {
