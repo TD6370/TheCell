@@ -86,14 +86,14 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("# CreateDataGamesObjectsWorld...");
         Storage.Instance.ClearGridData();
 
-        for (int y = 0; y < Storage.WidthLevel; y++)
+        for (int y = 0; y < Helper.WidthLevel; y++)
         {
-            for (int x = 0; x < Storage.HeightLevel; x++)
+            for (int x = 0; x < Helper.HeightLevel; x++)
             {
                 int intRndCount = UnityEngine.Random.Range(0, 3);
 
                 int maxObjectInField = (intRndCount == 0) ? 1 : 0;
-                string nameField = Storage.GetNameField(x, y);
+                string nameField = Helper.GetNameField(x, y);
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
@@ -114,7 +114,7 @@ public class SaveLoadData : MonoBehaviour {
 
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
-                    string nameObject = Storage.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+                    string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
                     ObjectData objDataSave = BildObjectData(prefabName);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
@@ -122,12 +122,12 @@ public class SaveLoadData : MonoBehaviour {
 
                     coutCreateObjects++;
 
-                    Storage.Instance.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+                    Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
                 }
             }
         }
 
-        Storage.Instance.SaveGridGameObjectsXml(true);
+        Storage.Data.SaveGridGameObjectsXml(true);
 
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
@@ -190,7 +190,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             case TypePrefabs.PrefabUfo:
                 newObject = new GameDataUfo();
-                string nameField = Storage.GetNameFieldByName(p_gobject.name);
+                string nameField = Helper.GetNameFieldByName(p_gobject.name);
                 if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                 {
                     Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
@@ -202,8 +202,8 @@ public class SaveLoadData : MonoBehaviour {
                 {
                     //Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
                     //Storage.Instance.DebugKill(p_gobject.name);
-                    StorageLog.Instance.GetHistory(p_gobject.name);
-                    StorageCorrect.Instance.CorrectData(null, p_gobject, "FindObjectData");
+                    Storage.Log.GetHistory(p_gobject.name);
+                    Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
                     return null;
                 }
                 newObject = objects[index] as GameDataUfo;
@@ -530,10 +530,10 @@ public class SaveLoadData : MonoBehaviour {
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;
             string nameObject = gobj.name;
-            string posFieldName = Storage.GetNameFieldByName(nameObject);
+            string posFieldName = Helper.GetNameFieldByName(nameObject);
 
-            string posFieldOld = Storage.GetNameFieldPosit(_oldPosition.x, _oldPosition.y);
-            string posFieldReal = Storage.GetNameFieldPosit(_newPosition.x, _newPosition.y);
+            string posFieldOld = Helper.GetNameFieldPosit(_oldPosition.x, _oldPosition.y);
+            string posFieldReal = Helper.GetNameFieldPosit(_newPosition.x, _newPosition.y);
             string newName = "";
 
             if (posFieldOld != posFieldReal)
@@ -544,14 +544,14 @@ public class SaveLoadData : MonoBehaviour {
                 {
                     //Create dublicate
                     Debug.Log("################ Error NextPosition (" + gobj.name + ")   ERROR NAMES:  Old Field name: " + posFieldName + " !=  posFieldOld: " + posFieldOld + "  ------  posFieldReal: " + posFieldReal + "   DN:" + NameObject );
-                    StorageLog.Instance.GetHistory(gobj.name);
+                    Storage.Log.GetHistory(gobj.name);
                     //gobj.PlayAnimation();
                     //Destroy(gobj, 3f);
 
                     //Storage.Instance.AddDestroyRealObject(gobj);
                     //@CD@
                     _isError = true;
-                    StorageCorrect.Instance.CorrectData(null, gobj, "NextPosition");
+                    Storage.Fix.CorrectData(null, gobj, "NextPosition");
                     return "Error";
 
                     

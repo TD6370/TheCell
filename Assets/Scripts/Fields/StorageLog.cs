@@ -7,19 +7,24 @@ using UnityEngine;
 //public class StorageLog : MonoBehaviour {
 public class StorageLog //: MonoBehaviour
 {
-
-    private static StorageLog _instance;
-    public static StorageLog Instance
+    public StorageLog()
     {
-        get
-        {
-            if(_instance==null)
-            {
-                _instance = new StorageLog();
-            }
-            return _instance;
-        }
+
     }
+
+
+    //private static StorageLog _instance;
+    //public static StorageLog Instance
+    //{
+    //    get
+    //    {
+    //        if(_instance==null)
+    //        {
+    //            _instance = new StorageLog();
+    //        }
+    //        return _instance;
+    //    }
+    //}
 
     private bool _isSaveHistory = true;
     public bool IsSaveHistory { get { return _isSaveHistory; } }
@@ -66,7 +71,7 @@ public class StorageLog //: MonoBehaviour
             return;
 
 
-        string id = Storage.GetID(findObj);
+        string id = Helper.GetID(findObj);
 
         var res = Storage.Instance.KillObject.Find(p => p == findObj);
         if (res != null)
@@ -101,7 +106,7 @@ public class StorageLog //: MonoBehaviour
         }
         if (resList == null || resList.Count() == 0)
         {
-            string id = Storage.GetID(nameObj);
+            string id = Helper.GetID(nameObj);
             Debug.Log("--- Find hyst: " + id + " ---------------------");
 
             //resList = _listHistoryGameObject.Where(p => p.Name.StartsWith(id)).OrderBy(p => p.TimeSave);

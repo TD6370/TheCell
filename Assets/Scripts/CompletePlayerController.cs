@@ -123,7 +123,7 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastY = posY;
 
         //# string nameFiled = "Filed" + posX + "x" + posY;
-        string nameFiled = Storage.GetNameField(posX, posY);
+        string nameFiled = Helper.GetNameField(posX, posY);
 
         txtLog.text = "?" + nameFiled;
         

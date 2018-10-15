@@ -5,28 +5,48 @@ using UnityEngine;
 
 public class StorageCorrect : MonoBehaviour {
 
-    public static StorageCorrect Instance { get; private set; }
+    //public StorageCorrect()
+    //{
+
+    //}
+
+
+    //private static StorageCorrect _instance;
+    //public static StorageCorrect Instance
+    //{
+    //    get
+    //    {
+    //        if (_instance == null)
+    //        {
+    //            _instance = new StorageCorrect();
+    //        }
+    //        return _instance;
+    //    }
+    //}
 
     // Use this for initialization
-    void Start () {
-		
-	}
-
-    //public static Storage Instance { get; private set; }
-    public void Awake()
+    void Start()
     {
-        Instance = this;
+
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
+    //public static StorageCorrect Instance { get; private set; }
+    ////   //public static Storage Instance { get; private set; }
+    //public void Awake()
+    //{
+    //    Instance = this;
+    //}
+
+    //   // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     #region Correct
 
     //@CD@
-    public void CorrectData(string nameObj)
+    public void CorrectData(string nameObj, string callFunc)
     {
         bool isCorrect = false;
 
@@ -37,13 +57,13 @@ public class StorageCorrect : MonoBehaviour {
         }
         Storage.Instance.IsCorrectData = true;
 
-        Debug.Log("++++++++++++++++++++ CorrectData BY NAME : " + nameObj);
+        Debug.Log("<<<<<<<<<<<<<<<<<<<<<<<1.>>>>>>>>>>>>>>>>>>>>>> CorrectData BY NAME : " + nameObj + "       call:" + callFunc);
 
         //string idObj = GetID(nameObj);
         //string typeObj = GetTag(nameObj);
         //Vector2 posObj = GetPositByField(nameObj);
-        bool isRemReal = Storage.Instance.RemoveAllFindRealObject(nameObj);
-        bool isRemData = Storage.Instance.RemoveAllFindDataObject(nameObj);
+        bool isRemReal = Storage.Data.RemoveAllFindRealObject(nameObj);
+        bool isRemData = Storage.Data.RemoveAllFindDataObject(nameObj);
         bool isRemGameObj = false;
 
 
@@ -55,7 +75,9 @@ public class StorageCorrect : MonoBehaviour {
             Destroy(findGO);
             //Debug.Log("--- CorrectData : DESTROY REAL FGO:");
             Storage.Instance.DestroyFullObject(findGO, true);
-            isRemGameObj = Storage.Instance.RemoveAllFindDataObject(nameObj);
+            isRemGameObj = Storage.Data.RemoveAllFindDataObject(nameObj);
+            //@@CORRECT !!!
+            //isRemGameObj = true;
         }
         else
         {
@@ -64,9 +86,49 @@ public class StorageCorrect : MonoBehaviour {
         Storage.Instance.IsCorrectData = false;
         if (isRemGameObj || isRemReal || isRemData)
         {
-            //CreateNewCorrectObject(nameObj, "CorrectData 2.     GO=" + isRemGameObj + " RO=" + isRemReal + " DO:" + isRemData);
-            string _info = "CorrectData 2.     GO=" + isRemGameObj + " RO=" + isRemReal + " DO:" + isRemData;
-            StartCoroutine(StartCreateNewCorrectObject(name, _info));
+            string strErr = "1.";
+            if (nameObj == null)
+            {
+                Debug.Log("################## CorrectData StartCreateNewCorrectObject: name: is null");
+                Storage.Instance.CorrectCreateName = "";
+                return;
+            }
+
+            try
+            {
+                strErr = "2.";
+                //CreateNewCorrectObject(nameObj, "CorrectData 2.     GO=" + isRemGameObj + " RO=" + isRemReal + " DO:" + isRemData);
+                string _info = "CorrectData 2.     GO=" + isRemGameObj + " RO=" + isRemReal + " DO:" + isRemData + " name: " + nameObj;
+
+                strErr = "3.";
+                if (_info==null)
+                {
+
+                    _info = "CorrectData 2.";
+                }
+                strErr = "4.";
+                //StartCoroutine(StartCreateNewCorrectObject(nameObj, _info));
+                //@TEST@
+                //CreateNewCorrectObject(nameObj, _info); 
+                string corrName = Storage.Instance.CorrectCreateName;
+                if (!String.IsNullOrEmpty(corrName) && Helper.GetID(corrName) == Helper.GetID(nameObj))
+                {
+                    Debug.Log("----- 2.CorrectData  WAIT Create : " + corrName);
+                    return;
+                }
+                Storage.Instance.CorrectCreateName = nameObj;
+                Storage.Instance.StartCor(nameObj, _info);
+
+            } catch (Exception x)
+            {
+                Debug.Log("################# ERROR CorrectData EX (" + strErr + ") :" + x.ToString());
+                Storage.Instance.CorrectCreateName = "";
+            }
+
+        }
+        else
+        {
+            //Storage.Instance.CorrectCreateName = "";
         }
     }
     //@CD@ //--- CORRECT -----
@@ -84,7 +146,7 @@ public class StorageCorrect : MonoBehaviour {
 #else
     Debug.Log("Booo..");
 #endif
-        Debug.Log("++++++++++++++++++++ CorrectData : " + callFunc);
+        Debug.Log("<<<<<<<<<<<<<<<<2.>>>>>>>>>>>>>>>>>>> CorrectData : " + callFunc);
 
         bool isExistRealObj = false;
         if (realGO != null)
@@ -92,11 +154,11 @@ public class StorageCorrect : MonoBehaviour {
 
         //@DESTROY@
         //string nameT = GetID(thisGO.name);
-        string nameT = thisGO.name;
-        string name = nameT;
+        string nameObjT = thisGO.name;
+        string nameObj = nameObjT;
 
         if (isExistRealObj)
-            name = realGO.name;
+            nameObj = realGO.name;
 
         bool isRemovedThis = false;
         bool isRemovedThis2 = false;
@@ -105,10 +167,10 @@ public class StorageCorrect : MonoBehaviour {
 
         //string idObj = GetID(name);
 
-        if (isExistRealObj && name != nameT)
+        if (isExistRealObj && nameObj != nameObjT)
         {
-            Debug.Log("--- CorrectData : names not equals: " + name + "     <>  " + nameT);
-            GameObject findGO1 = GameObject.Find(nameT);
+            Debug.Log("--- CorrectData : names not equals: " + nameObj + "     <>  " + nameObjT);
+            GameObject findGO1 = GameObject.Find(nameObjT);
             if (findGO1 != null)
             {
                 Debug.Log("--- CorrectData : yes find GameObject by Name: " + findGO1.name);
@@ -121,7 +183,7 @@ public class StorageCorrect : MonoBehaviour {
             }
         }
 
-        GameObject findGO = GameObject.Find(name);
+        GameObject findGO = GameObject.Find(nameObj);
         if (findGO != null)
         {
             //Debug.Log("--- CorrectData : yes find GameObject by Name: " + findGO.name);
@@ -133,7 +195,7 @@ public class StorageCorrect : MonoBehaviour {
         }
         else
         {
-            Debug.Log("--- CorrectData : NOT find GameObject by Name: " + name);
+            Debug.Log("--- CorrectData : NOT find GameObject by Name: " + nameObj);
         }
 
         isRemovedThis = Storage.Instance.DestroyFullObject(thisGO, true);
@@ -149,38 +211,90 @@ public class StorageCorrect : MonoBehaviour {
         bool isRemoved = (isRemovedThis || isRemovedThis2 || isRemovedReal || isRemovedGObj);
         if (isRemoved)
         {
-            Debug.Log("--- CorrectData  ---- start Coroutine CreateNewCorrectObject .......");
+            if (nameObj == null)
+            {
+                Debug.Log("############# CorrectData  nameObj==null");
+                Storage.Instance.CorrectCreateName = "";
+                return;
+            }
+            try
+            {
+                Debug.Log("--- CorrectData 1.  ---- start Coroutine CreateNewCorrectObject .......");
+                string _info = "  FGO=" + isRemovedGObj + " RO=" + isRemovedReal + " TGO:" + isRemovedThis + " TGO1:" + isRemovedThis2;
 
-            string _info = "  FGO=" + isRemovedGObj + " RO=" + isRemovedReal + " TGO:" + isRemovedThis + " TGO1:" + isRemovedThis2;
-            StartCoroutine(StartCreateNewCorrectObject(name, "CorrectData 1.    " + _info));
+                string corrName = Storage.Instance.CorrectCreateName;
+                if (!String.IsNullOrEmpty(corrName) && Helper.GetID(corrName) == Helper.GetID(nameObj))
+                {
+                    Debug.Log("----- 1.CorrectData  WAIT Create : " + corrName);
+                    return;
+                }
+                Storage.Instance.CorrectCreateName = nameObj;
+                //StartCoroutine(StartCreateNewCorrectObject(nameObj, "CorrectData 1.    " + _info));
+                Storage.Instance.StartCor(nameObj, _info);
+            }
+            catch (Exception x)
+            {
+                Debug.Log("############# ERROR CorrectData EX: +" + x.Message);
+                Storage.Instance.CorrectCreateName = "";
+            }
         }
         else
+        {
             Debug.Log("Not Start CreateNewCorrectObject...");
+            //Storage.Instance.CorrectCreateName = "";
+        }
     }
 
     //@CD@ //--- CORRECT NEW -----
-    private void CreateNewCorrectObject(string name, string callFunc)
+    private void CreateNewCorrectObject(string p_name, string callFunc)
     {
-        Debug.Log("**************************************************************");
-        Debug.Log("+++++++ 1. CreateNewCorrectObject   start ++++ " + name + "      " + callFunc);
+        try
+        {
 
-        string idObj = Storage.GetID(name);
-        string typeObj = Storage.GetTag(name);
-        string fieldName = Storage.GetNameFieldByName(name);
-        Vector2 posObj = Storage.Instance.GetPositByField(fieldName);
-        CreateNewCorrectObject(idObj, typeObj, (int)posObj.x, (int)posObj.y);
+            Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.Log("+++++++ 1. CreateNewCorrectObject   start ++++ " + p_name + "      " + callFunc);
+
+            string idObj = Helper.GetID(p_name);
+            string typeObj = Helper.GetTag(p_name);
+            string fieldName = Helper.GetNameFieldByName(p_name);
+            Vector2 posObj = Helper.GetPositByField(fieldName);
+            CreateNewCorrectObject(idObj, typeObj, (int)posObj.x, (int)posObj.y);
+        }catch(Exception x)
+        {
+            Debug.Log("################# ERROR CreateNewCorrectObject EX:" + x.ToString());
+        }
     }
 
-    IEnumerator StartCreateNewCorrectObject(string name, string callFunc)
+    public IEnumerator StartCreateNewCorrectObject(string p_name, string callFunc)
     {
+        
         Debug.Log("--- Coroutine StartCreateNewCorrectObject wait.......");
 
         //yield return new WaitForSeconds(0.5f);
         yield return new WaitForSeconds(1f);
 
-        Debug.Log("--- Coroutine StartCreateNewCorrectObject start.......");
+        try
+        {
+            string corrName = Storage.Instance.CorrectCreateName;
+            if (!String.IsNullOrEmpty(corrName) && Helper.GetID(corrName) == Helper.GetID(p_name))
+            {
+                Debug.Log("----- COROUTINE  StartCreateNewCorrectObject  WAIT Create : " + corrName);
+                yield break;
+            }
 
-        CreateNewCorrectObject(name, callFunc); ;
+            Debug.Log("--- Coroutine StartCreateNewCorrectObject start....... " + callFunc);
+
+            CreateNewCorrectObject(p_name, callFunc); ;
+        }
+        catch (Exception x)
+        {
+            Debug.Log("################# ERROR StartCreateNewCorrectObject EX:" + x.ToString());
+            //Storage.Instance.IsCorrectData = false;
+            Storage.Instance.CorrectCreateName = "";
+        }
+
+        //Storage.Instance.IsCorrectData = false;
+        //Storage.Instance.CorrectCreateName = "";
 
         yield break;
     }
@@ -198,7 +312,7 @@ public class StorageCorrect : MonoBehaviour {
 
         //string nameField = GetNameFieldPosit(x,y);
         string nameField = Storage.FieldKey + x + "x" + y;
-        string nameObject = Storage.CreateName(prefabName.ToString(), nameField, idObj);// prefabName.ToString() + "_" + nameFiled + "_" + i;
+        string nameObject = Helper.CreateName(prefabName.ToString(), nameField, idObj);// prefabName.ToString() + "_" + nameFiled + "_" + i;
 
         Debug.Log("+++++++ CreateNewCorrectObject  create Name Object : " + nameObject);
 
@@ -207,7 +321,7 @@ public class StorageCorrect : MonoBehaviour {
         objDataSave.NameObject = nameObject;
         objDataSave.TagObject = prefabName.ToString();
         objDataSave.Position = pos;
-        Storage.Instance.AddDataObjectInGrid(objDataSave, nameField, "CreateNewCorrectObject");
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateNewCorrectObject");
 
         Debug.Log("+++++++ CreateNewCorrectObject  Data +: " + objDataSave);
 

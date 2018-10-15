@@ -50,7 +50,7 @@ public class MovementNPC : MonoBehaviour {
         int speed = 2;
         float step = speed * Time.deltaTime;
         //@PD@ var objNPC = m_scriptPersonal.PersonalObjectData as SaveLoadData.GameDataNPC;
-        if (!Storage.IsDataInit(this.gameObject))
+        if (!Helper.IsDataInit(this.gameObject))
         {
             //yield return null;
             yield break;

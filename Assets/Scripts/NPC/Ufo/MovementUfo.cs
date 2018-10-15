@@ -26,7 +26,7 @@ public class MovementUfo : MonoBehaviour {
 
         InitData();
         StartCoroutine(MoveObjectToPosition());
-        objID = Storage.GetID(this.name);
+        objID = Helper.GetID(this.name);
         if (string.IsNullOrEmpty(objID))
             objID = "Empty";
 
@@ -107,7 +107,7 @@ public class MovementUfo : MonoBehaviour {
         float step = speed * Time.deltaTime;
 
 
-        if (!Storage.IsDataInit(this.gameObject))
+        if (!Helper.IsDataInit(this.gameObject))
         {
             //yield return null;
             yield break;
@@ -130,7 +130,7 @@ public class MovementUfo : MonoBehaviour {
                 //Debug.Log("*** DESTROY : " + this.gameObject.name);
                 //Storage.Instance.AddDestroyRealObject(this.gameObject);
                 //@CD@
-                StorageCorrect.Instance.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+                Storage.Fix.CorrectData(null, this.gameObject, "MoveObjectToPosition");
 
                 yield break;
             }
@@ -185,6 +185,12 @@ public class MovementUfo : MonoBehaviour {
 
     private bool ResavePositionData()
     {
+        if (Storage.Instance.IsCorrectData)
+        {
+            Debug.Log("_______________ResavePositionData     RETURN CorrectData ON CORRECT_______________");
+            return true;
+        }
+
         //+++++++++++ RESAVE Next Position ++++++++++++
         if (!string.IsNullOrEmpty(_resName) && _resName != this.gameObject.name)
         {

@@ -64,10 +64,12 @@
     <Compile Include="Assets\Scripts\CompletePlayerController.cs" />
     <Compile Include="Assets\Scripts\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\Fields\GenerateGridFields.cs" />
+    <Compile Include="Assets\Scripts\Fields\Helper.cs" />
     <Compile Include="Assets\Scripts\Fields\SaveLoadData.cs" />
     <Compile Include="Assets\Scripts\Fields\Storage.cs" />
     <Compile Include="Assets\Scripts\Fields\StorageCorrect.cs" />
     <Compile Include="Assets\Scripts\Fields\StorageLog.cs" />
+    <Compile Include="Assets\Scripts\Fields\UpdateData.cs" />
     <Compile Include="Assets\Scripts\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\NPC\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\NPC\MovementNPC.cs" />
