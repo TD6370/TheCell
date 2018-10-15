@@ -11,8 +11,27 @@ public class TEmp : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
+
+
+    //<Field>
+    //  <Key>Field43x32</Key>
+    //  <Value>
+    //    <Objects>
+    //      <ObjectData xsi:type="Ufo">
+    //        <NameObject>PrefabUfo_Field41x38_20b2</NameObject>
+    //        <TagObject>PrefabUfo</TagObject>
+    //        <Position>
+    //          <x>83.3700943</x>
+    //          <y>-76.03779</y>
+    //          <z>-2</z>
+    //        </Position>
+    //      </ObjectData>
+    //    </Objects>
+    //    <NameField>Field43x32</NameField>
+    //  </Value>
+    //</Field>
 
     //-------------
     //123456789

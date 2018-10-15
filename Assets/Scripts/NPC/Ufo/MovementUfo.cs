@@ -130,7 +130,7 @@ public class MovementUfo : MonoBehaviour {
                 //Debug.Log("*** DESTROY : " + this.gameObject.name);
                 //Storage.Instance.AddDestroyRealObject(this.gameObject);
                 //@CD@
-                Storage.Instance.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+                StorageCorrect.Instance.CorrectData(null, this.gameObject, "MoveObjectToPosition");
 
                 yield break;
             }
