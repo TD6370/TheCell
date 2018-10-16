@@ -43,7 +43,13 @@ public class CompletePlayerController : MonoBehaviour {
   	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
 	void FixedUpdate()
 	{
-		float moveHorizontal = Input.GetAxis ("Horizontal");
+        if (Storage.Instance.IsLoadingWorld)
+        {
+            Debug.Log("_______________ LOADING WORLD ....._______________");
+            return;
+        }
+
+        float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
         _movement = new Vector2 (moveHorizontal, moveVertical);
@@ -99,6 +105,8 @@ public class CompletePlayerController : MonoBehaviour {
 
     private void RestructGrid()
     {
+      
+
         var prefabFind = FindFieldCurrent();
         if (prefabFind != null)
         {

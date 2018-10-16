@@ -234,5 +234,20 @@ public static class Helper { //: MonoBehaviour {
         get { return 1000; }
     }
 
+    public static bool IsValidPiontInZona(float x, float y)
+    {
+        bool result = true;
+
+        if (x < Storage.Instance.ZonaReal.X)
+            return false;
+        if (y > Storage.Instance.ZonaReal.Y) //*-1
+            return false;
+        if (x > Storage.Instance.ZonaReal.X2)
+            return false;
+        if (y < Storage.Instance.ZonaReal.Y2) //*-1
+            return false;
+        return result;
+    }
+
     #endregion
 }

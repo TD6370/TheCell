@@ -19,6 +19,7 @@ public class Storage : MonoBehaviour {
     public List<GameObject> DestroyObjectList;
     public bool IsCorrectData = false;
     public string CorrectCreateName = "";
+    public bool IsLoadingWorld = false;
 
     private StorageLog _StorageLog;
     public static StorageLog Log{
@@ -177,6 +178,7 @@ public class Storage : MonoBehaviour {
 
     private void InitObjectsGrid()
     {
+        //Debug.Log("III InitObjectsGrid_______________");
         Fields = new Dictionary<string, GameObject>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
         _GridDataG = new SaveLoadData.GridData();
@@ -185,43 +187,98 @@ public class Storage : MonoBehaviour {
         _StorageLog = new StorageLog();
         _StorageLog.Init();
         _UpdateData = new UpdateData();
-        _StorageCorrect = new StorageCorrect();
+        //_StorageCorrect = new StorageCorrect();
+
+        _StorageCorrect = gameObject.GetComponent<StorageCorrect>();
+        if (_StorageCorrect != null)
+        {
+            //Debug.Log("InitObjectsGrid Destroy(_StorageCorrect) __________________________");
+            Destroy(_StorageCorrect);
+        }
+        _StorageCorrect = gameObject.AddComponent<StorageCorrect>();
+
 
         DestroyObjectList = new List<GameObject>();
     }
 
     public void LoadLevels()
     {
-        //---
-        DestroyAllGamesObjects();
+        IsLoadingWorld = true;
 
-        //return;
+        Debug.Log("III LoadLevels ::::_______________");
+
+        StopGame();
+
         InitObjectsGrid();
 
         LoadData();
 
         LoadGameObjects(true);
+
+        IsLoadingWorld = false;
+
+    }
+
+private void StopGame()
+    {
+        if(_scriptNPC!=null)
+            _scriptNPC.StopCrateNPC();
+
+        //---
+        DestroyAllGamesObjects();
     }
 
     private void LoadGameObjects(bool isLoadLevel = false)
     {
-        //GenerateGridFields
+        //Debug.Log("III LoadGameObjects ::::_______________");
+
         _scriptGrid.StartGenGrigField(isLoadLevel);
 
-        //SaveLoadData:
+        //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         _scriptData.CreateDataGamesObjectsWorld();
 
-        Debug.Log("....Init Position HERO......");
+        //Debug.Log("III ....Init Position HERO......");
         _screiptHero.FindFieldCurrent();
 
-        _scriptGrid.LoadObjectsNearHero();
+        if (isLoadLevel)
+            StartCoroutine(StartFindLookObjects());
+        else
+        {
+            //Debug.Log("III ....Init LoadObjectsNearHero ......");
+            _scriptGrid.LoadObjectsNearHero();
+            //Debug.Log("III ....Sart Crate NPC......");
+            _scriptNPC.SartCrateNPC();
+        }
+    }
 
-        Debug.Log("....Sart Crate NPC......");
+    IEnumerator StartFindLookObjects()
+    {
+        //Debug.Log("III ....Init StartFindLookObjects ::: ......");
+
+        bool isLoadedObjects = false;
+
+        while (!isLoadedObjects)
+        {
+            yield return null;
+
+            //Debug.Log("III ....Init LoadObjectsNearHero   start ......");
+
+            yield return new WaitForSeconds(0.1f);
+
+            //Debug.Log("III ....Init LoadObjectsNearHero ......");
+            _scriptGrid.LoadObjectsNearHero();
+
+            isLoadedObjects = true;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //Debug.Log("III ....Sart Crate NPC......");
         _scriptNPC.SartCrateNPC();
     }
-	
-	// Update is called once per frame
-	
+
+    // Update is called once per frame
+
     //public static void SetGridData(SaveLoadData.GridData p_GridData)
     //{
     //    _GridData = p_GridData;
@@ -325,66 +382,8 @@ public class Storage : MonoBehaviour {
         }
     }
 
-    private void DrawRect(float x,float y, float x2, float y2)
-    {
-        //return;
-        //LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-        {
-            Debug.Log("LineRenderer is null !!!!");
-            return;
-        }
+    
 
-        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        //lineRenderer.SetColors(c1, c2);
-        lineRenderer.SetColors(Color.green, Color.green);
-        lineRenderer.SetWidth(0.2F, 0.2F);
-        int size = 5;
-        lineRenderer.SetVertexCount(size);
-        
-        Vector3 pos1 = new Vector3(x, y, -2);
-        lineRenderer.SetPosition(0, pos1);
-        Vector3 pos2 = new Vector3(x2, y, -2);
-        lineRenderer.SetPosition(1, pos2);
-        Vector3 pos3 = new Vector3(x2, y2, -2);
-        lineRenderer.SetPosition(2, pos3);
-        Vector3 pos4 = new Vector3(x, y2, -2);
-        lineRenderer.SetPosition(3, pos4);
-        Vector3 pos5 = new Vector3(x, y, -2);
-        lineRenderer.SetPosition(4, pos5);
-    }
-
-    public Vector2 ValidPiontInZona(ref float x,ref float y, float offset=0)
-    {
-        offset = Mathf.Abs(offset);
-
-        if (x < ZonaReal.X)
-            x = ZonaReal.X + offset;
-        if (y > ZonaReal.Y) //*-1
-            y = ZonaReal.Y - offset;
-        if (x > ZonaReal.X2)
-            x = ZonaReal.X2 - offset;
-        if (y < ZonaReal.Y2) //*-1
-            y = ZonaReal.Y + offset;
-        Vector2 result = new Vector2(x, y);
-        return result;
-    }
-
-    public bool IsValidPiontInZona(float x,float y)
-    {
-        bool result = true;
-
-        if (x < ZonaReal.X)
-            return false;
-        if (y > ZonaReal.Y) //*-1
-            return false;
-        if (x > ZonaReal.X2)
-            return false;
-        if (y < ZonaReal.Y2) //*-1
-            return false;
-        return result;
-    }
 
 
 
@@ -394,6 +393,12 @@ public class Storage : MonoBehaviour {
     //public static string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData)
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false)
     {
+        if (Storage.Instance.IsLoadingWorld)
+        {
+            Debug.Log("_______________ LOADING WORLD ....._______________");
+            return "";
+        }
+
         if (Storage.Instance.IsCorrectData)
         {
             Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
@@ -419,9 +424,13 @@ public class Storage : MonoBehaviour {
             Debug.Log("********** UpdatePosition      GamesObjectsReal not found OldField = " + p_OldField);
             if (p_NameObject != null)
                 Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
+
+            Storage.Log.GetHistory(p_NameObject);
+
             //@@CORRECT
-            Destroy(thisGameObject, 1f);
-            return "Error";
+            //Destroy(thisGameObject, 1f);
+            //return "Error";
+            return "";
         }
         if (!_GridDataG.FieldsD.ContainsKey(p_OldField))
         {
@@ -469,10 +478,13 @@ public class Storage : MonoBehaviour {
             if(p_NameObject!=null)
                 Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
 
-            Storage.Fix.CorrectData(p_NameObject, "UpfatePosition Not Real");
+            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition Not Real");
 
 
-            return "Error";
+            //return "Error";
+
+            Storage.Log.GetHistory(p_NameObject);
+            return "";
         }
         int indData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
         if (indData == -1)
@@ -510,8 +522,9 @@ public class Storage : MonoBehaviour {
             Debug.Log("################ ERROR Not Equals thisGameOobject (" + thisGameObject + ")  and RealObject (" + gobj + ")");
             Storage.Instance.SelectGameObjectID = Helper.GetID(gobj.name);
             //@CD@
-            _StorageCorrect.CorrectData(gobj, thisGameObject, "UpdateGamePosition");
-            return "Error";
+            //_StorageCorrect.CorrectData(gobj, thisGameObject, "UpdateGamePosition");
+            //return "Error";
+            return "";
         }
             
 
@@ -745,7 +758,38 @@ public class Storage : MonoBehaviour {
         StartCoroutine(Fix.StartCreateNewCorrectObject(nameObj, _info));
     }
 
-#region class
+    private void DrawRect(float x, float y, float x2, float y2)
+    {
+        //return;
+        //LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        //lineRenderer.SetColors(c1, c2);
+        lineRenderer.SetColors(Color.green, Color.green);
+        lineRenderer.SetWidth(0.2F, 0.2F);
+        int size = 5;
+        lineRenderer.SetVertexCount(size);
+
+        Vector3 pos1 = new Vector3(x, y, -2);
+        lineRenderer.SetPosition(0, pos1);
+        Vector3 pos2 = new Vector3(x2, y, -2);
+        lineRenderer.SetPosition(1, pos2);
+        Vector3 pos3 = new Vector3(x2, y2, -2);
+        lineRenderer.SetPosition(2, pos3);
+        Vector3 pos4 = new Vector3(x, y2, -2);
+        lineRenderer.SetPosition(3, pos4);
+        Vector3 pos5 = new Vector3(x, y, -2);
+        lineRenderer.SetPosition(4, pos5);
+    }
+
+
+    #region class
 
     public class ZonaFieldLook
     {

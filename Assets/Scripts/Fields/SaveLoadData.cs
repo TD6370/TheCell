@@ -499,7 +499,7 @@ public class SaveLoadData : MonoBehaviour {
             //----------------------------- valid Limit look hero
             Storage.ZonaRealLook zona = Storage.Instance.ZonaReal;
             if (zona != null)
-                Storage.Instance.ValidPiontInZona(ref xT, ref yT, distX);
+                ValidPiontInZona(ref xT, ref yT, distX);
 
             TargetPosition = new Vector3(xT, yT, -1);
         }
@@ -516,7 +516,13 @@ public class SaveLoadData : MonoBehaviour {
 
         public virtual string NextPosition(GameObject gobj) //, Vector3 p_newPosition)
         {
-            if(_isError)
+            if (Storage.Instance.IsLoadingWorld)
+            {
+                Debug.Log("_______________ LOADING WORLD ....._______________");
+                return "";
+            }
+
+            if (_isError)
             {
                 Debug.Log("################ Error NextPosition (" + gobj.name + ")   already IS ERROR ");
                 return "Error";
@@ -559,7 +565,7 @@ public class SaveLoadData : MonoBehaviour {
 
                 bool isInZona = true;
 
-                if (!Storage.Instance.IsValidPiontInZona(_newPosition.x, _newPosition.y))
+                if (!Helper.IsValidPiontInZona(_newPosition.x, _newPosition.y))
                 {
                     
                     isInZona = false;
@@ -725,8 +731,22 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel);
     }
 
-    
-    
+    private static Vector2 ValidPiontInZona(ref float x, ref float y, float offset = 0)
+    {
+        offset = Mathf.Abs(offset);
+
+        if (x < Storage.Instance.ZonaReal.X)
+            x = Storage.Instance.ZonaReal.X + offset;
+        if (y > Storage.Instance.ZonaReal.Y) //*-1
+            y = Storage.Instance.ZonaReal.Y - offset;
+        if (x > Storage.Instance.ZonaReal.X2)
+            x = Storage.Instance.ZonaReal.X2 - offset;
+        if (y < Storage.Instance.ZonaReal.Y2) //*-1
+            y = Storage.Instance.ZonaReal.Y + offset;
+        Vector2 result = new Vector2(x, y);
+        return result;
+    }
+
 
 }
 

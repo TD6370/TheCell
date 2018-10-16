@@ -1472,9 +1472,9 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -77.18102, y: 91.779}
-  m_SizeDelta: {x: 134.36, y: 170.56}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -71.681, y: -0.49749756}
+  m_SizeDelta: {x: 123.36, y: -12.995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1037067973
 MonoBehaviour:
@@ -2684,6 +2684,7 @@ MonoBehaviour:
   DestroyObjectList: []
   IsCorrectData: 0
   CorrectCreateName: 
+  IsLoadingWorld: 0
   MainCamera: {fileID: 580250719}
   SelectGameObjectID: '?'
 --- !u!120 &1577116429
@@ -3463,6 +3464,8 @@ MonoBehaviour:
     - m_Text: LoadWorld
       m_Image: {fileID: 0}
     - m_Text: SaveWorld
+      m_Image: {fileID: 0}
+    - m_Text: ReloadWorld
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

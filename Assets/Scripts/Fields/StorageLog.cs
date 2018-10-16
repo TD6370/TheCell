@@ -94,8 +94,10 @@ public class StorageLog //: MonoBehaviour
 
     //--------------- History
 
-    public void GetHistory(string nameObj)
+    public string GetHistory(string nameObj)
     {
+        string findName = "";
+
         Debug.Log("******** History (" + _listHistoryGameObject.Count + ") --------------------------------------------FIND: " + nameObj);
         var resList = _listHistoryGameObject.Where(p => p.Name == nameObj || p.Name == "").OrderBy(p => p.TimeSave);
         int i = 0;
@@ -104,6 +106,15 @@ public class StorageLog //: MonoBehaviour
             i++;
             Debug.Log(i + ". " + obj.ToString());
         }
+        string id1 = Helper.GetID(nameObj);
+        var resList1 = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id1) != -1; }).OrderBy(p => p.TimeSave);
+        int i1 = 0;
+        foreach (var obj in resList1)
+        {
+            i1++;
+            Debug.Log(i1 + ". " + obj.ToString());
+        }
+
         if (resList == null || resList.Count() == 0)
         {
             string id = Helper.GetID(nameObj);
@@ -128,6 +139,7 @@ public class StorageLog //: MonoBehaviour
                         foreach (var obj in resListData)
                         {
                             Debug.Log("Exist " + id + " in Data Field: " + nameField + " --- " + obj.NameObject);
+                            findName = obj.NameObject;
                         }
                     }
                 }
@@ -137,6 +149,8 @@ public class StorageLog //: MonoBehaviour
         DebugKill(nameObj);
 
         Debug.Log("*******************************************************************************************");
+
+        return findName;
     }
 
     public void SaveHistory(string name, string actionName, string callFunc, string field = "", string comment = "", SaveLoadData.ObjectData oldDataObj = null, SaveLoadData.ObjectData newDataObj = null)

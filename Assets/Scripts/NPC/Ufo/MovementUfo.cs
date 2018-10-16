@@ -97,8 +97,6 @@ public class MovementUfo : MonoBehaviour {
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
 
-        
-
         int stepTest = 0;
         int stepLimitTest = 10;
         float minDist = 0.005f;  //0.01f;
@@ -118,6 +116,12 @@ public class MovementUfo : MonoBehaviour {
 
         while (true)
         {
+            if (Storage.Instance.IsLoadingWorld)
+            {
+                Debug.Log("_______________ LOADING WORLD ....._______________");
+                yield return null;
+            }
+
             if (Storage.Instance.IsCorrectData)
             {
                 Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");

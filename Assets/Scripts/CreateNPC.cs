@@ -12,6 +12,8 @@ public class CreateNPC : MonoBehaviour {
     private int m_LimitUfo = 0;//100;
     private float _periodCreateNPC = 2;//3;
 
+    private Coroutine coroutineCreateObjectUfo;
+
     void Start()
     {
         //StartCoroutine(CreateObjectUfo());
@@ -30,8 +32,15 @@ public class CreateNPC : MonoBehaviour {
 
     public void SartCrateNPC()
     {
+        
         //Debug.Log(".............SartCrateNPC -- CreateObjectUfo()");
-        StartCoroutine(CreateObjectUfo());
+        coroutineCreateObjectUfo = StartCoroutine(CreateObjectUfo());
+    }
+
+    public void StopCrateNPC()
+    {
+        if (coroutineCreateObjectUfo != null)
+            StopCoroutine(coroutineCreateObjectUfo);
     }
 
     [ExecuteInEditMode]
@@ -43,6 +52,13 @@ public class CreateNPC : MonoBehaviour {
 
         while (true)
         {
+
+            if (Storage.Instance.IsLoadingWorld)
+            {
+                Debug.Log("_______________ LOADING WORLD ....._______________");
+                yield return null;
+            }
+
             if (coutUfoReal < m_LimitUfo && !isTest)
             {
                 if (coutUfoReal == 0) coutUfoReal = 2;
@@ -56,7 +72,7 @@ public class CreateNPC : MonoBehaviour {
                     yield return null;
                 }
 
-                if (Storage.Instance.IsValidPiontInZona(pos.x, pos.y))
+                if (Helper.IsValidPiontInZona(pos.x, pos.y))
                 {
                     GameObject newUfo = (GameObject)Instantiate(prefabUfo);
                     int add = (coutUfoReal * 1);

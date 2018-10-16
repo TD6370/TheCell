@@ -78,6 +78,10 @@ public class UIEvents : MonoBehaviour {
         //}
 
         string selectCommand = menuCommands[selIndex].text.ToString();
+
+        Debug.ClearDeveloperConsole();
+        Debug.Log(">>>>>  COMMAND >>>>> " + selectCommand);
+
         switch (selectCommand)
         {
             case "None":
@@ -90,15 +94,45 @@ public class UIEvents : MonoBehaviour {
                 break;
             case "LoadWorld":
                 //m_scriptData
+
                 txtMessage.text = "Level loading...";
                 Storage.Instance.LoadLevels();
                 txtMessage.text = "Level loaded.";
+                break;
+            case "ReloadWorld":
+                //txtMessage.text = "Level saving...";
+                //m_scriptData.SaveLevel();
+                //txtMessage.text = "Level loading...";
+                //Storage.Instance.LoadLevels();
+                //txtMessage.text = "Level loaded.";
+                StartCoroutine(StartReloadWorld());
                 break;
         }
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
         txtLog.text = string.Join("\n", messages.ToArray());
         Storage.Instance.SelectGameObjectID = tbxTest.text;
+    }
+
+    IEnumerator StartReloadWorld()
+    {
+        bool isSave = false;
+        while(!isSave)
+        {
+            yield return null;
+
+            yield return new WaitForSeconds(0.3f);
+
+            txtMessage.text = "Level saving...";
+            m_scriptData.SaveLevel();
+
+            yield return new WaitForSeconds(0.3f);
+
+            isSave = true;
+        }
+        txtMessage.text = "Level loading...";
+        Storage.Instance.LoadLevels();
+        txtMessage.text = "Level loaded.";
     }
 
     public void SetTestText(string text)
