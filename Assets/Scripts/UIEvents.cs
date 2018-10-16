@@ -100,12 +100,17 @@ public class UIEvents : MonoBehaviour {
                 txtMessage.text = "Level loaded.";
                 break;
             case "ReloadWorld":
+                txtMessage.text = "Reload Level...";
                 //txtMessage.text = "Level saving...";
                 //m_scriptData.SaveLevel();
                 //txtMessage.text = "Level loading...";
                 //Storage.Instance.LoadLevels();
                 //txtMessage.text = "Level loaded.";
                 StartCoroutine(StartReloadWorld());
+                break;
+            case "CreateWorld":
+                txtMessage.text = "Create Level...";
+                Storage.Instance.CreateWorld();
                 break;
         }
 

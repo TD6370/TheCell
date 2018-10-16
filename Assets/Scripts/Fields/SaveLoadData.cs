@@ -15,24 +15,6 @@ public class SaveLoadData : MonoBehaviour {
     private GenerateGridFields _scriptGrid;
     public static float Spacing = 2f;
   
-
-    //private List<string> _namesPrefabs = new List<string>
-    //{
-    //    "PrefabField","PrefabRock","PrefabVood","PrefabUfo" //,"","","",""
-    //};
-
-    //private IEnumerable<string> _namesPrefabs
-    //{   get
-    //    {
-    //        return new List<string>{
-    //            TypePrefabs.PrefabField.ToString(),
-    //            TypePrefabs.PrefabRock.ToString(),
-    //            TypePrefabs.PrefabVood.ToString(),
-    //            TypePrefabs.PrefabUfo.ToString()
-    //        };
-    //    }
-    //}
-
     private IEnumerable<string> _namesPrefabs
     {   get
         {
@@ -100,7 +82,11 @@ public class SaveLoadData : MonoBehaviour {
                 {
 
                     //Type prefab
-                    int intTypePrefab = UnityEngine.Random.Range(1, 4);
+                    
+                    //#TT YES BOSS
+                    int intTypePrefab = UnityEngine.Random.Range(1, 5);
+                    //#TT YES UFO
+                    //int intTypePrefab = UnityEngine.Random.Range(1, 4);
                     //#TT NOT UFO
                     //int intTypePrefab = UnityEngine.Random.Range(1, 3);
 
@@ -132,17 +118,7 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
 
-    //private void CreateNewCorrectObject(string idObj, TypePrefabs prefabName, string nameField)
-    //{
-    //    string nameObject = Storage.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-    //    ObjectData objDataSave = BildObjectData(prefabName);
-    //    objDataSave.NameObject = nameObject;
-    //    objDataSave.TagObject = prefabName.ToString();
-    //    Vector3 pos = new Vector3(0, 0, 0);
-    //    objDataSave.Position = pos;
-    //    Storage.Instance.AddDataObjectInGrid(objDataSave, nameField, "CreateNewCorrectObject");
-    //}
-
+   
     public static ObjectData CreateObjectData(GameObject p_gobject)
     {
         ObjectData newObject;
@@ -161,7 +137,17 @@ public class SaveLoadData : MonoBehaviour {
                     TagObject = p_gobject.tag,
                     Position = p_gobject.transform.position
                 };
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
+                //Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
+                newObject.UpdateGameObject(p_gobject);
+                break;
+            case TypePrefabs.PrefabBoss:
+                newObject = new GameDataBoss()
+                {
+                    NameObject = p_gobject.name,
+                    TagObject = p_gobject.tag,
+                    Position = p_gobject.transform.position
+                };
+                //Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
                 newObject.UpdateGameObject(p_gobject);
                 break;
             default:
@@ -186,27 +172,50 @@ public class SaveLoadData : MonoBehaviour {
         if (!String.IsNullOrEmpty(p_gobject.tag))
             prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), p_gobject.tag.ToString()); ;
 
+        string nameField = "";
+        int index = -1;
+        List<ObjectData> objects;
+
         switch (prefabType)
         {
             case TypePrefabs.PrefabUfo:
                 newObject = new GameDataUfo();
-                string nameField = Helper.GetNameFieldByName(p_gobject.name);
+                nameField = Helper.GetNameFieldByName(p_gobject.name);
                 if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                 {
                     Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
                     return null;
                 }
-                var objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-                var index = objects.FindIndex(p => p.NameObject == p_gobject.name);
+                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
                 if (index == -1)
                 {
-                    //Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
                     //Storage.Instance.DebugKill(p_gobject.name);
-                    Storage.Log.GetHistory(p_gobject.name);
-                    Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
+                    //Storage.Log.GetHistory(p_gobject.name);
+                    //Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
                     return null;
                 }
                 newObject = objects[index] as GameDataUfo;
+                break;
+            case TypePrefabs.PrefabBoss:
+                newObject = new GameDataBoss();
+                nameField = Helper.GetNameFieldByName(p_gobject.name);
+                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                {
+                    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
+                    return null;
+                }
+                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
+                if (index == -1)
+                {
+                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                    //Storage.Log.GetHistory(p_gobject.name);
+                    //Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
+                    return null;
+                }
+                newObject = objects[index] as GameDataBoss;
                 break;
             default:
                 newObject = new ObjectData()

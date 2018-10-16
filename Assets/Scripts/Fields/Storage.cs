@@ -209,8 +209,6 @@ public class Storage : MonoBehaviour {
 
         StopGame();
 
-        InitObjectsGrid();
-
         LoadData();
 
         LoadGameObjects(true);
@@ -219,28 +217,36 @@ public class Storage : MonoBehaviour {
 
     }
 
-private void StopGame()
+    public void StopGame()
     {
         if(_scriptNPC!=null)
             _scriptNPC.StopCrateNPC();
 
         //---
         DestroyAllGamesObjects();
+
+        InitObjectsGrid();
     }
 
-    private void LoadGameObjects(bool isLoadLevel = false)
+    public void CreateWorld()
+    {
+        StopGame();
+        LoadGameObjects(true, true);
+    }
+
+    private void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false)
     {
         //Debug.Log("III LoadGameObjects ::::_______________");
 
-        _scriptGrid.StartGenGrigField(isLoadLevel);
+        _scriptGrid.StartGenGrigField(isLoadRealtime);
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
-        _scriptData.CreateDataGamesObjectsWorld();
+        _scriptData.CreateDataGamesObjectsWorld(isCreate);
 
         //Debug.Log("III ....Init Position HERO......");
         _screiptHero.FindFieldCurrent();
 
-        if (isLoadLevel)
+        if (isLoadRealtime)
             StartCoroutine(StartFindLookObjects());
         else
         {
