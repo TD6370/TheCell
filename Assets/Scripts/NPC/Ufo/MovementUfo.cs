@@ -187,6 +187,15 @@ public class MovementUfo : MonoBehaviour {
         }
     }
 
+
+    public void SaveData()
+    {
+        string field = Helper.GetNameFieldByName(_dataUfo.NameObject);
+        //Storage.Data.AddDataObjectInGrid(_dataUfo, field, "SaveData");
+        //_dataUfo.NextPosition(this.gameObject);
+        //Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+    }
+
     private bool ResavePositionData()
     {
         if (Storage.Instance.IsCorrectData)

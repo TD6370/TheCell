@@ -63,18 +63,19 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CompletePlayerController.cs" />
     <Compile Include="Assets\Scripts\CreateNPC.cs" />
-    <Compile Include="Assets\Scripts\Fields\GenerateGridFields.cs" />
-    <Compile Include="Assets\Scripts\Fields\Helper.cs" />
-    <Compile Include="Assets\Scripts\Fields\SaveLoadData.cs" />
-    <Compile Include="Assets\Scripts\Fields\Storage.cs" />
-    <Compile Include="Assets\Scripts\Fields\StorageCorrect.cs" />
-    <Compile Include="Assets\Scripts\Fields\StorageLog.cs" />
-    <Compile Include="Assets\Scripts\Fields\UpdateData.cs" />
     <Compile Include="Assets\Scripts\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\NPC\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\NPC\MovementNPC.cs" />
     <Compile Include="Assets\Scripts\NPC\Ufo\MovementUfo.cs" />
     <Compile Include="Assets\Scripts\PersonalData.cs" />
+    <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
+    <Compile Include="Assets\Scripts\Storage\Helper.cs" />
+    <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
+    <Compile Include="Assets\Scripts\Storage\Storage.cs" />
+    <Compile Include="Assets\Scripts\Storage\StorageCorrect.cs" />
+    <Compile Include="Assets\Scripts\Storage\StorageLog.cs" />
+    <Compile Include="Assets\Scripts\Storage\StoragePerson.cs" />
+    <Compile Include="Assets\Scripts\Storage\UpdateData.cs" />
     <Compile Include="Assets\Scripts\Temp.cs" />
     <Compile Include="Assets\Scripts\TileGen.cs" />
     <Compile Include="Assets\Scripts\UIEvents.cs" />

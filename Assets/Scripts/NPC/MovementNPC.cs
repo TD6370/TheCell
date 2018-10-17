@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class MovementNPC : MonoBehaviour {
 
-    private Coroutine moveObject;
+    protected Coroutine moveObject;
+    protected SaveLoadData.GameDataNPC _dataNPC;
+
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
     private Rigidbody2D _rb2d;
     private string objID;
     private UIEvents _scriptUIEvents;
-    private SaveLoadData.GameDataNPC _dataNPC;
+    
     string testId;
     string _resName = "";
 
@@ -23,7 +25,7 @@ public class MovementNPC : MonoBehaviour {
     {
 
         InitData();
-        moveObject = StartCoroutine(MoveObjectToPosition());
+        StartMoving();
         objID = Helper.GetID(this.name);
         if (string.IsNullOrEmpty(objID))
             objID = "Empty";
@@ -34,6 +36,11 @@ public class MovementNPC : MonoBehaviour {
         _scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
         if (_scriptUIEvents == null)
             Debug.Log("########### MovementUfo scriptUIEvents is Empty");
+    }
+
+    protected virtual void StartMoving()
+    {
+        moveObject = StartCoroutine(MoveObjectToPosition<SaveLoadData.GameDataNPC>());
     }
 
     // Update is called once per frame
@@ -86,7 +93,7 @@ public class MovementNPC : MonoBehaviour {
 
 
 
-    IEnumerator MoveObjectToPosition()
+    protected IEnumerator MoveObjectToPosition<T>() where T : SaveLoadData.GameDataNPC
     {
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
@@ -105,7 +112,8 @@ public class MovementNPC : MonoBehaviour {
         }
 
         string info = "MoveObjectToPosition Init";
-        _dataNPC = FindObjectData(info) as SaveLoadData.GameDataNPC;
+        //_dataNPC = FindObjectData(info) as SaveLoadData.GameDataNPC;
+        _dataNPC = FindObjectData<T>(info);
 
         while (true)
         {
@@ -154,7 +162,7 @@ public class MovementNPC : MonoBehaviour {
             }
 
             //+++++++++++ RESAVE Next Position ++++++++++++
-            bool res = ResavePositionData();
+            bool res = ResavePositionData<T>();
 
             if (!res)
             {
@@ -173,7 +181,7 @@ public class MovementNPC : MonoBehaviour {
         }
     }
 
-    private bool ResavePositionData()
+    private bool ResavePositionData<T>() where T : SaveLoadData.GameDataNPC
     {
         if (Storage.Instance.IsCorrectData)
         {
@@ -197,7 +205,7 @@ public class MovementNPC : MonoBehaviour {
             if (oldName != _resName)
             {
                 string callInfo = "ResavePositionData >> oldName(" + oldName + ") != _resName(" + _resName + ")";
-                _dataNPC = FindObjectData(callInfo) as SaveLoadData.GameDataUfo;
+                _dataNPC = FindObjectData<T>(callInfo);// as SaveLoadData.GameDataUfo;
                 if (_dataNPC == null)
                 {
                     Debug.Log("################## ERROR MoveObjectToPosition dataUfo is Empty   GO:" + this.gameObject.name);
@@ -215,35 +223,65 @@ public class MovementNPC : MonoBehaviour {
         //+++++++++++++++++++++++
     }
 
-    private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
+
+
+    protected T FindObjectData<T>(string callFunc)  where T : SaveLoadData.GameDataNPC
     {
-        var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataUfo;
+        //Debug.Log("***************  FindObjectData GO: " + gameObject.name + "  " + gameObject.tag + "    T: " + typeof(T) + "      GO Type: " + this.gameObject.GetType());
+
+        T _dataNPC = SaveLoadData.FindObjectData(this.gameObject) as T;
 
 
-        if (dataUfo == null)
+        if (_dataNPC == null)
         {
             Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo is Empty !!!!    :" + callFunc);
             return null;
         }
 
-        if (dataUfo.NameObject != this.name)
+        if (_dataNPC.NameObject != this.name)
         {
-            Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + dataUfo.NameObject + "  GO: " + this.name + "   :" + callFunc);
+            Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + _dataNPC.NameObject + "  GO: " + this.name + "   :" + callFunc);
             return null;
         }
 
-        if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
+        if (_dataNPC.TargetPosition == new Vector3(0, 0, 0))
         {
             Debug.Log("#################### Error UFO dataUfo.TargetPosition is zero !!!!   :" + callFunc);
             return null;
         }
 
-        return dataUfo;
+        return _dataNPC;
     }
 
-    public void UpdateData(string callFunc)
+    //private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
+    //{
+    //    var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataUfo;
+
+
+    //    if (dataUfo == null)
+    //    {
+    //        Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo is Empty !!!!    :" + callFunc);
+    //        return null;
+    //    }
+
+    //    if (dataUfo.NameObject != this.name)
+    //    {
+    //        Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + dataUfo.NameObject + "  GO: " + this.name + "   :" + callFunc);
+    //        return null;
+    //    }
+
+    //    if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
+    //    {
+    //        Debug.Log("#################### Error UFO dataUfo.TargetPosition is zero !!!!   :" + callFunc);
+    //        return null;
+    //    }
+
+    //    return dataUfo;
+    //}
+
+    public virtual void UpdateData(string callFunc)
     {
-        _dataNPC = FindObjectData(callFunc) as SaveLoadData.GameDataNPC;
+        _dataNPC = FindObjectData<SaveLoadData.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
     void OnGUI()

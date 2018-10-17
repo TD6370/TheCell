@@ -831,9 +831,6 @@ MonoBehaviour:
   GridX: 22
   GridY: 18
   Spacing: 2
-  prefabCompas: {fileID: 2012676942}
-  numberOfObjects: 10
-  radius: 1
 --- !u!114 &580250723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -859,7 +856,7 @@ MonoBehaviour:
   PrefabVood: {fileID: 1714765190}
   PrefabRock: {fileID: 587225620}
   PrefabUfo: {fileID: 134454365}
-  PrefabBoss: {fileID: 0}
+  PrefabBoss: {fileID: 1390742130}
 --- !u!1 &587225620 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1736101719947554, guid: 0d70e830e2198f0428159dad41177765,
@@ -2131,6 +2128,11 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1376562969}
   m_CullTransparentMesh: 0
+--- !u!1 &1390742130 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1162866333582890, guid: c477979b37236304893d17dfe2c2babc,
+    type: 2}
+  m_PrefabInternal: {fileID: 1399639149}
 --- !u!1 &1395350902
 GameObject:
   m_ObjectHideFlags: 0
@@ -2256,6 +2258,21 @@ Prefab:
     - target: {fileID: 1162866333582890, guid: c477979b37236304893d17dfe2c2babc, type: 2}
       propertyPath: m_TagString
       value: PrefabBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 50464271455216320, guid: c477979b37236304893d17dfe2c2babc,
+        type: 2}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 50464271455216320, guid: c477979b37236304893d17dfe2c2babc,
+        type: 2}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 50464271455216320, guid: c477979b37236304893d17dfe2c2babc,
+        type: 2}
+      propertyPath: m_Mass
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c477979b37236304893d17dfe2c2babc, type: 2}
@@ -2733,6 +2750,9 @@ MonoBehaviour:
   IsLoadingWorld: 0
   MainCamera: {fileID: 580250719}
   SelectGameObjectID: '?'
+  prefabCompas: {fileID: 0}
+  numberOfObjects: 10
+  radius: 0.1
 --- !u!120 &1577116429
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3535,11 +3555,6 @@ MonoBehaviour:
   tbxTest: {fileID: 470054890}
   dpnMenuCommandTest: {fileID: 1819239862}
   MainCamera: {fileID: 580250719}
---- !u!1 &2012676942 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1191300187631092, guid: 56867aa7f68e3a243b1ea105d6bbce8c,
-    type: 2}
-  m_PrefabInternal: {fileID: 171240802}
 --- !u!1 &2082532947
 GameObject:
   m_ObjectHideFlags: 0
