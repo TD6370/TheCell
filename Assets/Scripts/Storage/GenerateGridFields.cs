@@ -90,6 +90,8 @@ public class GenerateGridFields : MonoBehaviour {
             maxWidthOffset += startY - 1;
         }
 
+        Storage.Instance.Fields.Clear();
+
         for (int y = startY; y > maxWidthOffset; y--)
         {
             for (int x = startX; x < maxHeightOffset; x++)
@@ -776,44 +778,50 @@ public class GenerateGridFields : MonoBehaviour {
 
         Storage.Instance.IsLoadingWorld = true;
 
-        //-------------
+        
         Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects ...........");
 
-        var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
-        foreach (var itemKey in listKey)
-        {
-            List<GameObject> objects = Storage.Instance.GamesObjectsReal[itemKey];
-
-            //foreach (var gobj in objects)
-            for (int i= objects.Count() -1; i>=0; i--)
-            {
-                var gobj = objects[i];
-
-                var moveUfo = gobj.GetComponent<MovementUfo>();
-                if (moveUfo != null)
-                {
-                    moveUfo.SaveData();
-                }
-                //var moveNPC = gobj.GetComponent<MovementNPC>();
-                //if (moveNPC != null)
-                //    moveNPC.SaveData();
-                //var moveBoss = gobj.GetComponent<MovementBoss>();
-                //if (moveBoss != null)
-                //    moveBoss.SaveData();
-            }
-        }
-
-        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^");
+        DateTime startTestTime = DateTime.Now;
 
         //------------
-        ////var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
+        var listKeyR = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
+        foreach (var itemKey in listKeyR)
+        {
+            string nameField = itemKey;
+            //SaveListObjectsToData(nameField, true);
+            SaveListObjectsToData(nameField);
+        }
+        //------------
+
+        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T1 : " +  (DateTime.Now - startTestTime).TotalMilliseconds);
+        //startTestTime = DateTime.Now;
+
+        //-------------
+        //var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
         //foreach (var itemKey in listKey)
         //{
-        //    string nameField = itemKey;
-        //    //SaveListObjectsToData(nameField, true);
-        //    SaveListObjectsToData(nameField);
+        //    List<GameObject> objects = Storage.Instance.GamesObjectsReal[itemKey];
+
+        //    //foreach (var gobj in objects)
+        //    for (int i = objects.Count() - 1; i >= 0; i--)
+        //    {
+        //        var gobj = objects[i];
+
+        //        var moveUfo = gobj.GetComponent<MovementUfo>();
+        //        if (moveUfo != null)
+        //        {
+        //            moveUfo.SaveData();
+        //        }
+        //        //var moveNPC = gobj.GetComponent<MovementNPC>();
+        //        //if (moveNPC != null)
+        //        //    moveNPC.SaveData();
+        //        //var moveBoss = gobj.GetComponent<MovementBoss>();
+        //        //if (moveBoss != null)
+        //        //    moveBoss.SaveData();
+        //    }
         //}
         //------------
+        //Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T2 : " + (DateTime.Now - startTestTime).TotalMilliseconds);
 
         //Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR);
         //_dataUfo.NextPosition(this.gameObject);

@@ -155,6 +155,22 @@ public class Storage : MonoBehaviour {
         //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
         InitObjectsGrid();
 
+        InitComponents();
+
+        //StartGenGrigField();
+
+        LoadData();
+
+        LoadGameObjects();
+    }
+
+    void Update()
+    {
+        DestroyRealObjectInList();
+    }
+
+    private void InitComponents()
+    {
         //var camera = MainCamera;
         if (MainCamera == null)
         {
@@ -199,32 +215,6 @@ public class Storage : MonoBehaviour {
             Debug.Log("Storage.Start scriptUIEvents not load !!!!!");
             return;
         }
-
-        //StartGenGrigField();
-
-        LoadData();
-
-        LoadGameObjects();
-    }
-
-    void Update()
-    {
-        DestroyRealObjectInList();
-    }
-
-    private void InitObjectsGrid()
-    {
-        //Debug.Log("III InitObjectsGrid_______________");
-        Fields = new Dictionary<string, GameObject>();
-        _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        _GridDataG = new SaveLoadData.GridData();
-        
-
-        _StorageLog = new StorageLog();
-        _StorageLog.Init();
-        _UpdateData = new UpdateData();
-        //_StorageCorrect = new StorageCorrect();
-
         _StorageCorrect = gameObject.GetComponent<StorageCorrect>();
         if (_StorageCorrect != null)
         {
@@ -240,6 +230,20 @@ public class Storage : MonoBehaviour {
         }
         _StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
+    }
+
+    private void InitObjectsGrid()
+    {
+        //Debug.Log("III InitObjectsGrid_______________");
+        Fields = new Dictionary<string, GameObject>();
+        _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
+        _GridDataG = new SaveLoadData.GridData();
+        
+
+        _StorageLog = new StorageLog();
+        _StorageLog.Init();
+        _UpdateData = new UpdateData();
+        //_StorageCorrect = new StorageCorrect();
 
         DestroyObjectList = new List<GameObject>();
     }
@@ -279,15 +283,25 @@ public class Storage : MonoBehaviour {
 
     private void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false)
     {
-        //Debug.Log("III LoadGameObjects ::::_______________");
+        Debug.Log("III LoadGameObjects ::::_______________");
 
-        _scriptGrid.StartGenGrigField(isLoadRealtime);
+        //TTTT
+        _screiptHero.FindFieldCurrent();
+
+        //_scriptGrid.StartGenGrigField(isLoadRealtime);
+        _scriptGrid.StartGenGrigField(true);
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         _scriptData.CreateDataGamesObjectsWorld(isCreate);
 
         //Debug.Log("III ....Init Position HERO......");
-        _screiptHero.FindFieldCurrent();
+        //_screiptHero.FindFieldCurrent();
+
+        //if (!isLoadRealtime)
+        //{
+        //    Debug.Log("....................._scriptGrid.StartGenGrigField(true)");
+        //    _scriptGrid.StartGenGrigField(true);
+        //}
 
         if (isLoadRealtime)
             StartCoroutine(StartFindLookObjects());
@@ -337,7 +351,7 @@ public class Storage : MonoBehaviour {
     //    _GamesObjectsReal = p_GamesObjectsReal;
     //}
 
-    private void LoadData()
+    public void LoadData()
     {
         //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
         //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";

@@ -71,7 +71,7 @@ public class CompletePlayerController : MonoBehaviour {
             Application.Quit();
         }
 
-        GetMousePositionOnScene2();
+        GetMousePositionOnScene();
     }
 
 
@@ -80,7 +80,7 @@ public class CompletePlayerController : MonoBehaviour {
          //GetMousePositionOnScene2()
     }
 
-    private void GetMousePositionOnScene2()
+    private void GetMousePositionOnScene()
     {
         //GetMousePositionOnScene();
         //var t2 = Input.GetButtonDown("Q");
@@ -259,7 +259,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-    private void GetMousePositionOnScene()
+    private void GetMousePositionOnScene_()
     {
         string errInd = "satrt";
         try
@@ -317,7 +317,6 @@ public class CompletePlayerController : MonoBehaviour {
     void OnGUI()
     {
         //Debug.Log("Current detected event: " + Event.current);
-        //GetMousePositionOnScene();
         GetMouseCursorClick();
     }
 

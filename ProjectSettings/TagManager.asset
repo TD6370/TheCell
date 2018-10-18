@@ -12,6 +12,7 @@ TagManager:
   - PrefabPanel
   - UI
   - PrefabBoss
+  - PrefabCommandButton
   layers:
   - Default
   - TransparentFX
