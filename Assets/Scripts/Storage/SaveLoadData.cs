@@ -332,6 +332,21 @@ public class SaveLoadData : MonoBehaviour {
         
         static public void SaveGridXml(GridData state, string datapath, bool isNewWorld = false)
         {
+
+            if (isNewWorld)
+            {
+                if (File.Exists(datapath))
+                {
+                    try
+                    {
+                        File.Delete(datapath);
+                    }catch(Exception x)
+                    {
+                        Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
+                    }
+                }
+            }
+
             //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
             //## 
             state.FieldsXML = state.FieldsD.ToList();
@@ -509,8 +524,7 @@ public class SaveLoadData : MonoBehaviour {
     public class GameDataNPC : ObjectData
     {
         [XmlIgnore]
-        public Vector3 TargetPosition;
-        
+        public virtual Vector3 TargetPosition { get; set; }
 
         //-----------------------------------for Ufo
         private Vector3 m_Position = new Vector3(0, 0, 0);
@@ -540,6 +554,14 @@ public class SaveLoadData : MonoBehaviour {
         public GameDataNPC() : base()
         {
             
+        }
+
+        public void SetTargetPosition(Vector3 p_SetTarget)
+        {
+            //#TARGET
+            Debug.Log("^^^^^  Set Target + " + p_SetTarget + "    Name  " + NameObject);
+            TargetPosition = p_SetTarget;
+            return;
         }
 
         public void SetTargetPosition()
@@ -579,7 +601,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             if (Storage.Instance.IsLoadingWorld)
             {
-                Debug.Log("_______________ LOADING WORLD ....._______________");
+                //Debug.Log("_______________ LOADING WORLD ....._______________");
                 return "";
             }
 
@@ -648,11 +670,38 @@ public class SaveLoadData : MonoBehaviour {
             }
             return newName;
         }
+
+        public virtual string Upadete(GameObject gobj) 
+        {
+            Vector3 _newPosition = gobj.transform.position;
+            Vector3 _oldPosition = Position;
+            string nameObject = gobj.name;
+            string posFieldName = Helper.GetNameFieldByName(nameObject);
+
+            string posFieldOld = Helper.GetNameFieldPosit(_oldPosition.x, _oldPosition.y);
+            string posFieldReal = Helper.GetNameFieldPosit(_newPosition.x, _newPosition.y);
+            string newName = "";
+
+            bool isInZona = true;
+            if (!Helper.IsValidPiontInZona(_newPosition.x, _newPosition.y))
+            {
+                isInZona = false;
+            }
+            
+            newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
+            if (!isInZona && !string.IsNullOrEmpty(newName))
+            {
+                Destroy(gobj);
+            }
+            return newName;
+        }
     }
 
     [XmlType("Person")]
     public class PersonData : GameDataNPC
     {
+        public override Vector3 TargetPosition { get; set; }
+
         public string Id { get; set; }
 
         public PersonData()
@@ -725,11 +774,49 @@ public class SaveLoadData : MonoBehaviour {
     //public class GameDataBoss : GameDataNPC
     {
         [XmlIgnore]
-        public Color ColorRender = Color.black;
+        private Color m_ColorRender = Color.black;
+        [XmlIgnore]
+        public Color ColorRender
+        {
+            get
+            {
+                return m_ColorRender;
+            }
+            set
+            {
+                m_ColorRender = value;
+                if (m_ColorRender!=null && m_ColorRender != Color.black)
+                {
+                    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender);
+                    if(ColorLevel != colorStr)
+                        ColorLevel = colorStr;
+                }
+            }
+
+        }
+
+        private string _ColorLevel = "";
+        public string ColorLevel
+        {
+            get
+            {
+                return _ColorLevel;
+            }
+            set
+            {
+                _ColorLevel = value;
+                if (!string.IsNullOrEmpty(_ColorLevel))
+                    ColorRender = _ColorLevel.ToColor(ColorRender);
+            }
+
+        }
 
         public GameDataBoss()
             : base()
         {
+            if (m_ColorRender != Color.black)
+                return;
+
             Dictionary<int, Color> colorsPresent = new Dictionary<int, Color>();
             colorsPresent.Add(0, Color.black);
             colorsPresent.Add(1, Color.grey);
@@ -799,7 +886,7 @@ public class SaveLoadData : MonoBehaviour {
             return;
         }
 
-        Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel);
+        Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
     private static Vector2 ValidPiontInZona(ref float x, ref float y, float offset = 0)

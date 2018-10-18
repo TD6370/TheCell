@@ -284,6 +284,17 @@ public class MovementNPC : MonoBehaviour {
         _dataNPC = FindObjectData<SaveLoadData.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
+    public void SetTarget()
+    {
+        Debug.Log("^^^^^^^^ TARGET --- SetTarget NPC " + this.tag + "       " + this.name);
+        if (_dataNPC != null)
+        {
+            //Vector3 setV = Storage.Person.PersonsTargetPosition;
+            //_dataNPC.SetTargetPosition(setV);
+            _dataNPC.SetTargetPosition(Storage.Instance.PersonsTargetPosition);
+        }
+    }
+
     void OnGUI()
     {
         GUIStyle style = new GUIStyle();

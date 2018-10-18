@@ -112,6 +112,11 @@ public class UIEvents : MonoBehaviour {
                 txtMessage.text = "Create Level...";
                 Storage.Instance.CreateWorld();
                 break;
+            case "TartgetPositionAll":
+                txtMessage.text = "TartgetPositionAll...";
+                //Storage.Instance.TartgetPositionAll();
+                Storage.Instance.IsTartgetPositionAll = true;
+                break;
         }
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 

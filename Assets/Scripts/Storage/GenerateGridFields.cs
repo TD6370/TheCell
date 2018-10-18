@@ -13,6 +13,8 @@ public class GenerateGridFields : MonoBehaviour {
     public float GridY = 5f;
     public float Spacing = 2f;
 
+    private int _CounterRealObj;
+
     private int _counter;
     public int Counter
     {
@@ -29,6 +31,7 @@ public class GenerateGridFields : MonoBehaviour {
             Debug.Log("GenerateGridFields.Start : sctiptData not load !!!");
 
         //LoadPoolGameObjects();
+        StartCoroutine(CalculateTealsObjects());
     }
 
     void Awake()
@@ -40,6 +43,29 @@ public class GenerateGridFields : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    IEnumerator CalculateTealsObjects()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.3f);
+
+            if (Storage.Instance.GamesObjectsReal == null)
+                yield return null;
+
+            //string prUfo = SaveLoadData.TypePrefabs.PrefabUfo.ToString();
+            //string prBoss = SaveLoadData.TypePrefabs.PrefabBoss.ToString();
+
+            //List<GameObject> gobjsList = Storage.Instance.GamesObjectsReal.
+            //    SelectMany(x => x.Value).
+            //    Where( p=> p.tag == prUfo || p.tag == prBoss).ToList();
+            //List<GameObject> gobjsList = Storage.Person.GetAllRealPersons().ToList();
+
+            _CounterRealObj = Storage.Person.GetAllRealPersons().ToList().Count(); //gobjsList.Count();
+        }
+
+    }
+
 
     //Add start position
     public void StartGenGrigField(bool isOffsetHero = false)
@@ -750,13 +776,44 @@ public class GenerateGridFields : MonoBehaviour {
 
         Storage.Instance.IsLoadingWorld = true;
 
+        //-------------
+        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects ...........");
+
         var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
         foreach (var itemKey in listKey)
         {
-            string nameField = itemKey;
-            //SaveListObjectsToData(nameField, true);
-            SaveListObjectsToData(nameField);
+            List<GameObject> objects = Storage.Instance.GamesObjectsReal[itemKey];
+
+            //foreach (var gobj in objects)
+            for (int i= objects.Count() -1; i>=0; i--)
+            {
+                var gobj = objects[i];
+
+                var moveUfo = gobj.GetComponent<MovementUfo>();
+                if (moveUfo != null)
+                {
+                    moveUfo.SaveData();
+                }
+                //var moveNPC = gobj.GetComponent<MovementNPC>();
+                //if (moveNPC != null)
+                //    moveNPC.SaveData();
+                //var moveBoss = gobj.GetComponent<MovementBoss>();
+                //if (moveBoss != null)
+                //    moveBoss.SaveData();
+            }
         }
+
+        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^");
+
+        //------------
+        ////var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
+        //foreach (var itemKey in listKey)
+        //{
+        //    string nameField = itemKey;
+        //    //SaveListObjectsToData(nameField, true);
+        //    SaveListObjectsToData(nameField);
+        //}
+        //------------
 
         //Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR);
         //_dataUfo.NextPosition(this.gameObject);
@@ -923,6 +980,8 @@ public class GenerateGridFields : MonoBehaviour {
     {
         GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
         GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
+
+        GUI.Label(new Rect(0, 50, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
     }
 
 }

@@ -4,6 +4,7 @@ using System.Collections;
 //Adding this allows us to access members of the UI namespace including Text.
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(Collider2D))]
 public class CompletePlayerController : MonoBehaviour {
@@ -11,48 +12,52 @@ public class CompletePlayerController : MonoBehaviour {
     public Camera MainCamera;
 
     [Header("Speed move hero")]
-	public float Speed;				//Floating point variable to store the player's movement speed.
-	[Space]
-	public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
+    public float Speed;             //Floating point variable to store the player's movement speed.
+    [Space]
+    public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
     public Color ColorCurrentField = Color.yellow;
 
-	private Rigidbody2D rb2d;		//Store a reference to the Rigidbody2D component required to use 2D Physics.
-	//[SerializeField]
+    private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
+                                    //[SerializeField]
     private int _count;				//Integer to store the number of pickups collected so far.
     private int _posLastX = 0;
     private int _posLastY = 0;
     private GenerateGridFields m_scriptGrid;
-    Vector2 _movement;
+    private Vector2 _movement;
+    private Vector2 _MousePositionClick;
 
-	void Start()
-	{
-		rb2d = GetComponent<Rigidbody2D> ();
-        
+    void Start()
+    {
+        rb2d = GetComponent<Rigidbody2D>();
+
         InitData();
-		_count = 0;
-		txtMessage.text = "";
+        _count = 0;
+        txtMessage.text = "";
 
-		SetCountText ();
-	}
+        SetCountText();
+
+        //Set Start Position
+        rb2d.MovePosition(new Vector2(40, -40));
+    }
 
     void Awake()
     {
     }
 
-  	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
-	void FixedUpdate()
-	{
+    //FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
+    void FixedUpdate()
+    {
         if (Storage.Instance.IsLoadingWorld)
         {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return;
         }
 
-        float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
 
-        _movement = new Vector2 (moveHorizontal, moveVertical);
+        _movement = new Vector2(moveHorizontal, moveVertical);
 
         rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
 
@@ -65,11 +70,35 @@ public class CompletePlayerController : MonoBehaviour {
         {
             Application.Quit();
         }
-	}
+
+        GetMousePositionOnScene2();
+    }
+
 
     void Update()
     {
+         //GetMousePositionOnScene2()
+    }
+
+    private void GetMousePositionOnScene2()
+    {
+        //GetMousePositionOnScene();
+        //var t2 = Input.GetButtonDown("Q");
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
+            _MousePositionClick = Input.mousePosition;
+            Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition " + _MousePositionClick);
+        }
         
+        //Vector3 screenPosition = Camera.main.WorldToScreenPoint(mousePos);
+        //Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
+
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //if (Physics.Raycast(ray, hit))
+        //{
+        //    Debug.Log(hit.collider.name);
+        //}
     }
 
     private void InitData()
@@ -229,5 +258,100 @@ public class CompletePlayerController : MonoBehaviour {
             Application.Quit();
         }
     }
-    
+
+    private void GetMousePositionOnScene()
+    {
+        string errInd = "satrt";
+        try
+        {
+            //return;
+            errInd = "1";
+            if (Event.current == null)
+            {
+                //Debug.Log("########## Error GetMousePositionOnScene Event.current==null");
+                return;
+            }
+            errInd = "1.2";
+            if (Event.current.button == null)
+            {
+                Debug.Log("########## Error GetMousePositionOnScene Event.current.button");
+                return;
+            }
+            errInd = "1.3";
+            if (Event.current.type != EventType.MouseDown || Event.current.button != 0)
+                return;
+
+            errInd = "2";
+            // convert GUI coordinates to screen coordinates
+            Vector3 screenPosition = Event.current.mousePosition;
+            errInd = "3";
+            if(Camera.current==null)
+            {
+                Debug.Log("########## Error GetMousePositionOnScene Camera.current = null");
+                return;
+            }
+
+            screenPosition.y = Camera.current.pixelHeight - screenPosition.y;
+            //screenPosition.y = MainCamera.current.pixelHeight - screenPosition.y;
+            errInd = "4";
+            Ray ray = Camera.current.ScreenPointToRay(screenPosition);
+            errInd = "5";
+            RaycastHit hit;
+            errInd = "6";
+            // use a different Physics.Raycast() override if necessary
+            if (Physics.Raycast(ray, out hit))
+            {
+                errInd = "7";
+                // do stuff here using hit.point
+                // tell the event system you consumed the click
+                Event.current.Use();
+            }
+            errInd = "8";
+        }
+        catch (Exception x)
+        {
+            Debug.Log("########## Error GetMousePositionOnScene (" + errInd + ") " + x.Message + "");
+        }
+    }
+
+    void OnGUI()
+    {
+        //Debug.Log("Current detected event: " + Event.current);
+        //GetMousePositionOnScene();
+        GetMouseCursorClick();
+    }
+
+    private Rect _positionLastTarget = new Rect(0,0, 100, 100);
+
+    private void GetMouseCursorClick()
+    {
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePositionClick);
+        //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: " + screenPosition);
+        if (screenPosition != new Vector3(0, 0, 0))
+        {
+            Rect positionM = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 100, 100);
+            if (_positionLastTarget != positionM)
+            {
+                //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: " + positionM);
+
+                _positionLastTarget = positionM;
+                float positionMx = positionM.x / 25;
+                float positionMy = positionM.y / 25;
+
+                string field = Helper.GetNameFieldPosit(positionMx, positionMy);
+
+                //string field2 = Helper.GetNameFieldPosit(_MousePositionClick.x, _MousePositionClick.y);
+                //string field3 = Helper.GetNameFieldPosit(screenPosition.x, screenPosition.y);
+                //GUI.Label(positionM, field + " " + field2 + " " + field3);
+                GUI.Label(positionM, field);
+                foreach (var gobj in Storage.Person.GetAllRealPersons(field))
+                {
+                    Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
+                    gobj.GetComponent<SpriteRenderer>().color = Color.black;
+                }
+            }
+
+        }
+
+    }
 }

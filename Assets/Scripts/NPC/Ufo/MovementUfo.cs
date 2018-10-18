@@ -190,9 +190,22 @@ public class MovementUfo : MonoBehaviour {
 
     public void SaveData()
     {
-        string field = Helper.GetNameFieldByName(_dataUfo.NameObject);
+        string _nameField = Helper.GetNameFieldByName(_dataUfo.NameObject);
+
         //Storage.Data.AddDataObjectInGrid(_dataUfo, field, "SaveData");
-        //_dataUfo.NextPosition(this.gameObject);
+        //Debug.Log("SSSSSSSSSSSSS SaveData ++ NextPosition   : " + this.name);
+        _dataUfo.Upadete(this.gameObject);
+
+        if(this.gameObject==null)
+        {
+            Debug.Log("############# SaveData ++ This GameObject is null");
+            return;
+        }
+
+        //Debug.Log("SSSSSSSSSSSSS SaveData ++ UpdateDataObect   : " + this.name);
+            //Storage.Data.UpdateDataObect(_nameField, this.gameObject.name, _dataUfo, "SaveData", this.gameObject.transform.position);
+        
+        //_dataUfo.UpdateGameObject(this.gameObject);
         //Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
     }
 
@@ -280,7 +293,19 @@ public class MovementUfo : MonoBehaviour {
         _dataUfo = FindObjectData(callFunc) as SaveLoadData.GameDataUfo;
         //testNewName = dataUfo.NameObject;
     }
-    
+
+    //#TARGET
+    public void SetTarget()
+    {
+        Debug.Log("^^^^^^^^ TARGET --- SetTarget UFO");//#TARGET
+        if (_dataUfo!=null)
+        {
+            //_dataUfo.SetTargetPosition(Storage.Person.PersonsTargetPosition);
+            _dataUfo.SetTargetPosition(Storage.Instance.PersonsTargetPosition);
+            
+        }
+    }
+
     //--------------------
     //public string text = "TTTTTTTTTTTTTTTTTTTTTTTTTTT1";
     //public int textSize = 14;

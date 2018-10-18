@@ -13,6 +13,9 @@ public class Storage : MonoBehaviour {
     }
 
     public GameObject HeroObject;
+    public GameObject UIController;
+    //_scriptEvents = UIController.GetComponent<UIEvents>();
+
     public ZonaFieldLook ZonaField { get; set; }
     public ZonaRealLook ZonaReal { get; set; }
     public List<string> KillObject = new List<string>();
@@ -20,6 +23,8 @@ public class Storage : MonoBehaviour {
     public bool IsCorrectData = false;
     public string CorrectCreateName = "";
     public bool IsLoadingWorld = false;
+    public bool IsTartgetPositionAll = false;
+    public Vector3 PersonsTargetPosition { get; set; }
 
     private StorageLog _StorageLog;
     public static StorageLog Log{
@@ -47,6 +52,11 @@ public class Storage : MonoBehaviour {
     public static StoragePerson Person
     {
         get { return Instance._StoragePerson; }
+    }
+
+    public static UIEvents Events
+    {
+        get { return Instance._scriptUIEvents; }
     }
     
 
@@ -122,8 +132,8 @@ public class Storage : MonoBehaviour {
     private GenerateGridFields _scriptGrid;
     private CompletePlayerController _screiptHero;
     private CreateNPC _scriptNPC;
-    
-    
+    private UIEvents _scriptUIEvents;
+
 
     //public static Storage Instance { get; private set; }
     public void Awake()
@@ -154,21 +164,40 @@ public class Storage : MonoBehaviour {
 
         _scriptData = MainCamera.GetComponent<SaveLoadData>();
         if (_scriptData == null)
+        {
             Debug.Log("Storage.Start : sctiptData not load !!!");
+            return;
+        }
 
         _scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         if (_scriptGrid == null)
+        {
             Debug.Log("Storage.Start : scriptGrid not load !!!");
+            return;
+        }
 
         _scriptNPC = MainCamera.GetComponent<CreateNPC>();
         if (_scriptNPC == null)
         {
             Debug.Log("Storage.Start scriptNPC not load !!!!!");
+            return;
         }
         _screiptHero = HeroObject.GetComponent<CompletePlayerController>();
         if (_screiptHero == null)
         {
             Debug.Log("Storage.Start scriptHero not load !!!!!");
+            return;
+        }
+        if (UIController == null)
+        {
+            Debug.Log("Storage.Start UIController not setting !!!!!");
+            return;
+        }
+        _scriptUIEvents = UIController.GetComponent<UIEvents>();
+        if (_scriptUIEvents == null)
+        {
+            Debug.Log("Storage.Start scriptUIEvents not load !!!!!");
+            return;
         }
 
         //StartGenGrigField();
@@ -404,15 +433,15 @@ public class Storage : MonoBehaviour {
     }
     
 
-    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false)
+    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
-        if (Storage.Instance.IsLoadingWorld)
+        if (Storage.Instance.IsLoadingWorld && !NotValid)
         {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return "";
         }
 
-        if (Storage.Instance.IsCorrectData)
+        if (Storage.Instance.IsCorrectData && !NotValid)
         {
             Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
             return "Error";
@@ -602,6 +631,35 @@ public class Storage : MonoBehaviour {
     public void ClearGridData()
     {
         _GridDataG = new SaveLoadData.GridData();
+    }
+
+    //#TARGET
+    public void TartgetPositionAll()
+    {
+        Debug.Log("^^^^^^^^ TARGET --- TartgetPositionAll");//#TARGET
+
+        //PersonsTargetPosition
+        foreach (GameObject gobj in Storage.Person.GetAllRealPersons().ToList())
+        {
+            //if (Storage.Person.NamesPersons.Contains(gobj.tag.ToString()))
+            //if (typeP.IsPerson())
+            if (gobj.tag.ToString().IsPerson())
+            {
+                var movementUfo = gobj.GetMoveUfo();
+                if (movementUfo != null)
+                    movementUfo.SetTarget();
+
+                var movementNPC = gobj.GetMoveNPC();
+                if (movementNPC != null)
+                    movementNPC.SetTarget();
+
+                //var movementNPC = gobj.GetMoveBoss();
+                //if (movementNPC != null)
+                //    movementNPC.SetTarget();
+            }
+        }
+
+        
     }
 
     #region Destroy
@@ -834,5 +892,6 @@ public class Storage : MonoBehaviour {
     
 
 #endregion
+
 
 }

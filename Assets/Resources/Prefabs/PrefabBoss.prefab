@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212518968326219808}
   - component: {fileID: 58920752332719314}
   - component: {fileID: 50464271455216320}
+  - component: {fileID: 114557972229601778}
   - component: {fileID: 114997606400146178}
   m_Layer: 0
   m_Name: PrefabBoss
@@ -78,6 +79,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.91
+--- !u!114 &114557972229601778
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1162866333582890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8859a97391eb93e4a873a2f2997c8611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114997606400146178
 MonoBehaviour:
   m_ObjectHideFlags: 1

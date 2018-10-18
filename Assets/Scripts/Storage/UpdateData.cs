@@ -206,6 +206,25 @@ public class UpdateData { //: MonoBehaviour {
         //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
         _GridDataG.FieldsD[nameField].Objects[index] = setObject;
     }
+
+    public void UpdateDataObect(string nameField, string nameObj, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
+    {
+        if(!_GridDataG.FieldsD.ContainsKey(nameField))
+        {
+            Debug.Log("################### UpdateDataObect not in DATA Field:" + nameField);
+            return;
+        }
+
+        int index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == nameObj);
+        if(index==-1)
+        {
+            Debug.Log("################### UpdateDataObect not DATA (" + nameField + ") Find : " + nameObj);
+            return;
+        }
+        UpdateDataObect(nameField, index, setObject, callFunc, newPos);
+
+    }
+
     //----- Real Object
 
     public List<GameObject> AddNewFieldInRealObject(string newField, string callFunc)
