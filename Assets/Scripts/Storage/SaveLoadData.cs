@@ -80,7 +80,7 @@ public class SaveLoadData : MonoBehaviour {
 
         if (Storage.Instance.GridDataG != null && !isAlwaysCreate)
         {
-            Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded");
+            Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded  Storage.Instance.GridDataG: " + Storage.Instance.GridDataG);
             return;
         }
 
@@ -774,7 +774,36 @@ public class SaveLoadData : MonoBehaviour {
     //public class GameDataBoss : GameDataNPC
     {
         [XmlIgnore]
-        private Color m_ColorRender = Color.black;
+        Dictionary<int, Color> _colorsPresent = null;
+        [XmlIgnore]
+        Dictionary<int, Color> GetColorsLevel
+        {
+            get
+            {
+                if(_colorsPresent==null)
+                {
+                    if (_colorsPresent == null)
+                    {
+                        _colorsPresent = new Dictionary<int, Color>();
+                        _colorsPresent.Add(0, Color.black);
+                        _colorsPresent.Add(1, Color.grey);
+                        _colorsPresent.Add(2, Color.yellow);
+                        _colorsPresent.Add(3, Color.green);
+                        _colorsPresent.Add(4, Color.blue);
+                        _colorsPresent.Add(5, Color.red);
+                        _colorsPresent.Add(6, Color.cyan);
+                        _colorsPresent.Add(7, Color.gray);
+                        _colorsPresent.Add(8, Color.magenta);
+                        _colorsPresent.Add(9, Color.white);
+                    }
+                }
+                return _colorsPresent;
+            }
+        }
+
+        [XmlIgnore]
+        private Color m_ColorRender = Color.clear;
+        //private Color m_ColorRender = Color.black;
         [XmlIgnore]
         public Color ColorRender
         {
@@ -785,12 +814,35 @@ public class SaveLoadData : MonoBehaviour {
             set
             {
                 m_ColorRender = value;
-                if (m_ColorRender!=null && m_ColorRender != Color.black)
+                if (m_ColorRender != null && m_ColorRender != Color.clear)
                 {
-                    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender);
-                    if(ColorLevel != colorStr)
+                    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender); //!!!!!!!!!!!!!!!!!!!!
+                    if (ColorLevel != colorStr)
+                    {
+                        //Debug.Log("!!!!!!!!!!!!!!!!!!!! if (ColorLevel(" + ColorLevel + ") != color test(" + colorStr + "))");
                         ColorLevel = colorStr;
+
+                    }
                 }
+
+                //Debug.Log("----1. SaveColor=" + m_ColorRender);
+
+                //if (m_ColorRender != null && m_ColorRender != Color.black)
+                //{
+                //    //if (ColorRender == Color.clear)
+                //    //    ColorRender = Color.green;
+
+                //    //Debug.Log("---- SaveColor=" + m_ColorRender);
+
+                //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender);
+                //    if (ColorLevel != colorStr)
+                //        ColorLevel = colorStr;
+                //}
+
+                //if (m_ColorRender == null || m_ColorRender == Color.clear)
+                //{
+                //    InitColor();
+                //}
             }
 
         }
@@ -805,8 +857,30 @@ public class SaveLoadData : MonoBehaviour {
             set
             {
                 _ColorLevel = value;
-                if (!string.IsNullOrEmpty(_ColorLevel))
-                    ColorRender = _ColorLevel.ToColor(ColorRender);
+                //if(_ColorLevel != "#000000")
+                //{
+                //    if (Level == 1)
+                //        Level = UnityEngine.Random.Range(1, 10);
+
+                //    InitColor();
+                //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(ColorRender);
+                //    Debug.Log(">>>>>>>>> colorStr ==" + colorStr + "    Level:" + Level);
+                //}
+
+                //Debug.Log("---- Load Color =" + _ColorLevel);
+
+                //if (!string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
+                if (!string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
+                {
+                    Color testColor = _ColorLevel.ToColor(ColorRender);
+                    if (ColorRender != testColor)
+                    {
+                        //Debug.Log("!!!!!!!!!!!!!!!!!!!! SET R (ColorRender(" + ColorRender + ") != color test(" + testColor + "))   _ColorLevel=" + _ColorLevel);
+                        ColorRender = testColor;
+                    }
+                }
+                //if (ColorRender == Color.clear)
+                //    ColorRender = Color.green;
             }
 
         }
@@ -814,29 +888,68 @@ public class SaveLoadData : MonoBehaviour {
         public GameDataBoss()
             : base()
         {
-            if (m_ColorRender != Color.black)
+            //if (m_ColorRender != Color.black)
+            //    return;
+
+
+            if (m_ColorRender != Color.clear)
                 return;
 
-            Dictionary<int, Color> colorsPresent = new Dictionary<int, Color>();
-            colorsPresent.Add(0, Color.black);
-            colorsPresent.Add(1, Color.grey);
-            colorsPresent.Add(2, Color.yellow);
-            colorsPresent.Add(3, Color.green);
-            colorsPresent.Add(4, Color.blue);
-            colorsPresent.Add(5, Color.red);
-            colorsPresent.Add(6, Color.cyan);
-            colorsPresent.Add(7, Color.gray);
-            colorsPresent.Add(8, Color.magenta);
-            colorsPresent.Add(9, Color.white);
-            ColorRender = colorsPresent[Level];
+            //Debug.Log("GameDataBoss >>>>>>>>>   Level:" + 1);
+            ////#TEST
+            //if (Level == 1)
+            //{
+            //    Level = UnityEngine.Random.Range(1, 10);
+            //    Debug.Log("GameDataBoss >>>>>>>>> RND  GENNNNNN ");
+            //}
+
+            //Debug.Log("GameDataBoss >>>>>>>>> RND  Level:" + 1);
+
+            InitColor();
+        }
+
+
+        private void InitColor()
+        {
+            
+            ColorRender = GetColorsLevel[Level]; 
+            //ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+            //Debug.Log(">>>>>>>>> colorStr INIT ==" + ColorRender + "    Level:" + Level);
         }
 
         public override void UpdateGameObject(GameObject objGame)
         {
             //Debug.Log("______________________UpdateGameObject BOSS.1__________________");
 
+            //#TEST
+            //if (ColorRender == Color.black || ColorRender==Color.clear || _ColorLevel != "#000000")
+            //{
+            //    if (Level == 1)
+            //        Level = UnityEngine.Random.Range(1, 10);
+
+            //    InitColor();
+            //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(ColorRender);
+            //    Debug.Log(">>>>>>>>> colorStr ==" + colorStr + "    Level:" + Level);
+            //}
+
+            ////#TEST
+
+
+            //Level = UnityEngine.Random.Range(1, 10);
+            //InitColor();
+
+            if (ColorRender != GetColorsLevel[Level])
+            {
+                ColorRender = GetColorsLevel[Level];
+                //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
+            }
+
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
-            
+
+            //#TEST
+            //objGame.GetComponent<SpriteRenderer>().color = Color.green;
+
+
         }
     }
     //-----------------------------------
