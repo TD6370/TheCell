@@ -101,25 +101,25 @@ public class Storage : MonoBehaviour {
     //    }
     //}
 
-    private Dictionary<string, List<GameObject>> _GamesObjectsReal;
+    private Dictionary<string, List<GameObject>> _GamesObjectsReal = null;
     public Dictionary<string, List<GameObject>> GamesObjectsReal
     {
         get { return _GamesObjectsReal; }
     }
 
-    private SaveLoadData.GridData _GridDataG;
+    private SaveLoadData.GridData _GridDataG = null;
     public SaveLoadData.GridData GridDataG
     {
         get { return _GridDataG; }
     }
 
-    private string _datapathLevel;
+    private string _datapathLevel = null;
     public string DataPathLevel
     {
         get { return _datapathLevel; }
     }
 
-    private string _datapathPerson;
+    private string _datapathPerson = null;
     public string DataPathPerson
     {
         get { return _datapathPerson; }
@@ -237,7 +237,7 @@ public class Storage : MonoBehaviour {
         //Debug.Log("III InitObjectsGrid_______________");
         Fields = new Dictionary<string, GameObject>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        _GridDataG = new SaveLoadData.GridData();
+        //_GridDataG = new SaveLoadData.GridData();
         
 
         _StorageLog = new StorageLog();

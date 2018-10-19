@@ -332,6 +332,8 @@ public static class ColorExtensions
                 if (color.IndexOf("#") != 0)
                     color = "#" + color;
 
+                //Debug.Log("ToColor parse");
+
                 indErr = "6";
                 string parseColor = "#" + ColorUtility.ToHtmlStringRGB(oldColor);
                 if (parseColor != color)
@@ -342,15 +344,23 @@ public static class ColorExtensions
 
                     indErr = "9";
                     //Debug.Log("ColorRender SET " + _ColorLevel + "      ColorRender=" + ColorRender.ToString() + "      outColor=" + outColor.ToString() +  " RGB:" + testStr1 + "  RGBA:" + testStr2);
-                    //Debug.Log("ColorRender SET " + _ColorLevel + "   PARSE OLD COLOR: " + parseColor + "  VALUE: " + outColor);
+                    //Debug.Log("ColorRender SET    PARSE OLD COLOR: " + parseColor + "  VALUE: " + outColor);
                     indErr = "10";
                     resColor = outColor;
+                }
+                else
+                {
+                    return oldColor;
                 }
             }
             catch (Exception x)
             {
                 Debug.Log("############ Error GameDataBoss.ColorLevel (" + indErr + ") : " + x.Message);
             }
+        }
+        else
+        {
+            Debug.Log("############ Error GameDataBoss.ColorLevel (" + color + ") is null");
         }
         return resColor;
     }

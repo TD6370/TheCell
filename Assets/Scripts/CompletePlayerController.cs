@@ -86,7 +86,7 @@ public class CompletePlayerController : MonoBehaviour {
         //var t2 = Input.GetButtonDown("Q");
         if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
+            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
             _MousePositionClick = Input.mousePosition;
             Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition " + _MousePositionClick);
         }
@@ -324,6 +324,8 @@ public class CompletePlayerController : MonoBehaviour {
 
     private void GetMouseCursorClick()
     {
+        return;
+
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePositionClick);
         //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: " + screenPosition);
         if (screenPosition != new Vector3(0, 0, 0))
@@ -332,6 +334,8 @@ public class CompletePlayerController : MonoBehaviour {
             if (_positionLastTarget != positionM)
             {
                 //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: " + positionM);
+                Debug.Log("^^^^^^^^ GetMouseCursorClick screenPosition:  S: " + screenPosition + "     M: " + _MousePositionClick + "    R: " + positionM);
+                
 
                 _positionLastTarget = positionM;
                 float positionMx = positionM.x / 25;
@@ -343,6 +347,7 @@ public class CompletePlayerController : MonoBehaviour {
                 //string field3 = Helper.GetNameFieldPosit(screenPosition.x, screenPosition.y);
                 //GUI.Label(positionM, field + " " + field2 + " " + field3);
                 GUI.Label(positionM, field);
+                GUI.Label(positionM, "X");
                 foreach (var gobj in Storage.Person.GetAllRealPersons(field))
                 {
                     Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);

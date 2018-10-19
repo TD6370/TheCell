@@ -161,7 +161,41 @@ public class UIEvents : MonoBehaviour {
         {
             Vector3 pos = new Vector3(0, 0, 0);
             Button resGO = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
-            resGO.GetComponent<Text>().text = p_text;
+            Text compText = null;
+
+            //var compButton = resGO.GetComponent<Button>();
+            //if (compButton == null)
+            //{
+            //    Debug.Log("######### CreateCommandLogButton compButton is Empty");
+
+            //}
+            //else
+            //{
+            //    compText = compButton.GetComponent<Text>();
+            //    if (compText == null)
+            //    {
+            //        Debug.Log("######### CreateCommandLogButton compButton == compText is Empty");
+            //    }
+            //}
+
+            //if (compText == null)
+            //    compText =resGO.GetComponent<Text>();
+            //if (compText == null)
+            //{
+                compText = resGO.GetComponentInChildren<Text>();
+                if (compText == null)
+                {
+                    Debug.Log("######### CreateCommandLogButton compText is Empty");
+                    return;
+                }
+            //}
+            //else
+            //{
+            //    Debug.Log("######### CreateCommandLogButton compText is Empty");
+            //    return;
+            //}
+
+            compText.text = p_text;
             resGO.transform.SetParent(contentList.transform);
             resGO.name = nameBtn;
             resGO.onClick.AddListener(delegate
