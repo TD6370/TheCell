@@ -41,6 +41,7 @@ public class CompletePlayerController : MonoBehaviour {
     private int _offsetLabelY = 10;
     float _diffCenterX = 0;
     float _diffCenterY = 0;
+    private bool _RotateMenu = false;
 
     #region Events
 
@@ -56,9 +57,6 @@ public class CompletePlayerController : MonoBehaviour {
 
         //Set Start Position
         rb2d.MovePosition(new Vector2(40, -40));
-
-
-       
     }
 
     void Awake()
@@ -86,15 +84,23 @@ public class CompletePlayerController : MonoBehaviour {
             RestructGrid();
         }
 
-        CalculateDiffCenterHero();
-
+        //CalculateDiffCenterHero();
         if (Input.GetKey("escape"))
         {
             Application.Quit();
         }
-        
 
-        GetMousePositionOnScene();
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
+            _MousePositionClick = Input.mousePosition;
+            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition " + _MousePositionClick);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            _RotateMenu = true;
+        }
+        _MousePosition = Input.mousePosition;
     }
 
     void Update()
@@ -131,7 +137,6 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("OnCollisionEnter.............................................");
@@ -142,8 +147,6 @@ public class CompletePlayerController : MonoBehaviour {
         //Debug.Log("Current detected event: " + Event.current);
         GetMouseCursorClick();
     }
-
-
     #endregion
 
     #region Coroutine
@@ -188,21 +191,7 @@ public class CompletePlayerController : MonoBehaviour {
         int posY = 0;
         posX = (int)((transform.position.x / scale) + 0.5);
         posY = (int)((transform.position.y / scale) - 0.5);
-
-        //-----------------
-        //float restX = (posX * scale) - 0.5f;
-        //float restY = (posY * scale) + 0.5f;
-        //-----------------
-
         posY = (int)(Mathf.Abs(posY));
-
-        //-----------------
-        //string textTest = "";
-        //_diffCenterX = transform.position.x - restX;
-        //_diffCenterY = transform.position.y - restY;
-        ////float diffCenterY = Mathf.Abs(transform.position.y) - restY;
-        //textTest = "\nDiff Center Hero=" + _diffCenterX + "x" + _diffCenterY;
-        //-----------------
 
         if (_posLastX == posX && _posLastY == posY)
             return null;
@@ -210,14 +199,9 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastX = posX;
         _posLastY = posY;
 
-        //# string nameFiled = "Filed" + posX + "x" + posY;
         _fieldHero = Helper.GetNameField(posX, posY);
         _PosHeroToField = new Vector2(posX, posY);
 
-        //SetTextLog("?" + _fieldHero + " " + textTest);
-        //SetTextLog("????");
-
-        //Debug.Log("MainCamera.GetComponent GenerateGridFields");
         var camera = MainCamera;
         if (camera == null)
         {
@@ -249,74 +233,6 @@ public class CompletePlayerController : MonoBehaviour {
     
     #endregion
 
-    private void CalculateDiffCenterHero()
-    {
-        int scale = 2;
-        int posX = 0;
-        int posY = 0;
-        //posX = (int)((transform.position.x / scale) + 0.5);
-        //posY = (int)((transform.position.y / scale) - 0.5);
-
-        ////-----------------
-        //float restX = (posX * scale) - 0.5f;
-        //float restY = (posY * scale) + 0.5f;
-        ////-----------------
-
-        posX = (int)((transform.position.x / scale));
-        posY = (int)((transform.position.y / scale));
-
-        //-----------------
-        float restX = (posX * scale);
-        float restY = (posY * scale);
-        //-----------------
-
-        //posY = (int)(Mathf.Abs(posY));
-
-        //-----------------
-        string textTest = "";
-        _diffCenterX = transform.position.x - restX;
-        _diffCenterY = transform.position.y - restY;
-        float diffTestX;
-        float diffTestY;
-        float TestX = 1;
-        float TestY = 1;
-
-        if (Math.Abs(_diffCenterX) < 1)
-        {
-            //_diffCenterX = Math.Abs(_diffCenterX) * (-1);
-            diffTestX = -1;
-            TestX = Math.Abs(_diffCenterX) * 100;
-            TestX = (float)Math.Round(TestX, 2);
-        }
-        else
-        {
-            //_diffCenterX = 1 - Math.Abs(_diffCenterX);
-            diffTestX = 1;
-            TestX = (Math.Abs(_diffCenterX)-1) * 100;
-            TestX = (float)Math.Round(TestX, 2);
-        }
-        if (Math.Abs(_diffCenterY) < 1)
-        {
-            //_diffCenterY = Math.Abs(_diffCenterY) * (-1);
-            diffTestY = -1;
-            TestY = Math.Abs(_diffCenterY) * 100;
-            TestY = (float)Math.Round(TestY, 2);
-        }
-        else
-        {
-            //_diffCenterY = 1 - Math.Abs(_diffCenterY);
-            diffTestY = 1;
-            TestY = (Math.Abs(_diffCenterY) - 1) * 100;
-            TestY = (float)Math.Round(TestY, 2);
-        }
-
-        textTest = "\nDiff Center Hero=\nX=(" + _diffCenterX + ")\n" + diffTestX + "x" + diffTestY + "\nY=("  + _diffCenterY + ")" +
-            "\n diffX=" + TestX +
-            "\n diffY=" + TestY;
-
-        SetTextLog("?" + _fieldHero + " " + textTest);
-    }
-
     private void InitData()
     {
         var camera = MainCamera;
@@ -333,7 +249,6 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-
     private void RestructGrid()
     {
         var prefabFind = FindFieldCurrent();
@@ -347,159 +262,80 @@ public class CompletePlayerController : MonoBehaviour {
 
     private void BeforeDestroyUfo()
     {
-        //Add one to the current value of our count variable.
         _count = _count + 1;
-
-        //Update the currently displayed count by calling the SetCountText function.
         SetCountText();
     }
-	//This function updates the text displaying the number of objects we've collected and displays our victory message if we've collected all of them.
-	
-   
 
-    private void GetMousePositionOnScene_()
+    private Vector2 CalculatePosCutsorToGrid()
     {
-        string errInd = "satrt";
-        try
-        {
-            //return;
-            errInd = "1";
-            if (Event.current == null)
-            {
-                //Debug.Log("########## Error GetMousePositionOnScene Event.current==null");
-                return;
-            }
-            errInd = "1.2";
-            if (Event.current.button == null)
-            {
-                Debug.Log("########## Error GetMousePositionOnScene Event.current.button");
-                return;
-            }
-            errInd = "1.3";
-            if (Event.current.type != EventType.MouseDown || Event.current.button != 0)
-                return;
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePosition);
 
-            errInd = "2";
-            // convert GUI coordinates to screen coordinates
-            Vector3 screenPosition = Event.current.mousePosition;
-            errInd = "3";
-            if(Camera.current==null)
-            {
-                Debug.Log("########## Error GetMousePositionOnScene Camera.current = null");
-                return;
-            }
+        //_rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
+        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
 
-            screenPosition.y = Camera.current.pixelHeight - screenPosition.y;
-            //screenPosition.y = MainCamera.current.pixelHeight - screenPosition.y;
-            errInd = "4";
-            Ray ray = Camera.current.ScreenPointToRay(screenPosition);
-            errInd = "5";
-            RaycastHit hit;
-            errInd = "6";
-            // use a different Physics.Raycast() override if necessary
-            if (Physics.Raycast(ray, out hit))
-            {
-                errInd = "7";
-                // do stuff here using hit.point
-                // tell the event system you consumed the click
-                Event.current.Use();
-            }
-            errInd = "8";
-        }
-        catch (Exception x)
-        {
-            Debug.Log("########## Error GetMousePositionOnScene (" + errInd + ") " + x.Message + "");
-        }
-    }
+        float zoom = MainCamera.orthographicSize / 10;
 
-  
-    private void GetMousePositionOnScene()
-    {
-        //GetMousePositionOnScene();
-        //var t2 = Input.GetButtonDown("Q");
-        if (Input.GetMouseButtonDown(1))
-        {
-            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
-            _MousePositionClick = Input.mousePosition;
-            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition " + _MousePositionClick);
-        }
-        _MousePosition = Input.mousePosition;
+        Vector2 posHero = transform.position;
+        Vector2 posCursorToField = new Vector2(0, 0);
+        Vector2 posHeroStartInCentre = new Vector2(17, -9);
+        Vector2 posCursorNormalize = new Vector2(0, 0);
+        float offsetUI_World_lenToCenterScreenX = 0;
+        float offsetUI_World_lenToCenterScreenY = 0;
+        float normalX = 1;
+        float normalY = 1;
+        string testCalc = "";
+
+        offsetUI_World_lenToCenterScreenX = Screen.width / 35;
+        offsetUI_World_lenToCenterScreenY = Screen.height / 19;
+        testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
+
+        normalX = _rectCursorReal.x / offsetUI_World_lenToCenterScreenX;
+        normalY = _rectCursorReal.y / offsetUI_World_lenToCenterScreenY;
+        testCalc += "\n *posCursorToField.Y(" + normalY + ") = _rectCursorReal.y(" + _rectCursorReal.y + ") / offsetY(" + offsetUI_World_lenToCenterScreenY + ")";
+        posCursorToField = new Vector2(normalX, normalY);
+
+        float addPosHeroX = posHero.x - posHeroStartInCentre.x + posCursorToField.x;
+        //float addPosHeroY = posHero.y - posHeroStartInCentre.y + posCursorToField.y; ///!!!!!!!!!!!!!!!
+        float addPosHeroY = Math.Abs(posHero.y) - Math.Abs(posHeroStartInCentre.y) + Math.Abs(posCursorToField.y); ///!!!!!!!!!!!!!!!
+        addPosHeroY *= -1;
+
+        testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
+        posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
+
+
+        //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
+        //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));
+
+        //_infoPoint =
+        //    "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
+        //    "\nSize: " + Screen.width + "x" + Screen.height +
+        //    "\nHero: " + transform.position.x + "x" + transform.position.y +
+        //    "\nZoom=" + zoom +
+        //    "\nField: " + _fieldCursor +
+        //    "\nOffset: " + offsetUI_World_lenToCenterScreenX + " : " + offsetUI_World_lenToCenterScreenY +
+        //    "\nNormali : " + normalX + " x " + normalY +
+        //    "\nAdd pos Hero: " + addPosHeroX + " x " + addPosHeroY
+        //    + testCalc;
+
+        return posCursorToField;
     }
 
     private void GetMouseCursorClick()
     {
-        //return;
-
-        //Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePositionClick);
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePosition);
-        //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: " + screenPosition);
-        //if (screenPosition != new Vector3(0, 0, 0))
-        //{
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
-        //if (_positionLastTarget != _rectCursor)
-        //{
-            //_positionLastTarget = _rectCursor;
-
-        //---calculation
-        float zoom = MainCamera.orthographicSize / 10;
-        //Vector2 posCursorToField = CalculatePositionCursorToField(zoom);
-        //---calculation
-        //============================
-        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
-        string testText = "";
-
-        float ScreenWidth = Screen.width;
-        float ScreenHeight = Screen.height; // 800;
-        float diffX = 1;
-        float diffY = 1;
-
-        int Rows = 10;
-        int Columns = 18;
-        float sizeW = ScreenWidth / Columns;
-        float sizeH = ScreenHeight / Rows;
-        float korrectSizeY = 0;// -10;
-        float korrectSizeX = 0;
-        //float korrectSizeY = _diffCenterY * 10;// -10;
-        //float korrectSizeX = _diffCenterX * -10;
-        //float korrectSizeX = (_diffCenterX < 0) ?
-        //    _diffCenterX * -10 :
-        //    _diffCenterX * 10;
-        //float korrectSizeX = 0;
-        float mX = (_MousePosition.x + korrectSizeX);
-        float mY = ScreenHeight - _MousePosition.y + korrectSizeY;
-
-        diffX = (int)(mX / sizeW);
-        diffY = (int)(mY / sizeH);
-        //}
-        Vector2 posCursorToField = CalculatePositionCursorToField((int)diffX, (int)diffY, 1);
-        //string findField = Helper.GetNameField(fieldPosNormaliz.x, fieldPosNormaliz.y);
-        
-        // + "\nfindField: " + findField;
-        //_infoPoint = testText;
-        //============================
-        //<<<<<
-
-        _fieldCursor = Helper.GetNameField(posCursorToField.x, posCursorToField.y);
-
-        _infoPoint =
-            //"\nMouse X=" + _MousePosition.x + " Y=" + _MousePosition.y + 
-            "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
-            "\nSize: " + ScreenWidth + "x" + ScreenHeight +
-            "\nHero: " + transform.position.x + "x" + transform.position.y +
-            //"\nReal=" + _rectCursorReal.x + "x" + _rectCursorReal.y + 
-            "\nScreen: " + screenPosition.x + "x" + screenPosition.y +
-            "\nZoom=" + zoom +
-            "\nField: " + _fieldCursor;
 
         if (_positionLastTarget != _rectCursor)
         {
             _positionLastTarget = _rectCursor;
 
-             GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
+            Vector2 posCursorToField = CalculatePosCutsorToGrid();
+            _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
+
+            GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
             if (prefabFind != null)
             {
                 //txtLog.text = prefabFind.name.ToString();
-                prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
+                prefabFind.gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
             }
 
             _infoPoint += "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
@@ -510,7 +346,12 @@ public class CompletePlayerController : MonoBehaviour {
                 gobj.GetComponent<SpriteRenderer>().color = Color.black;
             }
 
-            if(_offsetLabelX == 10 && _offsetLabelY == 10)
+        }
+
+        if (_RotateMenu == true)
+        {
+            _RotateMenu = false;
+            if (_offsetLabelX == 10 && _offsetLabelY == 10)
             {
                 _offsetLabelX = -150;
             }
@@ -528,48 +369,13 @@ public class CompletePlayerController : MonoBehaviour {
             }
         }
 
-        //GUI.Label(positionM, _fieldPoint + " " + _infoPoint );
-        //Rect rectPosLabel = new Rect( _rectCursor.x + 10, _rectCursor.y + 10, _rectCursor.width, _rectCursor.height);
-
-        //SetLabel(rectPosLabel, _infoPoint);
-        //}
-
-
-        
+        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
         Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
-
-        var test = _infoPoint;//  + "\ncursor=" + _MousePosition.x + "x" + _MousePosition.y + "\ndiffLabel:" + _offsetLabelX + ":" + _offsetLabelY;
-        SetLabel(rectPosLabel, test);
+        var test = _infoPoint;
+        SetLabelCursor(rectPosLabel, test);
     }
 
-    private Vector2 CalculatePositionCursorToField(float zoom)
-    {
-        float positionMx = _rectCursor.x / 28.4f;
-        float positionMy = _rectCursor.y / 28.4f;
-        Vector2 posCursorToField = Helper.NormalizPosToField(positionMx, positionMy);
-        ////Correct zoom
-        //if (zoom != 1)
-        //{
-        //    //zoom = zoom * 2.5f;
-        //}
-        int centerHeroX = 8;
-        int centerHeroY = 5;
-        int offsetX = (int)_PosHeroToField.x - centerHeroX;
-        int offsetY = (int)_PosHeroToField.y - centerHeroY;
-        posCursorToField += new Vector2(offsetX * zoom, offsetY * zoom);
-        return posCursorToField;
-    }
-
-    private Vector2 CalculatePositionCursorToField(int x, int y, float zoom)
-    {
-        int centerHeroX = 8;
-        int centerHeroY = 5;
-        int offsetX = (int)_PosHeroToField.x - centerHeroX;
-        int offsetY = (int)_PosHeroToField.y - centerHeroY;
-        return new Vector2(x,y) + new Vector2(offsetX * zoom, offsetY * zoom);
-    }
-
-    private void SetLabel(Rect position, string text)
+    private void SetLabelCursor(Rect position, string text)
     {
         GUIStyle styleLabel = new GUIStyle();
         styleLabel.fontSize =16;

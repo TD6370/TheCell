@@ -112,22 +112,22 @@ public static class Helper { //: MonoBehaviour {
 
     public static string GetNameFieldPosit(int x, int y)
     {
-        x = (int)(x / 2);
-        y = (int)(y / 2);
+        x = (int)(x / Storage.ScaleWorld);
+        y = (int)(y / Storage.ScaleWorld);
         return FieldKey + x + "x" + Mathf.Abs(y);
     }
 
     public static string GetNameFieldPosit(System.Single x, System.Single y)
     {
-        x = (int)(x / 2);
-        y = (int)(y / 2);
+        x = (int)(x / Storage.ScaleWorld);
+        y = (int)(y / Storage.ScaleWorld);
         return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
     }
 
     public static Vector2 NormalizPosToField(System.Single x, System.Single y)
     {
-        x = (int)(x / 2);
-        y = (int)(y / 2);
+        x = (int)(x / Storage.ScaleWorld);
+        y = (int)(y / Storage.ScaleWorld);
         return new Vector2(x, Mathf.Abs((int)y));
     }
 

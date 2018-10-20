@@ -11,6 +11,10 @@ public class Storage : MonoBehaviour {
     {
         get { return "Field"; }
     }
+    public static float ScaleWorld
+    {
+        get { return 2; }
+    }
 
     public static bool GamePause
     {

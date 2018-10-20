@@ -2055,4 +2055,177 @@ public class TEmp : MonoBehaviour {
                     */
 
     //----------------------------
+    //---calculation
+    //============================
+    /*
+    string testText = "";
+
+
+    float diffX = 1;
+    float diffY = 1;
+
+    int Rows = 10;
+    int Columns = 18;
+    float sizeW = ScreenWidth / Columns;
+    float sizeH = ScreenHeight / Rows;
+    float korrectSizeY = 0;// -10;
+    float korrectSizeX = 0;
+    //float korrectSizeY = _diffCenterY * 10;// -10;
+    //float korrectSizeX = _diffCenterX * -10;
+    //float korrectSizeX = (_diffCenterX < 0) ?
+    //    _diffCenterX * -10 :
+    //    _diffCenterX * 10;
+    //float korrectSizeX = 0;
+    float mX = (_MousePosition.x + korrectSizeX);
+    float mY = ScreenHeight - _MousePosition.y + korrectSizeY;
+
+    diffX = (int)(mX / sizeW);
+    diffY = (int)(mY / sizeH);
+    //}
+    */
+
+    //Vector2 posCursorToField = CalculatePositionCursorToField((int)diffX, (int)diffY, 1);
+
+
+
+    //string findField = Helper.GetNameField(fieldPosNormaliz.x, fieldPosNormaliz.y);
+
+    // + "\nfindField: " + findField;
+    //_infoPoint = testText;
+
+    //============================
+
+
+    //private Vector2 CalculatePositionCursorToField(float zoom)
+    //{
+    //    float positionMx = _rectCursor.x / 28.4f;
+    //    float positionMy = _rectCursor.y / 28.4f;
+    //    Vector2 posCursorToField = Helper.NormalizPosToField(positionMx, positionMy);
+    //    int centerHeroX = 8;
+    //    int centerHeroY = 5;
+    //    int offsetX = (int)_PosHeroToField.x - centerHeroX;
+    //    int offsetY = (int)_PosHeroToField.y - centerHeroY;
+    //    posCursorToField += new Vector2(offsetX * zoom, offsetY * zoom);
+    //    return posCursorToField;
+    //}
+
+    //private Vector2 CalculatePositionCursorToField(int x, int y, float zoom)
+    //{
+    //    int centerHeroX = 8;
+    //    int centerHeroY = 5;
+    //    int offsetX = (int)_PosHeroToField.x - centerHeroX;
+    //    int offsetY = (int)_PosHeroToField.y - centerHeroY;
+    //    return new Vector2(x,y) + new Vector2(offsetX * zoom, offsetY * zoom);
+    //}
+
+    //============================
+
+    //private void GetMousePositionOnScene_()
+    //{
+    //    string errInd = "satrt";
+    //    try
+    //    {
+    //        //return;
+    //        errInd = "1";
+    //        if (Event.current == null)
+    //        {
+    //            //Debug.Log("########## Error GetMousePositionOnScene Event.current==null");
+    //            return;
+    //        }
+    //        errInd = "1.2";
+    //        if (Event.current.button == null)
+    //        {
+    //            Debug.Log("########## Error GetMousePositionOnScene Event.current.button");
+    //            return;
+    //        }
+    //        errInd = "1.3";
+    //        if (Event.current.type != EventType.MouseDown || Event.current.button != 0)
+    //            return;
+
+    //        errInd = "2";
+    //        // convert GUI coordinates to screen coordinates
+    //        Vector3 screenPosition = Event.current.mousePosition;
+    //        errInd = "3";
+    //        if (Camera.current == null)
+    //        {
+    //            Debug.Log("########## Error GetMousePositionOnScene Camera.current = null");
+    //            return;
+    //        }
+
+    //        screenPosition.y = Camera.current.pixelHeight - screenPosition.y;
+    //        //screenPosition.y = MainCamera.current.pixelHeight - screenPosition.y;
+    //        errInd = "4";
+    //        Ray ray = Camera.current.ScreenPointToRay(screenPosition);
+    //        errInd = "5";
+    //        RaycastHit hit;
+    //        errInd = "6";
+    //        // use a different Physics.Raycast() override if necessary
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            errInd = "7";
+    //            // do stuff here using hit.point
+    //            // tell the event system you consumed the click
+    //            Event.current.Use();
+    //        }
+    //        errInd = "8";
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("########## Error GetMousePositionOnScene (" + errInd + ") " + x.Message + "");
+    //    }
+    //}
+
+    //-------------------------
+    //private void CalculateDiffCenterHero()
+    //{
+    //    int scale = 2;
+    //    int posX = 0;
+    //    int posY = 0;
+    //    posX = (int)((transform.position.x / scale));
+    //    posY = (int)((transform.position.y / scale));
+
+    //    float restX = (posX * scale);
+    //    float restY = (posY * scale);
+
+    //    string textTest = "";
+    //    _diffCenterX = transform.position.x - restX;
+    //    _diffCenterY = transform.position.y - restY;
+    //    float diffTestX;
+    //    float diffTestY;
+    //    float TestX = 1;
+    //    float TestY = 1;
+
+    //    if (Math.Abs(_diffCenterX) < 1)
+    //    {
+    //        diffTestX = -1;
+    //        TestX = Math.Abs(_diffCenterX) * 100;
+    //        TestX = (float)Math.Round(TestX, 2);
+    //    }
+    //    else
+    //    {
+    //        diffTestX = 1;
+    //        TestX = (Math.Abs(_diffCenterX) - 1) * 100;
+    //        TestX = (float)Math.Round(TestX, 2);
+    //    }
+    //    if (Math.Abs(_diffCenterY) < 1)
+    //    {
+    //        diffTestY = -1;
+    //        TestY = Math.Abs(_diffCenterY) * 100;
+    //        TestY = (float)Math.Round(TestY, 2);
+    //    }
+    //    else
+    //    {
+    //        diffTestY = 1;
+    //        TestY = (Math.Abs(_diffCenterY) - 1) * 100;
+    //        TestY = (float)Math.Round(TestY, 2);
+    //    }
+
+    //    textTest = "\nDiff Center Hero=\nX=(" + _diffCenterX + ")\n" + diffTestX + "x" + diffTestY + "\nY=(" + _diffCenterY + ")" +
+    //        "\n diffX=" + TestX +
+    //        "\n diffY=" + TestY;
+
+    //    SetTextLog("?" + _fieldHero + " " + textTest);
+    //}
+    //-------------------------
+
 }
