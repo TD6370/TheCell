@@ -12,6 +12,22 @@ public class Storage : MonoBehaviour {
         get { return "Field"; }
     }
 
+    public static bool GamePause
+    {
+        
+        get { return (Time.timeScale == 0.0f); }
+        set
+        {
+            if (Time.timeScale == 1.0f)
+                Time.timeScale = 0.0f;
+            else 
+            //if (Time.timeScale == 0.0f)
+            //    Time.timeScale = 0.7f;
+            //else
+                Time.timeScale = 1.0f;
+        }
+    }
+
     public GameObject HeroObject;
     public GameObject UIController;
     //_scriptEvents = UIController.GetComponent<UIEvents>();

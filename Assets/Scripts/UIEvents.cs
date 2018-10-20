@@ -130,6 +130,9 @@ public class UIEvents : MonoBehaviour {
                 txtMessage.text = "LoadXML...";
                 Storage.Instance.LoadData();
                 break;
+            case "Pause":
+                Storage.GamePause = !Storage.GamePause;
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -204,7 +207,7 @@ public class UIEvents : MonoBehaviour {
             });
         }
         else{
-            CreateCommandLogText(p_text, Color.white);
+            //CreateCommandLogText(p_text, Color.white);
         }
     }
 

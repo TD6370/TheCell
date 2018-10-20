@@ -357,7 +357,7 @@ public class MovementUfo : MonoBehaviour {
         GUI.Label(position1, objID, style);
     }
 
-    //void OnBecameVisible()
+     //void OnBecameVisible()
     //{
     //    enabled = true;
     //}

@@ -124,6 +124,13 @@ public static class Helper { //: MonoBehaviour {
         return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
     }
 
+    public static Vector2 NormalizPosToField(System.Single x, System.Single y)
+    {
+        x = (int)(x / 2);
+        y = (int)(y / 2);
+        return new Vector2(x, Mathf.Abs((int)y));
+    }
+
     public static Vector2 GetPositByField(string nameFiled)
     {
         string strPos = nameFiled.Replace(FieldKey, "");
