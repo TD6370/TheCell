@@ -21,8 +21,8 @@ public class CompletePlayerController : MonoBehaviour {
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
     public Color ColorCurrentField = Color.yellow;
-    public Color ColorSelectedCursorObject = Color.cyan;
-    public Color ColorFindCursorObject = Color.magenta;
+    //public Color ColorSelectedCursorObject = Color.cyan;
+    //public Color ColorFindCursorObject = Color.magenta;
     //List<string> listLog = new List<string>();
 
     private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
@@ -339,30 +339,30 @@ public class CompletePlayerController : MonoBehaviour {
         return posCursorToField;
     }
 
-    private void VeiwCursorGameObjectData(string fieldCursor)
-    {
-        //Storage.Events.ListLogClear();
+    //private void VeiwCursorGameObjectData(string fieldCursor)
+    //{
+    //    //Storage.Events.ListLogClear();
         
 
-        GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
+    //    GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
 
-        if (prefabFind != null)
-        {
-            //txtLog.text = prefabFind.name.ToString();
-            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
-        }
+    //    if (prefabFind != null)
+    //    {
+    //        //txtLog.text = prefabFind.name.ToString();
+    //        prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
+    //    }
 
-        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
-        {
-            //listLog.Add(gobj.name);
-            Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
+    //    foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
+    //    {
+    //        //listLog.Add(gobj.name);
+    //        Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
 
-            //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
-            gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
-        }
+    //        //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
+    //        gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
+    //    }
 
-        //SetTextLog = Storage.Events.ListLogtoString;// String.Join("\n", listLog.ToArray()); 
-    }
+    //    //SetTextLog = Storage.Events.ListLogtoString;// String.Join("\n", listLog.ToArray()); 
+    //}
 
     private void GetMouseCursorClick()
     {
@@ -378,7 +378,7 @@ public class CompletePlayerController : MonoBehaviour {
             _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
             _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
-            VeiwCursorGameObjectData(_fieldCursor);
+            Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
         }
 
         if (_RotateMenu == true)

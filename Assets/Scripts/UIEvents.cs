@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,8 @@ public class UIEvents : MonoBehaviour {
     public TextMesh textListLogs1;
     public GameObject textListLogs;
     public GameObject contentList;
+    public GameObject contentListExpandPerson;
+    public GameObject PrefabExpandPanel;  
     public Text prefabText;
     public Button prefabButtonCommand;
 
@@ -114,7 +117,7 @@ public class UIEvents : MonoBehaviour {
         CommandExecute(selectCommand);
 
         
-        CreateCommandLogButton(selectCommand, Color.white);
+        CreateCommandLogButton(selectCommand, Color.white, contentList.transform);
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
         SetTextLog = string.Join("\n", messages.ToArray());
@@ -165,6 +168,12 @@ public class UIEvents : MonoBehaviour {
             case "Pause":
                 Storage.GamePause = !Storage.GamePause;
                 break;
+            case "ClearLog":
+                ListLogClear();
+                break;
+            case "LogPerson":
+                AddExpand("Tittle TEST",new List<string> { "Param1: qqqq", "Param2: ssss", "Param3: dddd", "Param4: cccc", "Param5: qzzq" }, null);
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -174,7 +183,7 @@ public class UIEvents : MonoBehaviour {
 
     }
 
-    public void CreateCommandLogText(string p_text, Color color)
+    public void CreateCommandLogText(string p_text, Color color, Transform p_parent)
     {
         
 
@@ -183,10 +192,10 @@ public class UIEvents : MonoBehaviour {
         Text resGO = (Text)Instantiate(prefabText, pos, Quaternion.identity);
         //resGO.name = nameGO;
         resGO.text = p_text;
-        resGO.transform.SetParent(contentList.transform);
+        resGO.transform.SetParent(p_parent);
     }
 
-    public void CreateCommandLogButton(string p_text, Color color)
+    public void CreateCommandLogButton(string p_text, Color color, Transform p_parent)
     {
         string nameBtn = "ButtonCommand" + p_text;
 
@@ -231,7 +240,8 @@ public class UIEvents : MonoBehaviour {
             //}
 
             compText.text = p_text;
-            resGO.transform.SetParent(contentList.transform);
+            //resGO.transform.SetParent(contentList.transform);
+            resGO.transform.SetParent(p_parent);
             resGO.name = nameBtn;
             resGO.onClick.AddListener(delegate
             {
@@ -321,5 +331,108 @@ public class UIEvents : MonoBehaviour {
     {
         tbxTest.text = text;
     }
+
+    public void AddExpand(string tittle, List<string> listText, List<Button> listButtonCommand)
+    {
+        if (PrefabExpandPanel == null)
+        {
+            Debug.Log("########### PrefabExpandPanel is Empty");
+            return;
+        }
+
+        //GameObject contentListExpandPerson;
+        //GameObject PrefabExpandPanel;
+
+        Vector3 pos = new Vector3(0, 0, 0);
+        GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
+        //GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
+        //resGO.name = nameGO;
+        //expandGO.Find
+        if (expandGO == null)
+        {
+            Debug.Log("########### expandGO is Empty");
+            return;
+        }
+
+        if (expandGO.transform ==null)
+        {
+            Debug.Log("########### expandGO.transform = null");
+            return;
+        }
+
+        var transContentExpandGO = expandGO.transform.Find("ContentListLogCommand");
+
+        if(transContentExpandGO==null)
+            transContentExpandGO = GameObject.Find("ContentListLogCommand").transform;
+
+        //transContentExpandGO = expandGO.Find("ContentListLogCommand").transform;
+
+        if (transContentExpandGO == null)
+        {
+            Debug.Log("########### NOT Find trans ContentExpand ");
+            return;
+        }
+
+        GameObject contentExpandGO = transContentExpandGO.gameObject;
+        if (contentExpandGO==null)
+        {
+            Debug.Log("########### Content Expand is Empty");
+            return;
+        }
+
+        Transform transExpandButton =  expandGO.transform.Find("textExpanderButton");
+
+        GameObject ExpandButton = null;
+        if (transExpandButton == null)
+        {
+            ExpandButton = GameObject.Find("textExpanderButton");
+        }
+        else
+        {
+            ExpandButton = transExpandButton.gameObject;
+        }
+
+        if (ExpandButton == null)
+        {
+            Debug.Log("########### textBlock Expand is Empty");
+            return;
+        }
+
+        //tbExpand = transExpand.gameObject;
+        //if (tbExpand == null)
+        //{
+        //    Debug.Log("########### textBlock Expand is Empty");
+        //    return;
+        //}
+        Text textExpanderButton = ExpandButton.GetComponent<Text>();
+        if (textExpanderButton == null)
+        {
+            Debug.Log("########### textBlock Expand GetComponent<Text> is Empty");
+            return;
+        }
+        textExpanderButton.text = tittle;
+
+        foreach (string text in listText)
+        {
+            CreateCommandLogText(text, Color.white, contentExpandGO.transform);
+        }
+
+        //resGO.text = p_text;
+        //expand.transform.SetParent(contentListExpandPerson);
+    }
+
+    //public GameObject GetFindExpandContent(Transform transExpand)
+    //{
+    //    for (var child in transform.gameObject)
+    //    {
+    //        if (child.name == "Bone")
+    //        {
+    //            // the code here is called 
+    //            // for each child named Bone
+    //            return child;
+    //        }
+    //    }
+    //    return null;
+    //}
 
 }

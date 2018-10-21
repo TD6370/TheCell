@@ -526,6 +526,9 @@ public class SaveLoadData : MonoBehaviour {
         [XmlIgnore]
         public virtual Vector3 TargetPosition { get; set; }
 
+        [XmlIgnore]
+        public int Speed { get; set; }
+
         //-----------------------------------for Ufo
         private Vector3 m_Position = new Vector3(0, 0, 0);
         public override Vector3 Position
@@ -553,7 +556,7 @@ public class SaveLoadData : MonoBehaviour {
 
         public GameDataNPC() : base()
         {
-            
+            Speed = 1;
         }
 
         public void SetTargetPosition(Vector3 p_SetTarget)
@@ -725,7 +728,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
 
-            
+            Speed = 3;
         }
 
          public override void UpdateGameObject(GameObject objGame)
@@ -803,7 +806,6 @@ public class SaveLoadData : MonoBehaviour {
 
         [XmlIgnore]
         private Color m_ColorRender = Color.clear;
-        //private Color m_ColorRender = Color.black;
         [XmlIgnore]
         public Color ColorRender
         {
@@ -824,27 +826,7 @@ public class SaveLoadData : MonoBehaviour {
 
                     }
                 }
-
-                //Debug.Log("----1. SaveColor=" + m_ColorRender);
-
-                //if (m_ColorRender != null && m_ColorRender != Color.black)
-                //{
-                //    //if (ColorRender == Color.clear)
-                //    //    ColorRender = Color.green;
-
-                //    //Debug.Log("---- SaveColor=" + m_ColorRender);
-
-                //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender);
-                //    if (ColorLevel != colorStr)
-                //        ColorLevel = colorStr;
-                //}
-
-                //if (m_ColorRender == null || m_ColorRender == Color.clear)
-                //{
-                //    InitColor();
-                //}
             }
-
         }
 
         private string _ColorLevel = "";
@@ -857,19 +839,7 @@ public class SaveLoadData : MonoBehaviour {
             set
             {
                 _ColorLevel = value;
-                //if(_ColorLevel != "#000000")
-                //{
-                //    if (Level == 1)
-                //        Level = UnityEngine.Random.Range(1, 10);
 
-                //    InitColor();
-                //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(ColorRender);
-                //    Debug.Log(">>>>>>>>> colorStr ==" + colorStr + "    Level:" + Level);
-                //}
-
-                //Debug.Log("---- Load Color =" + _ColorLevel);
-
-                //if (!string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
                 if (!string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
                 {
                     Color testColor = _ColorLevel.ToColor(ColorRender);
@@ -879,8 +849,7 @@ public class SaveLoadData : MonoBehaviour {
                         ColorRender = testColor;
                     }
                 }
-                //if (ColorRender == Color.clear)
-                //    ColorRender = Color.green;
+
             }
 
         }
@@ -888,22 +857,11 @@ public class SaveLoadData : MonoBehaviour {
         public GameDataBoss()
             : base()
         {
-            //if (m_ColorRender != Color.black)
-            //    return;
 
+            Speed = 5;
 
             if (m_ColorRender != Color.clear)
                 return;
-
-            //Debug.Log("GameDataBoss >>>>>>>>>   Level:" + 1);
-            ////#TEST
-            //if (Level == 1)
-            //{
-            //    Level = UnityEngine.Random.Range(1, 10);
-            //    Debug.Log("GameDataBoss >>>>>>>>> RND  GENNNNNN ");
-            //}
-
-            //Debug.Log("GameDataBoss >>>>>>>>> RND  Level:" + 1);
 
             InitColor();
         }
@@ -919,24 +877,6 @@ public class SaveLoadData : MonoBehaviour {
 
         public override void UpdateGameObject(GameObject objGame)
         {
-            //Debug.Log("______________________UpdateGameObject BOSS.1__________________");
-
-            //#TEST
-            //if (ColorRender == Color.black || ColorRender==Color.clear || _ColorLevel != "#000000")
-            //{
-            //    if (Level == 1)
-            //        Level = UnityEngine.Random.Range(1, 10);
-
-            //    InitColor();
-            //    string colorStr = "#" + ColorUtility.ToHtmlStringRGB(ColorRender);
-            //    Debug.Log(">>>>>>>>> colorStr ==" + colorStr + "    Level:" + Level);
-            //}
-
-            ////#TEST
-
-
-            //Level = UnityEngine.Random.Range(1, 10);
-            //InitColor();
 
             if (ColorRender != GetColorsLevel[Level])
             {
@@ -945,30 +885,9 @@ public class SaveLoadData : MonoBehaviour {
             }
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
-
-            //#TEST
-            //objGame.GetComponent<SpriteRenderer>().color = Color.green;
-
-
         }
     }
     //-----------------------------------
-
-    //private ObjectData BildObjectData(TypePrefabs prefabType)
-    //{
-    //    ObjectData objGameBild;
-
-    //    switch (prefabType)
-    //    {
-    //        case SaveLoadData.TypePrefabs.PrefabUfo:
-    //            objGameBild = new GameDataUfo();
-    //            break;
-    //        default:
-    //            objGameBild = new ObjectData();
-    //            break;
-    //    }
-    //    return objGameBild;
-    //}
 
     public static ObjectData BildObjectData(TypePrefabs prefabType)
     {

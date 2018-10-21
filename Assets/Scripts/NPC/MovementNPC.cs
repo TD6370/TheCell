@@ -100,10 +100,10 @@ public class MovementNPC : MonoBehaviour {
 
         int stepTest = 0;
         int stepLimitTest = 10;
-        float minDist = 0.005f;  
+        float minDist = 0.005f;
 
-        int speed = 5;
-        float step = speed * Time.deltaTime;
+        int speed = 1;
+        float step = 0;
 
 
         if (!Helper.IsDataInit(this.gameObject))
@@ -114,6 +114,13 @@ public class MovementNPC : MonoBehaviour {
         string info = "MoveObjectToPosition Init";
         //_dataNPC = FindObjectData(info) as SaveLoadData.GameDataNPC;
         _dataNPC = FindObjectData<T>(info);
+        if(_dataNPC!=null)
+        {
+            speed = _dataNPC.Speed;
+            //Debug.Log("Speed (" + this.name + ") : " + speed);
+        }
+
+        step = speed * Time.deltaTime;
 
         while (true)
         {
@@ -365,5 +372,10 @@ public class MovementNPC : MonoBehaviour {
             Debug.Log("############# SaveData ++ This GameObject is null");
             return;
         }
+    }
+
+    public SaveLoadData.GameDataNPC GetData()
+    {
+        return _dataNPC;
     }
 }

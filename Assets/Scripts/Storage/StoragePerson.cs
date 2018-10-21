@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class StoragePerson : MonoBehaviour {
 
+    public Color ColorSelectedCursorObject = Color.cyan;
+    public Color ColorFindCursorObject = Color.magenta;
+
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
 
@@ -90,6 +93,46 @@ public class StoragePerson : MonoBehaviour {
     public void SelectedID(string gobjID)
     {
 
+    }
+
+    public void VeiwCursorGameObjectData(string _fieldCursor)
+    {
+        //Storage.Events.ListLogClear();
+        GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
+
+        if (prefabFind != null)
+        {
+            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
+        }
+
+        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
+        {
+            Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
+
+            gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
+
+            MovementNPC movement = gobj.GetComponent<MovementNPC>();
+            SaveLoadData.ObjectData findData = movement.GetData(); 
+            var objData = SaveLoadData.FindObjectData(gobj);
+            if(findData!= objData)
+            {
+                Storage.Events.ListLogAdd = "#### " + gobj.name + " conflict DATA";
+            }
+            var dataBoss = findData as SaveLoadData.GameDataBoss;
+            if(dataBoss!=null)
+            {
+                Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                dataBoss.ColorRender = Color.magenta;
+            }
+            else
+            {
+                if(gobj.tag == _Boss)
+                {
+                    Storage.Events.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                }
+            }
+
+        }
     }
 }
 
