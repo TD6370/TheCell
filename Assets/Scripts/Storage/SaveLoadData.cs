@@ -698,6 +698,31 @@ public class SaveLoadData : MonoBehaviour {
             }
             return newName;
         }
+
+        public virtual List<string> GetParams
+        {
+            get
+            {
+                return new List<string> {
+                    "Name: " + NameObject,
+                    "Type : " + TagObject,
+                    "Pos : " + Position,
+                    "Target : " + TargetPosition,
+                    //"Life: " + Life,
+                    //"Speed: " + Speed,
+                    //"Color : " + ColorLevel
+                  };
+            }
+        }
+
+        public string GetParamsString
+        {
+            get
+            {
+                return string.Join("\n", GetParams.ToArray());
+            }
+        }
+
     }
 
     [XmlType("Person")]
@@ -750,6 +775,19 @@ public class SaveLoadData : MonoBehaviour {
             
             return NameObject + " " + TagObject + " " + Position.x + " " + Position.y;
             
+        }
+
+        public override List<string> GetParams
+        {
+            get
+            {
+                return new List<string> {
+                    "Name: " + NameObject,
+                    "Type : " + TagObject,
+                    "Pos : " + Position,
+                    "Target : " + TargetPosition,
+                  };
+            }
         }
     }
 
@@ -885,6 +923,21 @@ public class SaveLoadData : MonoBehaviour {
             }
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
+        }
+
+        public override List<string> GetParams
+        {
+            get {
+                return new List<string> {
+                    "Name: " + NameObject,
+                    "Type : " + TagObject,
+                    "Pos : " + Position,
+                    "Target : " + TargetPosition,
+                    "Life: " + Life,
+                    "Speed: " + Speed,
+                    "Color : " + ColorLevel
+                  };
+            }
         }
     }
     //-----------------------------------

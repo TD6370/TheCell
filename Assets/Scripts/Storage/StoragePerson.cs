@@ -61,7 +61,7 @@ public class StoragePerson : MonoBehaviour {
             Debug.Log("OBJECT(" + field + ") : " + gobjItem);
         }
 
-        return Storage.Instance.GamesObjectsReal.Where(p=> p.Key == field).
+        return Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).
                 SelectMany(x => x.Value).
                 Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
     }
@@ -112,26 +112,62 @@ public class StoragePerson : MonoBehaviour {
             gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
 
             MovementNPC movement = gobj.GetComponent<MovementNPC>();
-            SaveLoadData.ObjectData findData = movement.GetData(); 
+            SaveLoadData.ObjectData findData = movement.GetData();
             var objData = SaveLoadData.FindObjectData(gobj);
-            if(findData!= objData)
+            if (findData != objData)
             {
                 Storage.Events.ListLogAdd = "#### " + gobj.name + " conflict DATA";
+                Debug.Log("#### " + gobj.name + " conflict DATA");
             }
-            var dataBoss = findData as SaveLoadData.GameDataBoss;
-            if(dataBoss!=null)
+
+            var dataNPC = findData as SaveLoadData.GameDataNPC;
+            if (dataNPC != null)
             {
-                Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
-                dataBoss.ColorRender = Color.magenta;
+                Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
+                Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
             }
             else
             {
-                if(gobj.tag == _Boss)
+                Debug.Log("VeiwCursorGameObjectData: " + gobj.name + "  Not is NPC");
+            }
+
+
+            var dataBoss = findData as SaveLoadData.GameDataBoss;
+            if (dataBoss != null)
+            {
+                Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                Debug.Log("YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                dataBoss.ColorRender = Color.magenta;
+
+                //#EXPAND
+
+                //Storage.Events.AddExpand(dataBoss.NameObject, 
+                //    dataBoss.GetParams,
+                //    new List<string> { "Pause", "Kill", "StartTrack" },
+                //    gobjObservable: gobj);
+            }
+            else
+            {
+                if (gobj.tag == _Boss)
                 {
                     Storage.Events.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                    Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
                 }
             }
 
+        }
+    }
+
+    public void SetTartgetPositionAll(Vector2 posCursorToField)
+    {
+        Debug.Log("SetTartgetPositionAll : to " + posCursorToField.x + "" + posCursorToField.y);
+
+        foreach (var gobj in Storage.Person.GetAllRealPersons())
+        {
+            Debug.Log("SetTartgetPositionAll : " + gobj.name + " to : " + posCursorToField.x + "" + posCursorToField.y);
+            MovementNPC movem = gobj.GetComponent<MovementNPC>();
+            SaveLoadData.GameDataNPC dataNPC = movem.GetData();
+            dataNPC.SetTargetPosition(posCursorToField);
         }
     }
 }

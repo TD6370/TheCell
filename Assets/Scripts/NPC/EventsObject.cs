@@ -16,8 +16,13 @@ public class EventsObject : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        Debug.Log("&&&& EventsObject OnMouseDown");
+        //Debug.Log("&&&& EventsObject OnMouseDown");
         SelectIdFromTextBox();
+    }
+
+    public void Kill()
+    {
+        Storage.Instance.AddDestroyGameObject(this.gameObject);
     }
 
     private void SelectIdFromTextBox()
@@ -27,12 +32,12 @@ public class EventsObject : MonoBehaviour {
         {
             string objID = Helper.GetID(this.gameObject.name);
             Storage.Instance.SelectGameObjectID = objID;
-            Debug.Log("&&&& EventsObject Select " + objID + "   " + this.gameObject.name);
+            //Debug.Log("&&&& EventsObject Select " + objID + "   " + this.gameObject.name);
             Storage.Events.SetTestText(objID);
         }
         else
         {
-            Debug.Log("&&&& EventsObject Select " + gobj.tag.ToString() + "     " + this.gameObject.name);
+            //Debug.Log("&&&& EventsObject Select " + gobj.tag.ToString() + "     " + this.gameObject.name);
             Storage.Events.SetTestText(gobj.tag.ToString());
         }
     }

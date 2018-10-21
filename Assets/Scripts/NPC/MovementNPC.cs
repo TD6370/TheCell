@@ -12,7 +12,11 @@ public class MovementNPC : MonoBehaviour {
     private Rigidbody2D _rb2d;
     private string objID;
     private UIEvents _scriptUIEvents;
-    
+    private bool m_isPause = false;
+    private bool m_isTrack = false;
+    private List<Vector3> m_TrackPoints = new List<Vector3>();
+
+
     string testId;
     string _resName = "";
 
@@ -114,7 +118,7 @@ public class MovementNPC : MonoBehaviour {
         string info = "MoveObjectToPosition Init";
         //_dataNPC = FindObjectData(info) as SaveLoadData.GameDataNPC;
         _dataNPC = FindObjectData<T>(info);
-        if(_dataNPC!=null)
+        if (_dataNPC != null)
         {
             speed = _dataNPC.Speed;
             //Debug.Log("Speed (" + this.name + ") : " + speed);
@@ -124,6 +128,12 @@ public class MovementNPC : MonoBehaviour {
 
         while (true)
         {
+            if (m_isPause)
+            {
+                Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
+                yield return null;
+            }
+
             if (Storage.Instance.IsLoadingWorld)
             {
                 Debug.Log("_______________ LOADING WORLD ....._______________");
@@ -202,6 +212,8 @@ public class MovementNPC : MonoBehaviour {
         }
 
         string oldName = this.gameObject.name;
+        Vector3 oldPoint = this.transform.position;
+
         _resName = _dataNPC.NextPosition(this.gameObject);
 
         if (_resName == "Error")
@@ -215,8 +227,14 @@ public class MovementNPC : MonoBehaviour {
                 _dataNPC = FindObjectData<T>(callInfo);// as SaveLoadData.GameDataUfo;
                 if (_dataNPC == null)
                 {
-                    Debug.Log("################## ERROR MoveObjectToPosition dataUfo is Empty   GO:" + this.gameObject.name);
+                    Debug.Log("################## ERROR MoveObjectToPosition dataNPC is Empty   GO:" + this.gameObject.name);
                     return false;
+                }
+                //TRACK ME
+                if (m_isTrack)
+                {
+                    m_TrackPoints.Add(oldPoint);
+                    Storage.Instance.DrawTrack(m_TrackPoints, Color.red);
                 }
             }
             if (_resName != this.gameObject.name)
@@ -232,7 +250,7 @@ public class MovementNPC : MonoBehaviour {
 
 
 
-    protected T FindObjectData<T>(string callFunc)  where T : SaveLoadData.GameDataNPC
+    protected T FindObjectData<T>(string callFunc) where T : SaveLoadData.GameDataNPC
     {
         //Debug.Log("***************  FindObjectData GO: " + gameObject.name + "  " + gameObject.tag + "    T: " + typeof(T) + "      GO Type: " + this.gameObject.GetType());
 
@@ -378,4 +396,20 @@ public class MovementNPC : MonoBehaviour {
     {
         return _dataNPC;
     }
+
+    public void Pause()
+    {
+        m_isPause = !m_isPause;
+    }
+
+    public void TrackOn()
+    {
+        m_isTrack = !m_isTrack;
+    }
+
+    //public void DrawTrack(Vector2 posTrack)
+    //{
+
+    //}
+
 }

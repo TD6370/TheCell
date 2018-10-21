@@ -13,6 +13,7 @@ TagManager:
   - UI
   - PrefabBoss
   - PrefabCommandButton
+  - ExpandPersonControl
   layers:
   - Default
   - TransparentFX

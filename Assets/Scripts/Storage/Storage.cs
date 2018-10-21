@@ -44,6 +44,11 @@ public class Storage : MonoBehaviour {
     public string CorrectCreateName = "";
     public bool IsLoadingWorld = false;
     public bool IsTartgetPositionAll = false;
+    public void IsTartgetPositionAllOn()
+    {
+        IsTartgetPositionAll = !IsTartgetPositionAll;
+    }
+
     public Vector3 PersonsTargetPosition { get; set; }
 
     private StorageLog _StorageLog;
@@ -78,7 +83,14 @@ public class Storage : MonoBehaviour {
     {
         get { return Instance._scriptUIEvents; }
     }
-    
+
+    public static CompletePlayerController PlayerController
+    {
+        get
+        {
+            return Instance._screiptHero;
+        }
+    }
 
     public static Storage Instance { get; private set; }
 
@@ -169,6 +181,15 @@ public class Storage : MonoBehaviour {
     private SaveLoadData _scriptData;
     private GenerateGridFields _scriptGrid;
     private CompletePlayerController _screiptHero;
+    //public CompletePlayerController PlayerController
+    //{
+    //    get
+    //    {
+    //        return _screiptHero;
+    //    }
+    //}
+
+
     private CreateNPC _scriptNPC;
     private UIEvents _scriptUIEvents;
 
@@ -871,6 +892,49 @@ public class Storage : MonoBehaviour {
     //}
 
     #region Graphic
+
+    public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
+    {
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        lineRenderer.startColor = colorTrack;
+        lineRenderer.endColor = colorTrack;
+
+        //lineRenderer.StartColor(Color.green, Color.green);
+
+        //lineRenderer.SetWidth(0.2F, 0.2F);
+        lineRenderer.startWidth = 0.2F;
+        lineRenderer.endWidth = 0.2F;
+
+        int size = 5;
+        //lineRenderer.SetVertexCount(size);
+        lineRenderer.positionCount = size;
+
+        //Vector3 pos1 = new Vector3(posTrack.x, posTrack.y, -2);
+        //lineRenderer.SetPosition(0, pos1);
+        //Vector3 pos2 = new Vector3(posTrack.x + 2, posTrack.y + 2, -2);
+        //lineRenderer.SetPosition(1, pos2);
+        //Vector3 pos3 = new Vector3(posTrack.x - 2, posTrack.y + 2, -2);
+        //lineRenderer.SetPosition(2, pos3);
+        //Vector3 pos4 = new Vector3(posTrack.x - 2, posTrack.y - 2, -2);
+        //lineRenderer.SetPosition(3, pos4);
+        //Vector3 pos5 = new Vector3(posTrack.x + 2, posTrack.y - 2, -2);
+        //lineRenderer.SetPosition(4, pos5);
+        //Vector3 pos6 = new Vector3(posTrack.x, posTrack.y, -2);
+        //lineRenderer.SetPosition(5, pos6);
+        for(int i=0; i< trackPoints.Count(); i++)
+        {
+            Vector3 pos1 = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
+            lineRenderer.SetPosition(0, pos1);
+            
+        }
+
+    }
 
     private void DrawRect(float x, float y, float x2, float y2)
     {

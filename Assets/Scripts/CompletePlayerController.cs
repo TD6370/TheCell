@@ -11,6 +11,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     public Camera MainCamera;
     public GameObject UIController;
+    private bool m_IsCursorSelection = false;
 
     private GenerateGridFields m_scriptGrid;
     //private UIEvents m_UIEvents;
@@ -109,7 +110,7 @@ public class CompletePlayerController : MonoBehaviour {
             Application.Quit();
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && m_IsCursorSelection)
         {
             //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
             _MousePositionClick = Input.mousePosition;
@@ -370,7 +371,7 @@ public class CompletePlayerController : MonoBehaviour {
 
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
 
-        if (_positionLastTarget != _rectCursor)
+        if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
             _positionLastTarget = _rectCursor;
 
@@ -379,6 +380,10 @@ public class CompletePlayerController : MonoBehaviour {
             _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
             Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
+            if (Storage.Instance.IsTartgetPositionAll)
+                Storage.Person.SetTartgetPositionAll(posCursorToField);
+
+
         }
 
         if (_RotateMenu == true)
@@ -447,6 +452,11 @@ public class CompletePlayerController : MonoBehaviour {
             SetTextMessage = "You win! :" + _count;
             StartCoroutine(EndGame());
         }
+    }
+
+    public void CursorSelectionOn()
+    {
+        m_IsCursorSelection = !m_IsCursorSelection;
     }
 
 }
