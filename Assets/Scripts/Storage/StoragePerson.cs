@@ -48,39 +48,14 @@ public class StoragePerson : MonoBehaviour {
 
     public IEnumerable<GameObject> GetAllRealPersons(string field)
     {
-        var count1= Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList().Count();
-        Debug.Log("PERSON PAIR (" + field + ")  COUNT " + count1);
+        //var count1= Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList().Count();
+        //Debug.Log("PERSON PAIR (" + field + ")  COUNT " + count1);
 
-        var listT1=  Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList();
-        foreach(var pair in listT1)
+        foreach (GameObject gobjItem in Storage.Instance.GamesObjectsReal.
+            Where(p => p.Key == field).
+            SelectMany(x => x.Value).ToList())
         {
-            foreach (var obj in pair.Value)
-            {
-                Debug.Log("PERSON PAIR (" + field + ") 1.: " + obj.name);
-            }
-        }
-
-        foreach (var listM in listT1.Select(p => p.Value.Select(c=>c.name))) 
-        {
-            foreach (var obj in listM)
-            {
-                Debug.Log("PERSON  VALUES(" + field + ") 1.: " + obj);
-            }
-            
-        }
-
-        var listT2 = listT1.SelectMany(x => x.Value).ToList();
-
-        foreach (var t3 in listT2)
-        {
-            Debug.Log("PERSON(" + field + ") 2.: " + t3);
-        }
-
-        var listT3 = listT2.Where(p => p.tag.ToString() == _Ufo || p.tag.ToString() == _Boss);
-
-        foreach (var t3 in listT3)
-        {
-            Debug.Log("PERSON(" + field + ") 3.: " + t3);
+            Debug.Log("OBJECT(" + field + ") : " + gobjItem);
         }
 
         return Storage.Instance.GamesObjectsReal.Where(p=> p.Key == field).
@@ -110,6 +85,11 @@ public class StoragePerson : MonoBehaviour {
                      SaveLoadData.TypePrefabs.PrefabBoss.ToString()
                 };
         }
+    }
+
+    public void SelectedID(string gobjID)
+    {
+
     }
 }
 

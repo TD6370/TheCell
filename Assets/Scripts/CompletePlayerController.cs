@@ -10,8 +10,10 @@ using System;
 public class CompletePlayerController : MonoBehaviour {
 
     public Camera MainCamera;
-    //private GenerateGridFields _scriptGrid;
+    public GameObject UIController;
+
     private GenerateGridFields m_scriptGrid;
+    //private UIEvents m_UIEvents;
 
     [Header("Speed move hero")]
     public float Speed;             //Floating point variable to store the player's movement speed.
@@ -19,6 +21,9 @@ public class CompletePlayerController : MonoBehaviour {
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
     public Color ColorCurrentField = Color.yellow;
+    public Color ColorSelectedCursorObject = Color.cyan;
+    public Color ColorFindCursorObject = Color.magenta;
+    //List<string> listLog = new List<string>();
 
     private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
                                     //[SerializeField]
@@ -26,6 +31,7 @@ public class CompletePlayerController : MonoBehaviour {
     private int _posLastX = 0;
     private int _posLastY = 0;
     
+
     private Vector2 _movement;
 
     private Vector2 _MousePositionClick;
@@ -42,6 +48,7 @@ public class CompletePlayerController : MonoBehaviour {
     float _diffCenterX = 0;
     float _diffCenterY = 0;
     private bool _RotateMenu = false;
+    
 
     #region Events
 
@@ -51,12 +58,24 @@ public class CompletePlayerController : MonoBehaviour {
 
         InitData();
         _count = 0;
-        txtMessage.text = "";
+        SetTextMessage = "";
 
         SetCountText();
 
         //Set Start Position
         rb2d.MovePosition(new Vector2(40, -40));
+
+        //if(UIController==null)
+        //{
+        //    Debug.Log("################## UIController is EMPTY");
+        //    return;
+        //}
+        //m_UIEvents = UIController.GetComponent<UIEvents>();
+        //if (m_UIEvents == null)
+        //{
+        //    Debug.Log("################## m_UIEvents is EMPTY");
+        //    return;
+        //}
     }
 
     void Awake()
@@ -113,13 +132,13 @@ public class CompletePlayerController : MonoBehaviour {
     {
         float nextSize = 8.0f;
         float size = MainCamera.orthographicSize;
-        if(size==8.0f)
+        if (size == 8.0f)
             nextSize = 22.0f;
-        else if(size==22.0f)
+        else if (size == 22.0f)
             nextSize = 35.0f;
         if (size == 35.0f)
             nextSize = 10.0f;
-        else 
+        else
             nextSize = 8.0f;
 
         MainCamera.orthographicSize = nextSize;
@@ -156,7 +175,7 @@ public class CompletePlayerController : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(5);
-            txtMessage.text = "END GAME";
+            SetTextMessage = "END GAME";
             Application.Quit();
         }
     }
@@ -230,7 +249,7 @@ public class CompletePlayerController : MonoBehaviour {
 
         return prefabFind;
     }
-    
+
     #endregion
 
     private void InitData()
@@ -320,8 +339,35 @@ public class CompletePlayerController : MonoBehaviour {
         return posCursorToField;
     }
 
+    private void VeiwCursorGameObjectData(string fieldCursor)
+    {
+        //Storage.Events.ListLogClear();
+        
+
+        GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
+
+        if (prefabFind != null)
+        {
+            //txtLog.text = prefabFind.name.ToString();
+            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
+        }
+
+        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
+        {
+            //listLog.Add(gobj.name);
+            Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
+
+            //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
+            gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
+        }
+
+        //SetTextLog = Storage.Events.ListLogtoString;// String.Join("\n", listLog.ToArray()); 
+    }
+
     private void GetMouseCursorClick()
     {
+
+
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
 
         if (_positionLastTarget != _rectCursor)
@@ -330,22 +376,9 @@ public class CompletePlayerController : MonoBehaviour {
 
             Vector2 posCursorToField = CalculatePosCutsorToGrid();
             _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
+            _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
-            GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
-            if (prefabFind != null)
-            {
-                //txtLog.text = prefabFind.name.ToString();
-                prefabFind.gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
-            }
-
-            _infoPoint += "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
-
-            foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
-            {
-                Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
-                gobj.GetComponent<SpriteRenderer>().color = Color.black;
-            }
-
+            VeiwCursorGameObjectData(_fieldCursor);
         }
 
         if (_RotateMenu == true)
@@ -387,19 +420,31 @@ public class CompletePlayerController : MonoBehaviour {
         GUI.Label(position, text, styleLabel);
     }
 
-    private void SetTextLog(string text)
+    //private string SetTextLog
+    //{
+    //    set
+    //    {
+    //        txtLog.text = value;
+    //    }
+    //}
+
+    private string SetTextMessage
     {
-        txtLog.text = text;// "?" + _fieldHero;
+        set
+        {
+            txtMessage.text = value;
+        }
     }
+    
 
     void SetCountText()
     {
         int limitEndGame = 150;
-        txtMessage.text = "Count: " + _count.ToString() + " / " + limitEndGame;
+        SetTextMessage = "Count: " + _count.ToString() + " / " + limitEndGame;
 
         if (_count >= limitEndGame)
         {
-            txtMessage.text = "You win! :" + _count;
+            SetTextMessage = "You win! :" + _count;
             StartCoroutine(EndGame());
         }
     }

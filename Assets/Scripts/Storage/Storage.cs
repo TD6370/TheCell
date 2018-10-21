@@ -145,8 +145,26 @@ public class Storage : MonoBehaviour {
         get { return _datapathPerson; }
     }
 
+    public delegate void EventID(string id);
+    public event EventID OnSelectGameObjectID;
+
     public Camera MainCamera;
-    public string SelectGameObjectID="?";
+    //public string SelectGameObjectID="?";
+    private string m_SelectGameObjectID = "?";
+    public string SelectGameObjectID
+    {
+        get { return m_SelectGameObjectID; }
+        set
+        {
+            if(m_SelectGameObjectID != value)
+            {
+                if (OnSelectGameObjectID != null)
+                    OnSelectGameObjectID(value);
+                Person.SelectedID(value);//m_SelectGameObjectID
+            }
+            m_SelectGameObjectID = value;
+        }
+    }
 
     private SaveLoadData _scriptData;
     private GenerateGridFields _scriptGrid;
@@ -695,6 +713,8 @@ public class Storage : MonoBehaviour {
 
         
     }
+
+    
 
     #region Destroy
 

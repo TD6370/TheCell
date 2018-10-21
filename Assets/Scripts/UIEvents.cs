@@ -23,6 +23,9 @@ public class UIEvents : MonoBehaviour {
     
     private SaveLoadData m_scriptData;
     private List<string> m_CommandLogList = new List<string>();
+    private List<string> m_ListLog = new List<string>();
+
+   
 
     // Use this for initialization
     void Start () {
@@ -58,6 +61,35 @@ public class UIEvents : MonoBehaviour {
         btnTest.onClick.AddListener(LoadTest); 
     }
 
+    public string ListLogToString
+    {
+        get
+        {
+            return string.Join("\n", m_ListLog.ToArray());
+        }
+    }
+    public string ListLogAdd
+    {
+        set
+        {
+            m_ListLog.Add(value);
+            SetTextLog = ListLogToString;
+        }
+    }
+    public void ListLogClear()
+    {
+        m_ListLog.Clear();
+    }
+
+
+    private string SetTextLog
+    {
+        set
+        {
+            txtLog.text = value;
+        }
+    }
+
     private void ExitGame()
     {
 
@@ -85,7 +117,7 @@ public class UIEvents : MonoBehaviour {
         CreateCommandLogButton(selectCommand, Color.white);
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
-        txtLog.text = string.Join("\n", messages.ToArray());
+        SetTextLog = string.Join("\n", messages.ToArray());
         Storage.Instance.SelectGameObjectID = tbxTest.text;
     }
 

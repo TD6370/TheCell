@@ -188,26 +188,7 @@ public class MovementUfo : MonoBehaviour {
     }
 
 
-    public void SaveData()
-    {
-        string _nameField = Helper.GetNameFieldByName(_dataUfo.NameObject);
-
-        //Storage.Data.AddDataObjectInGrid(_dataUfo, field, "SaveData");
-        //Debug.Log("SSSSSSSSSSSSS SaveData ++ NextPosition   : " + this.name);
-        _dataUfo.Upadete(this.gameObject);
-
-        if(this.gameObject==null)
-        {
-            Debug.Log("############# SaveData ++ This GameObject is null");
-            return;
-        }
-
-        //Debug.Log("SSSSSSSSSSSSS SaveData ++ UpdateDataObect   : " + this.name);
-            //Storage.Data.UpdateDataObect(_nameField, this.gameObject.name, _dataUfo, "SaveData", this.gameObject.transform.position);
-        
-        //_dataUfo.UpdateGameObject(this.gameObject);
-        //Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
-    }
+    
 
     private bool ResavePositionData()
     {
@@ -344,11 +325,24 @@ public class MovementUfo : MonoBehaviour {
         //GUI.Label(new Rect(screenPosition.x, screenPosition.y, 0, 0), text, style);
         //-------------------------
 
+        //if (objID == Storage.Instance.SelectGameObjectID)
+        //{
+        //    style.fontSize = 15;
+        //    style.fontStyle = FontStyle.Bold;
+        //    style.normal.textColor = Color.yellow;
+        //}
+        IsSelectedMe();
+        //if(isSelected)
         if (objID == Storage.Instance.SelectGameObjectID)
         {
             style.fontSize = 15;
             style.fontStyle = FontStyle.Bold;
             style.normal.textColor = Color.yellow;
+        }else
+        {
+            style.fontSize = 13;
+            style.fontStyle = FontStyle.Normal;
+            style.normal.textColor = Color.black;
         }
 
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
@@ -357,7 +351,7 @@ public class MovementUfo : MonoBehaviour {
         GUI.Label(position1, objID, style);
     }
 
-     //void OnBecameVisible()
+    //void OnBecameVisible()
     //{
     //    enabled = true;
     //}
@@ -366,6 +360,57 @@ public class MovementUfo : MonoBehaviour {
     //{
     //    enabled = false;
     //}
+
+    public void SaveData()
+    {
+        string _nameField = Helper.GetNameFieldByName(_dataUfo.NameObject);
+
+        //Storage.Data.AddDataObjectInGrid(_dataUfo, field, "SaveData");
+        //Debug.Log("SSSSSSSSSSSSS SaveData ++ NextPosition   : " + this.name);
+        _dataUfo.Upadete(this.gameObject);
+
+        if (this.gameObject == null)
+        {
+            Debug.Log("############# SaveData ++ This GameObject is null");
+            return;
+        }
+
+        //Debug.Log("SSSSSSSSSSSSS SaveData ++ UpdateDataObect   : " + this.name);
+        //Storage.Data.UpdateDataObect(_nameField, this.gameObject.name, _dataUfo, "SaveData", this.gameObject.transform.position);
+
+        //_dataUfo.UpdateGameObject(this.gameObject);
+        //Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+    }
+
+    private bool _isSelected = false;
+    private bool IsSelectedMe()
+    {
+        if (objID == Storage.Instance.SelectGameObjectID)
+        {
+            //Storage.Events.ListLogAdd ="SelectedMe " + this.name;
+            //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^ SELECTED " + this.name);
+
+            if (!_isSelected)
+            {
+
+                //Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^ SELECTED 2." + this.name);
+                _isSelected = true;
+                SelectedMe();
+                return true;
+            }
+        }
+        else
+        {
+            _isSelected = false;
+        }
+        return false;
+    }
+
+    private void SelectedMe()
+    {
+        //Storage.Instance.SelectGameObjectID
+        Storage.Events.ListLogAdd = "SelectedMe: " + this.gameObject.name;
+    }
 
     private void OnMouseDown()
     {

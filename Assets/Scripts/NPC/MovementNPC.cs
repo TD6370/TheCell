@@ -301,13 +301,20 @@ public class MovementNPC : MonoBehaviour {
         style.fontSize = 13;
         style.normal.textColor = Color.black;
 
-
+        IsSelectedMe();
         if (objID == Storage.Instance.SelectGameObjectID)
         {
             style.fontSize = 15;
             style.fontStyle = FontStyle.Bold;
             style.normal.textColor = Color.yellow;
         }
+        else
+        {
+            style.fontSize = 13;
+            style.fontStyle = FontStyle.Normal;
+            style.normal.textColor = Color.black;
+        }
+
 
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
         Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
@@ -322,5 +329,41 @@ public class MovementNPC : MonoBehaviour {
     private void SelectIdFromTextBox()
     {
         _scriptUIEvents.SetTestText(objID);
+    }
+
+    private bool _isSelected = false;
+    private bool IsSelectedMe()
+    {
+        if (objID == Storage.Instance.SelectGameObjectID)
+        {
+            if (!_isSelected)
+            {
+                _isSelected = true;
+                SelectedMe();
+                return true;
+            }
+        }
+        else
+        {
+            _isSelected = false;
+        }
+        return false;
+    }
+
+    private void SelectedMe()
+    {
+        Storage.Events.ListLogAdd = "Me: " + this.gameObject.name;
+    }
+
+    public void SaveData()
+    {
+        string _nameField = Helper.GetNameFieldByName(_dataNPC.NameObject);
+        _dataNPC.Upadete(this.gameObject);
+
+        if (this.gameObject == null)
+        {
+            Debug.Log("############# SaveData ++ This GameObject is null");
+            return;
+        }
     }
 }

@@ -989,7 +989,7 @@ public class GenerateGridFields : MonoBehaviour {
         GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
         GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
 
-        GUI.Label(new Rect(0, 50, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
+        GUI.Label(new Rect(0, 550, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
     }
 
 }

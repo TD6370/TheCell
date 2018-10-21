@@ -26,6 +26,7 @@ public class EventsObject : MonoBehaviour {
         if (gobj.tag.ToString().IsPerson())
         {
             string objID = Helper.GetID(this.gameObject.name);
+            Storage.Instance.SelectGameObjectID = objID;
             Debug.Log("&&&& EventsObject Select " + objID + "   " + this.gameObject.name);
             Storage.Events.SetTestText(objID);
         }
