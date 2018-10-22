@@ -61,7 +61,7 @@ public class UIEvents : MonoBehaviour {
             ExitGame();
         });
 
-        btnTest.onClick.AddListener(LoadTest); 
+        btnTest.onClick.AddListener(TestClick); 
     }
 
     public string ListLogToString
@@ -95,13 +95,16 @@ public class UIEvents : MonoBehaviour {
 
     private void ExitGame()
     {
-
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 
     
 
-    private void LoadTest()
+    private void TestClick()
     {
         int selIndex = dpnMenuCommandTest.value;
         var menuCommands = dpnMenuCommandTest.options.ToArray();
@@ -117,7 +120,7 @@ public class UIEvents : MonoBehaviour {
         CommandExecute(selectCommand);
 
         
-        CreateCommandLogButton(selectCommand, Color.white, contentList.transform);
+        CreateCommandLogButton(selectCommand, Color.white, contentList.transform, null, true);
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
         SetTextLog = string.Join("\n", messages.ToArray());
@@ -166,6 +169,7 @@ public class UIEvents : MonoBehaviour {
                 Storage.Instance.LoadData();
                 break;
             case "Pause":
+                Debug.Log("CommandExecuteParson(" + selectCommand + ") :  " + selectCommand);
                 txtMessage.text = "Game Pause...";
                 Storage.GamePause = !Storage.GamePause;
                 break;
@@ -218,6 +222,7 @@ public class UIEvents : MonoBehaviour {
                     Debug.Log("############ CommandExecuteParson(" + selectCommand  + ") : " + gobjObservable.name  + " MovementNPC is Empty");
                     return;
                 }
+                Debug.Log("CommandExecuteParson(" + selectCommand + ") : " + gobjObservable.name + " : " + selectCommand);
                 movem.Pause();
                 break;
             case "Kill":
@@ -259,13 +264,27 @@ public class UIEvents : MonoBehaviour {
         //Debug.Log("CreateCommandLogText : " + p_text);
     }
 
-    public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null)
+    public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null, bool isValidExistCommand = false)
     {
+        bool isPersonComm = false;
+        if (gobjObservable != null)
+            isPersonComm = true;
+
         string nameBtn = "ButtonCommand" + p_text;
 
+        GameObject findObjects;
         //GameObject[] findObjects = GameObject.FindGameObjectsWithTag("PrefabCommandButton");
-        GameObject findObjects = GameObject.Find(nameBtn); ;
-        if (findObjects == null)
+        if (isValidExistCommand)
+        {
+            findObjects = GameObject.Find(nameBtn); ;
+            if (findObjects == null)
+                isValidExistCommand = false;
+        }
+        else
+            isValidExistCommand = true;
+
+        //if (findObjects == null)
+        if (isValidExistCommand)
         {
             Vector3 pos = new Vector3(0, 0, 0);
             Button buttonCommand = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
@@ -311,18 +330,45 @@ public class UIEvents : MonoBehaviour {
             //    gobjObservable == null ? 
             //    Color.yellow : 
             //    Color.blue;
-            if(gobjObservable != null)
-                buttonCommand.GetComponent<SpriteRenderer>().color = Color.yellow;
+            if (isPersonComm)
+            {
+                //buttonCommand.GetComponent<SpriteRenderer>().color = Color.yellow;
+                ColorBlock cb = buttonCommand.colors;
+                cb.normalColor = Color.yellow;
+                cb.disabledColor = Color.yellow;
+                cb.highlightedColor = Color.yellow;
+                cb.pressedColor = Color.yellow;
+                buttonCommand.colors = cb;
+            }
 
             //Debug.Log("ADD: CreateCommandLogText : " + nameBtn + "  parent: " + p_parent.name);
 
             //ADD EVENT COMMAND
             buttonCommand.onClick.AddListener(delegate
             {
-                if(gobjObservable==null)
-                    CommandExecute(p_text);
-                else
+                if (isPersonComm)
+                {
+                    if(gobjObservable ==null)
+                    {
+                        //buttonCommand.GetComponent<SpriteRenderer>().color = Color.yellow;
+                        ColorBlock cb = buttonCommand.colors;
+                        cb.normalColor = Color.red;
+                        cb.disabledColor = Color.red;
+                        cb.highlightedColor = Color.red;
+                        cb.pressedColor = Color.red;
+                        buttonCommand.colors = cb;
+
+                        Debug.Log("buttonCommand.onClick isPersonComm gobjObservable ==null");
+                        return;
+                    }
                     CommandExecutePerson(p_text, gobjObservable);
+                }
+                else
+                {
+                    Debug.Log("######### gobjObservable  is NULL" + nameBtn);
+                    CommandExecute(p_text);
+                }
+                    
             });
         }
         else{
@@ -427,6 +473,11 @@ public class UIEvents : MonoBehaviour {
         expandGO.name = "ExpandPanel" + tittle.Replace(" ","_") + "" + gobjName + listText.Count;
         expandGO.transform.SetParent(contentListExpandPerson.transform);
 
+        if(gobjObservable == null)
+        {
+            Debug.Log("########### gobjObservable is Empty : " + tittle);
+        }
+
         if (expandGO == null)
         {
             Debug.Log("########### expandGO is Empty");
@@ -446,109 +497,5 @@ public class UIEvents : MonoBehaviour {
         
     }
 
-    /*
-    public void AddExpand(string tittle, List<string> listText, List<Button> listButtonCommand)
-    {
-        if (PrefabExpandPanel == null)
-        {
-            Debug.Log("########### PrefabExpandPanel is Empty");
-            return;
-        }
-
-        //GameObject contentListExpandPerson;
-        //GameObject PrefabExpandPanel;
-
-        Vector3 pos = new Vector3(0, 0, 0);
-        GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
-        //GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
-        //resGO.name = nameGO;
-        //expandGO.Find
-        if (expandGO == null)
-        {
-            Debug.Log("########### expandGO is Empty");
-            return;
-        }
-
-        if (expandGO.transform == null)
-        {
-            Debug.Log("########### expandGO.transform = null");
-            return;
-        }
-
-        var transContentExpandGO = expandGO.transform.Find("ContentListLogCommand");
-
-        if (transContentExpandGO == null)
-            transContentExpandGO = GameObject.Find("ContentListLogCommand").transform;
-
-        //transContentExpandGO = expandGO.Find("ContentListLogCommand").transform;
-
-        if (transContentExpandGO == null)
-        {
-            Debug.Log("########### NOT Find trans ContentExpand ");
-            return;
-        }
-
-        GameObject contentExpandGO = transContentExpandGO.gameObject;
-        if (contentExpandGO == null)
-        {
-            Debug.Log("########### Content Expand is Empty");
-            return;
-        }
-
-        Transform transExpandButton = expandGO.transform.Find("textExpanderButton");
-
-        GameObject ExpandButton = null;
-        if (transExpandButton == null)
-        {
-            ExpandButton = GameObject.Find("textExpanderButton");
-        }
-        else
-        {
-            ExpandButton = transExpandButton.gameObject;
-        }
-
-        if (ExpandButton == null)
-        {
-            Debug.Log("########### textBlock Expand is Empty");
-            return;
-        }
-
-        //tbExpand = transExpand.gameObject;
-        //if (tbExpand == null)
-        //{
-        //    Debug.Log("########### textBlock Expand is Empty");
-        //    return;
-        //}
-        Text textExpanderButton = ExpandButton.GetComponent<Text>();
-        if (textExpanderButton == null)
-        {
-            Debug.Log("########### textBlock Expand GetComponent<Text> is Empty");
-            return;
-        }
-        textExpanderButton.text = tittle;
-
-        foreach (string text in listText)
-        {
-            CreateCommandLogText(text, Color.white, contentExpandGO.transform);
-        }
-
-        //resGO.text = p_text;
-        //expand.transform.SetParent(contentListExpandPerson);
-    }
-    */
-
-    //public GameObject GetFindExpandContent(Transform transExpand)
-    //{
-    //    for (var child in transform.gameObject)
-    //    {
-    //        if (child.name == "Bone")
-    //        {
-    //            // the code here is called 
-    //            // for each child named Bone
-    //            return child;
-    //        }
-    //    }
-    //    return null;
-    //}
-
+ 
 }

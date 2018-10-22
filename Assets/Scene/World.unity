@@ -1110,7 +1110,7 @@ Prefab:
     - target: {fileID: 224434317407773602, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0000076293945
+      value: 0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
@@ -1535,6 +1535,11 @@ Prefab:
       propertyPath: m_TagString
       value: ExpandPersonControl
       objectReference: {fileID: 0}
+    - target: {fileID: 114719986702982704, guid: b2069cca3deb24c47967ba82aa7e87c9,
+        type: 2}
+      propertyPath: ButtonCloseObj
+      value: 
+      objectReference: {fileID: 1268940784}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2069cca3deb24c47967ba82aa7e87c9, type: 2}
   m_IsPrefabAsset: 0
@@ -1742,7 +1747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.00000058988076}
+  m_AnchoredPosition: {x: 8.5, y: 0.0000010549418}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &705706334
@@ -1955,8 +1960,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -246, y: -521}
-  m_SizeDelta: {x: 128.26, y: 30}
+  m_AnchoredPosition: {x: -193.4, y: -516}
+  m_SizeDelta: {x: 233.4, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &818911285
 MonoBehaviour:
@@ -3260,6 +3265,11 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1268218902}
   m_CullTransparentMesh: 0
+--- !u!1 &1268940784 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1796984683379070, guid: b2069cca3deb24c47967ba82aa7e87c9,
+    type: 2}
+  m_PrefabInternal: {fileID: 571310074}
 --- !u!1 &1345113911
 GameObject:
   m_ObjectHideFlags: 0
@@ -4713,7 +4723,7 @@ Prefab:
     - target: {fileID: 224998670003520054, guid: 4f1d29a7857bd4946b5395fa9045b06e,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -250
+      value: -192.4
       objectReference: {fileID: 0}
     - target: {fileID: 224998670003520054, guid: 4f1d29a7857bd4946b5395fa9045b06e,
         type: 2}
@@ -4723,7 +4733,7 @@ Prefab:
     - target: {fileID: 224998670003520054, guid: 4f1d29a7857bd4946b5395fa9045b06e,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 128.26
+      value: 243.4
       objectReference: {fileID: 0}
     - target: {fileID: 224998670003520054, guid: 4f1d29a7857bd4946b5395fa9045b06e,
         type: 2}
@@ -4890,7 +4900,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: LogPerson
+  m_Text: CursorSelection
 --- !u!222 &1697010830
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5127,7 +5137,7 @@ MonoBehaviour:
   m_CaptionImage: {fileID: 0}
   m_ItemText: {fileID: 850988333}
   m_ItemImage: {fileID: 0}
-  m_Value: 9
+  m_Value: 10
   m_Options:
     m_Options:
     - m_Text: None

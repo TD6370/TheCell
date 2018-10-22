@@ -5,6 +5,9 @@ using System.Linq;
 using System;
 using System.IO;
 
+using UnityEditor;
+
+
 public class Storage : MonoBehaviour {
 
     public static string FieldKey
@@ -893,8 +896,39 @@ public class Storage : MonoBehaviour {
 
     #region Graphic
 
+    public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
+    {
+        foreach(var point in trackPoints)
+        {
+            Debug.Log("DrawPolyLine Point : " + point);
+        }
+
+        Handles.DrawPolyLine(trackPoints.ToArray());
+
+
+    }
+
+    //public static Vector3 PositionHandle(Vector3 position, Quaternion rotation)
+    //{
+    //    float handleSize = HandleUtility.GetHandleSize(position);
+    //    Color color = Handles.color;
+    //    Handles.color = Handles.xAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.right, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.x);
+    //    Handles.color = Handles.yAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.up, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.y);
+    //    Handles.color = Handles.zAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.forward, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.z);
+    //    Handles.color = Handles.centerColor;
+    //    position = Handles.FreeMoveHandle(position, rotation, handleSize * 0.15f, SnapSettings.move, new Handles.DrawCapFunction(Handles.RectangleCap));
+    //    Handles.color = color;
+    //    return position;
+    //}
+
     public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
     {
+        DrawTrack2(trackPoints, colorTrack);
+            return;
+
         LineRenderer lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null)
         {
@@ -927,11 +961,20 @@ public class Storage : MonoBehaviour {
         //lineRenderer.SetPosition(4, pos5);
         //Vector3 pos6 = new Vector3(posTrack.x, posTrack.y, -2);
         //lineRenderer.SetPosition(5, pos6);
-        for(int i=0; i< trackPoints.Count(); i++)
+        string indErr = "";
+        try
         {
-            Vector3 pos1 = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
-            lineRenderer.SetPosition(0, pos1);
-            
+            for (int i = 0; i < trackPoints.Count(); i++)
+            {
+                indErr = i.ToString();
+                Vector3 pos1 = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
+                indErr += "pos1=" + pos1.x + "x" + pos1.y;
+                lineRenderer.SetPosition(i, pos1);
+
+            }
+        }catch(Exception x)
+        {
+            Debug.Log("####### Error DrawTrack (" + indErr + ") : " + x.Message);
         }
 
     }

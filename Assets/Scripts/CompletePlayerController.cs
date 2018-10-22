@@ -137,10 +137,12 @@ public class CompletePlayerController : MonoBehaviour {
             nextSize = 22.0f;
         else if (size == 22.0f)
             nextSize = 35.0f;
-        if (size == 35.0f)
+        else if (size == 35.0f)
             nextSize = 10.0f;
         else
             nextSize = 8.0f;
+
+        //Debug.Log("SIZE CAMERA HERO:" + nextSize);
 
         MainCamera.orthographicSize = nextSize;
     }
@@ -340,30 +342,6 @@ public class CompletePlayerController : MonoBehaviour {
         return posCursorToField;
     }
 
-    //private void VeiwCursorGameObjectData(string fieldCursor)
-    //{
-    //    //Storage.Events.ListLogClear();
-        
-
-    //    GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
-
-    //    if (prefabFind != null)
-    //    {
-    //        //txtLog.text = prefabFind.name.ToString();
-    //        prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
-    //    }
-
-    //    foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
-    //    {
-    //        //listLog.Add(gobj.name);
-    //        Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
-
-    //        //Debug.Log("^^^^^^^^ GetMouseCursorClick _MousePositionClick: GOBJ: " + gobj.name);
-    //        gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
-    //    }
-
-    //    //SetTextLog = Storage.Events.ListLogtoString;// String.Join("\n", listLog.ToArray()); 
-    //}
 
     private void GetMouseCursorClick()
     {

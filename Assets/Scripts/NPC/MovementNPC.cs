@@ -11,7 +11,7 @@ public class MovementNPC : MonoBehaviour {
     private SpriteRenderer m_spriteRenderer;
     private Rigidbody2D _rb2d;
     private string objID;
-    private UIEvents _scriptUIEvents;
+    //private UIEvents _scriptUIEvents;
     private bool m_isPause = false;
     private bool m_isTrack = false;
     private List<Vector3> m_TrackPoints = new List<Vector3>();
@@ -34,12 +34,12 @@ public class MovementNPC : MonoBehaviour {
         if (string.IsNullOrEmpty(objID))
             objID = "Empty";
 
-        GameObject UIcontroller = GameObject.FindWithTag("UI");
-        if (UIcontroller == null)
-            Debug.Log("########### MovementUfo UIcontroller is Empty");
-        _scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
-        if (_scriptUIEvents == null)
-            Debug.Log("########### MovementUfo scriptUIEvents is Empty");
+        //GameObject UIcontroller = GameObject.FindWithTag("UI");
+        //if (UIcontroller == null)
+        //    Debug.Log("########### MovementUfo UIcontroller is Empty");
+        //_scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
+        //if (_scriptUIEvents == null)
+        //    Debug.Log("########### MovementUfo scriptUIEvents is Empty");
     }
 
     protected virtual void StartMoving()
@@ -131,7 +131,12 @@ public class MovementNPC : MonoBehaviour {
             if (m_isPause)
             {
                 Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
-                yield return null;
+                //yield return null;
+                //yield break;
+                while (m_isPause)
+                {
+                    yield return null;
+                }
             }
 
             if (Storage.Instance.IsLoadingWorld)
@@ -212,7 +217,7 @@ public class MovementNPC : MonoBehaviour {
         }
 
         string oldName = this.gameObject.name;
-        Vector3 oldPoint = this.transform.position;
+        Vector3 oldPoint = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
         _resName = _dataNPC.NextPosition(this.gameObject);
 
@@ -233,6 +238,7 @@ public class MovementNPC : MonoBehaviour {
                 //TRACK ME
                 if (m_isTrack)
                 {
+                    Debug.Log("m_TrackPoints : " + m_TrackPoints.Count + "          " + oldPoint.x + "x" + oldPoint.y);
                     m_TrackPoints.Add(oldPoint);
                     Storage.Instance.DrawTrack(m_TrackPoints, Color.red);
                 }
@@ -348,12 +354,21 @@ public class MovementNPC : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        SelectIdFromTextBox();
+        SelectedGameObject();
     }
 
-    private void SelectIdFromTextBox()
+    private void SelectedGameObject()
     {
-        _scriptUIEvents.SetTestText(objID);
+
+
+        //_scriptUIEvents.SetTestText(objID);
+        Storage.Events.SetTestText(objID);
+
+        //#EXPAND
+        Storage.Events.AddExpand(_dataNPC.NameObject,
+            _dataNPC.GetParams,
+            new List<string> { "Pause", "Kill", "StartTrack" },
+            gobjObservable: this.gameObject);
     }
 
     private bool _isSelected = false;
@@ -400,6 +415,7 @@ public class MovementNPC : MonoBehaviour {
     public void Pause()
     {
         m_isPause = !m_isPause;
+        Debug.Log("Pause = " + m_isPause + "   " + this.name);
     }
 
     public void TrackOn()

@@ -805,7 +805,9 @@ public class SaveLoadData : MonoBehaviour {
                 Level = UnityEngine.Random.Range(1, 10);
 
             if (Life == 0)
-                Life = 100;
+                Life = Level * 10;
+
+            Speed = Level;
         }
     }
 

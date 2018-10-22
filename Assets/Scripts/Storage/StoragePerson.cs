@@ -9,7 +9,7 @@ public class StoragePerson : MonoBehaviour {
     public Color ColorFindCursorObject = Color.magenta;
 
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
-    public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
+    public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
     //public Vector3 PersonsTargetPosition { get; set; }
 
@@ -125,6 +125,12 @@ public class StoragePerson : MonoBehaviour {
             {
                 Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
                 Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
+
+                //#EXPAND
+                Storage.Events.AddExpand(dataNPC.NameObject,
+                    dataNPC.GetParams,
+                    new List<string> { "Pause", "Kill", "StartTrack" },
+                    gobjObservable: gobj);
             }
             else
             {
@@ -140,11 +146,10 @@ public class StoragePerson : MonoBehaviour {
                 dataBoss.ColorRender = Color.magenta;
 
                 //#EXPAND
-
-                //Storage.Events.AddExpand(dataBoss.NameObject, 
-                //    dataBoss.GetParams,
-                //    new List<string> { "Pause", "Kill", "StartTrack" },
-                //    gobjObservable: gobj);
+                Storage.Events.AddExpand(dataBoss.NameObject,
+                    dataBoss.GetParams,
+                    new List<string> { "Pause", "Kill", "StartTrack" },
+                    gobjObservable: gobj);
             }
             else
             {

@@ -2275,5 +2275,109 @@ public class TEmp : MonoBehaviour {
     //            Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
     //}
     //------------------------
+    /*
+ public void AddExpand(string tittle, List<string> listText, List<Button> listButtonCommand)
+ {
+     if (PrefabExpandPanel == null)
+     {
+         Debug.Log("########### PrefabExpandPanel is Empty");
+         return;
+     }
+
+     //GameObject contentListExpandPerson;
+     //GameObject PrefabExpandPanel;
+
+     Vector3 pos = new Vector3(0, 0, 0);
+     GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
+     //GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
+     //resGO.name = nameGO;
+     //expandGO.Find
+     if (expandGO == null)
+     {
+         Debug.Log("########### expandGO is Empty");
+         return;
+     }
+
+     if (expandGO.transform == null)
+     {
+         Debug.Log("########### expandGO.transform = null");
+         return;
+     }
+
+     var transContentExpandGO = expandGO.transform.Find("ContentListLogCommand");
+
+     if (transContentExpandGO == null)
+         transContentExpandGO = GameObject.Find("ContentListLogCommand").transform;
+
+     //transContentExpandGO = expandGO.Find("ContentListLogCommand").transform;
+
+     if (transContentExpandGO == null)
+     {
+         Debug.Log("########### NOT Find trans ContentExpand ");
+         return;
+     }
+
+     GameObject contentExpandGO = transContentExpandGO.gameObject;
+     if (contentExpandGO == null)
+     {
+         Debug.Log("########### Content Expand is Empty");
+         return;
+     }
+
+     Transform transExpandButton = expandGO.transform.Find("textExpanderButton");
+
+     GameObject ExpandButton = null;
+     if (transExpandButton == null)
+     {
+         ExpandButton = GameObject.Find("textExpanderButton");
+     }
+     else
+     {
+         ExpandButton = transExpandButton.gameObject;
+     }
+
+     if (ExpandButton == null)
+     {
+         Debug.Log("########### textBlock Expand is Empty");
+         return;
+     }
+
+     //tbExpand = transExpand.gameObject;
+     //if (tbExpand == null)
+     //{
+     //    Debug.Log("########### textBlock Expand is Empty");
+     //    return;
+     //}
+     Text textExpanderButton = ExpandButton.GetComponent<Text>();
+     if (textExpanderButton == null)
+     {
+         Debug.Log("########### textBlock Expand GetComponent<Text> is Empty");
+         return;
+     }
+     textExpanderButton.text = tittle;
+
+     foreach (string text in listText)
+     {
+         CreateCommandLogText(text, Color.white, contentExpandGO.transform);
+     }
+
+     //resGO.text = p_text;
+     //expand.transform.SetParent(contentListExpandPerson);
+ }
+ */
+
+    //public GameObject GetFindExpandContent(Transform transExpand)
+    //{
+    //    for (var child in transform.gameObject)
+    //    {
+    //        if (child.name == "Bone")
+    //        {
+    //            // the code here is called 
+    //            // for each child named Bone
+    //            return child;
+    //        }
+    //    }
+    //    return null;
+    //}
 
 }
