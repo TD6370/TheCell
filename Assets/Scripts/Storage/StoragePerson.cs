@@ -127,7 +127,7 @@ public class StoragePerson : MonoBehaviour {
                 Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
 
                 //#EXPAND
-                Storage.Events.AddExpand(dataNPC.NameObject,
+                Storage.Events.AddExpandPerson(dataNPC.NameObject,
                     dataNPC.GetParams,
                     new List<string> { "Pause", "Kill", "StartTrack" },
                     gobjObservable: gobj);
@@ -146,7 +146,7 @@ public class StoragePerson : MonoBehaviour {
                 dataBoss.ColorRender = Color.magenta;
 
                 //#EXPAND
-                Storage.Events.AddExpand(dataBoss.NameObject,
+                Storage.Events.AddExpandPerson(dataBoss.NameObject,
                     dataBoss.GetParams,
                     new List<string> { "Pause", "Kill", "StartTrack" },
                     gobjObservable: gobj);

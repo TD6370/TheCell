@@ -325,52 +325,5 @@ public static class Helper { //: MonoBehaviour {
     
 }
 
-public static class ColorExtensions
-{
-    public static Color ToColor(this string color, Color oldColor)
-    {
-        Color resColor = Color.clear;
 
-        if (!string.IsNullOrEmpty(color))
-        {
-            string indErr = "srart";
-            try
-            {
-                if (color.IndexOf("#") != 0)
-                    color = "#" + color;
-
-                //Debug.Log("ToColor parse");
-
-                indErr = "6";
-                string parseColor = "#" + ColorUtility.ToHtmlStringRGB(oldColor);
-                if (parseColor != color)
-                {
-                    Color outColor = Color.clear;
-                    indErr = "3";
-                    ColorUtility.TryParseHtmlString(color, out outColor);
-
-                    indErr = "9";
-                    //Debug.Log("ColorRender SET " + _ColorLevel + "      ColorRender=" + ColorRender.ToString() + "      outColor=" + outColor.ToString() +  " RGB:" + testStr1 + "  RGBA:" + testStr2);
-                    //Debug.Log("ColorRender SET    PARSE OLD COLOR: " + parseColor + "  VALUE: " + outColor);
-                    indErr = "10";
-                    resColor = outColor;
-                }
-                else
-                {
-                    return oldColor;
-                }
-            }
-            catch (Exception x)
-            {
-                Debug.Log("############ Error GameDataBoss.ColorLevel (" + indErr + ") : " + x.Message);
-            }
-        }
-        else
-        {
-            Debug.Log("############ Error GameDataBoss.ColorLevel (" + color + ") is null");
-        }
-        return resColor;
-    }
-
-}
 

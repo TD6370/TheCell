@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MovementNPC : MonoBehaviour {
 
+    public GameObject PrefabStarTrackPoint;
+
     protected Coroutine moveObject;
     protected SaveLoadData.GameDataNPC _dataNPC;
 
@@ -137,6 +139,7 @@ public class MovementNPC : MonoBehaviour {
                 {
                     yield return null;
                 }
+                Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
             }
 
             if (Storage.Instance.IsLoadingWorld)
@@ -240,7 +243,8 @@ public class MovementNPC : MonoBehaviour {
                 {
                     Debug.Log("m_TrackPoints : " + m_TrackPoints.Count + "          " + oldPoint.x + "x" + oldPoint.y);
                     m_TrackPoints.Add(oldPoint);
-                    Storage.Instance.DrawTrack(m_TrackPoints, Color.red);
+
+                    StartCoroutine(CreateTrackPolyline());
                 }
             }
             if (_resName != this.gameObject.name)
@@ -282,6 +286,26 @@ public class MovementNPC : MonoBehaviour {
         }
 
         return _dataNPC;
+    }
+
+    //#POLYLINE TRACK
+    IEnumerator CreateTrackPolyline()
+    {
+        if(PrefabStarTrackPoint==null)
+        {
+            Debug.Log("############ PrefabStarTrackPoint is Empty");
+            yield break;
+        }
+
+        //Storage.Instance.DrawTrack(m_TrackPoints, Color.red);
+        GameObject StartTrackPoints = (GameObject)Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
+        StartTrackPoints.transform.SetParent(this.transform);
+
+        yield return new WaitForSeconds(0.1f);
+
+
+
+        yield return new WaitForSeconds(0.1f);
     }
 
     //private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
@@ -365,7 +389,7 @@ public class MovementNPC : MonoBehaviour {
         Storage.Events.SetTestText(objID);
 
         //#EXPAND
-        Storage.Events.AddExpand(_dataNPC.NameObject,
+        Storage.Events.AddExpandPerson(_dataNPC.NameObject,
             _dataNPC.GetParams,
             new List<string> { "Pause", "Kill", "StartTrack" },
             gobjObservable: this.gameObject);

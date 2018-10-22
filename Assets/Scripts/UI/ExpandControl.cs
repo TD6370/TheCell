@@ -10,11 +10,34 @@ public class ExpandControl : MonoBehaviour {
     public GameObject ButtonExpandObj;
     public GameObject ButtonCloseObj;
     public GameObject PanelContentExpandObj;
+    public GameObject ScrollListBoxPerson;
 
     public string TittleExpand { get; set; }
 
     private bool m_isExpand = false;
+    public bool IsOpen
+    {
+        get
+        {
+            return m_isExpand;
+        }
+    }
+
+
     private GameObject m_gobjObservable;
+
+    public string GetName
+    {
+        get
+        {
+            if (m_gobjObservable == null)
+            {
+                Debug.Log("############# gobjObservable == null");
+                return "ERROR_ME_DESTROY";
+            }
+            return m_gobjObservable.name;
+        }
+    }
 
     public Button ButtonExpand
     {
@@ -72,13 +95,23 @@ public class ExpandControl : MonoBehaviour {
     GameObject gobjExpandLast;
     float addHeight;
 
-    public void ExpandPanelOn(bool isOnly = false)
+    
+    public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
     {
-        //Debug.Log("ExpandPanelOn");
+        Debug.Log("ExpandPanelOn (" + this.name + ")");
+
+        bool isSet = p_isOpen.HasValue ? true : false;
+
+        Debug.Log("isSet=" + isSet + "");
 
         m_isExpand = PanelContentExpandObj.activeSelf;
-        m_isExpand = !m_isExpand;
-        
+        if(isSet)
+            m_isExpand = p_isOpen.Value;
+        else
+            m_isExpand = !m_isExpand;
+
+        Debug.Log("ExpandPanelOn (" + this.name + ") m_isExpand=" + m_isExpand);
+
         PanelContentExpandObj.SetActive(m_isExpand);
         //Storage.Events.contentListExpandPerson.transform.SetAsLastSibling();
 
@@ -88,8 +121,8 @@ public class ExpandControl : MonoBehaviour {
         //------------------
         var listExpandPersonControls =  GameObject.FindGameObjectsWithTag("ExpandPersonControl");
 
-        RectTransform rtContent = (RectTransform)PanelContentExpandObj.transform;
-        addHeight = rtContent.rect.height;
+        //RectTransform rtContent = (RectTransform)PanelContentExpandObj.transform;
+        //addHeight = rtContent.rect.height;
 
         gobjExpandLast = listExpandPersonControls[listExpandPersonControls.Length-1];
         StartCoroutine(UpdatePositionExpandPanels());
@@ -146,7 +179,7 @@ public class ExpandControl : MonoBehaviour {
         }
 
         string nameObservable = gobjObservable.name;
-        Debug.Log("ExpandControl: SetGameObject : " + nameObservable);
+        //Debug.Log("ExpandControl: SetGameObject : " + nameObservable);
 
         m_gobjObservable = gobjObservable;
     }
@@ -199,11 +232,20 @@ public class ExpandControl : MonoBehaviour {
         {
             //Debug.Log("AddList CreateCommandLogButton : " + selectCommand);
             Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, false);
+            //Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, true);
         }
         foreach (string text in listText)
         {
             //Debug.Log("AddList CreateCommandLogText : " + text);
             Storage.Events.CreateCommandLogText(text, Color.white, ContentExpandList.transform);
         }
+    }
+
+    public void SetColorText(string strColor)
+    {
+        Debug.Log("SetColorText Me : " + this.name + " color: " + strColor);
+
+        ButtonExpand.SetColor("", strColorText: strColor);
+        //ButtonExpand.SetColor(strColor, strColor);
     }
 }

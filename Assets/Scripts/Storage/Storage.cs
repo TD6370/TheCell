@@ -896,17 +896,14 @@ public class Storage : MonoBehaviour {
 
     #region Graphic
 
-    public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
-    {
-        foreach(var point in trackPoints)
-        {
-            Debug.Log("DrawPolyLine Point : " + point);
-        }
-
-        Handles.DrawPolyLine(trackPoints.ToArray());
-
-
-    }
+    //public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
+    //{
+    //    foreach(var point in trackPoints)
+    //    {
+    //        Debug.Log("DrawPolyLine Point : " + point);
+    //    }
+    //    Handles.DrawPolyLine(trackPoints.ToArray());
+    //}
 
     //public static Vector3 PositionHandle(Vector3 position, Quaternion rotation)
     //{
@@ -926,8 +923,8 @@ public class Storage : MonoBehaviour {
 
     public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
     {
-        DrawTrack2(trackPoints, colorTrack);
-            return;
+        //DrawTrack2(trackPoints, colorTrack);
+        //    return;
 
         LineRenderer lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null)
@@ -945,10 +942,11 @@ public class Storage : MonoBehaviour {
         lineRenderer.startWidth = 0.2F;
         lineRenderer.endWidth = 0.2F;
 
-        int size = 5;
+       //int size = 2;
         //lineRenderer.SetVertexCount(size);
-        lineRenderer.positionCount = size;
+        lineRenderer.positionCount = trackPoints.Count();// size;
 
+        
         //Vector3 pos1 = new Vector3(posTrack.x, posTrack.y, -2);
         //lineRenderer.SetPosition(0, pos1);
         //Vector3 pos2 = new Vector3(posTrack.x + 2, posTrack.y + 2, -2);
@@ -967,16 +965,45 @@ public class Storage : MonoBehaviour {
             for (int i = 0; i < trackPoints.Count(); i++)
             {
                 indErr = i.ToString();
-                Vector3 pos1 = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
-                indErr += "pos1=" + pos1.x + "x" + pos1.y;
-                lineRenderer.SetPosition(i, pos1);
-
+                Vector3 posNext = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
+                indErr += "pos1=" + posNext.x + "x" + posNext.y;
+                if (lineRenderer != null)
+                {
+                    //Debug.Log("?????? DrawTrack lineRenderer i =" + i + "   posNext=" + posNext);
+                    lineRenderer.SetPosition(i, posNext);
+                }
+                else
+                    Debug.Log("####### DrawTrack lineRenderer is null");
             }
         }catch(Exception x)
         {
             Debug.Log("####### Error DrawTrack (" + indErr + ") : " + x.Message);
         }
 
+    }
+
+    IEnumerator AminateAlphaColor(GameObject obj)
+    {
+        while (true)
+        {
+            var color = obj.GetComponent<Renderer>().material.color;
+            for (float i = 1; i >= 0; i -= 0.1f)
+            {
+                color.a = i;
+                obj.GetComponent<Renderer>().material.color = color;
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
+            for (float i = 0; i < 1; i += 0.1f)
+            {
+                color.a = i;
+                obj.GetComponent<Renderer>().material.color = color;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     private void DrawRect(float x, float y, float x2, float y2)
@@ -1050,9 +1077,8 @@ public class Storage : MonoBehaviour {
         public ZonaRealLook() { }
     }
 
+
+
+    #endregion
     
-
-#endregion
-
-
 }
