@@ -241,7 +241,7 @@ public class MovementNPC : MonoBehaviour {
                 //TRACK ME
                 if (m_isTrack)
                 {
-                    Debug.Log("m_TrackPoints : " + m_TrackPoints.Count + "          " + oldPoint.x + "x" + oldPoint.y);
+                    //Debug.Log("m_TrackPoints : " + m_TrackPoints.Count + "          " + oldPoint.x + "x" + oldPoint.y);
                     m_TrackPoints.Add(oldPoint);
 
                     StartCoroutine(CreateTrackPolyline());

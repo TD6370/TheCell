@@ -10,7 +10,8 @@ using System;
 public class CompletePlayerController : MonoBehaviour {
 
     public Camera MainCamera;
-    public GameObject UIController;
+    //public GameObject UIController;
+    public GameObject ObjectCursor;
     private bool m_IsCursorSelection = false;
 
     private GenerateGridFields m_scriptGrid;
@@ -307,6 +308,11 @@ public class CompletePlayerController : MonoBehaviour {
         float normalY = 1;
         string testCalc = "";
 
+        //MainCamera.orthographicSize
+        var wCam =  MainCamera.rect.width;
+        var hCam =  MainCamera.rect.height;
+        Debug.Log("SIZE MainCamera :" + wCam + "x" + hCam);
+
         offsetUI_World_lenToCenterScreenX = Screen.width / 35;
         offsetUI_World_lenToCenterScreenY = Screen.height / 19;
         testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
@@ -342,18 +348,37 @@ public class CompletePlayerController : MonoBehaviour {
         return posCursorToField;
     }
 
-
+    Vector2 posCursorToField;
+    private Vector2 m_lastMousePosition;
     private void GetMouseCursorClick()
     {
 
 
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
 
+        //if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
+        //{
+        //Vector2 posCursorToField = CalculatePosCutsorToGrid();
+        if (_MousePosition != m_lastMousePosition)
+        {
+            posCursorToField = CalculatePosCutsorToGrid();
+            m_lastMousePosition = _MousePosition;
+
+            if (ObjectCursor != null)
+            {
+                //Debug.Log("Cursor pos: " + posCursorToField);
+                ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+            }
+            else
+            {
+                Debug.Log("######### ObjectCursor is null");
+            }
+        }
+
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
             _positionLastTarget = _rectCursor;
 
-            Vector2 posCursorToField = CalculatePosCutsorToGrid();
             _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
             _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
@@ -389,6 +414,8 @@ public class CompletePlayerController : MonoBehaviour {
         Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
         var test = _infoPoint;
         SetLabelCursor(rectPosLabel, test);
+
+        
     }
 
     private void SetLabelCursor(Rect position, string text)
