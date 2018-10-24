@@ -171,7 +171,7 @@ public class CompletePlayerController : MonoBehaviour {
     void OnGUI()
     {
         //Debug.Log("Current detected event: " + Event.current);
-        GetMouseCursorClick();
+        CursorEvents();
     }
     #endregion
 
@@ -297,35 +297,36 @@ public class CompletePlayerController : MonoBehaviour {
 
     Vector2 posCursorToField;
     private Vector2 m_lastMousePosition;
-    private void GetMouseCursorClick()
+    private void CursorEvents()
     {
-
 
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
 
         //CURSOR VIEW 
         //StartCoroutine(SetPositionCursorView());
 
-        Debug.Log("Storage.Events.IsCursorVisible = " + Storage.Events.IsCursorVisible);
+        //Debug.Log("Storage.Events.IsCursorVisible = " + Storage.Events.IsCursorVisible);
 
         if (Storage.Events.IsCursorVisible &&  _MousePosition != m_lastMousePosition)
         {
             StartCoroutine(SetPositionCursorView());
+            m_lastMousePosition = _MousePosition;
 
             //posCursorToField = CalculatePosCutsorToGrid();
-                //posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
-                //m_lastMousePosition = _MousePosition;
-                //if (ObjectCursor != null)
-                //{
-                //    //Debug.Log("Cursor pos: " + posCursorToField);
-                //    ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
-                //}
-                //else
-                //{
-                //    Debug.Log("######### ObjectCursor is null");
-                //}
+            //posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
+
+            //if (ObjectCursor != null)
+            //{
+            //    //Debug.Log("Cursor pos: " + posCursorToField);
+            //    ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+            //}
+            //else
+            //{
+            //    Debug.Log("######### ObjectCursor is null");
+            //}
         }
 
+        //MOUSE ON CLICK
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
             _positionLastTarget = _rectCursor;
@@ -336,8 +337,6 @@ public class CompletePlayerController : MonoBehaviour {
             Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
             if (Storage.Instance.IsTartgetPositionAll)
                 Storage.Person.SetTartgetPositionAll(posCursorToField);
-
-
         }
 
         if (_RotateMenu == true)
@@ -363,10 +362,10 @@ public class CompletePlayerController : MonoBehaviour {
 
         if (Storage.Events.IsCursorVisible)
         {
-            var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
-            Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
-            var test = _infoPoint;
-            SetLabelCursor(rectPosLabel, test);
+            //var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
+            //Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
+            //var test = _infoPoint;
+            //SetLabelCursor(rectPosLabel, test);
         }
         
     }
@@ -420,6 +419,8 @@ public class CompletePlayerController : MonoBehaviour {
         m_IsCursorSelection = !m_IsCursorSelection;
     }
 
+    float offsetCursorX = 0;
+    float offsetCursorY = 0;
     IEnumerator SetPositionCursorView()
     {
         //yield return new WaitForSeconds(0.1f);
@@ -427,14 +428,37 @@ public class CompletePlayerController : MonoBehaviour {
 
         //posCursorToField = CalculatePosCutsorToGrid();
         posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
-        m_lastMousePosition = _MousePosition;
+        //m_lastMousePosition = _MousePosition;
 
         yield return null;
 
         if (ObjectCursor != null)
         {
             //Debug.Log("Cursor pos: " + posCursorToField);
-            ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+            //ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+            if (offsetCursorX == 0 && offsetCursorY == 0)
+            {
+                offsetCursorX = 0.75f;
+                offsetCursorY = 0.85f;
+                //RectTransform rt = (RectTransform)ObjectCursor.transform;
+                //float widthCursor = rt.rect.width;
+                //float heightCursor = rt.rect.height;
+
+                float widthCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.x; 
+                float heightCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.y;
+                //float widthCursor = ObjectCursor.GetComponent<SpriteRenderer>()
+                //float heightCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.y;
+
+
+                //offsetCursorX = widthCursor / 2;
+                //offsetCursorY = (heightCursor / 2);// * (-1);
+                Debug.Log("_______________CURSOR OffSet = " + offsetCursorX + "x" + offsetCursorY   + "     SpriteRenderer.bounds: " + widthCursor  + "x" + heightCursor);
+            }
+            //ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+            ObjectCursor.transform.position = new Vector3(
+                posCursorToField.x - offsetCursorX, 
+                posCursorToField.y + offsetCursorY, 
+                -5);
         }
         else
         {
@@ -514,7 +538,7 @@ public class CompletePlayerController : MonoBehaviour {
     {
         Vector2 m_MousePosition;
         Camera m_MainCamera;
-        Vector2 m_posHero;
+        //Vector2 m_posHero;
 
         Vector2 posCursorToField = new Vector2(0, 0);
         Vector2 posHeroStartInCentre = new Vector2(17, -9);
@@ -524,14 +548,14 @@ public class CompletePlayerController : MonoBehaviour {
         float normalX = 1;
         float normalY = 1;
         string testCalc = "";
-        float cameraWidth = 35.5f;// 35;
-        float cameraHeight = 20;// 19;
+        float lookGridWidth = 35.5f;// 35;
+        float lookGridHeight = 20;// 19;
                                 //float cameraWidth = 35;
                                 //float cameraHeight = 19;
 
         //MainCamera.orthographicSize
-        float wCam =0;
-        float hCam = 0;
+        float cameraGridWidth = 0;
+        float cameraGridHeight = 0;
 
         //public CutsorPositionBilder(Camera p_MainCamera, Vector2 p_MousePosition, Vector2 p_posHero)
         public CutsorPositionBilder(Camera p_MainCamera)
@@ -539,11 +563,31 @@ public class CompletePlayerController : MonoBehaviour {
             //m_MousePosition = p_MousePosition;
             m_MainCamera = p_MainCamera;
             //m_posHero = p_posHero;
-            wCam = m_MainCamera.rect.width;
-            hCam = m_MainCamera.rect.height;
+            cameraGridWidth = m_MainCamera.rect.width;
+            cameraGridWidth = m_MainCamera.rect.height;
+            cameraGridWidth = m_MainCamera.pixelWidth;
+            cameraGridWidth = m_MainCamera.pixelHeight;
 
-            offsetUI_World_lenToCenterScreenX = Screen.width / cameraWidth;
-            offsetUI_World_lenToCenterScreenY = Screen.height / cameraHeight;
+            //--------------------------
+            //int distance = 10;
+            //Matrix4x4 m = Camera.main.cameraToWorldMatrix;
+            //Vector3 p = m.MultiplyPoint(new Vector3(0, 0, distance));
+            //Gizmos.color = Color.yellow;
+            //Gizmos.DrawSphere(p, 0.2F);
+            Debug.Log("%%%%%%%%% Camera.main.cameraToWorldMatrix: " + Camera.main.cameraToWorldMatrix);
+            //--------------------------
+
+            //Debug.Log("__________________________________SIZE MainCamera :" + lookGridWidth + "x" + lookGridHeight + "   orthographicSize=" + m_MainCamera.orthographicSize);
+            //Debug.Log("%%%%%%%%% SIZE MainCamera :" + cameraGridWidth + "x" + cameraGridWidth + "   orthographicSize=" + m_MainCamera.orthographicSize + "" +
+            //    ""
+            //    );
+            Debug.Log("%%%%%%%%% SIZE MainCamera : rect: " + m_MainCamera.rect.width + "x" + m_MainCamera.rect.height +
+                "   pixel: " + m_MainCamera.pixelWidth + "x" + m_MainCamera.pixelHeight +
+                ""
+                );
+
+            offsetUI_World_lenToCenterScreenX = Screen.width / lookGridWidth;
+            offsetUI_World_lenToCenterScreenY = Screen.height / lookGridHeight;
         }
 
         //public void Update(Vector2 p_MousePosition, Vector2 p_posHero)
@@ -553,10 +597,10 @@ public class CompletePlayerController : MonoBehaviour {
         //}
 
 
-        public Vector2 CalculatePosCutsorToGrid(Vector2 p_MousePosition, Vector2 p_posHero)
+        public Vector2 CalculatePosCutsorToGrid(Vector2 p_MousePosition, Vector2 m_posHero)
         {
             m_MousePosition = p_MousePosition;
-            m_posHero = p_posHero;
+            //m_posHero = p_posHero;
 
             //Vector3 screenPosition = Camera.main.WorldToScreenPoint(m_MousePosition);
 
@@ -586,6 +630,7 @@ public class CompletePlayerController : MonoBehaviour {
             //testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + m_posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
             posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
 
+            //Debug.Log(@"\\\\\ CALC: " + testCalc);
 
             //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
             //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));

@@ -15,8 +15,8 @@ public class MovementNPC : MonoBehaviour {
     private string objID;
     //private UIEvents _scriptUIEvents;
     private bool m_isPause = false;
-    //private bool m_isTrack = false;
-    private bool m_isTrack = true;
+    private bool m_isTrack = false;
+    //private bool m_isTrack = true;
     private List<Vector3> m_TrackPoints = new List<Vector3>();
     private GameObject m_TrackPointsNavigator = null;
 
@@ -30,12 +30,16 @@ public class MovementNPC : MonoBehaviour {
     // Use this for initialization
     public virtual void Start()
     {
+        objID = Helper.GetID(this.name);
+        if (string.IsNullOrEmpty(objID))
+        {
+            objID = "Empty";
+            //this.gameObject.SetActive(false);
+            return;
+        }
 
         InitData();
         StartMoving();
-        objID = Helper.GetID(this.name);
-        if (string.IsNullOrEmpty(objID))
-            objID = "Empty";
 
         //GameObject UIcontroller = GameObject.FindWithTag("UI");
         //if (UIcontroller == null)
@@ -43,6 +47,14 @@ public class MovementNPC : MonoBehaviour {
         //_scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
         //if (_scriptUIEvents == null)
         //    Debug.Log("########### MovementUfo scriptUIEvents is Empty");
+        if(Storage.Events == null)
+        {
+            Debug.Log("############ Storage.Events == null");
+            return;
+        }
+    
+
+        m_isTrack = Storage.Events.IsTrackPointsVisible;
     }
 
     protected virtual void StartMoving()
@@ -224,6 +236,13 @@ public class MovementNPC : MonoBehaviour {
         Vector3 oldPoint = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 
         _resName = _dataNPC.NextPosition(this.gameObject);
+
+        if(_resName=="Update")
+        {
+            UpdateData("ResavePositionData");
+            _resName = "";
+            return false;
+        }
 
         if (_resName == "Error")
             return false;

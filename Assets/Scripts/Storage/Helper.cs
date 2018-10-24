@@ -80,7 +80,7 @@ public static class Helper { //: MonoBehaviour {
             //Debug.Log("_______________________GetGameObjectID  ID:" + id);
         }
         else
-            Debug.Log("!!!!!! GetID Error  !!!!!!!!!!");
+            Debug.Log("!!!!!! GetID Error  on " + nameObj + " !!!!!!!!!!");
 
         return id;
     }

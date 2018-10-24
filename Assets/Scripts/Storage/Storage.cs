@@ -163,6 +163,13 @@ public class Storage : MonoBehaviour {
         get { return _datapathPerson; }
     }
 
+    private string _datapathUserData = null;
+    public string DataPathUserData
+    {
+        get { return _datapathUserData; }
+    }
+    
+
     public delegate void EventID(string id);
     public event EventID OnSelectGameObjectID;
 
@@ -236,6 +243,8 @@ public class Storage : MonoBehaviour {
 
     private void InitComponents()
     {
+        Debug.Log("..................InitComponents");
+
         //var camera = MainCamera;
         if (MainCamera == null)
         {
@@ -280,6 +289,8 @@ public class Storage : MonoBehaviour {
             Debug.Log("Storage.Start scriptUIEvents not load !!!!!");
             return;
         }
+
+        //Reinit Component
         _StorageCorrect = gameObject.GetComponent<StorageCorrect>();
         if (_StorageCorrect != null)
         {
@@ -288,6 +299,8 @@ public class Storage : MonoBehaviour {
         }
         _StorageCorrect = gameObject.AddComponent<StorageCorrect>();
 
+
+        //Reinit Component
         _StoragePerson = gameObject.GetComponent<StoragePerson>();
         if (_StoragePerson != null)
         {
@@ -421,6 +434,7 @@ public class Storage : MonoBehaviour {
         //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
         //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
+        
         Debug.Log("# LoadPathData... " + _datapathLevel);
 
         if (File.Exists(_datapathLevel))
@@ -443,6 +457,9 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
+
+        _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
+       
     }
 
     public void SetHeroPosition(int x, int y, float xH, float yH)

@@ -80,7 +80,7 @@ public class SaveLoadData : MonoBehaviour {
 
         if (Storage.Instance.GridDataG != null && !isAlwaysCreate)
         {
-            Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded  Storage.Instance.GridDataG: " + Storage.Instance.GridDataG);
+            Debug.Log("# CreateDataGamesObjectsWorld... Game is loaded              Storage.Instance.GridDataG:    " + Storage.Instance.GridDataG);
             return;
         }
 
@@ -409,7 +409,7 @@ public class SaveLoadData : MonoBehaviour {
 
                 stepErr = ".1";
                 stepErr = ".2";
-                XmlSerializer serializer = new XmlSerializer(typeof(GridData), extraTypes);
+                XmlSerializer serializer = new XmlSerializer(typeof(LevelData), extraTypes);
                 stepErr = ".3";
                 FileStream fs = new FileStream(datapath, FileMode.Open);
                 stepErr = ".4";
@@ -431,7 +431,90 @@ public class SaveLoadData : MonoBehaviour {
             return state;
         }
 
-        
+        //static public CommandStore LoadCommandsStore(string datapath)
+        //{
+        //    string stepErr = "start";
+        //    CommandStore state = null;
+        //    try
+        //    {
+        //        Debug.Log("Loaded Xml GridData start...");
+
+        //        stepErr = ".1";
+        //        stepErr = ".2";
+        //        XmlSerializer serializer = new XmlSerializer(typeof(CommandStore), extraTypes);
+        //        stepErr = ".3";
+        //        FileStream fs = new FileStream(datapath, FileMode.Open);
+        //        stepErr = ".4";
+        //        state = (CommandStore)serializer.Deserialize(fs);
+        //        stepErr = ".5";
+        //        fs.Close();
+        //        stepErr = ".6";
+        //        stepErr = ".7";
+        //    }
+        //    catch (Exception x)
+        //    {
+        //        state = null;
+        //        Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        //    }
+
+        //    return state;
+        //}
+
+        static public T LoadXml<T>(string datapath) where T : class
+        {
+            string stepErr = "start";
+            T state = null;
+            try
+            {
+                Debug.Log("Loaded Xml GridData start...");
+
+                stepErr = ".1";
+                stepErr = ".2";
+                XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+                stepErr = ".3";
+                FileStream fs = new FileStream(datapath, FileMode.Open);
+                stepErr = ".4";
+                state = (T)serializer.Deserialize(fs);
+                stepErr = ".5";
+                fs.Close();
+                stepErr = ".6";
+                stepErr = ".7";
+            }
+            catch (Exception x)
+            {
+                state = null;
+                Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+            }
+
+            return state;
+        }
+
+        static public void SaveXml<T>(T state, string datapath, bool isResave = false) where T : class
+        {
+
+            if (isResave)
+            {
+                if (File.Exists(datapath))
+                {
+                    try
+                    {
+                        File.Delete(datapath);
+                    }
+                    catch (Exception x)
+                    {
+                        Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
+                    }
+                }
+            }
+
+            XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+
+            FileStream fs = new FileStream(datapath, FileMode.Create);
+
+            serializer.Serialize(fs, state);
+            fs.Close();
+
+        }
     }
 
     [XmlRoot("Level")]
@@ -618,6 +701,11 @@ public class SaveLoadData : MonoBehaviour {
                 Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
                 return "Error";
             }
+            if(!IsReality)
+            {
+                Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");
+                return "Update";
+            }
 
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;
@@ -635,7 +723,7 @@ public class SaveLoadData : MonoBehaviour {
                 if (posFieldName != posFieldOld)
                 {
                     //Create dublicate
-                    Debug.Log("################ Error NextPosition (" + gobj.name + ")   ERROR NAMES:  Old Field name: " + posFieldName + " !=  posFieldOld: " + posFieldOld + "  ------  posFieldReal: " + posFieldReal + "   DN:" + NameObject );
+                    Debug.Log("################ Error NextPosition (" + gobj.name + ")   ERROR NAMES:  Old Field name: " + posFieldName + " !=  posFieldOld: " + posFieldOld + "  ------  posFieldReal: " + posFieldReal + "   DN:" + NameObject  + " DataPos: " + Position.x + "x" + Position.y);
                     Storage.Log.GetHistory(gobj.name);
                     //gobj.PlayAnimation();
                     //Destroy(gobj, 3f);
@@ -917,6 +1005,12 @@ public class SaveLoadData : MonoBehaviour {
 
         public override void UpdateGameObject(GameObject objGame)
         {
+
+            string nameObjData = ((GameDataBoss)this).NameObject;
+            if (nameObjData != objGame.name)
+            {
+                objGame.name = nameObjData;
+            }
 
             if (ColorRender != GetColorsLevel[Level])
             {

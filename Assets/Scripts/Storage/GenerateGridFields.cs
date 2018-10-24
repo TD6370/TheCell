@@ -126,7 +126,7 @@ public class GenerateGridFields : MonoBehaviour {
         if (!m_onLoadFields && (Storage.Instance.Fields.Count < countField || countField == 0))
         {
             
-            Debug.Log("!!!!! Fields.Count =" + _fields.Count + "   countField =" + countField);
+            Debug.Log("!!!!! Fields.Count =" + _fields.Count + "   Grid Field Limit =" + countField);
             return;
         }
         {
@@ -509,9 +509,12 @@ public class GenerateGridFields : MonoBehaviour {
                 //---------------------------------------------
                 if (posFieldOld != posFieldReal)
                 {
+                    if (isDestroy)
+                        dataObj.IsReality = false;
+
                     indErr = "10.";
 
-                    Debug.Log("___________________ SaveListObjectsToData ___________________GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
+                    Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
 
                     //!!!!!!!!!!!!!!!!!!
                     SaveLoadData.ObjectData dataObjNew = (SaveLoadData.ObjectData)dataObj.Clone();
@@ -547,9 +550,9 @@ public class GenerateGridFields : MonoBehaviour {
 
                     dataObj.NameObject = name;
                     //Debug.Log("___ RENAME : DATA OBJECT: " + testDO + "  >>  " + dataObj.NameObject + "         GO:" + gobj.name);
-                    
-                    if (isDestroy)
-                        dataObj.IsReality = false;
+
+                    //if (isDestroy)
+                    //    dataObj.IsReality = false;
 
                     //#TEST -----------------
                     var objTest = _gridData.FieldsD[posFieldReal].Objects.Find(p => p.NameObject == dataObj.NameObject);
@@ -569,15 +572,16 @@ public class GenerateGridFields : MonoBehaviour {
 
                         indErr = "18.";
                         //Debug.Log("___ RENAME : GO: " + gobj.name + "  >>  " + dataObj.NameObject);
-                        gobj.name = dataObj.NameObject;
+                        //gobj.name = dataObj.NameObject;
                         indErr = "19.";
                         //Debug.Log("___ RESAVE POS : GO: " + dataObj.Position + "  >>  " + gobj.transform.position);
                         dataObj.Position = gobj.transform.position;
                     }
+                    dataObj.IsReality = true;
 
                     indErr = "20.";
 
-                    Debug.Log("DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal);
+                    Debug.Log("DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
                     Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //@<<@ 
 
                     indErr = "21.";
@@ -588,8 +592,11 @@ public class GenerateGridFields : MonoBehaviour {
                         indErr = "22.";
                         Storage.Data.AddNewFieldInRealObject(posFieldReal, "SaveListObjectsToData");
                     }
+
                     indErr = "23.";
-                    Storage.Data.AddRealObject(gobj, posFieldReal, "SaveListObjectsToData");
+                    if (!isDestroy)
+                        Storage.Data.AddRealObject(gobj, posFieldReal, "SaveListObjectsToData");
+
                     indErr = "24.";
                     Storage.Data.RemoveRealObject(i, p_nameField, "SaveListObjectsToData");
                     //+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -630,19 +637,23 @@ public class GenerateGridFields : MonoBehaviour {
             return;
         }
 
+        MovementUfo _movementUfo = gobj.GetComponent<MovementUfo>();
+        if(_movementUfo!=null)
+            _movementUfo.UpdateData("GameObjectUpdatePersonData");
+
         //Debug.Log("___________________________GameObjectRealUpdateData....__________________" + gobj.name);
 
-        SaveLoadData.TypePrefabs prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), gobj.tag.ToString()); ;
+        //SaveLoadData.TypePrefabs prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), gobj.tag.ToString()); ;
 
-        switch (prefabType)
-        {
-            case SaveLoadData.TypePrefabs.PrefabUfo:
-                MovementUfo _movementUfo = gobj.GetComponent<MovementUfo>();
-                _movementUfo.UpdateData("GameObjectUpdatePersonData");
-                break;
-            default:
-                break;
-        }
+        //switch (prefabType)
+        //{
+        //    case SaveLoadData.TypePrefabs.PrefabUfo:
+        //        MovementUfo _movementUfo = gobj.GetComponent<MovementUfo>();
+        //        _movementUfo.UpdateData("GameObjectUpdatePersonData");
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
     
 

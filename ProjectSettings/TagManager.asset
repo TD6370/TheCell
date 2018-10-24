@@ -16,6 +16,9 @@ TagManager:
   - ExpandPersonControl
   - Cursor
   - TrackPoint
+  - CommandButtonPerson
+  - CommandButton
+  - CommandButtonTool
   layers:
   - Default
   - TransparentFX

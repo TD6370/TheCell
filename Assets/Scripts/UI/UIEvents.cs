@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +10,7 @@ public class UIEvents : MonoBehaviour {
 
     //public static bool IsCursorVisible = true;
     public bool IsCursorVisible = true;
+    public bool IsTrackPointsVisible = false;
 
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
@@ -28,20 +31,11 @@ public class UIEvents : MonoBehaviour {
     public Camera MainCamera;
     
     private SaveLoadData m_scriptData;
-    private List<string> m_CommandLogList = new List<string>();
+    //private List<string> m_CommandLogList = new List<string>();
     private List<string> m_ListLog = new List<string>();
-
+    
    
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     void Awake()
     {
@@ -64,7 +58,26 @@ public class UIEvents : MonoBehaviour {
             ExitGame();
         });
 
-        btnTest.onClick.AddListener(TestClick); 
+        btnTest.onClick.AddListener(TestClick);
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        if (File.Exists(Storage.Instance.DataPathUserData))
+        {
+            LoadCommandTool();
+        }
+        else
+        {
+            Debug.Log("########## DataPathUserData not exist: " + Storage.Instance.DataPathUserData);
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
     public string ListLogToString
@@ -194,6 +207,9 @@ public class UIEvents : MonoBehaviour {
                 txtMessage.text = @"Cursor selection On\Off...";
                 Storage.PlayerController.CursorSelectionOn();
                 break;
+            case "ClearCommands":
+                ClearAllCommandButtonsTool();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -310,6 +326,10 @@ public class UIEvents : MonoBehaviour {
             compText.text = p_text;
             buttonCommand.transform.SetParent(p_parent);
             buttonCommand.name = nameBtn;
+            if (isPersonComm)
+                buttonCommand.tag = "CommandButtonPerson";
+            else
+                buttonCommand.tag = "CommandButtonTool";
 
             if (isPersonComm)
             {
@@ -517,7 +537,94 @@ public class UIEvents : MonoBehaviour {
         scrollbar.numberOfSteps = 10;
 
     }
+
+    private void ClearAllCommandButtonsTool()
+    {
+        GameObject[] listBtnCommandTool = GameObject.FindGameObjectsWithTag("CommandButtonTool");
+        if(listBtnCommandTool==null || listBtnCommandTool.Length==0)
+        {
+            Debug.Log("--- ClearAllCommandButtonsTool listBtnCommandTool is empty");
+            return;
+        }
+
+        for(int i= listBtnCommandTool.Length-1; i>=0;i--)
+        {
+            Destroy(listBtnCommandTool[i]);
+        }
+    }
+
+    private List<string> ListCommandsTool
+    {
+        get
+        {
+            GameObject[] listBtnCommandTool = GameObject.FindGameObjectsWithTag("CommandButtonTool");
+            if (listBtnCommandTool == null || listBtnCommandTool.Length == 0)
+            {
+                Debug.Log("----- ClearAllCommandButtonsTool listBtnCommandTool is empty");
+                return null;
+            }
+
+            return listBtnCommandTool.ToList().Select(p => p.name).ToList();
+
+            //for (int i = listBtnCommandTool.Length - 1; i >= 0; i--)
+            //{
+            //    Destroy(listBtnCommandTool[i]);
+            //}
+        }
+    }
+
+    private void LoadCommandTool()
+    {
+        string path = Storage.Instance.DataPathUserData;
+        CommandStore storeComm = SaveLoadData.Serializator.LoadXml<CommandStore>(path);
+        if(storeComm==null)
+        {
+            Debug.Log("############ LoadCommandTool storeComm is Empty");
+            return;
+        }
+        else
+        {
+            if(storeComm.CommadsTemplate==null)
+            {
+                Debug.Log("############ LoadCommandTool storeComm  CommadsTemplate is Empty");
+                return;
+            }
+            if (storeComm.CommadsTemplate.Count==0)
+            {
+                Debug.Log("---- LoadCommandTool storeComm  CommadsTemplate is zero");
+                return;
+            }
+            ClearAllCommandButtonsTool();
+            foreach (string nameCommand in storeComm.CommadsTemplate)
+            {
+                CreateCommandLogButton(nameCommand, Color.white, contentList.transform, null, true);
+            }
+
+            Debug.Log("---- LoadCommandTool Loaded..........");
+        }
+    }
+
+    private void SaveCommandTool()
+    {
+        var listSave = ListCommandsTool.ToList();
+        if (listSave != null && listSave.Count > 0)
+        {
+            CommandStore storeComm = new CommandStore()
+            {
+                CommadsTemplate = listSave
+            };
+
+            string path = Storage.Instance.DataPathUserData;
+            SaveLoadData.Serializator.SaveXml<CommandStore>(storeComm, path, true);
+        }
+    }
 }
+
+public class CommandStore
+{
+    public List<string> CommadsTemplate { get; set; }
+}
+
 
 public static class EventsExtensions
 {
