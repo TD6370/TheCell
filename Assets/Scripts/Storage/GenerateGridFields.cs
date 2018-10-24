@@ -460,6 +460,7 @@ public class GenerateGridFields : MonoBehaviour {
         {
             indErr = "1.";
 
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for (int i = realObjects.Count - 1; i >= 0; i--)  //+FIX
             {
                 indErr = "2.";
@@ -512,6 +513,10 @@ public class GenerateGridFields : MonoBehaviour {
 
                     Debug.Log("___________________ SaveListObjectsToData ___________________GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
 
+                    //!!!!!!!!!!!!!!!!!!
+                    SaveLoadData.ObjectData dataObjNew = (SaveLoadData.ObjectData)dataObj.Clone();
+                    var name = Helper.CreateName(dataObj.TagObject, posFieldReal, "", gobj.name);
+
                     Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData"); ////@<<@ 
 
                     if (!_gridData.FieldsD.ContainsKey(posFieldReal))
@@ -519,9 +524,28 @@ public class GenerateGridFields : MonoBehaviour {
                         Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData"); //@<<@ 
                     }
 
-                    var testDO = dataObj.NameObject;
+                    //var testDO = dataObj.NameObject;
+                    //!!!!!!!!!!!!!!!!!!!!!
+                    //SaveLoadData.ObjectData dataObjNew = new SaveLoadData.ObjectData()
+                    //{
 
-                    dataObj.NameObject = Helper.CreateName(dataObj.TagObject, posFieldReal,"", gobj.name);
+                    //};
+                    
+                    dataObjects = _gridData.FieldsD[posFieldReal].Objects;
+                    indData = dataObjects.FindIndex(p => p.NameObject == name);
+                    if (indData != -1)
+                    {
+                        dataObj = dataObjects[indData];
+                        Debug.Log("################# SaveListObjectsToData 3.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
+                        Storage.Log.GetHistory(gobj.name);
+                        continue;
+                    }
+                    dataObj = dataObjNew;
+
+                    //dataObj = dataObjects[indData];
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    dataObj.NameObject = name;
                     //Debug.Log("___ RENAME : DATA OBJECT: " + testDO + "  >>  " + dataObj.NameObject + "         GO:" + gobj.name);
                     
                     if (isDestroy)
@@ -540,6 +564,9 @@ public class GenerateGridFields : MonoBehaviour {
                     //@SAVE@ ------ RESAVE PROPERTIES
                     if (dataObj.NameObject != gobj.name)
                     {
+                        //!!!!!!!!!!!!!!!!!!!!!!
+                        dataObj.UpdateGameObject(gobj);
+
                         indErr = "18.";
                         //Debug.Log("___ RENAME : GO: " + gobj.name + "  >>  " + dataObj.NameObject);
                         gobj.name = dataObj.NameObject;
@@ -549,6 +576,8 @@ public class GenerateGridFields : MonoBehaviour {
                     }
 
                     indErr = "20.";
+
+                    Debug.Log("DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal);
                     Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //@<<@ 
 
                     indErr = "21.";

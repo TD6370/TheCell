@@ -262,8 +262,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.14544, y: 0.14544, z: 1.4544}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1345113913}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -400,7 +400,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4939844650099518, guid: 56867aa7f68e3a243b1ea105d6bbce8c, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56867aa7f68e3a243b1ea105d6bbce8c, type: 2}
@@ -2617,7 +2617,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.00000047948583}
+  m_AnchoredPosition: {x: 8.5, y: 0}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &705706334
@@ -2860,8 +2860,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 354061448}
   m_HandleRect: {fileID: 354061447}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3324,7 +3324,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4016123250634744, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
         type: 2}
@@ -4232,7 +4232,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4051467883741880, guid: e90ee8d74ed523b4690f9ca26c8348a3, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1549111573032600, guid: e90ee8d74ed523b4690f9ca26c8348a3, type: 2}
       propertyPath: m_TagString
@@ -4493,8 +4493,9 @@ Transform:
   m_Children:
   - {fileID: 2082532948}
   - {fileID: 816106697}
+  - {fileID: 134454374}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1376562969
 GameObject:
@@ -5366,7 +5367,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4198590862946530, guid: 0d70e830e2198f0428159dad41177765, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1736101719947554, guid: 0d70e830e2198f0428159dad41177765, type: 2}
       propertyPath: m_TagString
@@ -5489,7 +5490,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4011135552660476, guid: 02cf8e4b1e5aa134894f004c1ccefd0a, type: 2}
       propertyPath: m_RootOrder
-      value: 13
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 212715352658214594, guid: 02cf8e4b1e5aa134894f004c1ccefd0a,
         type: 2}
@@ -5519,6 +5520,11 @@ Prefab:
         type: 2}
       propertyPath: TextureMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114129102945564234, guid: 02cf8e4b1e5aa134894f004c1ccefd0a,
+        type: 2}
+      propertyPath: MaxLenLine
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02cf8e4b1e5aa134894f004c1ccefd0a, type: 2}
@@ -5990,7 +5996,7 @@ Transform:
   m_LocalScale: {x: 91.75, y: 75.32043, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1626881611
 GameObject:
@@ -6876,7 +6882,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2093528016}
   m_HandleRect: {fileID: 2093528015}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -6956,7 +6962,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000015258789}
+  m_AnchoredPosition: {x: 8.5, y: 0.00001018322}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -7110,8 +7116,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1137823048}
   m_HandleRect: {fileID: 1137823047}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7190,7 +7196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 91.8734}
+  m_AnchoredPosition: {x: 0.3, y: 53.334026}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -7561,13 +7567,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ded33204d1311d842b51a0fa41512935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsCursorVisible: 1
   txtMessage: {fileID: 1171611291}
   txtLog: {fileID: 1626881613}
   btnExit: {fileID: 421268062}
   btnTest: {fileID: 1448774051}
   tbxTest: {fileID: 470054890}
-  textListLogs1: {fileID: 0}
-  textListLogs: {fileID: 0}
   contentList: {fileID: 1891207648}
   ListBoxExpandPerson: {fileID: 174116161}
   contentListExpandPerson: {fileID: 705706332}

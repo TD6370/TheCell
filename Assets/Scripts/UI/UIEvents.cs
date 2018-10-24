@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 public class UIEvents : MonoBehaviour {
 
+    //public static bool IsCursorVisible = true;
+    public bool IsCursorVisible = true;
+
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
     public Button btnExit;
     public Button btnTest;
     public InputField tbxTest;
-    public TextMesh textListLogs1;
-    public GameObject textListLogs;
     public GameObject contentList;
     public GameObject ListBoxExpandPerson;
     public GameObject contentListExpandPerson;

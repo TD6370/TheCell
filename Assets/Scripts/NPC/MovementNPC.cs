@@ -15,7 +15,8 @@ public class MovementNPC : MonoBehaviour {
     private string objID;
     //private UIEvents _scriptUIEvents;
     private bool m_isPause = false;
-    private bool m_isTrack = false;
+    //private bool m_isTrack = false;
+    private bool m_isTrack = true;
     private List<Vector3> m_TrackPoints = new List<Vector3>();
     private GameObject m_TrackPointsNavigator = null;
 
@@ -294,7 +295,7 @@ public class MovementNPC : MonoBehaviour {
 
         if (m_TrackPointsNavigator == null)
         {
-            Debug.Log("------------------ StartCoroutine -- CreateTrackPolyline " + this.name);
+            //Debug.Log("------------------ StartCoroutine -- CreateTrackPolyline " + this.name);
 
             StartCoroutine(CreateTrackPolyline());
         }
@@ -332,7 +333,8 @@ public class MovementNPC : MonoBehaviour {
         }
         yield return new WaitForSeconds(0.1f);
 
-        m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
+        //m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
+        m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, new Vector3(0, 0, -10), Quaternion.identity);
         m_TrackPointsNavigator.name = "NavigatorTrackPoints_" + this.gameObject.name;
         m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform);
         m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);

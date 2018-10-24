@@ -51,7 +51,7 @@ public class CompletePlayerController : MonoBehaviour {
     float _diffCenterY = 0;
     private bool _RotateMenu = false;
     private CutsorPositionBilder _bilderCursorPosition;
-
+    private GUIStyle styleLabel = new GUIStyle();
 
     #region Events
 
@@ -113,7 +113,7 @@ public class CompletePlayerController : MonoBehaviour {
             Application.Quit();
         }
 
-        if (Input.GetMouseButtonDown(0) && m_IsCursorSelection)
+        if (Input.GetMouseButtonDown(0) &&  m_IsCursorSelection)
         {
             //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
             _MousePositionClick = Input.mousePosition;
@@ -123,7 +123,8 @@ public class CompletePlayerController : MonoBehaviour {
         {
             _RotateMenu = true;
         }
-        _MousePosition = Input.mousePosition;
+        if (Storage.Events.IsCursorVisible)
+            _MousePosition = Input.mousePosition;
     }
 
     void Update()
@@ -305,7 +306,9 @@ public class CompletePlayerController : MonoBehaviour {
         //CURSOR VIEW 
         //StartCoroutine(SetPositionCursorView());
 
-        if (_MousePosition != m_lastMousePosition)
+        Debug.Log("Storage.Events.IsCursorVisible = " + Storage.Events.IsCursorVisible);
+
+        if (Storage.Events.IsCursorVisible &&  _MousePosition != m_lastMousePosition)
         {
             StartCoroutine(SetPositionCursorView());
 
@@ -358,21 +361,26 @@ public class CompletePlayerController : MonoBehaviour {
             }
         }
 
-        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
-        Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
-        var test = _infoPoint;
-        SetLabelCursor(rectPosLabel, test);
-
+        if (Storage.Events.IsCursorVisible)
+        {
+            var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
+            Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
+            var test = _infoPoint;
+            SetLabelCursor(rectPosLabel, test);
+        }
         
     }
 
     private void SetLabelCursor(Rect position, string text)
     {
-        GUIStyle styleLabel = new GUIStyle();
-        styleLabel.fontSize =16;
-        styleLabel.richText = true;
-        styleLabel.normal.textColor =Color.black;
-        styleLabel.fontStyle = FontStyle.Bold;
+        if (styleLabel == null)
+        {
+            styleLabel = new GUIStyle();
+            styleLabel.fontSize = 16;
+            styleLabel.richText = true;
+            styleLabel.normal.textColor = Color.black;
+            styleLabel.fontStyle = FontStyle.Bold;
+        }
         //shadow.alignment = TextAnchor.MiddleCenter;
 
         GUI.Label(position, text, styleLabel);
