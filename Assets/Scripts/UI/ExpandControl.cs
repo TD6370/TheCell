@@ -98,11 +98,11 @@ public class ExpandControl : MonoBehaviour {
     
     public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
     {
-        Debug.Log("ExpandPanelOn (" + this.name + ")");
+        //Debug.Log("ExpandPanelOn (" + this.name + ")");
 
         bool isSet = p_isOpen.HasValue ? true : false;
 
-        Debug.Log("isSet=" + isSet + "");
+        //Debug.Log("isSet=" + isSet + "");
 
         m_isExpand = PanelContentExpandObj.activeSelf;
         if(isSet)
@@ -110,7 +110,7 @@ public class ExpandControl : MonoBehaviour {
         else
             m_isExpand = !m_isExpand;
 
-        Debug.Log("ExpandPanelOn (" + this.name + ") m_isExpand=" + m_isExpand);
+        //Debug.Log("ExpandPanelOn (" + this.name + ") m_isExpand=" + m_isExpand);
 
         PanelContentExpandObj.SetActive(m_isExpand);
         //Storage.Events.contentListExpandPerson.transform.SetAsLastSibling();
@@ -243,7 +243,7 @@ public class ExpandControl : MonoBehaviour {
 
     public void SetColorText(string strColor)
     {
-        Debug.Log("SetColorText Me : " + this.name + " color: " + strColor);
+        //Debug.Log("SetColorText Me : " + this.name + " color: " + strColor);
 
         ButtonExpand.SetColor("", strColorText: strColor);
         //ButtonExpand.SetColor(strColor, strColor);

@@ -50,7 +50,8 @@ public class CompletePlayerController : MonoBehaviour {
     float _diffCenterX = 0;
     float _diffCenterY = 0;
     private bool _RotateMenu = false;
-    
+    private CutsorPositionBilder _bilderCursorPosition;
+
 
     #region Events
 
@@ -78,6 +79,7 @@ public class CompletePlayerController : MonoBehaviour {
         //    Debug.Log("################## m_UIEvents is EMPTY");
         //    return;
         //}
+        _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
     }
 
     void Awake()
@@ -289,64 +291,8 @@ public class CompletePlayerController : MonoBehaviour {
         SetCountText();
     }
 
-    private Vector2 CalculatePosCutsorToGrid()
-    {
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePosition);
 
-        //_rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
-        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
-
-        float zoom = MainCamera.orthographicSize / 10;
-
-        Vector2 posHero = transform.position;
-        Vector2 posCursorToField = new Vector2(0, 0);
-        Vector2 posHeroStartInCentre = new Vector2(17, -9);
-        Vector2 posCursorNormalize = new Vector2(0, 0);
-        float offsetUI_World_lenToCenterScreenX = 0;
-        float offsetUI_World_lenToCenterScreenY = 0;
-        float normalX = 1;
-        float normalY = 1;
-        string testCalc = "";
-
-        //MainCamera.orthographicSize
-        var wCam =  MainCamera.rect.width;
-        var hCam =  MainCamera.rect.height;
-        Debug.Log("SIZE MainCamera :" + wCam + "x" + hCam);
-
-        offsetUI_World_lenToCenterScreenX = Screen.width / 35;
-        offsetUI_World_lenToCenterScreenY = Screen.height / 19;
-        testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
-
-        normalX = _rectCursorReal.x / offsetUI_World_lenToCenterScreenX;
-        normalY = _rectCursorReal.y / offsetUI_World_lenToCenterScreenY;
-        testCalc += "\n *posCursorToField.Y(" + normalY + ") = _rectCursorReal.y(" + _rectCursorReal.y + ") / offsetY(" + offsetUI_World_lenToCenterScreenY + ")";
-        posCursorToField = new Vector2(normalX, normalY);
-
-        float addPosHeroX = posHero.x - posHeroStartInCentre.x + posCursorToField.x;
-        //float addPosHeroY = posHero.y - posHeroStartInCentre.y + posCursorToField.y; ///!!!!!!!!!!!!!!!
-        float addPosHeroY = Math.Abs(posHero.y) - Math.Abs(posHeroStartInCentre.y) + Math.Abs(posCursorToField.y); ///!!!!!!!!!!!!!!!
-        addPosHeroY *= -1;
-
-        testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
-        posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
-
-
-        //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
-        //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));
-
-        //_infoPoint =
-        //    "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
-        //    "\nSize: " + Screen.width + "x" + Screen.height +
-        //    "\nHero: " + transform.position.x + "x" + transform.position.y +
-        //    "\nZoom=" + zoom +
-        //    "\nField: " + _fieldCursor +
-        //    "\nOffset: " + offsetUI_World_lenToCenterScreenX + " : " + offsetUI_World_lenToCenterScreenY +
-        //    "\nNormali : " + normalX + " x " + normalY +
-        //    "\nAdd pos Hero: " + addPosHeroX + " x " + addPosHeroY
-        //    + testCalc;
-
-        return posCursorToField;
-    }
+    
 
     Vector2 posCursorToField;
     private Vector2 m_lastMousePosition;
@@ -356,23 +302,25 @@ public class CompletePlayerController : MonoBehaviour {
 
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
 
-        //if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
-        //{
-        //Vector2 posCursorToField = CalculatePosCutsorToGrid();
+        //CURSOR VIEW 
+        //StartCoroutine(SetPositionCursorView());
+
         if (_MousePosition != m_lastMousePosition)
         {
-            posCursorToField = CalculatePosCutsorToGrid();
-            m_lastMousePosition = _MousePosition;
+            StartCoroutine(SetPositionCursorView());
 
-            if (ObjectCursor != null)
-            {
-                //Debug.Log("Cursor pos: " + posCursorToField);
-                ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
-            }
-            else
-            {
-                Debug.Log("######### ObjectCursor is null");
-            }
+            //posCursorToField = CalculatePosCutsorToGrid();
+                //posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
+                //m_lastMousePosition = _MousePosition;
+                //if (ObjectCursor != null)
+                //{
+                //    //Debug.Log("Cursor pos: " + posCursorToField);
+                //    ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+                //}
+                //else
+                //{
+                //    Debug.Log("######### ObjectCursor is null");
+                //}
         }
 
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
@@ -462,6 +410,191 @@ public class CompletePlayerController : MonoBehaviour {
     public void CursorSelectionOn()
     {
         m_IsCursorSelection = !m_IsCursorSelection;
+    }
+
+    IEnumerator SetPositionCursorView()
+    {
+        //yield return new WaitForSeconds(0.1f);
+        yield return null;
+
+        //posCursorToField = CalculatePosCutsorToGrid();
+        posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
+        m_lastMousePosition = _MousePosition;
+
+        yield return null;
+
+        if (ObjectCursor != null)
+        {
+            //Debug.Log("Cursor pos: " + posCursorToField);
+            ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+        }
+        else
+        {
+            Debug.Log("######### ObjectCursor is null");
+        }
+        
+
+    }
+
+    /*
+    public Vector2 CalculatePosCutsorToGrid_Old()
+    {
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePosition);
+
+        //_rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
+        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
+
+        float zoom = MainCamera.orthographicSize / 10;
+
+        //Vector2 posHero = transform.position;
+        Vector2 posHero = transform.position;
+        Vector2 posCursorToField = new Vector2(0, 0);
+        Vector2 posHeroStartInCentre = new Vector2(17, -9);
+        Vector2 posCursorNormalize = new Vector2(0, 0);
+        float offsetUI_World_lenToCenterScreenX = 0;
+        float offsetUI_World_lenToCenterScreenY = 0;
+        float normalX = 1;
+        float normalY = 1;
+        string testCalc = "";
+        float cameraWidth = 35.5f;// 35;
+        float cameraHeight = 20;// 19;
+                                //float cameraWidth = 35;
+                                //float cameraHeight = 19;
+
+        //MainCamera.orthographicSize
+        var wCam = MainCamera.rect.width;
+        var hCam = MainCamera.rect.height;
+        Debug.Log("SIZE MainCamera :" + wCam + "x" + hCam + "   orthographicSize=" + MainCamera.orthographicSize);
+
+        offsetUI_World_lenToCenterScreenX = Screen.width / cameraWidth;
+        offsetUI_World_lenToCenterScreenY = Screen.height / cameraHeight;
+        testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
+
+        normalX = _rectCursorReal.x / offsetUI_World_lenToCenterScreenX;
+        normalY = _rectCursorReal.y / offsetUI_World_lenToCenterScreenY;
+        testCalc += "\n *posCursorToField.Y(" + normalY + ") = _rectCursorReal.y(" + _rectCursorReal.y + ") / offsetY(" + offsetUI_World_lenToCenterScreenY + ")";
+        posCursorToField = new Vector2(normalX, normalY);
+
+        float addPosHeroX =posHero.x - posHeroStartInCentre.x + posCursorToField.x;
+        //float addPosHeroY = posHero.y - posHeroStartInCentre.y + posCursorToField.y; ///!!!!!!!!!!!!!!!
+        float addPosHeroY = Math.Abs(posHero.y) - Math.Abs(posHeroStartInCentre.y) + Math.Abs(posCursorToField.y); ///!!!!!!!!!!!!!!!
+        addPosHeroY *= -1;
+
+        testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
+        posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
+
+
+        //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
+        //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));
+
+        //_infoPoint =
+        //    "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
+        //    "\nSize: " + Screen.width + "x" + Screen.height +
+        //    "\nHero: " + transform.position.x + "x" + transform.position.y +
+        //    "\nZoom=" + zoom +
+        //    "\nField: " + _fieldCursor +
+        //    "\nOffset: " + offsetUI_World_lenToCenterScreenX + " : " + offsetUI_World_lenToCenterScreenY +
+        //    "\nNormali : " + normalX + " x " + normalY +
+        //    "\nAdd pos Hero: " + addPosHeroX + " x " + addPosHeroY
+        //    + testCalc;
+
+        return posCursorToField;
+    }
+    */
+
+    public class CutsorPositionBilder
+    {
+        Vector2 m_MousePosition;
+        Camera m_MainCamera;
+        Vector2 m_posHero;
+
+        Vector2 posCursorToField = new Vector2(0, 0);
+        Vector2 posHeroStartInCentre = new Vector2(17, -9);
+        Vector2 posCursorNormalize = new Vector2(0, 0);
+        float offsetUI_World_lenToCenterScreenX = 0;
+        float offsetUI_World_lenToCenterScreenY = 0;
+        float normalX = 1;
+        float normalY = 1;
+        string testCalc = "";
+        float cameraWidth = 35.5f;// 35;
+        float cameraHeight = 20;// 19;
+                                //float cameraWidth = 35;
+                                //float cameraHeight = 19;
+
+        //MainCamera.orthographicSize
+        float wCam =0;
+        float hCam = 0;
+
+        //public CutsorPositionBilder(Camera p_MainCamera, Vector2 p_MousePosition, Vector2 p_posHero)
+        public CutsorPositionBilder(Camera p_MainCamera)
+        {
+            //m_MousePosition = p_MousePosition;
+            m_MainCamera = p_MainCamera;
+            //m_posHero = p_posHero;
+            wCam = m_MainCamera.rect.width;
+            hCam = m_MainCamera.rect.height;
+
+            offsetUI_World_lenToCenterScreenX = Screen.width / cameraWidth;
+            offsetUI_World_lenToCenterScreenY = Screen.height / cameraHeight;
+        }
+
+        //public void Update(Vector2 p_MousePosition, Vector2 p_posHero)
+        //{
+        //    m_MousePosition = p_MousePosition;
+        //    m_posHero = p_posHero;
+        //}
+
+
+        public Vector2 CalculatePosCutsorToGrid(Vector2 p_MousePosition, Vector2 p_posHero)
+        {
+            m_MousePosition = p_MousePosition;
+            m_posHero = p_posHero;
+
+            //Vector3 screenPosition = Camera.main.WorldToScreenPoint(m_MousePosition);
+
+            //_rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
+            var _rectCursorReal = new Rect(m_MousePosition.x, Screen.height - m_MousePosition.y, 300, 800);
+
+            //float zoom = m_MainCamera.orthographicSize / 10;
+
+            //Vector2 posHero = transform.position;
+            //Vector2 posHero = transform.position;
+           
+            //Debug.Log("SIZE MainCamera :" + wCam + "x" + hCam + "   orthographicSize=" + m_MainCamera.orthographicSize);
+
+            
+            //testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
+
+            normalX = _rectCursorReal.x / offsetUI_World_lenToCenterScreenX;
+            normalY = _rectCursorReal.y / offsetUI_World_lenToCenterScreenY;
+            //testCalc += "\n *posCursorToField.Y(" + normalY + ") = _rectCursorReal.y(" + _rectCursorReal.y + ") / offsetY(" + offsetUI_World_lenToCenterScreenY + ")";
+            posCursorToField = new Vector2(normalX, normalY);
+
+            float addPosHeroX = m_posHero.x - posHeroStartInCentre.x + posCursorToField.x;
+            //float addPosHeroY = posHero.y - posHeroStartInCentre.y + posCursorToField.y; ///!!!!!!!!!!!!!!!
+            float addPosHeroY = Math.Abs(m_posHero.y) - Math.Abs(posHeroStartInCentre.y) + Math.Abs(posCursorToField.y); ///!!!!!!!!!!!!!!!
+            addPosHeroY *= -1;
+
+            //testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + m_posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
+            posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
+
+
+            //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
+            //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));
+
+            //_infoPoint =
+            //    "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
+            //    "\nSize: " + Screen.width + "x" + Screen.height +
+            //    "\nHero: " + transform.position.x + "x" + transform.position.y +
+            //    "\nZoom=" + zoom +
+            //    "\nField: " + _fieldCursor +
+            //    "\nOffset: " + offsetUI_World_lenToCenterScreenX + " : " + offsetUI_World_lenToCenterScreenY +
+            //    "\nNormali : " + normalX + " x " + normalY +
+            //    "\nAdd pos Hero: " + addPosHeroX + " x " + addPosHeroY
+            //    + testCalc;
+
+            return posCursorToField;
+        }
     }
 
 }

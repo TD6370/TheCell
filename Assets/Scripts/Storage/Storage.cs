@@ -923,6 +923,8 @@ public class Storage : MonoBehaviour {
 
     public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
     {
+        Debug.Log("DrawTrack Storage ...........");
+
         //DrawTrack2(trackPoints, colorTrack);
         //    return;
 

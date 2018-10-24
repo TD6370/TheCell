@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\TileGen.cs" />
     <Compile Include="Assets\Scripts\UI\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
+    <Compile Include="Assets\Scripts\UI\TrackPointsNavigator.cs" />
     <Compile Include="Assets\Scripts\UI\UIEvents.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

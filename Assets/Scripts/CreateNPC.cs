@@ -75,7 +75,7 @@ public class CreateNPC : MonoBehaviour {
                 if (Helper.IsValidPiontInZona(pos.x, pos.y))
                 {
                     GameObject newUfo = (GameObject)Instantiate(prefabUfo);
-                    int add = (coutUfoReal * 1);
+                    //int add = (coutUfoReal * 1);
 
                     string id = System.Guid.NewGuid().ToString().Substring(1, 4);
                     newUfo.name = "PrefabUfo_" + id;

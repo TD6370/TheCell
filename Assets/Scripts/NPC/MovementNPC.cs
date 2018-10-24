@@ -17,7 +17,7 @@ public class MovementNPC : MonoBehaviour {
     private bool m_isPause = false;
     private bool m_isTrack = false;
     private List<Vector3> m_TrackPoints = new List<Vector3>();
-
+    private GameObject m_TrackPointsNavigator = null;
 
     string testId;
     string _resName = "";
@@ -243,8 +243,7 @@ public class MovementNPC : MonoBehaviour {
                 {
                     //Debug.Log("m_TrackPoints : " + m_TrackPoints.Count + "          " + oldPoint.x + "x" + oldPoint.y);
                     m_TrackPoints.Add(oldPoint);
-
-                    StartCoroutine(CreateTrackPolyline());
+                    CrateNavigatorTrackPoints();
                 }
             }
             if (_resName != this.gameObject.name)
@@ -289,23 +288,68 @@ public class MovementNPC : MonoBehaviour {
     }
 
     //#POLYLINE TRACK
+    private void CrateNavigatorTrackPoints()
+    {
+       // Debug.Log("CrateNavigatorTrackPoints................");
+
+        if (m_TrackPointsNavigator == null)
+        {
+            Debug.Log("------------------ StartCoroutine -- CreateTrackPolyline " + this.name);
+
+            StartCoroutine(CreateTrackPolyline());
+        }
+        else
+        {
+            //Debug.Log("------------------ scriptTrackPoints.TrackPoints get TrackPointsNavigator");
+            TrackPointsNavigator scriptTrackPoints = m_TrackPointsNavigator.GetComponent<TrackPointsNavigator>();
+            if (scriptTrackPoints == null)
+            {
+                Debug.Log("############ TrackPointsNavigator is Empty");
+                return;
+            }
+            
+            scriptTrackPoints.TrackPoints = m_TrackPoints;
+            //Debug.Log("------------------ scriptTrackPoints.TrackPoints =" + m_TrackPoints.Count + " points: " + scriptTrackPoints);
+        }
+    }
+
+    //#POLYLINE TRACK
     IEnumerator CreateTrackPolyline()
     {
-        if(PrefabStarTrackPoint==null)
+        //PrefabStarTrackPointT
+
+        if (PrefabStarTrackPoint==null)
         {
-            Debug.Log("############ PrefabStarTrackPoint is Empty");
+            PrefabStarTrackPoint = (GameObject)GameObject.Find("PrefabStarTrackPointT");
+            if(PrefabStarTrackPoint==null)
+            {
+                Debug.Log("############ PrefabStarTrackPoint Find(PrefabStarTrackPointT) Not Found !!! " + this.gameObject.name);
+                yield break;
+            }
+
+            //Debug.Log("############ PrefabStarTrackPoint is Empty" + this.gameObject.name);
+            //yield break;
+        }
+        yield return new WaitForSeconds(0.1f);
+
+        m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
+        m_TrackPointsNavigator.name = "NavigatorTrackPoints_" + this.gameObject.name;
+        m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform);
+        m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);
+        m_TrackPointsNavigator.SetActive(true);
+
+        yield return new WaitForSeconds(0.1f);
+
+        TrackPointsNavigator scriptTrackPoints = m_TrackPointsNavigator.GetComponent<TrackPointsNavigator>();
+        if(scriptTrackPoints==null)
+        {
+            Debug.Log("############ TrackPointsNavigator is Empty");
             yield break;
         }
+        scriptTrackPoints.TrackPoints = m_TrackPoints;
 
-        //Storage.Instance.DrawTrack(m_TrackPoints, Color.red);
-        GameObject StartTrackPoints = (GameObject)Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
-        StartTrackPoints.transform.SetParent(this.transform);
+        //Debug.Log("************ TrackPointsNavigator Created : " + m_TrackPointsNavigator.name);
 
-        yield return new WaitForSeconds(0.1f);
-
-
-
-        yield return new WaitForSeconds(0.1f);
     }
 
     //private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
@@ -421,7 +465,7 @@ public class MovementNPC : MonoBehaviour {
 
     public void SaveData()
     {
-        string _nameField = Helper.GetNameFieldByName(_dataNPC.NameObject);
+        //string _nameField = Helper.GetNameFieldByName(_dataNPC.NameObject);
         _dataNPC.Upadete(this.gameObject);
 
         if (this.gameObject == null)
