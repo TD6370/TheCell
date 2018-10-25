@@ -11,6 +11,7 @@ public class UIEvents : MonoBehaviour {
     //public static bool IsCursorVisible = true;
     public bool IsCursorVisible = true;
     public bool IsTrackPointsVisible = false;
+    public int LimitLogView = 20;
 
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
@@ -84,6 +85,7 @@ public class UIEvents : MonoBehaviour {
     {
         get
         {
+            //Debug.Log("ListLogToString=" + string.Join("\n", m_ListLog.ToArray()));
             return string.Join("\n", m_ListLog.ToArray());
         }
     }
@@ -91,8 +93,17 @@ public class UIEvents : MonoBehaviour {
     {
         set
         {
+            if (m_ListLog.Count > LimitLogView)
+            {
+                Debug.Log("ListLogAdd   m_ListLog.Count(" + m_ListLog.Count + ") > (" + LimitLogView + ")LimitLogView");
+
+                m_ListLog.RemoveAt(0);
+            }
+
+            //Debug.Log(">>>>>>>>>>>>>>> ListLogAdd  Add + " + value + "  IN " + String.Join(",", m_ListLog.ToArray()));
             m_ListLog.Add(value);
             SetTextLog = ListLogToString;
+            
         }
     }
     public void ListLogClear()
@@ -105,7 +116,9 @@ public class UIEvents : MonoBehaviour {
     {
         set
         {
+            //Debug.Log("SetTextLog===" + value);
             txtLog.text = value;
+            //txtLog.text = "TEST_TEST_TEST_TEST_TEST_TEST_TEST_TEST_TEST_TEST_TEST_TEST_";
         }
     }
 
@@ -125,21 +138,23 @@ public class UIEvents : MonoBehaviour {
         int selIndex = dpnMenuCommandTest.value;
         var menuCommands = dpnMenuCommandTest.options.ToArray();
 
-        List<string> messages = new List<string>();
+        //List<string> messages = new List<string>();
 
-        messages.Add("Sel GO: [" + tbxTest.text + "]");
+        //messages.Add("Sel GO: [" + tbxTest.text + "]");
 
         string selectCommand = menuCommands[selIndex].text.ToString();
 
         Debug.ClearDeveloperConsole();
-        Debug.Log(">>>>>  COMMAND >>>>> " + selectCommand);
+        //Debug.Log(">>>>>  COMMAND >>>>> " + selectCommand);
+        //ListLogAdd = ">>>>>  COMMAND >>>>> " + selectCommand;
         CommandExecute(selectCommand);
 
         
         CreateCommandLogButton(selectCommand, Color.white, contentList.transform, null, true);
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
-        SetTextLog = string.Join("\n", messages.ToArray());
+        //SetTextLog = string.Join("\n", messages.ToArray());
+        //ListLogAdd = 
         Storage.Instance.SelectGameObjectID = tbxTest.text;
     }
 
@@ -210,10 +225,18 @@ public class UIEvents : MonoBehaviour {
             case "ClearCommands":
                 ClearAllCommandButtonsTool();
                 break;
+            case "SaveCommandTool":
+                SaveCommandTool();
+                break;
+            case "LoadCommandTool":
+                LoadCommandTool();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
         }
+
+        ListLogAdd = "CALL >> " + selectCommand;
 
         //m_CommandLogList.Add(selectCommand);
 
@@ -289,7 +312,10 @@ public class UIEvents : MonoBehaviour {
         if (gobjObservable != null)
             isPersonComm = true;
 
-        string nameBtn = "ButtonCommand" + p_text;
+        //string nameBtn = "ButtonCommand" + p_text;
+        string keyB = "ButtonCommand";
+        string textBtn = p_text.Replace(keyB, "");
+        string nameBtn = textBtn + keyB;
 
         GameObject findObjects;
         //GameObject[] findObjects = GameObject.FindGameObjectsWithTag("PrefabCommandButton");
@@ -323,7 +349,7 @@ public class UIEvents : MonoBehaviour {
             }
 
 
-            compText.text = p_text;
+            compText.text = textBtn;
             buttonCommand.transform.SetParent(p_parent);
             buttonCommand.name = nameBtn;
             if (isPersonComm)
@@ -353,12 +379,12 @@ public class UIEvents : MonoBehaviour {
                         Debug.Log("buttonCommand.onClick isPersonComm gobjObservable == null");
                         return;
                     }
-                    CommandExecutePerson(p_text, gobjObservable);
+                    CommandExecutePerson(textBtn, gobjObservable);
                 }
                 else
                 {
                     //Debug.Log("######### gobjObservable  is NULL" + nameBtn);
-                    CommandExecute(p_text);
+                    CommandExecute(textBtn);
                 }
                     
             });
@@ -451,6 +477,7 @@ public class UIEvents : MonoBehaviour {
 
     public void AddExpandPerson(string tittle, List<string> listText, List<string> listCommand, GameObject gobjObservable)
     {
+        //Debug.Log("AddExpandPerson .....");
         if (PrefabExpandPanel == null)
         {
             Debug.Log("########### PrefabExpandPanel is Empty");
@@ -461,26 +488,32 @@ public class UIEvents : MonoBehaviour {
         
         //if (resultFind != null)
         //{
-            var listExpandPersonControls = GameObject.FindGameObjectsWithTag("ExpandPersonControl");
-            //Debug.Log("listExpandPersonControls count = " + listExpandPersonControls.Length);
+        var listExpandPersonControls = GameObject.FindGameObjectsWithTag("ExpandPersonControl");
+        //Debug.Log("listExpandPersonControls count = " + listExpandPersonControls.Length);
 
-            foreach(var exp in listExpandPersonControls)
+        foreach(var exp in listExpandPersonControls)
+        {
+            if(exp.name == "PrefabExpandPanel")
             {
-                ExpandControl scriptExp = exp.GetExpandControl();
-                string nameExp = scriptExp.GetName;
-                //if(nameExp!= newNameExpand)
-                scriptExp.SetColorText("#FFFFFF");
-
-                //Debug.Log("ME " + newNameExpand + "  FIND: " + nameExp);
-                scriptExp.ExpandPanelOn(true, p_isOpen: false);
-                //Debug.Log("ME " + newNameExpand + "  IsOpen=" + scriptExp.IsOpen);
-                //else
-                //    scriptExp.SetColorText("#FFFA00");
-
+                continue;    
             }
-            //ExpandControl scriptExpand = resultFind.GetExpandControl();
-            //scriptExpand.SetColorText("#FFFA00");
-            //scriptExpand.ExpandPanelOn(p_isOpen: true);
+            //Debug.Log("_EXP ME (" + newNameExpand + ")__________ expand find " + exp.name);
+
+            ExpandControl scriptExp = exp.GetExpandControl();
+            string nameExp = scriptExp.GetName;
+            //if(nameExp!= newNameExpand)
+            scriptExp.SetColorText("#FFFFFF");
+
+            //Debug.Log("ME " + newNameExpand + "  FIND: " + nameExp);
+            scriptExp.ExpandPanelOn(true, p_isOpen: false);
+            //Debug.Log("ME " + newNameExpand + "  IsOpen=" + scriptExp.IsOpen);
+            //else
+            //    scriptExp.SetColorText("#FFFA00");
+
+        }
+        //ExpandControl scriptExpand = resultFind.GetExpandControl();
+        //scriptExpand.SetColorText("#FFFA00");
+        //scriptExpand.ExpandPanelOn(p_isOpen: true);
         //}
 
         if (resultFind != null)
@@ -604,12 +637,14 @@ public class UIEvents : MonoBehaviour {
         }
     }
 
-    private void SaveCommandTool()
+    public void SaveCommandTool()
     {
+        CommandStore storeComm = new CommandStore();
+
         var listSave = ListCommandsTool.ToList();
         if (listSave != null && listSave.Count > 0)
         {
-            CommandStore storeComm = new CommandStore()
+            storeComm = new CommandStore()
             {
                 CommadsTemplate = listSave
             };
@@ -617,6 +652,9 @@ public class UIEvents : MonoBehaviour {
             string path = Storage.Instance.DataPathUserData;
             SaveLoadData.Serializator.SaveXml<CommandStore>(storeComm, path, true);
         }
+        Debug.Log("Save Commands Tool count : " + storeComm.CommadsTemplate.Count);
+        //ListLogAdd = "Save Commands Tool count : " + storeComm.CommadsTemplate.Count;
+
     }
 }
 
@@ -633,3 +671,4 @@ public static class EventsExtensions
         return exp.GetComponent<ExpandControl>();
     }
 }
+

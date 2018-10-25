@@ -409,7 +409,7 @@ public class MovementUfo : MonoBehaviour {
     private void SelectedMe()
     {
         //Storage.Instance.SelectGameObjectID
-        Storage.Events.ListLogAdd = "SelectedMe: " + this.gameObject.name;
+        //Storage.Events.ListLogAdd = "SelectedMe: " + this.gameObject.name;
     }
 
     private void OnMouseDown()

@@ -25,6 +25,7 @@ public class ExpandControl : MonoBehaviour {
 
 
     private GameObject m_gobjObservable;
+    private string m_storeNameObservable = "";
 
     public string GetName
     {
@@ -32,9 +33,13 @@ public class ExpandControl : MonoBehaviour {
         {
             if (m_gobjObservable == null)
             {
-                Debug.Log("############# gobjObservable == null");
+                //Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + ButtonExpand.name);
+                Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + this.gameObject.name);
+                if (!string.IsNullOrEmpty(m_storeNameObservable))
+                    Storage.Log.GetHistory(m_storeNameObservable);
                 return "ERROR_ME_DESTROY";
             }
+            m_storeNameObservable = m_gobjObservable.name;
             return m_gobjObservable.name;
         }
     }
@@ -98,6 +103,9 @@ public class ExpandControl : MonoBehaviour {
     
     public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
     {
+        SelectedObserver();
+        //Storage.Instance.SelectGameObjectID = Helper.GetID(GetName);
+
         //Debug.Log("ExpandPanelOn (" + this.name + ")");
 
         bool isSet = p_isOpen.HasValue ? true : false;
@@ -247,5 +255,17 @@ public class ExpandControl : MonoBehaviour {
 
         ButtonExpand.SetColor("", strColorText: strColor);
         //ButtonExpand.SetColor(strColor, strColor);
+    }
+
+    public void SelectedObserver()
+    {
+        if (m_gobjObservable == null)
+        {
+            Storage.Events.ListLogAdd = " SelectedObserver IS EMPTY -- " + this.gameObject.name;
+            return;
+        }
+
+        //Storage.Events.ListLogAdd = "SELECTED --- " + GetName.Replace("_", " ");
+        Storage.Instance.SelectGameObjectID = Helper.GetID(GetName);
     }
 }

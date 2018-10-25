@@ -32,7 +32,7 @@ public class TrackPointsNavigator : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        Debug.Log("TrackPointsNavigator StartCoroutine   DrawTrackPoints");
+        //Debug.Log("TrackPointsNavigator StartCoroutine   DrawTrackPoints");
         StartCoroutine(DrawTrackPoints());
 	}
 	
@@ -61,7 +61,7 @@ public class TrackPointsNavigator : MonoBehaviour {
 
     IEnumerator DrawTrackPoints()
     {
-        Debug.Log("TrackPointsNavigator DrawTrackPoints..... start");
+        //Debug.Log("TrackPointsNavigator DrawTrackPoints..... start");
 
         while (true)
         {
