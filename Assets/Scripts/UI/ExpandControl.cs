@@ -14,6 +14,14 @@ public class ExpandControl : MonoBehaviour {
 
     public string TittleExpand { get; set; }
 
+    public bool IsAlert
+    {
+        get
+        {
+            return m_gobjObservable == null;
+        }
+    }
+
     private bool m_isExpand = false;
     public bool IsOpen
     {
@@ -33,15 +41,38 @@ public class ExpandControl : MonoBehaviour {
         {
             if (m_gobjObservable == null)
             {
-                //Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + ButtonExpand.name);
-                Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + this.gameObject.name);
                 if (!string.IsNullOrEmpty(m_storeNameObservable))
-                    Storage.Log.GetHistory(m_storeNameObservable);
-                return "ERROR_ME_DESTROY";
+                {
+                    Debug.Log("############# GetName Find Observable on name: " + m_storeNameObservable);
+                    m_gobjObservable = GameObject.Find(m_storeNameObservable);
+                }
+                if (m_gobjObservable == null)
+                {
+                    Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + this.gameObject.name);
+                    if (!string.IsNullOrEmpty(m_storeNameObservable))
+                        Storage.Log.GetHistory(m_storeNameObservable);
+                    return "ERROR_ME_DESTROY";
+                }
             }
-            m_storeNameObservable = m_gobjObservable.name;
+            StoreNameObservable = m_gobjObservable.gameObject.name;
             return m_gobjObservable.name;
         }
+    }
+
+    public string StoreNameObservable
+    {
+        get
+        {
+            return m_storeNameObservable;
+        }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+                return;
+
+            m_storeNameObservable = value;
+        }
+
     }
 
     public Button ButtonExpand
@@ -77,13 +108,20 @@ public class ExpandControl : MonoBehaviour {
     //}
 
     // Use this for initialization
+
+    //public bool IsOpen
+    //{
+    //    get
+    //    {
+    //        return PanelContentExpandObj.activeSelf;
+    //    }
+    //}
+
+
     void Start ()
     {
         //ButtonExpand.onClick.AddListener(ExpandPanelOn);
-        ButtonExpand.onClick.AddListener(delegate
-        {
-            ExpandPanelOn(false);
-        });
+        ButtonExpand.onClick.AddListener(ButtonExpandOnClick);
 
         ButtonClose.onClick.AddListener(delegate
         {
@@ -100,10 +138,36 @@ public class ExpandControl : MonoBehaviour {
     GameObject gobjExpandLast;
     float addHeight;
 
-    
-    public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
+    private void ButtonExpandOnClick()
     {
         SelectedObserver();
+        ColorUnsetAllExpand();
+        ExpandPanelOn(isOnly: false);
+    }
+
+    public void ColorUnsetAllExpand()
+    {
+        if (IsOpen)
+            return;
+
+            var listExpandPersonControls = GameObject.FindGameObjectsWithTag("ExpandPersonControl");
+        foreach (var exp in listExpandPersonControls)
+        {
+            if (exp.name == "PrefabExpandPanel")
+                continue;
+            ExpandControl scriptExp = exp.GetExpandControl();
+            scriptExp.SetColorText(UIEvents.ColorExpClose);
+
+            //string nameExp = scriptExp.GetName;
+            //scriptExp.ExpandPanelOn(true, p_isOpen: false);
+        }
+
+        SetColorText(UIEvents.ColorExpOpen);
+    }
+
+    public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
+    {
+        //SelectedObserver();
         //Storage.Instance.SelectGameObjectID = Helper.GetID(GetName);
 
         //Debug.Log("ExpandPanelOn (" + this.name + ")");
@@ -192,8 +256,9 @@ public class ExpandControl : MonoBehaviour {
         m_gobjObservable = gobjObservable;
     }
 
-    //string tittle, List<string> listText, List<Button> listButtonCommand{
-    //public void AddList(text, Color.white, contentExpandGO.transform)
+
+
+    // ADD DATA NPC
     public void AddList(string tittle, List<string> listText, List<string> listCommand)
     {
         TittleExpand = tittle;
@@ -251,6 +316,12 @@ public class ExpandControl : MonoBehaviour {
 
     public void SetColorText(string strColor)
     {
+        if (IsAlert)
+        {
+            ButtonExpand.SetColor("", strColorText: UIEvents.ColorAlert);
+            return;
+        }
+
         //Debug.Log("SetColorText Me : " + this.name + " color: " + strColor);
 
         ButtonExpand.SetColor("", strColorText: strColor);
@@ -261,8 +332,19 @@ public class ExpandControl : MonoBehaviour {
     {
         if (m_gobjObservable == null)
         {
-            Storage.Events.ListLogAdd = " SelectedObserver IS EMPTY -- " + this.gameObject.name;
-            return;
+            if (!string.IsNullOrEmpty(m_storeNameObservable))
+            {
+                Debug.Log("############# GetName Find Observable on name: " + m_storeNameObservable);
+                m_gobjObservable = GameObject.Find(m_storeNameObservable);
+            }
+
+            if (m_gobjObservable == null)
+            {
+                //Storage.Events.ListLogAdd = "SelectedObserver EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
+                Storage.Events.ListLogAdd = "EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
+                SetColorText(UIEvents.ColorAlert);
+                return;
+            }
         }
 
         //Storage.Events.ListLogAdd = "SELECTED --- " + GetName.Replace("_", " ");

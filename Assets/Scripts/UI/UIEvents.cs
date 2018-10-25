@@ -25,6 +25,11 @@ public class UIEvents : MonoBehaviour {
     public GameObject ScrollListBoxPerson;
     public Text prefabText;
     public Button prefabButtonCommand;
+    public static string ColorExpClose = "#FFFFFF";
+    public static string ColorExpOpen = "#FFFA00";
+    public static string ColorYelow = "#CDA143";
+    public static string ColorGreen = "#468C44";
+    public static string ColorAlert = "#EC4D56";
 
     [Header("Menu Command")]
     public Dropdown dpnMenuCommandTest;
@@ -95,7 +100,7 @@ public class UIEvents : MonoBehaviour {
         {
             if (m_ListLog.Count > LimitLogView)
             {
-                Debug.Log("ListLogAdd   m_ListLog.Count(" + m_ListLog.Count + ") > (" + LimitLogView + ")LimitLogView");
+                //Debug.Log("ListLogAdd   m_ListLog.Count(" + m_ListLog.Count + ") > (" + LimitLogView + ")LimitLogView");
 
                 m_ListLog.RemoveAt(0);
             }
@@ -359,11 +364,11 @@ public class UIEvents : MonoBehaviour {
 
             if (isPersonComm)
             {
-                buttonCommand.SetColor("#CDA143");
+                buttonCommand.SetColor(ColorYelow); // "#CDA143");
             }
             else
             {
-                buttonCommand.SetColor("#468C44");
+                buttonCommand.SetColor(ColorGreen);
             }
 
             //Debug.Log("ADD: CreateCommandLogText : " + nameBtn + "  parent: " + p_parent.name);
@@ -375,7 +380,7 @@ public class UIEvents : MonoBehaviour {
                 {
                     if(gobjObservable ==null)
                     {
-                        buttonCommand.SetColor("#EC4D56");
+                        buttonCommand.SetColor(ColorAlert);// "#EC4D56");
                         Debug.Log("buttonCommand.onClick isPersonComm gobjObservable == null");
                         return;
                     }
@@ -502,7 +507,7 @@ public class UIEvents : MonoBehaviour {
             ExpandControl scriptExp = exp.GetExpandControl();
             string nameExp = scriptExp.GetName;
             //if(nameExp!= newNameExpand)
-            scriptExp.SetColorText("#FFFFFF");
+            scriptExp.SetColorText(ColorExpClose);
 
             //Debug.Log("ME " + newNameExpand + "  FIND: " + nameExp);
             scriptExp.ExpandPanelOn(true, p_isOpen: false);
@@ -519,7 +524,7 @@ public class UIEvents : MonoBehaviour {
         if (resultFind != null)
         {
             ExpandControl scriptExpand = resultFind.GetExpandControl();
-            scriptExpand.SetColorText("#FFFA00");
+            scriptExpand.SetColorText(ColorExpOpen);
             scriptExpand.ExpandPanelOn(p_isOpen: true);
             return;
         }
@@ -555,7 +560,7 @@ public class UIEvents : MonoBehaviour {
         scriptEvents.AddList(tittle, listText, listCommand);
 
         //scriptEvents = resultFind.GetExpandControl();
-        scriptEvents.SetColorText("#FFFA00");
+        scriptEvents.SetColorText(ColorExpOpen);
         scriptEvents.ExpandPanelOn(p_isOpen: true);
 
         //var scroll = ScrollListBoxPerson;

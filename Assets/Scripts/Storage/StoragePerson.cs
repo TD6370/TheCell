@@ -44,6 +44,17 @@ public class StoragePerson : MonoBehaviour {
 
     public IEnumerable<GameObject> GetAllRealPersons()
     {
+        //??????????????? MissingReferenceException: The object of type 'GameObject' has been destroyed but you are still trying to access it.
+        //        Your script should either check if it is null or you should not destroy the object.
+        //        StoragePerson.< GetAllRealPersons > m__1(UnityEngine.GameObject p)(at Assets / Scripts / Storage / StoragePerson.cs:49)
+        //System.Linq.Enumerable +< CreateWhereIterator > c__Iterator1D`1[UnityEngine.GameObject].MoveNext()
+        //System.Collections.Generic.List`1[UnityEngine.GameObject].AddEnumerable(IEnumerable`1 enumerable)(at / Users / builduser / buildslave / mono / build / mcs /class/corlib/System.Collections.Generic/List.cs:128)
+        //System.Collections.Generic.List`1[UnityEngine.GameObject]..ctor(IEnumerable`1 collection) (at /Users/builduser/buildslave/mono/build/mcs/class/corlib/System.Collections.Generic/List.cs:65)
+        //System.Linq.Enumerable.ToList[GameObject] (IEnumerable`1 source)
+        //StoragePerson.GetAllRealPersons() (at Assets/Scripts/Storage/StoragePerson.cs:49)
+        //GenerateGridFields+<CalculateTealsObjects>c__Iterator0.MoveNext() (at Assets/Scripts/Storage/GenerateGridFields.cs:64)
+        //UnityEngine.SetupCoroutine.InvokeMoveNext(IEnumerator enumerator, IntPtr returnValueAddress) (at C:/buildslave/unity/build/Runtime/Export/Coroutines.cs:17)
+
         return Storage.Instance.GamesObjectsReal.
                 SelectMany(x => x.Value).
                 Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();

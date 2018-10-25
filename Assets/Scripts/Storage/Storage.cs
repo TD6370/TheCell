@@ -183,11 +183,20 @@ public class Storage : MonoBehaviour {
         {
             if(m_SelectGameObjectID != value)
             {
+                if (value == null)
+                {
+                    Debug.Log("############### SelectGameObjectID set value 1. --- NULL");
+                }
+
                 if (OnSelectGameObjectID != null)
                     OnSelectGameObjectID(value);
                 Person.SelectedID(value);//m_SelectGameObjectID
             }
             m_SelectGameObjectID = value;
+            if(value == null)
+            {
+                Debug.Log("############### SelectGameObjectID set value 2. --- NULL");
+            }
         }
     }
 

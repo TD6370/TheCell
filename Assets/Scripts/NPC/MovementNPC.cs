@@ -241,7 +241,7 @@ public class MovementNPC : MonoBehaviour {
         {
             UpdateData("ResavePositionData");
             _resName = "";
-            return false;
+            return true;
         }
 
         if (_resName == "Error")
