@@ -156,7 +156,9 @@ public class CompletePlayerController : MonoBehaviour {
         //Debug.Log("OnTriggerEnter2D.............................................");
 
         //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-        if (other.gameObject.CompareTag("PrefabUfo"))
+        //if (other.gameObject.CompareTag("PrefabUfo"))
+        //if (other.gameObject.CompareTag(StoragePerson._Ufo))
+        if (other.gameObject.IsUFO())
         {
             //DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
             StartCoroutine(DestroyObjectC(other.gameObject));
@@ -199,6 +201,9 @@ public class CompletePlayerController : MonoBehaviour {
         //}
         //m_scriptGrid.DestroyRealObject(gObj);
         //@DESTROY@
+        //if (gObj != null)
+        //    Debug.Log("HERO DESTROY NPC " + gObj.name);
+
         Storage.Instance.DestroyFullObject(gObj);
 
         BeforeDestroyUfo();

@@ -361,21 +361,14 @@ public class GenerateGridFields : MonoBehaviour {
                 {
 
                     //Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already IsReality !!!!");
-                    int indTest = listGameObjectReal.FindIndex(p => p.name == dataObj.NameObject);
-                    if (indTest != -1) //@??@
+                    var realObj = listGameObjectReal.Find(p => p.name == dataObj.NameObject);
+                    if (realObj != null) //@??@
                     {
-                        //Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already EXIST !!!!");
+                        //Debug.Log("????????????????? LoadGameObjectDataForLook ****** IsReality DO:" + dataObj + " EXIST in Real == " + realObj.name);
+                        //Storage.Log.GetHistory(dataObj.NameObject);
+                        //return;
+                        continue;
                     }
-                    else
-                    {
-                        Debug.Log("##################### Error LoadGameObjectDataForLook ****** DO:" + dataObj + " not EXIST in Real %)");
-                        Storage.Log.GetHistory(dataObj.NameObject);
-                        //@CD@
-                        Storage.Fix.CorrectData(dataObj.NameObject, "LoadGameObjectDataForLook");
-                        //Storage.Instance.IsCorrectData = true;
-                        return;
-                    }
-                    continue;
                 }
                 //--------------
 
@@ -417,6 +410,7 @@ public class GenerateGridFields : MonoBehaviour {
             foreach (var obj in realObjects)
             {
                 Counter--;
+                Storage.Log.SaveHistory(obj.name, "DESTROY GOBJ", "RemoveRealObjects");
                 Destroy(obj);
             }
             //@<<@ Storage.Instance.GamesObjectsReal.Remove(p_nameField);
@@ -465,7 +459,7 @@ public class GenerateGridFields : MonoBehaviour {
             {
                 indErr = "2.";
                 GameObject gobj = realObjects[i];
-                if (gobj == null)
+                if (gobj == null || !gobj.activeSelf)
                 {
                     //Debug.Log("################# SaveListObjectsToData   REMOVE  GameObject   field:" + p_nameField + "  ind:" + i);
                     Debug.Log("***************** SaveListObjectsToData DESTROY GameObject field:" + p_nameField + "  ind:" + i);
@@ -510,17 +504,23 @@ public class GenerateGridFields : MonoBehaviour {
                 if (posFieldOld != posFieldReal)
                 {
                     if (isDestroy)
+                    {
                         dataObj.IsReality = false;
+                        //Debug.Log("SaveListObjectsToData DEACTIVATE : " + gobj.name);
+                        gobj.SetActive(false);
+                    }
 
                     indErr = "10.";
 
-                    Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
+                    //Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
 
                     //!!!!!!!!!!!!!!!!!!
                     SaveLoadData.ObjectData dataObjNew = (SaveLoadData.ObjectData)dataObj.Clone();
                     var name = Helper.CreateName(dataObj.TagObject, posFieldReal, "", gobj.name);
 
-                    Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData"); ////@<<@ 
+
+                    // #????# ????????????????
+                    Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
 
                     if (!_gridData.FieldsD.ContainsKey(posFieldReal))
                     {
@@ -568,7 +568,8 @@ public class GenerateGridFields : MonoBehaviour {
                     if (dataObj.NameObject != gobj.name)
                     {
                         //!!!!!!!!!!!!!!!!!!!!!!
-                        dataObj.UpdateGameObject(gobj);
+                        if (!isDestroy)
+                            dataObj.UpdateGameObject(gobj);
 
                         indErr = "18.";
                         //Debug.Log("___ RENAME : GO: " + gobj.name + "  >>  " + dataObj.NameObject);
@@ -577,11 +578,12 @@ public class GenerateGridFields : MonoBehaviour {
                         //Debug.Log("___ RESAVE POS : GO: " + dataObj.Position + "  >>  " + gobj.transform.position);
                         dataObj.Position = gobj.transform.position;
                     }
-                    dataObj.IsReality = true;
+                    //dataObj.IsReality = true;
+                    dataObj.IsReality = false;
 
                     indErr = "20.";
 
-                    Debug.Log("DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
+                    //Debug.Log("_________DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
                     Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //@<<@ 
 
                     indErr = "21.";
@@ -593,11 +595,17 @@ public class GenerateGridFields : MonoBehaviour {
                         Storage.Data.AddNewFieldInRealObject(posFieldReal, "SaveListObjectsToData");
                     }
 
+                    
+
                     indErr = "23.";
                     if (!isDestroy)
+                    {
+                        Debug.Log("SaveListObjectsToData -- AddRealObject -- " +  gobj.name + " : " + posFieldReal);
                         Storage.Data.AddRealObject(gobj, posFieldReal, "SaveListObjectsToData");
+                    }
 
                     indErr = "24.";
+                    //Debug.Log("SaveListObjectsToData -- RemoveRealObject -- " + gobj.name + " : " + p_nameField);
                     Storage.Data.RemoveRealObject(i, p_nameField, "SaveListObjectsToData");
                     //+++++++++++++++++++++++++++++++++++++++++++++++++++++
 

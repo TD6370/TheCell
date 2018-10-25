@@ -167,7 +167,7 @@ public class UpdateData { //: MonoBehaviour {
         Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
     }
 
-    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false)
+    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false, SaveLoadData.ObjectData dataObjDel = null)
     {
         SaveLoadData.ObjectData histData = null;
         if (Storage.Log.IsSaveHistory)
@@ -175,6 +175,23 @@ public class UpdateData { //: MonoBehaviour {
         if (isDebug)
             Debug.Log("****** RemoveDataObjectInGrid : start " + histData);
 
+        if(dataObjDel!=null && dataObjDel.NameObject != histData.NameObject)
+        {
+            index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            if (index == -1)
+            {
+                Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
+                Storage.Log.SaveHistory(histData.NameObject, "ERROR RemoveDataObjectInGrid", callFunc, nameField, "Conflict Name", dataObjDel, histData);
+                return;
+            }
+            histData = _GridDataG.FieldsD[nameField].Objects[index];
+            if(dataObjDel.NameObject != histData.NameObject)
+            {
+                Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
+                Storage.Log.SaveHistory(histData.NameObject, "ERROR RemoveDataObjectInGrid", callFunc, nameField, "Conflict Name", dataObjDel, histData);
+                return;
+            }
+        }
         _GridDataG.FieldsD[nameField].Objects.RemoveAt(index);
 
         if (Storage.Log.IsSaveHistory)
@@ -184,7 +201,7 @@ public class UpdateData { //: MonoBehaviour {
                 Debug.Log("##################### Error RemoveDataObjectInGrid save SaveHistory  histData == null ");
                 return;
             }
-            Storage.Log.SaveHistory(histData.NameObject, "RemoveDataObjectInGrid", callFunc, nameField, "", histData);
+            Storage.Log.SaveHistory(histData.NameObject, "RemoveDataObjectInGrid", callFunc, nameField, "", histData, dataObjDel);
         }
     }
 
@@ -207,23 +224,23 @@ public class UpdateData { //: MonoBehaviour {
         _GridDataG.FieldsD[nameField].Objects[index] = setObject;
     }
 
-    public void UpdateDataObect(string nameField, string nameObj, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
-    {
-        if(!_GridDataG.FieldsD.ContainsKey(nameField))
-        {
-            Debug.Log("################### UpdateDataObect not in DATA Field:" + nameField);
-            return;
-        }
+    //public void UpdateDataObect(string nameField, string nameObj, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
+    //{
+    //    if(!_GridDataG.FieldsD.ContainsKey(nameField))
+    //    {
+    //        Debug.Log("################### UpdateDataObect not in DATA Field:" + nameField);
+    //        return;
+    //    }
 
-        int index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == nameObj);
-        if(index==-1)
-        {
-            Debug.Log("################### UpdateDataObect not DATA (" + nameField + ") Find : " + nameObj);
-            return;
-        }
-        UpdateDataObect(nameField, index, setObject, callFunc, newPos);
+    //    int index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == nameObj);
+    //    if(index==-1)
+    //    {
+    //        Debug.Log("################### UpdateDataObect not DATA (" + nameField + ") Find : " + nameObj);
+    //        return;
+    //    }
+    //    UpdateDataObect(nameField, index, setObject, callFunc, newPos);
 
-    }
+    //}
 
     //----- Real Object
 

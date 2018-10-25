@@ -100,50 +100,48 @@ public class StorageLog //: MonoBehaviour
 
         Debug.Log("******** History (" + _listHistoryGameObject.Count + ") --------------------------------------------FIND: " + nameObj);
         var resList = _listHistoryGameObject.Where(p => p.Name == nameObj || p.Name == "").OrderBy(p => p.TimeSave);
-        int i = 0;
-        foreach (var obj in resList)
-        {
-            i++;
-            Debug.Log(i + ". " + obj.ToString());
-        }
-        string id1 = Helper.GetID(nameObj);
-        var resList1 = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id1) != -1; }).OrderBy(p => p.TimeSave);
         int i1 = 0;
-        foreach (var obj in resList1)
+        foreach (var obj in resList)
         {
             i1++;
             Debug.Log(i1 + ". " + obj.ToString());
         }
-
-        if (resList == null || resList.Count() == 0)
+        string id = Helper.GetID(nameObj);
+        var resListById = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id) != -1; }).OrderBy(p => p.TimeSave);
+        if (resListById!=null && resListById.Count() > 0)
+            Debug.Log("** Find hyst: " + id + " :::::");
+        foreach (var obj in resListById)
         {
-            string id = Helper.GetID(nameObj);
-            Debug.Log("--- Find hyst: " + id + " ---------------------");
+            
+            i1++;
+            Debug.Log(i1 + ". " + obj.ToString());
+        }
+        Debug.Log("GAME: -----------------------------------");
+        var listRealObjs = Storage.Person.GetAllRealPersonsForID(nameObj);
+        if (listRealObjs != null && listRealObjs.Count() > 0)
+            Debug.Log("** Find Real: " + id + " :::::");
+        foreach (var obj in listRealObjs)
+        {
+            i1++;
+            Debug.Log(i1 + ".   " + obj.ToString());
+        }
+        var listDataObjs = Storage.Person.GetAllDataPersonsForID(nameObj);
+        if (listDataObjs != null && listDataObjs.Count() > 0)
+            Debug.Log("** Find DATA: " + id + " :::::");
+        foreach (var obj in listDataObjs)
+        {
+            i1++;
+            Debug.Log(i1 + ".   " + obj.ToString());
+        }
 
-            //resList = _listHistoryGameObject.Where(p => p.Name.StartsWith(id)).OrderBy(p => p.TimeSave);
-            resList = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id) != -1; }).OrderBy(p => p.TimeSave);
-            foreach (var obj in resList)
-            {
-                i++;
-                Debug.Log(i + ". " + obj.ToString());
-            }
-            if (resList == null || resList.Count() == 0)
-            {
-                //var listKey = GridDataG.FieldsD.Select(p => p.Key).ToList();
-                foreach (var item in Storage.Instance.GridDataG.FieldsD)
-                {
-                    string nameField = item.Key;
-                    var resListData = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(id) != -1; });
-                    if (resListData != null)
-                    {
-                        foreach (var obj in resListData)
-                        {
-                            Debug.Log("Exist " + id + " in Data Field: " + nameField + " --- " + obj.NameObject);
-                            findName = obj.NameObject;
-                        }
-                    }
-                }
-            }
+        string field = Helper.GetNameFieldByName(nameObj);
+        var listDataObjsInField = Storage.Person.GetAllDataPersonsForName(field);
+        if (listDataObjsInField != null && listDataObjsInField.Count() > 0)
+            Debug.Log("** Find in Field: " + field + " :::::");
+        foreach (var obj in listDataObjsInField)
+        {
+            i1++;
+            Debug.Log(i1 + ".   " + obj.ToString());
         }
 
         DebugKill(nameObj);

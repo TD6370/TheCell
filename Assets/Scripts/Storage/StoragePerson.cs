@@ -77,6 +77,29 @@ public class StoragePerson : MonoBehaviour {
                 Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
     }
 
+    public IEnumerable<GameObject> GetAllRealPersonsForID(string name)
+    {
+        string id = Helper.GetID(name);
+
+        return Storage.Instance.GamesObjectsReal.
+                SelectMany(x => x.Value).
+                Where(p => p.name.IndexOf(id)!=-1).ToList();
+    }
+
+    public IEnumerable<SaveLoadData.ObjectData> GetAllDataPersonsForID(string name)
+    {
+        string id = Helper.GetID(name);
+        return GetAllDataPersonsForName(id);
+    }
+
+    public IEnumerable<SaveLoadData.ObjectData> GetAllDataPersonsForName(string name)
+    {
+        return Storage.Instance.GridDataG.FieldsD.
+            Select(x => x.Value).
+            SelectMany(x => x.Objects).
+            Where(p => p.NameObject.IndexOf(name) != -1).ToList();
+    }
+
     public List<SaveLoadData.TypePrefabs> TypesPersons
     {
         get
@@ -209,5 +232,10 @@ public static class PersonsExtensions
         if (moveNPC != null)
             return moveNPC;
         return null;
+    }
+
+    public static bool IsUFO(this GameObject gobj)
+    {
+        return gobj.tag.Equals(StoragePerson._Ufo); 
     }
 }

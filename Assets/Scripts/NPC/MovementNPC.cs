@@ -355,8 +355,8 @@ public class MovementNPC : MonoBehaviour {
         //m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
         m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, new Vector3(0, 0, -10), Quaternion.identity);
         m_TrackPointsNavigator.name = "NavigatorTrackPoints_" + this.gameObject.name;
-        m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform);
-        m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);
+        m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform, true);
+        //m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);
         m_TrackPointsNavigator.SetActive(true);
 
         yield return new WaitForSeconds(0.1f);
