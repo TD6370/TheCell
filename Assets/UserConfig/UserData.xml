@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <CommandStore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CommadsTemplate>
+    <string>SaveWorldButtonCommand</string>
+    <string>ReloadWorldButtonCommand</string>
     <string>PauseButtonCommand</string>
     <string>CursorSelectionButtonCommand</string>
-    <string>LoadWorldButtonCommand</string>
+    <string>TartgetPositionAllButtonCommand</string>
     <string>SaveCommandToolButtonCommand</string>
-    <string>ReloadWorldButtonCommand</string>
-    <string>ClearLogButtonCommand</string>
-    <string>SaveWorldButtonCommand</string>
+    <string>LoadGridLookButtonCommand</string>
+    <string>ReloadGridLookButtonCommand</string>
   </CommadsTemplate>
 </CommandStore>

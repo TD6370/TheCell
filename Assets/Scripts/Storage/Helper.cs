@@ -80,7 +80,13 @@ public static class Helper { //: MonoBehaviour {
             //Debug.Log("_______________________GetGameObjectID  ID:" + id);
         }
         else
-            Debug.Log("!!!!!! GetID Error  on " + nameObj + " !!!!!!!!!!");
+        {
+            if (nameObj != StoragePerson._Boss &&
+                nameObj != StoragePerson._Ufo)
+            {
+                Debug.Log("!!!!!! GetID Error  on " + nameObj + " !!!!!!!!!!");
+            }
+        }
 
         return id;
     }
@@ -258,6 +264,8 @@ public static class Helper { //: MonoBehaviour {
 
     #endregion
 
+    
+
     #region Gen Grid Field
 
     public static void InitRange(int p_PosHero, int p_limitLook, int gridSize, out int p_startPos, out int limit)
@@ -323,6 +331,35 @@ public static class Helper { //: MonoBehaviour {
     #endregion
 
     
+}
+
+public static class HelperExtension
+{
+
+    public static string GetID(this string nameObj)
+    {
+        string id = "";
+        int i = nameObj.LastIndexOf("_");
+        //int i2 = nameObjOld.IndexOf("_");
+        if (i != -1)
+        {
+            //123456789
+            //Debug.Log("_______________________CREATE NAME i_l=" + i + "     i=" + i2 + "     len=" + nameObjOld.Length + "      :" + nameObjOld);
+            id = nameObj.Substring(i + 1, nameObj.Length - i - 1);
+            //Debug.Log("_______________________GetGameObjectID  ID:" + id);
+        }
+        else
+        {
+            if (nameObj != StoragePerson._Boss &&
+                nameObj != StoragePerson._Ufo)
+            {
+                Debug.Log("!!!!!! GetID Error  on " + nameObj + " !!!!!!!!!!");
+            }
+        }
+
+        return id;
+    }
+
 }
 
 

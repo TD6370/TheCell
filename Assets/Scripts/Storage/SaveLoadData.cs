@@ -466,7 +466,7 @@ public class SaveLoadData : MonoBehaviour {
             T state = null;
             try
             {
-                Debug.Log("Loaded Xml GridData start...");
+                //Debug.Log("Loaded Xml GridData start...");
 
                 stepErr = ".1";
                 stepErr = ".2";

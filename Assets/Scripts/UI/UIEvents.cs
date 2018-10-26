@@ -236,6 +236,12 @@ public class UIEvents : MonoBehaviour {
             case "LoadCommandTool":
                 LoadCommandTool();
                 break;
+            case "LoadGridLook":
+                Storage.GenGrid.LoadObjectsNearHero();// LoadGridLook();
+                break;
+            case "ReloadGridLook":
+                Storage.GenGrid.ReloadGridLook();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -581,7 +587,7 @@ public class UIEvents : MonoBehaviour {
         GameObject[] listBtnCommandTool = GameObject.FindGameObjectsWithTag("CommandButtonTool");
         if(listBtnCommandTool==null || listBtnCommandTool.Length==0)
         {
-            Debug.Log("--- ClearAllCommandButtonsTool listBtnCommandTool is empty");
+            //Debug.Log("--- ClearAllCommandButtonsTool listBtnCommandTool is empty");
             return;
         }
 
@@ -638,7 +644,7 @@ public class UIEvents : MonoBehaviour {
                 CreateCommandLogButton(nameCommand, Color.white, contentList.transform, null, true);
             }
 
-            Debug.Log("---- LoadCommandTool Loaded..........");
+            //Debug.Log("---- LoadCommandTool Loaded..........");
         }
     }
 
@@ -661,6 +667,8 @@ public class UIEvents : MonoBehaviour {
         //ListLogAdd = "Save Commands Tool count : " + storeComm.CommadsTemplate.Count;
 
     }
+
+   
 }
 
 public class CommandStore

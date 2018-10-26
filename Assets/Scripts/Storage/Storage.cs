@@ -98,6 +98,15 @@ public class Storage : MonoBehaviour {
         }
     }
 
+    private GenerateGridFields _scriptGrid;
+    public static GenerateGridFields GenGrid
+    {
+        get
+        {
+            return Instance._scriptGrid;
+        }
+    }
+
     public static Storage Instance { get; private set; }
 
     private int _limitHorizontalLook = 22;
@@ -201,7 +210,7 @@ public class Storage : MonoBehaviour {
     }
 
     private SaveLoadData _scriptData;
-    private GenerateGridFields _scriptGrid;
+    
     private CompletePlayerController _screiptHero;
     //public CompletePlayerController PlayerController
     //{
@@ -444,7 +453,7 @@ public class Storage : MonoBehaviour {
         //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
         
-        Debug.Log("# LoadPathData... " + _datapathLevel);
+        //Debug.Log("# LoadPathData... " + _datapathLevel);
 
         if (File.Exists(_datapathLevel))
         {

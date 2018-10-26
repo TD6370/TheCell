@@ -100,6 +100,36 @@ public class StoragePerson : MonoBehaviour {
             Where(p => p.NameObject.IndexOf(name) != -1).ToList();
     }
 
+
+   
+
+    public FindPersonData GetFindPersonsDataForName(string nameFind)
+    {
+        FindPersonData persData = null;
+        
+        foreach (var item in Storage.Instance.GridDataG.FieldsD)
+        {
+            string field = item.Key;
+            SaveLoadData.ObjectData dataObj = item.Value.Objects.Find(p => p.NameObject.IndexOf(nameFind) != -1);
+            if(dataObj!=null)
+            {
+                persData = new FindPersonData()
+                {
+                    DataObj = dataObj,
+                    Field = field
+                };
+                break;
+            }
+            //Storage.Instance.GridDataG.FieldsD.
+            //   Select(x => x.Value).
+            //   SelectMany(x => x.Objects).
+            //   Where(p => p.NameObject.IndexOf(name) != -1).ToList();
+
+
+        }
+        return persData;
+    }
+
     public List<SaveLoadData.TypePrefabs> TypesPersons
     {
         get
@@ -238,4 +268,11 @@ public static class PersonsExtensions
     {
         return gobj.tag.Equals(StoragePerson._Ufo); 
     }
+}
+
+public class FindPersonData
+{
+    public FindPersonData() { }
+    public SaveLoadData.ObjectData DataObj { get; set; }
+    public string Field { get; set; }
 }

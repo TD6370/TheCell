@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 [RequireComponent(typeof(Collider2D))]
 public class CompletePlayerController : MonoBehaviour {
@@ -52,6 +53,7 @@ public class CompletePlayerController : MonoBehaviour {
     private bool _RotateMenu = false;
     private CutsorPositionBilder _bilderCursorPosition;
     private GUIStyle styleLabel = new GUIStyle();
+    private bool m_isFindFieldCurrent = false;
 
     #region Events
 
@@ -80,6 +82,8 @@ public class CompletePlayerController : MonoBehaviour {
         //    return;
         //}
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
+
+        StartCoroutine(StartLoadGridLook());
     }
 
     void Awake()
@@ -252,7 +256,15 @@ public class CompletePlayerController : MonoBehaviour {
         {
             m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         }
+
+        //GEN LOOK
         m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
+        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, true);
+        m_isFindFieldCurrent = true;
+        //StartCoroutine(StartLoadGridLook());
+        //LoadGridLook();
+
+        
 
         if (!Storage.Instance.Fields.ContainsKey(_fieldHero))
             return null;
@@ -261,6 +273,89 @@ public class CompletePlayerController : MonoBehaviour {
 
         return prefabFind;
     }
+
+    IEnumerator StartLoadGridLook()
+    {
+        while (true)
+        {
+            //yield return new WaitForSeconds(0.5f);
+            yield return null;
+
+        if (m_isFindFieldCurrent)
+        {
+            m_isFindFieldCurrent = false;
+            //yield return new WaitForSeconds(0.2f);
+            //Debug.Log("______________________LoadObjectsNearHero__________________");
+
+            int limit = 20;
+            int step = 1;
+            int index = 1;
+            //Debug.Log("StartLoadGridLook .....1.");
+            var listLoad = Storage.Instance.Fields.Select(p => p.Key).ToList();
+            foreach (var nameField in listLoad)
+            {
+                //Debug.Log("StartLoadGridLook .....2.");
+                //yield return null;
+                //Debug.Log("StartLoadGridLook .....3.");
+                Storage.GenGrid.LoadObjectToReal(nameField);
+                if (index > step * limit)
+                {
+                    step++;
+                    yield return null;
+                }
+                index++;
+            }
+            //Debug.Log("StartLoadGridLook steps :" + step + " listLoad.Count=" + listLoad.Count);
+            //m_isFindFieldCurrent = false;
+        }
+        }
+
+    }
+
+    private void LoadGridLook()
+    {
+        //int CountAdd = 0;
+        //Debug.Log("______________________LoadObjectsNearHero__________________");
+        foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
+        {
+            //yield return null;
+            Storage.GenGrid.LoadObjectToReal(nameField);
+            //LoadOnlyData(nameField);
+            //CountAdd++;
+        }
+        //Debug.Log("LoadGridLook CHECK FIELD COUNT: " + CountAdd);
+    }
+    private void LoadOnlyData(string nameField)
+    {
+        int CountAdd = 0;
+
+        //var listDataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p=>p.IsReality==false);
+        var listDataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+
+        //var listDataObjects = Storage.Person.GetAllDataPersonsForName(nameField);
+
+        foreach (SaveLoadData.ObjectData dataObj in listDataObjects)
+        {
+            if (dataObj.IsReality)
+            {
+                //continue;
+
+                var realObj = Storage.Instance.GamesObjectsReal[nameField].Find(p => p.name == dataObj.NameObject);
+                if (realObj != null)
+                {
+                    //Debug.Log("LoadOnlyData ... EXIST: " + realObj.name);
+                    continue;
+                }
+            }
+            dataObj.IsReality = true;
+            Storage.GenGrid.CreateDataObject(dataObj, nameField);
+            //GameObject newField = CreatePrefabByName(dataObj);
+            //listGameObjectReal.Add(newField);
+            //CountAdd++;
+        }
+        //Debug.Log("LoadOnlyData ADD COUNT: " + CountAdd);
+    }
+    
 
     #endregion
 
