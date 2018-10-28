@@ -113,10 +113,13 @@ public class StoragePerson : MonoBehaviour {
             SaveLoadData.ObjectData dataObj = item.Value.Objects.Find(p => p.NameObject.IndexOf(nameFind) != -1);
             if(dataObj!=null)
             {
+
+                int index = item.Value.Objects.FindIndex(p => p.NameObject.IndexOf(nameFind) != -1);
                 persData = new FindPersonData()
                 {
                     DataObj = dataObj,
-                    Field = field
+                    Field = field,
+                    Index = index
                 };
                 break;
             }
@@ -275,4 +278,5 @@ public class FindPersonData
     public FindPersonData() { }
     public SaveLoadData.ObjectData DataObj { get; set; }
     public string Field { get; set; }
+    public int Index { get; set; }
 }

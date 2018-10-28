@@ -310,7 +310,7 @@ public class MovementNPC : MonoBehaviour {
     //#POLYLINE TRACK
     private void CrateNavigatorTrackPoints()
     {
-       // Debug.Log("CrateNavigatorTrackPoints................");
+        // Debug.Log("CrateNavigatorTrackPoints................");
 
         if (m_TrackPointsNavigator == null)
         {
@@ -327,8 +327,24 @@ public class MovementNPC : MonoBehaviour {
                 Debug.Log("############ TrackPointsNavigator is Empty");
                 return;
             }
-            
+
             scriptTrackPoints.TrackPoints = m_TrackPoints;
+
+            if (_dataNPC == null)
+            {
+                UpdateData("CrateNavigatorTrackPoints");
+                if (_dataNPC == null)
+                {
+                    Debug.Log("################# CrateNavigatorTrackPoints dataNPC is Empty");
+                    return;
+                }
+            }
+
+            SaveLoadData.GameDataBoss dataBoss = _dataNPC as SaveLoadData.GameDataBoss;
+            if (dataBoss != null)
+            {
+                scriptTrackPoints.ColorTrack = dataBoss.ColorRender;
+            }
             //Debug.Log("------------------ scriptTrackPoints.TrackPoints =" + m_TrackPoints.Count + " points: " + scriptTrackPoints);
         }
     }
@@ -356,6 +372,7 @@ public class MovementNPC : MonoBehaviour {
         m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, new Vector3(0, 0, -10), Quaternion.identity);
         m_TrackPointsNavigator.name = "NavigatorTrackPoints_" + this.gameObject.name;
         m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform, true);
+        //m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform);
         //m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);
         m_TrackPointsNavigator.SetActive(true);
 

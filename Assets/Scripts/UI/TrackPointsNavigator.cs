@@ -95,8 +95,12 @@ public class TrackPointsNavigator : MonoBehaviour {
             
             //lineRenderer.colorGradient = new Gradient();
             lineRenderer.textureMode = TextureMode;
-            if(MaterialTrack==null)
-                MaterialTrack = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+
+            //#ERROR BILD----------------------------
+            //if(MaterialTrack==null)
+            //    MaterialTrack = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
+            //#------------------------------
+
             lineRenderer.material = MaterialTrack;
 
             lineRenderer.startWidth = sizeTrack;

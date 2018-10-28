@@ -57,6 +57,8 @@ public class Storage : MonoBehaviour {
 
     public Vector3 PersonsTargetPosition { get; set; }
 
+    
+
     private StorageLog _StorageLog;
     public static StorageLog Log{
         get
@@ -83,6 +85,12 @@ public class Storage : MonoBehaviour {
     public static StoragePerson Person
     {
         get { return Instance._StoragePerson; }
+    }
+
+    private SaveLoadData _scriptData;
+    public static SaveLoadData GridData
+    {
+        get { return Instance._scriptData; }
     }
 
     public static UIEvents Events
@@ -209,7 +217,7 @@ public class Storage : MonoBehaviour {
         }
     }
 
-    private SaveLoadData _scriptData;
+    
     
     private CompletePlayerController _screiptHero;
     //public CompletePlayerController PlayerController

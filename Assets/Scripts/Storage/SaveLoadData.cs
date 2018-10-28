@@ -13,8 +13,146 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabRock;
     public GameObject PrefabUfo;
     public GameObject PrefabBoss;
-    private GenerateGridFields _scriptGrid;
+
+    //public GameObject 
     public static float Spacing = 2f;
+
+    private GenerateGridFields _scriptGrid;
+    //private Sprite[] _spritesBoss;
+    Dictionary<string, Sprite> SpriteCollection ;
+    //{
+    //    {"SpriteBossLizard", null },
+    //    {"SpriteBossRed", null },
+    //    {"SpriteBossBandos", null },
+    //    {"SpriteBossBooble", null },
+    //    {"SpriteBossAlien", null },
+    //    {"SpriteBossDroid", null },
+    //    {"SpriteBossArm", null },
+    //    {"SpriteBoss", null },
+    //};
+
+    public class TypeBoss
+    {
+        public List<TypeBoss> _TypesBoss;
+
+        public static List<TypeBoss> TypesBoss
+        {
+            get
+            {
+                return Instance._TypesBoss;
+            }
+        }
+
+        public TypeBoss()
+        {
+
+            
+        }
+
+        //----
+        //private void CreateTypesBoss()
+        //{
+            
+        //}
+        //---
+
+        private static TypeBoss _instance;
+        public static TypeBoss Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    
+
+                    _instance = new TypeBoss();
+                    _instance._TypesBoss = new List<TypeBoss>()
+                    {
+                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid },
+                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss  },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=9, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=10, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=12, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=13, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=14, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=15, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=16, ColorTrack=ManagerPalette.ColorBoss },
+                    };
+                }
+                return _instance;
+            }
+        }
+
+        public string NameTextura2D { get; set; }
+        public int Level { get; set; }
+        public Color ColorTrack { get; set; }
+
+        public string GetNameSpriteForIndexLevel(int p_level)
+        {
+            //string spriteName =  NemesSpritesBoss[index];
+            string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
+            return spriteName;
+        }
+    }
+    //private List<TypeBoss> _typesBoss;
+    //private string[] NemesSpritesBoss = new string[] { };
+
+
+    //private string[] NemesSpritesBoss = new string[]
+    //{
+    //    "SpriteBossLizard",
+    //    "SpriteBossRed",
+    //    "SpriteBossBandos",
+    //    "SpriteBossBooble",
+    //    "SpriteBossAlien",
+    //    "SpriteBossDroid",
+    //    "SpriteBossArm",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //};
+
+    private static Dictionary<int, Color> _colorsPresent = null;
+    public static Dictionary<int, Color> GetColorsLevel
+    {
+        get
+        {
+            if (_colorsPresent == null)
+            {
+                if (_colorsPresent == null)
+                {
+                    _colorsPresent = new Dictionary<int, Color>();
+                    foreach (var typeItem in TypeBoss.TypesBoss)
+                    {
+                        //_colorsPresent = new Dictionary<int, Color>();
+                        _colorsPresent.Add(typeItem.Level, typeItem.ColorTrack);
+                        //_colorsPresent.Add(1, Color.grey);
+                        //_colorsPresent.Add(2, Color.yellow);
+                        //_colorsPresent.Add(3, Color.green);
+                        //_colorsPresent.Add(4, Color.blue);
+                        //_colorsPresent.Add(5, Color.red);
+                        //_colorsPresent.Add(6, Color.cyan);
+                        //_colorsPresent.Add(7, Color.gray);
+                        //_colorsPresent.Add(8, Color.magenta);
+                        //_colorsPresent.Add(9, Color.white);
+                    }
+                }
+            }
+            return _colorsPresent;
+        }
+    }
+
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -22,6 +160,8 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataUfo
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
+
+
 
     static Type[] extraTypes = {
             typeof(FieldData),
@@ -60,17 +200,63 @@ public class SaveLoadData : MonoBehaviour {
     void Start()
     {
         InitData();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+        
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
     private void InitData()
     {
         _scriptGrid = GetComponent<GenerateGridFields>();
+
+        //CreateTypesBoss();
+        LoadSprites();
     }
+
+    //private void CreateTypesBoss()
+    //{
+    //    _typesBoss = new List<TypeBoss>()
+    //    {
+    //         new TypeBoss(){ NameTextura2D= "SpriteBossLizard" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossRed" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBossArm" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //    };
+
+    //    //NemesSpritesBoss = new string[]
+    //    //{
+    //    //    "SpriteBossLizard",
+    //    //    "SpriteBossRed",
+    //    //    "SpriteBossBandos",
+    //    //    "SpriteBossBooble",
+    //    //    "SpriteBossAlien",
+    //    //    "SpriteBossDroid",
+    //    //    "SpriteBossArm",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //};
+    //}
 
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
@@ -906,31 +1092,31 @@ public class SaveLoadData : MonoBehaviour {
     {
         [XmlIgnore]
         Dictionary<int, Color> _colorsPresent = null;
-        [XmlIgnore]
-        Dictionary<int, Color> GetColorsLevel
-        {
-            get
-            {
-                if(_colorsPresent==null)
-                {
-                    if (_colorsPresent == null)
-                    {
-                        _colorsPresent = new Dictionary<int, Color>();
-                        _colorsPresent.Add(0, Color.black);
-                        _colorsPresent.Add(1, Color.grey);
-                        _colorsPresent.Add(2, Color.yellow);
-                        _colorsPresent.Add(3, Color.green);
-                        _colorsPresent.Add(4, Color.blue);
-                        _colorsPresent.Add(5, Color.red);
-                        _colorsPresent.Add(6, Color.cyan);
-                        _colorsPresent.Add(7, Color.gray);
-                        _colorsPresent.Add(8, Color.magenta);
-                        _colorsPresent.Add(9, Color.white);
-                    }
-                }
-                return _colorsPresent;
-            }
-        }
+        //[XmlIgnore]
+        //Dictionary<int, Color> GetColorsLevel
+        //{
+        //    get
+        //    {
+        //        if(_colorsPresent==null)
+        //        {
+        //            if (_colorsPresent == null)
+        //            {
+        //                _colorsPresent = new Dictionary<int, Color>();
+        //                _colorsPresent.Add(0, Color.black);
+        //                _colorsPresent.Add(1, Color.grey);
+        //                _colorsPresent.Add(2, Color.yellow);
+        //                _colorsPresent.Add(3, Color.green);
+        //                _colorsPresent.Add(4, Color.blue);
+        //                _colorsPresent.Add(5, Color.red);
+        //                _colorsPresent.Add(6, Color.cyan);
+        //                _colorsPresent.Add(7, Color.gray);
+        //                _colorsPresent.Add(8, Color.magenta);
+        //                _colorsPresent.Add(9, Color.white);
+        //            }
+        //        }
+        //        return _colorsPresent;
+        //    }
+        //}
 
         [XmlIgnore]
         private Color m_ColorRender = Color.clear;
@@ -1005,6 +1191,7 @@ public class SaveLoadData : MonoBehaviour {
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            bool isUpdateStyle = false; 
 
             string nameObjData = ((GameDataBoss)this).NameObject;
             if (nameObjData != objGame.name)
@@ -1015,10 +1202,27 @@ public class SaveLoadData : MonoBehaviour {
             if (ColorRender != GetColorsLevel[Level])
             {
                 ColorRender = GetColorsLevel[Level];
+                isUpdateStyle = true;
                 //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
             }
+            
 
-            objGame.GetComponent<SpriteRenderer>().color = ColorRender;
+            //if (isUpdateStyle)
+            //{
+                Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level);
+                if (spriteMe != null)
+                {
+                    //string _nameSprite = Storage.GridData.GetNameSpriteForIndexLevel(Level);
+                    //Debug.Log("____________________Update new Sprite " + NameObject + "  Level=" + Level + "   >> " + _nameSprite);
+                    
+                    objGame.GetComponent<SpriteRenderer>().sprite = spriteMe;
+                }
+                else
+                {
+                    Debug.Log("############## NOT Update new Sprite " + NameObject + "  Level=" + Level + " ???????????????");
+                    objGame.GetComponent<SpriteRenderer>().color = ColorRender;
+                }
+            //}
         }
 
         public override List<string> GetParams
@@ -1036,7 +1240,152 @@ public class SaveLoadData : MonoBehaviour {
             }
         }
     }
-    //-----------------------------------
+    //------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
+
+    private void LoadSprites()
+    {
+        string indErr = "";
+        try
+        {
+            indErr = "start";
+
+            //string pathSprites = "Sprites/NPC/";
+            string pathSprites = "Textures/NPC/";
+            //string pathSprites = "Assets/Sprites/NPC/";
+            int colSprites = 0;
+
+            Debug.Log("Loading Sprites from Resources...");
+
+            SpriteCollection = new Dictionary<string, Sprite>();
+
+            indErr = "1.";
+
+            //NemesSpritesBoss = _typesBoss;
+            //_typesBoss.Select(p => p.NameTextura2D).Distinct();
+
+            //foreach (string nameStrite in NemesSpritesBoss.Distinct())
+            foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
+            {
+                indErr = "2.";
+                //Sprite[] _spritesBoss = Resources.LoadAll<Sprite>(pathSprites + nameStrite);
+                Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+
+                ////pathSprites = "Sprites/NPC/";
+                //var testT = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+                //if(testT==null)
+
+
+
+                if (_texturesBoss == null || _texturesBoss.Length == 0)
+                {
+                    Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
+
+                    //var testT = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+                    //var testT = Resources.LoadAll(pathSprites + nameStrite);
+                    //var testT = (Texture2D)Resources.Load(pathSprites + nameStrite, typeof(Texture2D));
+
+                    //if (testT == null)
+                    //    Debug.Log("############# Not Texture2D 2. " + pathSprites + nameStrite + " IN Resources");
+                    //else
+                    //    Debug.Log("@@@@@@@@@@@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources = " + testT);
+                    continue;
+                }
+                indErr = "3.";
+                Texture2D _texture = _texturesBoss[0];
+
+                indErr = "4.";
+                Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
+                indErr = "5.";
+                Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+                if (!SpriteCollection.ContainsKey(nameStrite))
+                {
+                    indErr = "6.";
+                    SpriteCollection.Add(nameStrite, spriteBoss);
+                    colSprites++;
+                }
+                else
+                {
+                    Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
+                }
+            }
+            indErr = "7.";
+            Debug.Log("Loaded Sprites Boss : " + colSprites);
+        }
+        catch (Exception x)
+        {
+            Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
+        }
+    }
+
+   
+
+    public Sprite GetSpriteBossTrue(int index)
+    {
+        string indErr = "";
+        try
+        {
+            indErr = "start";
+            //if (NemesSpritesBoss.Length <= index)
+            //{
+            //    Debug.Log("############ NemeSpriteBoss int on range index = " + index + "   sprites count= " + NemesSpritesBoss.Length);
+            //    return null;
+            //}
+
+            indErr = "2";
+            //Case 1.
+            //string spriteName = NemesSpritesBoss[index];
+            string spriteName = 
+
+            indErr = "3";
+            if (!SpriteCollection.ContainsKey(spriteName))
+            {
+                Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
+                return null;
+            }
+            indErr = "4";
+            Sprite spriteBoss = SpriteCollection[spriteName];
+            if (spriteBoss == null)
+            {
+                Debug.Log("############ spritesBoss is null");
+                return null;
+            }
+            else
+            {
+                return spriteBoss;
+            }
+
+        }catch(Exception x)
+        {
+            Debug.Log("################# GetSpriteBoss #" + indErr + " [" + index + "] : " + x.Message);
+            return GetSpriteBossTrue(index);
+        }
+
+        return null;
+    }
+
+    public Sprite GetSpriteBoss(int index)
+    {
+        
+        try
+        {
+            //_typesBoss.Select(p => p.NameTextura2D).Distinct()
+            //_typesBoss.Select(p => p.NameTextura2D)
+            //string spriteName = NemesSpritesBoss[index];
+            string spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            Sprite spriteBoss = SpriteCollection[spriteName];
+            
+            return spriteBoss;
+
+        }
+        catch (Exception x)
+        {
+            Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
+        }
+
+        return null;
+    }
 
     public static ObjectData BildObjectData(TypePrefabs prefabType)
     {
