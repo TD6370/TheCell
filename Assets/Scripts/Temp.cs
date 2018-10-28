@@ -15,6 +15,68 @@ public class TEmp : MonoBehaviour {
     }
 
 
+    //private void CreateTypesBoss()
+    //{
+    //    _typesBoss = new List<TypeBoss>()
+    //    {
+    //         new TypeBoss(){ NameTextura2D= "SpriteBossLizard" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossRed" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien" },
+    //        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBossArm" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
+    //    };
+
+    //    //NemesSpritesBoss = new string[]
+    //    //{
+    //    //    "SpriteBossLizard",
+    //    //    "SpriteBossRed",
+    //    //    "SpriteBossBandos",
+    //    //    "SpriteBossBooble",
+    //    //    "SpriteBossAlien",
+    //    //    "SpriteBossDroid",
+    //    //    "SpriteBossArm",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //    "SpriteBoss",
+    //    //};
+    //}
+
+
+    //private string[] NemesSpritesBoss = new string[]
+    //{
+    //    "SpriteBossLizard",
+    //    "SpriteBossRed",
+    //    "SpriteBossBandos",
+    //    "SpriteBossBooble",
+    //    "SpriteBossAlien",
+    //    "SpriteBossDroid",
+    //    "SpriteBossArm",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //    "SpriteBoss",
+    //};
+
+
     //<Field>
     //  <Key>Field43x32</Key>
     //  <Value>

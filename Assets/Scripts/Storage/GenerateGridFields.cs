@@ -456,6 +456,11 @@ public class GenerateGridFields : MonoBehaviour {
                     if (dataObjects[indDataNew].NameObject != gobj.name)
                     {
                         Debug.Log("##..... ConflictLog dataObjects[" + indDataNew  + "].NameObject[" + dataObjects[indDataNew].NameObject + "]  <>  GOBJ: " + gobj.name);
+                        Debug.Log("##..... Objects in Data : ");
+                        foreach(var doItem in dataObjects)
+                        {
+                            Debug.Log("#................. Data : " + doItem.ToString());
+                        }
                         return -1;
                     }
                     else

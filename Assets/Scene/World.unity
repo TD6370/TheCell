@@ -764,8 +764,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -687, y: 494.4}
-  m_SizeDelta: {x: 100, y: -536.2}
+  m_AnchoredPosition: {x: -687, y: 558}
+  m_SizeDelta: {x: 100, y: -409.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &289588939
 MonoBehaviour:
@@ -7185,7 +7185,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1fcd860e0acb5cd4885fafc5168a6669, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb5cadc436983054db4feeb0618c95b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7250,9 +7250,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.03, y: 0.04}
+  m_Offset: {x: 0, y: 0.01}
   serializedVersion: 2
-  m_Radius: 1.31
+  m_Radius: 1.01
 --- !u!114 &1798573869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7827,7 +7827,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 69.11523}
+  m_AnchoredPosition: {x: 0.3, y: 95.527985}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -8199,7 +8199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsCursorVisible: 1
-  IsTrackPointsVisible: 1
+  IsTrackPointsVisible: 0
   LimitLogView: 15
   txtMessage: {fileID: 1171611291}
   txtLog: {fileID: 1626881613}

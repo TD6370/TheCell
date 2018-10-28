@@ -83,7 +83,7 @@ public class CompletePlayerController : MonoBehaviour {
         //}
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
 
-        StartCoroutine(StartLoadGridLook());
+        //StartCoroutine(StartLoadGridLook());
     }
 
     void Awake()
@@ -259,10 +259,10 @@ public class CompletePlayerController : MonoBehaviour {
 
         //GEN LOOK
         m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
-        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, true);
+        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
         m_isFindFieldCurrent = true;
         //StartCoroutine(StartLoadGridLook());
-        //LoadGridLook();
+        LoadGridLook();
 
         
 
@@ -281,33 +281,34 @@ public class CompletePlayerController : MonoBehaviour {
             //yield return new WaitForSeconds(0.5f);
             yield return null;
 
-        if (m_isFindFieldCurrent)
-        {
-            m_isFindFieldCurrent = false;
-            //yield return new WaitForSeconds(0.2f);
-            //Debug.Log("______________________LoadObjectsNearHero__________________");
-
-            int limit = 20;
-            int step = 1;
-            int index = 1;
-            //Debug.Log("StartLoadGridLook .....1.");
-            var listLoad = Storage.Instance.Fields.Select(p => p.Key).ToList();
-            foreach (var nameField in listLoad)
+            if (m_isFindFieldCurrent)
             {
-                //Debug.Log("StartLoadGridLook .....2.");
-                //yield return null;
-                //Debug.Log("StartLoadGridLook .....3.");
-                Storage.GenGrid.LoadObjectToReal(nameField);
-                if (index > step * limit)
+                m_isFindFieldCurrent = false;
+                //yield return new WaitForSeconds(0.2f);
+                //Debug.Log("______________________LoadObjectsNearHero__________________");
+
+                //int limit = 20;
+                int limit = 50;
+                int step = 1;
+                int index = 1;
+                //Debug.Log("StartLoadGridLook .....1.");
+                var listLoad = Storage.Instance.Fields.Select(p => p.Key).ToList();
+                foreach (var nameField in listLoad)
                 {
-                    step++;
-                    yield return null;
+                    //Debug.Log("StartLoadGridLook .....2.");
+                    //yield return null;
+                    //Debug.Log("StartLoadGridLook .....3.");
+                    Storage.GenGrid.LoadObjectToReal(nameField);
+                    if (index > step * limit)
+                    {
+                        step++;
+                        yield return null;
+                    }
+                    index++;
                 }
-                index++;
+                //Debug.Log("StartLoadGridLook steps :" + step + " listLoad.Count=" + listLoad.Count);
+                //m_isFindFieldCurrent = false;
             }
-            //Debug.Log("StartLoadGridLook steps :" + step + " listLoad.Count=" + listLoad.Count);
-            //m_isFindFieldCurrent = false;
-        }
         }
 
     }

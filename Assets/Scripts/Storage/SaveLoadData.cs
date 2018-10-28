@@ -18,141 +18,7 @@ public class SaveLoadData : MonoBehaviour {
     public static float Spacing = 2f;
 
     private GenerateGridFields _scriptGrid;
-    //private Sprite[] _spritesBoss;
-    Dictionary<string, Sprite> SpriteCollection ;
-    //{
-    //    {"SpriteBossLizard", null },
-    //    {"SpriteBossRed", null },
-    //    {"SpriteBossBandos", null },
-    //    {"SpriteBossBooble", null },
-    //    {"SpriteBossAlien", null },
-    //    {"SpriteBossDroid", null },
-    //    {"SpriteBossArm", null },
-    //    {"SpriteBoss", null },
-    //};
-
-    public class TypeBoss
-    {
-        public List<TypeBoss> _TypesBoss;
-
-        public static List<TypeBoss> TypesBoss
-        {
-            get
-            {
-                return Instance._TypesBoss;
-            }
-        }
-
-        public TypeBoss()
-        {
-
-            
-        }
-
-        //----
-        //private void CreateTypesBoss()
-        //{
-            
-        //}
-        //---
-
-        private static TypeBoss _instance;
-        public static TypeBoss Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    
-
-                    _instance = new TypeBoss();
-                    _instance._TypesBoss = new List<TypeBoss>()
-                    {
-                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid },
-                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss  },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=9, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=10, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=12, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=13, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=14, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=15, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=16, ColorTrack=ManagerPalette.ColorBoss },
-                    };
-                }
-                return _instance;
-            }
-        }
-
-        public string NameTextura2D { get; set; }
-        public int Level { get; set; }
-        public Color ColorTrack { get; set; }
-
-        public string GetNameSpriteForIndexLevel(int p_level)
-        {
-            //string spriteName =  NemesSpritesBoss[index];
-            string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
-            return spriteName;
-        }
-    }
-    //private List<TypeBoss> _typesBoss;
-    //private string[] NemesSpritesBoss = new string[] { };
-
-
-    //private string[] NemesSpritesBoss = new string[]
-    //{
-    //    "SpriteBossLizard",
-    //    "SpriteBossRed",
-    //    "SpriteBossBandos",
-    //    "SpriteBossBooble",
-    //    "SpriteBossAlien",
-    //    "SpriteBossDroid",
-    //    "SpriteBossArm",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //    "SpriteBoss",
-    //};
-
-    private static Dictionary<int, Color> _colorsPresent = null;
-    public static Dictionary<int, Color> GetColorsLevel
-    {
-        get
-        {
-            if (_colorsPresent == null)
-            {
-                if (_colorsPresent == null)
-                {
-                    _colorsPresent = new Dictionary<int, Color>();
-                    foreach (var typeItem in TypeBoss.TypesBoss)
-                    {
-                        //_colorsPresent = new Dictionary<int, Color>();
-                        _colorsPresent.Add(typeItem.Level, typeItem.ColorTrack);
-                        //_colorsPresent.Add(1, Color.grey);
-                        //_colorsPresent.Add(2, Color.yellow);
-                        //_colorsPresent.Add(3, Color.green);
-                        //_colorsPresent.Add(4, Color.blue);
-                        //_colorsPresent.Add(5, Color.red);
-                        //_colorsPresent.Add(6, Color.cyan);
-                        //_colorsPresent.Add(7, Color.gray);
-                        //_colorsPresent.Add(8, Color.magenta);
-                        //_colorsPresent.Add(9, Color.white);
-                    }
-                }
-            }
-            return _colorsPresent;
-        }
-    }
-
+   
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -160,8 +26,6 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataUfo
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
-
-
 
     static Type[] extraTypes = {
             typeof(FieldData),
@@ -212,51 +76,7 @@ public class SaveLoadData : MonoBehaviour {
     private void InitData()
     {
         _scriptGrid = GetComponent<GenerateGridFields>();
-
-        //CreateTypesBoss();
-        LoadSprites();
     }
-
-    //private void CreateTypesBoss()
-    //{
-    //    _typesBoss = new List<TypeBoss>()
-    //    {
-    //         new TypeBoss(){ NameTextura2D= "SpriteBossLizard" },
-    //        new TypeBoss(){ NameTextura2D=  "SpriteBossRed" },
-    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos" },
-    //        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble" },
-    //        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien" },
-    //        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBossArm" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //        new TypeBoss(){ NameTextura2D= "SpriteBoss" },
-    //    };
-
-    //    //NemesSpritesBoss = new string[]
-    //    //{
-    //    //    "SpriteBossLizard",
-    //    //    "SpriteBossRed",
-    //    //    "SpriteBossBandos",
-    //    //    "SpriteBossBooble",
-    //    //    "SpriteBossAlien",
-    //    //    "SpriteBossDroid",
-    //    //    "SpriteBossArm",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //    "SpriteBoss",
-    //    //};
-    //}
 
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
@@ -846,15 +666,16 @@ public class SaveLoadData : MonoBehaviour {
             float yT = _position.y + distY;
 
             //validate
-            if (yT > -1)
-                yT = _position.y - distY;
-            if (xT < 1)
-                xT = _position.x - distX;
+            //if (yT > -1)
+            //    yT = _position.y - distY;
+            //if (xT < 1)
+            //    xT = _position.x - distX;
 
             //----------------------------- valid Limit look hero
-            Storage.ZonaRealLook zona = Storage.Instance.ZonaReal;
-            if (zona != null)
-                ValidPiontInZona(ref xT, ref yT, distX);
+            //Storage.ZonaRealLook zona = Storage.Instance.ZonaReal;
+            //if (zona != null)
+            //ValidPiontInZona(ref xT, ref yT, distX);z
+            ValidPiontInZonaWorld(ref xT, ref yT, distX);
 
             TargetPosition = new Vector3(xT, yT, -1);
         }
@@ -1076,7 +897,7 @@ public class SaveLoadData : MonoBehaviour {
             : base()
         {
             if(Level==0)
-                Level = UnityEngine.Random.Range(1, 10);
+                Level = UnityEngine.Random.Range(1, 7);
 
             if (Life == 0)
                 Life = Level * 10;
@@ -1092,31 +913,6 @@ public class SaveLoadData : MonoBehaviour {
     {
         [XmlIgnore]
         Dictionary<int, Color> _colorsPresent = null;
-        //[XmlIgnore]
-        //Dictionary<int, Color> GetColorsLevel
-        //{
-        //    get
-        //    {
-        //        if(_colorsPresent==null)
-        //        {
-        //            if (_colorsPresent == null)
-        //            {
-        //                _colorsPresent = new Dictionary<int, Color>();
-        //                _colorsPresent.Add(0, Color.black);
-        //                _colorsPresent.Add(1, Color.grey);
-        //                _colorsPresent.Add(2, Color.yellow);
-        //                _colorsPresent.Add(3, Color.green);
-        //                _colorsPresent.Add(4, Color.blue);
-        //                _colorsPresent.Add(5, Color.red);
-        //                _colorsPresent.Add(6, Color.cyan);
-        //                _colorsPresent.Add(7, Color.gray);
-        //                _colorsPresent.Add(8, Color.magenta);
-        //                _colorsPresent.Add(9, Color.white);
-        //            }
-        //        }
-        //        return _colorsPresent;
-        //    }
-        //}
 
         [XmlIgnore]
         private Color m_ColorRender = Color.clear;
@@ -1184,7 +980,7 @@ public class SaveLoadData : MonoBehaviour {
         private void InitColor()
         {
             
-            ColorRender = GetColorsLevel[Level]; 
+            ColorRender = StoragePerson.GetColorsLevel[Level]; 
             //ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
             //Debug.Log(">>>>>>>>> colorStr INIT ==" + ColorRender + "    Level:" + Level);
         }
@@ -1199,9 +995,9 @@ public class SaveLoadData : MonoBehaviour {
                 objGame.name = nameObjData;
             }
 
-            if (ColorRender != GetColorsLevel[Level])
+            if (ColorRender != StoragePerson.GetColorsLevel[Level])
             {
-                ColorRender = GetColorsLevel[Level];
+                ColorRender = StoragePerson.GetColorsLevel[Level];
                 isUpdateStyle = true;
                 //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
             }
@@ -1243,81 +1039,7 @@ public class SaveLoadData : MonoBehaviour {
     //------------------------------------------------------------------------------
     //------------------------------------------------------------------------------
 
-    private void LoadSprites()
-    {
-        string indErr = "";
-        try
-        {
-            indErr = "start";
-
-            //string pathSprites = "Sprites/NPC/";
-            string pathSprites = "Textures/NPC/";
-            //string pathSprites = "Assets/Sprites/NPC/";
-            int colSprites = 0;
-
-            Debug.Log("Loading Sprites from Resources...");
-
-            SpriteCollection = new Dictionary<string, Sprite>();
-
-            indErr = "1.";
-
-            //NemesSpritesBoss = _typesBoss;
-            //_typesBoss.Select(p => p.NameTextura2D).Distinct();
-
-            //foreach (string nameStrite in NemesSpritesBoss.Distinct())
-            foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
-            {
-                indErr = "2.";
-                //Sprite[] _spritesBoss = Resources.LoadAll<Sprite>(pathSprites + nameStrite);
-                Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-
-                ////pathSprites = "Sprites/NPC/";
-                //var testT = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-                //if(testT==null)
-
-
-
-                if (_texturesBoss == null || _texturesBoss.Length == 0)
-                {
-                    Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
-
-                    //var testT = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-                    //var testT = Resources.LoadAll(pathSprites + nameStrite);
-                    //var testT = (Texture2D)Resources.Load(pathSprites + nameStrite, typeof(Texture2D));
-
-                    //if (testT == null)
-                    //    Debug.Log("############# Not Texture2D 2. " + pathSprites + nameStrite + " IN Resources");
-                    //else
-                    //    Debug.Log("@@@@@@@@@@@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources = " + testT);
-                    continue;
-                }
-                indErr = "3.";
-                Texture2D _texture = _texturesBoss[0];
-
-                indErr = "4.";
-                Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
-                indErr = "5.";
-                Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-
-                if (!SpriteCollection.ContainsKey(nameStrite))
-                {
-                    indErr = "6.";
-                    SpriteCollection.Add(nameStrite, spriteBoss);
-                    colSprites++;
-                }
-                else
-                {
-                    Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
-                }
-            }
-            indErr = "7.";
-            Debug.Log("Loaded Sprites Boss : " + colSprites);
-        }
-        catch (Exception x)
-        {
-            Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
-        }
-    }
+    
 
    
 
@@ -1339,13 +1061,13 @@ public class SaveLoadData : MonoBehaviour {
             string spriteName = 
 
             indErr = "3";
-            if (!SpriteCollection.ContainsKey(spriteName))
+            if (!Storage.Person.SpriteCollection.ContainsKey(spriteName))
             {
                 Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
                 return null;
             }
             indErr = "4";
-            Sprite spriteBoss = SpriteCollection[spriteName];
+            Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
             if (spriteBoss == null)
             {
                 Debug.Log("############ spritesBoss is null");
@@ -1370,14 +1092,10 @@ public class SaveLoadData : MonoBehaviour {
         
         try
         {
-            //_typesBoss.Select(p => p.NameTextura2D).Distinct()
-            //_typesBoss.Select(p => p.NameTextura2D)
-            //string spriteName = NemesSpritesBoss[index];
             string spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
-            Sprite spriteBoss = SpriteCollection[spriteName];
+            Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
             
             return spriteBoss;
-
         }
         catch (Exception x)
         {
@@ -1431,6 +1149,22 @@ public class SaveLoadData : MonoBehaviour {
             x = Storage.Instance.ZonaReal.X2 - offset;
         if (y < Storage.Instance.ZonaReal.Y2) //*-1
             y = Storage.Instance.ZonaReal.Y + offset;
+        Vector2 result = new Vector2(x, y);
+        return result;
+    }
+
+    private static Vector2 ValidPiontInZonaWorld(ref float x, ref float y, float offset = 0)
+    {
+        offset = Mathf.Abs(offset);
+
+        if (x < 1)
+            x = 1 +  Math.Abs(offset);
+        if (y > -1) //*-1
+            y = offset - Math.Abs(offset);
+        if (x > Helper.WidthLevel * Storage.ScaleWorld)
+            x = (Helper.WidthLevel * Storage.ScaleWorld) -  Math.Abs(offset);
+        if (y < (Helper.HeightLevel * Storage.ScaleWorld)*(-1)) //*-1
+            y = ((Helper.HeightLevel * Storage.ScaleWorld) - Math.Abs(offset)) * (-1);
         Vector2 result = new Vector2(x, y);
         return result;
     }

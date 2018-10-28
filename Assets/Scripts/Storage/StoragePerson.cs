@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,25 @@ public class StoragePerson : MonoBehaviour {
 
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
+
+    public Dictionary<string, Sprite> SpriteCollection;
+
+    private static Dictionary<int, Color> _colorsPresent = null;
+    public static Dictionary<int, Color> GetColorsLevel
+    {
+        get
+        {
+            if (_colorsPresent == null)
+            {
+                _colorsPresent = new Dictionary<int, Color>();
+                foreach (var typeItem in TypeBoss.TypesBoss)
+                {
+                    _colorsPresent.Add(typeItem.Level, typeItem.ColorTrack);
+                }
+            }
+            return _colorsPresent;
+        }
+    }
 
     //public Vector3 PersonsTargetPosition { get; set; }
 
@@ -30,17 +50,63 @@ public class StoragePerson : MonoBehaviour {
     void Awake()
     {
         PersonsDataInit();
+        LoadSprites();
     }
 
     // Use this for initialization
     void Start() {
-
+        
     }
 
     // Update is called once per frame
     void Update() {
 
     }
+
+    private void LoadSprites()
+    {
+        string indErr = "";
+        try
+        {
+            indErr = "start";
+            string pathSprites = "Textures/NPC/";
+            int colSprites = 0;
+
+            Debug.Log("Loading Sprites from Resources...");
+
+            SpriteCollection = new Dictionary<string, Sprite>();
+            foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
+            {
+                Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+
+                if (_texturesBoss == null || _texturesBoss.Length == 0)
+                {
+                    Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
+                    continue;
+                }
+                Texture2D _texture = _texturesBoss[0];
+                //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
+                Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+                if (!SpriteCollection.ContainsKey(nameStrite))
+                {
+                    indErr = "6.";
+                    SpriteCollection.Add(nameStrite, spriteBoss);
+                    colSprites++;
+                }
+                else
+                {
+                    Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
+                }
+            }
+            Debug.Log("Loaded Sprites Boss : " + colSprites);
+        }
+        catch (Exception x)
+        {
+            Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
+        }
+    }
+
 
     public IEnumerable<GameObject> GetAllRealPersons()
     {
@@ -279,4 +345,61 @@ public class FindPersonData
     public SaveLoadData.ObjectData DataObj { get; set; }
     public string Field { get; set; }
     public int Index { get; set; }
+}
+
+public class TypeBoss
+{
+    public List<TypeBoss> _TypesBoss;
+
+    public static List<TypeBoss> TypesBoss
+    {
+        get
+        {
+            return Instance._TypesBoss;
+        }
+    }
+
+    public TypeBoss() { }
+
+    private static TypeBoss _instance;
+    public static TypeBoss Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new TypeBoss();
+                _instance._TypesBoss = new List<TypeBoss>()
+                    {
+                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid },
+                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss  },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=9, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=10, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=12, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=13, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=14, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=15, ColorTrack=ManagerPalette.ColorBoss },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=16, ColorTrack=ManagerPalette.ColorBoss },
+                    };
+            }
+            return _instance;
+        }
+    }
+
+    public string NameTextura2D { get; set; }
+    public int Level { get; set; }
+    public Color ColorTrack { get; set; }
+
+    public string GetNameSpriteForIndexLevel(int p_level)
+    {
+        //string spriteName =  NemesSpritesBoss[index];
+        string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
+        return spriteName;
+    }
 }
