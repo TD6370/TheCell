@@ -146,6 +146,8 @@ public class MovementNPC : MonoBehaviour {
             if (m_isPause)
             {
                 Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
+                //_rb2d.Sleep();
+                _rb2d.velocity = Vector3.zero;
                 //yield return null;
                 //yield break;
                 while (m_isPause)
@@ -322,6 +324,10 @@ public class MovementNPC : MonoBehaviour {
         {
             //Debug.Log("------------------ scriptTrackPoints.TrackPoints get TrackPointsNavigator");
             TrackPointsNavigator scriptTrackPoints = m_TrackPointsNavigator.GetComponent<TrackPointsNavigator>();
+
+            var tr1 = m_TrackPointsNavigator.transform;
+            var tr2 = this.gameObject.transform;
+
             if (scriptTrackPoints == null)
             {
                 Debug.Log("############ TrackPointsNavigator is Empty");

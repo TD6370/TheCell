@@ -167,14 +167,8 @@ public class ExpandControl : MonoBehaviour {
 
     public void ExpandPanelOn(bool isOnly = false, bool? p_isOpen = null)
     {
-        //SelectedObserver();
-        //Storage.Instance.SelectGameObjectID = Helper.GetID(GetName);
-
-        //Debug.Log("ExpandPanelOn (" + this.name + ")");
-
         bool isSet = p_isOpen.HasValue ? true : false;
-
-        //Debug.Log("isSet=" + isSet + "");
+        //Debug.Log("ExpandPanelOn (" + this.name + ")");
 
         m_isExpand = PanelContentExpandObj.activeSelf;
         if(isSet)
@@ -182,38 +176,17 @@ public class ExpandControl : MonoBehaviour {
         else
             m_isExpand = !m_isExpand;
 
-        //Debug.Log("ExpandPanelOn (" + this.name + ") m_isExpand=" + m_isExpand);
-
         PanelContentExpandObj.SetActive(m_isExpand);
-        //Storage.Events.contentListExpandPerson.transform.SetAsLastSibling();
 
         if (isOnly)
             return;
 
-        //------------------
-        var listExpandPersonControls =  GameObject.FindGameObjectsWithTag("ExpandPersonControl");
-
-        //RectTransform rtContent = (RectTransform)PanelContentExpandObj.transform;
-        //addHeight = rtContent.rect.height;
-
+        var listExpandPersonControls = GameObject.FindGameObjectsWithTag("ExpandPersonControl");
         gobjExpandLast = listExpandPersonControls[listExpandPersonControls.Length-1];
-        StartCoroutine(UpdatePositionExpandPanels());
 
-        //foreach (var gobj in listExpandPersonControls)
-        //{
-        //    Debug.Log("Update transform ExpadPersonControl " + gobj.name);
-        //    ExpandControl scriptExpand = gobj.GetComponent<ExpandControl>();
-        //    scriptExpand = gobj.GetComponent<ExpandControl>();
-        //    if (scriptExpand == null)
-        //    {
-        //        Debug.Log("############# ExpandPanelOn scriptExpand is empty " + gobj.name);
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        var tittle = scriptExpand.TittleExpand;
-        //        //Debug.Log("Update transform ExpadPersonControl  " + gobj.name + "  tittle:" + tittle);
-        //    }
+        var listComPerson = (GameObject)GameObject.FindGameObjectWithTag("ListCommandPerson");
+        if (listComPerson!=null && listComPerson.activeSelf)
+            StartCoroutine(UpdatePositionExpandPanels());
     }
 
     IEnumerator UpdatePositionExpandPanels()

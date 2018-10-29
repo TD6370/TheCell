@@ -17,7 +17,11 @@ public class UIEvents : MonoBehaviour {
     public Text txtLog;
     public Button btnExit;
     public Button btnTest;
+    public Button btnPanelPersonOpen;
+    public Button btnPanelPersonClose;
+    public Toggle btnShowLog;
     public InputField tbxTest;
+    public GameObject PanelLog;
     public GameObject contentList;
     public GameObject ListBoxExpandPerson;
     public GameObject contentListExpandPerson;
@@ -63,6 +67,25 @@ public class UIEvents : MonoBehaviour {
             
             ExitGame();
         });
+
+        btnPanelPersonOpen.onClick.AddListener(delegate
+        {
+            ListBoxExpandPerson.SetActive(true);
+            btnPanelPersonClose.gameObject.SetActive(true);
+            btnPanelPersonOpen.gameObject.SetActive(false);
+        });
+        btnPanelPersonClose.onClick.AddListener(delegate
+        {
+            ListBoxExpandPerson.SetActive(false);
+            btnPanelPersonClose.gameObject.SetActive(false);
+            btnPanelPersonOpen.gameObject.SetActive(true);
+        });
+
+        btnShowLog.onValueChanged.AddListener(delegate
+        {
+            PanelLog.SetActive(btnShowLog.isOn);
+        });
+
 
         btnTest.onClick.AddListener(TestClick);
     }

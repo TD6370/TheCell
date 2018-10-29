@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\NPC\MovementNPC.cs" />
     <Compile Include="Assets\Scripts\NPC\Ufo\MovementUfo.cs" />
     <Compile Include="Assets\Scripts\PersonalData.cs" />
+    <Compile Include="Assets\Scripts\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
