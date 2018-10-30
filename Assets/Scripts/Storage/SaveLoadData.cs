@@ -94,9 +94,9 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("# CreateDataGamesObjectsWorld...");
         Storage.Instance.ClearGridData();
 
-        for (int y = 0; y < Helper.WidthLevel; y++)
+        for (int y = 0; y < Helper.HeightLevel; y++)
         {
-            for (int x = 0; x < Helper.HeightLevel; x++)
+            for (int x = 0; x < Helper.WidthLevel; x++)
             {
                 int intRndCount = UnityEngine.Random.Range(0, 3);
 

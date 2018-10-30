@@ -61,15 +61,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CompletePlayerController.cs" />
-    <Compile Include="Assets\Scripts\CreateNPC.cs" />
-    <Compile Include="Assets\Scripts\MovementCamera.cs" />
+    <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\NPC\Boss\MovementBoss.cs" />
+    <Compile Include="Assets\Scripts\NPC\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\NPC\EventsObject.cs" />
+    <Compile Include="Assets\Scripts\NPC\Models\ModelNPC.cs" />
     <Compile Include="Assets\Scripts\NPC\MovementNPC.cs" />
     <Compile Include="Assets\Scripts\NPC\Ufo\MovementUfo.cs" />
     <Compile Include="Assets\Scripts\PersonalData.cs" />
-    <Compile Include="Assets\Scripts\PositionRenderSorting.cs" />
+    <Compile Include="Assets\Scripts\Player\CompletePlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Assets\Scripts\UI\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\ManagerPalette.cs" />
+    <Compile Include="Assets\Scripts\UI\MapWorld.cs" />
     <Compile Include="Assets\Scripts\UI\TrackPointsNavigator.cs" />
     <Compile Include="Assets\Scripts\UI\UIEvents.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />

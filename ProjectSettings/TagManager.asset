@@ -58,3 +58,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: LayerGeometry
+    uniqueID: 1432927223
+    locked: 0

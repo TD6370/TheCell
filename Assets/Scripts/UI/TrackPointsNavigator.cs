@@ -142,6 +142,10 @@ public class TrackPointsNavigator : MonoBehaviour {
                 else
                     Debug.Log("####### DrawTrack lineRenderer is null");
 
+                //var rend = lineRenderer.GetComponent<Renderer>();
+
+                //lineRenderer.GetComponent<Renderer>().sortingOrder = 17000;
+
                 //if(indNext > MaxLenLine)
                 //{
                 //    Debug.Log("####### DrawTrack IS LIMIT : " + MaxLenLine + ")   Points count =" + indNext);

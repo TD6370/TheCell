@@ -19,9 +19,6 @@ public class Storage : MonoBehaviour {
         get { return 2; }
     }
 
-    
-    
-
     public static bool GamePause
     {
         
@@ -112,6 +109,15 @@ public class Storage : MonoBehaviour {
         get
         {
             return Instance._scriptGrid;
+        }
+    }
+
+    private MapWorld _scriptMapWorld;
+    public static MapWorld Map
+    {
+        get
+        {
+            return Instance._scriptMapWorld;
         }
     }
 
@@ -296,6 +302,12 @@ public class Storage : MonoBehaviour {
         if (_scriptNPC == null)
         {
             Debug.Log("Storage.Start scriptNPC not load !!!!!");
+            return;
+        }
+        _scriptMapWorld = MainCamera.GetComponent<MapWorld>();
+        if (_scriptMapWorld == null)
+        {
+            Debug.Log("Storage.Start scriptMapWorld not load !!!!!");
             return;
         }
         _screiptHero = HeroObject.GetComponent<CompletePlayerController>();

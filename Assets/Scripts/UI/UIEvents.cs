@@ -265,6 +265,9 @@ public class UIEvents : MonoBehaviour {
             case "ReloadGridLook":
                 Storage.GenGrid.ReloadGridLook();
                 break;
+            case "MapCreate":
+                Storage.Map.Create();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
