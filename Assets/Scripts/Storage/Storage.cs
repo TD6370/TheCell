@@ -54,7 +54,9 @@ public class Storage : MonoBehaviour {
 
     public Vector3 PersonsTargetPosition { get; set; }
 
-    
+
+    private ManagerPalette _Palette;
+
    private PlayerManager _PlayerManager;
     public static PlayerManager Player
     {
@@ -362,6 +364,8 @@ public class Storage : MonoBehaviour {
         _StoragePerson.PersonsDataInit();
 
         _PlayerManager = gameObject.AddComponent<PlayerManager>();
+
+        _Palette = gameObject.AddComponent<ManagerPalette>(); 
     }
 
     private void InitObjectsGrid()

@@ -12,6 +12,14 @@ public class StoragePerson : MonoBehaviour {
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
+    public TypeModifPerson ModificatorPerson = TypeModifPerson.Alpha;
+
+    public enum TypeModifPerson
+    {
+        Alpha, 
+        Kill
+    }
+
     public Dictionary<string, Sprite> SpriteCollection;
 
     private static Dictionary<int, Color> _colorsPresent = null;
@@ -126,7 +134,7 @@ public class StoragePerson : MonoBehaviour {
                 Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
     }
 
-    public IEnumerable<GameObject> GetAllRealPersons(string field)
+    public IEnumerable<GameObject> GetAllRealPersons(string field, bool  isModif = false)
     {
         //var count1= Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList().Count();
         //Debug.Log("PERSON PAIR (" + field + ")  COUNT " + count1);
@@ -135,6 +143,10 @@ public class StoragePerson : MonoBehaviour {
             Where(p => p.Key == field).
             SelectMany(x => x.Value).ToList())
         {
+            if(isModif)
+            {
+                ModifObject(gobjItem);
+            }
             Debug.Log("OBJECT(" + field + ") : " + gobjItem);
         }
 
@@ -238,7 +250,7 @@ public class StoragePerson : MonoBehaviour {
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
         }
 
-        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor))
+        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
         {
             Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
 
@@ -268,6 +280,7 @@ public class StoragePerson : MonoBehaviour {
             else
             {
                 Debug.Log("VeiwCursorGameObjectData: " + gobj.name + "  Not is NPC");
+                //ModifObject(gobj);
             }
 
 
@@ -307,6 +320,26 @@ public class StoragePerson : MonoBehaviour {
             SaveLoadData.GameDataNPC dataNPC = movem.GetData();
             dataNPC.SetTargetPosition(posCursorToField);
         }
+    }
+
+
+    public void ModifObject(GameObject gobj)
+    {
+        Storage.Events.ListLogAdd = "Modif : " + ModificatorPerson + " > " + gobj.name;
+        switch(ModificatorPerson)
+        {
+            case TypeModifPerson.Alpha:
+                gobj.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, .5f);
+                break;
+            case TypeModifPerson.Kill:
+                Storage.Instance.AddDestroyGameObject(gobj);
+                break;
+            default:
+                Storage.Events.ListLogAdd = "Empty modificator > " + ModificatorPerson.ToString();
+                break;
+        }
+
+        
     }
 }
 

@@ -4,9 +4,40 @@ using UnityEngine;
 
 public class ManagerPalette : MonoBehaviour {
 
+    //public static ManagerPalette()
+    //{
+    //    PaletteColors = new Dictionary<string, Color>
+    //    {
+    //        {"SpriteBossLizard",ColorBossLizard },
+    //        {"SpriteBossRed",ColorBossRed },
+    //        {"SpriteBossBandos",ColorBossBandos },
+    //        {"SpriteBossBooble",ColorBossBooble },
+    //        {"SpriteBossAlien",ColorBossAlien },
+    //        {"SpriteBossDroid",ColorBossDroid },
+    //        {"SpriteBossArm",ColorBossArm },
+    //        {"SpriteBoss",ColorBoss },
+    //        {"PrefabVood","#379200".ToColor() },
+    //        {"PrefabRock","#77A7C2".ToColor() },
+
+    //    };
+    //}
+
     public static Dictionary<string, Color> PaletteColors = new Dictionary<string, Color>();
 
-    private void Awake()
+    //switch (prefabName)
+    //    {
+    //        case SaveLoadData.TypePrefabs.PrefabField:
+    //            sprtRend.color = "#8ACA84".ToColor();
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabRock:
+    //            sprtRend.color = "#77A7C2".ToColor();
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabVood:
+    //            sprtRend.color = "#379200".ToColor();
+    //            break;
+    //    }
+
+private void Awake()
     {
         PaletteColors = new Dictionary<string, Color>
         {
@@ -18,7 +49,8 @@ public class ManagerPalette : MonoBehaviour {
             {"SpriteBossDroid",ColorBossDroid },
             {"SpriteBossArm",ColorBossArm },
             {"SpriteBoss",ColorBoss },
-            {"","".ToColor() },
+            {"PrefabVood","#379200".ToColor() },
+            {"PrefabRock","#77A7C2".ToColor() },
 
         };
     }
