@@ -55,6 +55,14 @@ public class Storage : MonoBehaviour {
     public Vector3 PersonsTargetPosition { get; set; }
 
     
+   private PlayerManager _PlayerManager;
+    public static PlayerManager Player
+    {
+        get
+        {
+            return Instance._PlayerManager;
+        }
+    }
 
     private StorageLog _StorageLog;
     public static StorageLog Log{
@@ -191,7 +199,13 @@ public class Storage : MonoBehaviour {
     {
         get { return _datapathUserData; }
     }
-    
+
+    private string _datapatPlayerData = null;
+    public string DataPathPlayer
+    {
+        get { return _datapatPlayerData; }
+    }
+
 
     public delegate void EventID(string id);
     public event EventID OnSelectGameObjectID;
@@ -346,6 +360,8 @@ public class Storage : MonoBehaviour {
         }
         _StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
+
+        _PlayerManager = gameObject.AddComponent<PlayerManager>();
     }
 
     private void InitObjectsGrid()
@@ -497,7 +513,9 @@ public class Storage : MonoBehaviour {
         }
 
         _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
-       
+        _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
+
+
     }
 
     public void SetHeroPosition(int x, int y, float xH, float yH)
@@ -800,7 +818,7 @@ public class Storage : MonoBehaviour {
 
     #region Destroy
 
-    private void DestroyAllGamesObjects()
+    public void DestroyAllGamesObjects()
     {
         foreach (var item in _GamesObjectsReal)
         {

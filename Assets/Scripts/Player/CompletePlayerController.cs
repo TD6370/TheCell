@@ -219,6 +219,16 @@ public class CompletePlayerController : MonoBehaviour {
 
     #region Public
 
+    public void Move(Vector2 posMove)
+    {
+        int Speed = 10;
+        Debug.Log("posMove: " + posMove);
+        //rb2d.MovePosition(posMove);
+        //rb2d.MovePosition((rb2d.position + posMove) * Speed * Time.deltaTime);
+        //rb2d.MovePosition((rb2d.position + posMove) * Speed);
+        rb2d.MovePosition(posMove * Speed);
+    }
+
     public GameObject FindFieldCurrent()
     {
         int scale = 2;

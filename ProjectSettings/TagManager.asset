@@ -21,6 +21,7 @@ TagManager:
   - CommandButtonTool
   - PanelCommandPerson
   - ListCommandPerson
+  - MapObject
   layers:
   - Default
   - TransparentFX

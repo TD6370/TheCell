@@ -12,6 +12,11 @@ public class MapWorld : MonoBehaviour {
 
     public Dictionary<string, GameObject> MapObjects;
 
+    private void Awake()
+    {
+        MapObjects = new Dictionary<string, GameObject>();
+    }
+
     // Use this for initialization
     void Start () {
 		
@@ -54,57 +59,145 @@ public class MapWorld : MonoBehaviour {
 
     //}
 
+    public void CreateTextureMap()
+    {
+        Texture2D texture = new Texture2D(128, 128);
+        GetComponent<Renderer>().material.mainTexture = texture;
+
+        for (int y = 0; y < texture.height; y++)
+        {
+            for (int x = 0; x < texture.width; x++)
+            {
+                Color color = ((x & y) != 0 ? Color.white : Color.gray);
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+    }
+
     public void Create()
     {
-        ClearWorld();
+        string indErr = "start";
         int index = 0;
-        float scaleMap = 0.5f;
+        float scaleMap = 0.2f;
 
-        for (int y = 0; y < Helper.HeightWorld ; y++)
+            ClearWorld();
+
+        try
         {
-            for (int x = 0; x < Helper.WidthWorld; x++)
+            indErr = "1.";
+            MapObjects = new Dictionary<string, GameObject>();
+
+            int schet = 0;
+
+            GameObject newFieldBackground = BildMapObject(SaveLoadData.TypePrefabs.PrefabField);
+            newFieldBackground.transform.position = new Vector3(10, -10, -2);
+            newFieldBackground.transform.localScale = new Vector3(100F, 100f, 0);
+            //newFieldBackground.GetComponent<PositionRenderSorting>()
+            //newField.GetComponent<Sprite>().
+            //rectTransform.sizeDelta = new Vector2(width, height);
+            newFieldBackground.tag = "MapObject";
+            newFieldBackground.SetActive(true);
+
+            indErr = "2.";
+            for (int y = 0; y < Helper.HeightWorld ; y++)
             {
-                int intRndCount = UnityEngine.Random.Range(0, 3);
-
-                int maxObjectInField = (intRndCount == 0) ? 1 : 0;
-                string nameField = Helper.GetNameField(x, y);
-
-                List<GameObject> ListNewObjects = new List<GameObject>();
-                for (int i = 0; i < maxObjectInField; i++)
+                for (int x = 0; x < Helper.WidthWorld; x++)
                 {
+                    //indErr = "3.";
+                    //int intRndCount = UnityEngine.Random.Range(0, 3);
+
+                    //indErr = "4.";
+                    //int maxObjectInField = (intRndCount == 0) ? 1 : 0;
+                    indErr = "5.";
+                    string nameField = Helper.GetNameField(x, y);
+
+                    indErr = "6.";
+                    List<GameObject> ListNewObjects = new List<GameObject>();
+                    //for (int i = 0; i < maxObjectInField; i++)
+                    //{
+                    indErr = "7.";
                     int _y = y * (-1);
                     Vector3 pos = new Vector3(x, _y, 0) * scaleMap;
-                    pos.z = -1;
-
-                    
+                    pos.z = -10;
+                    indErr = "8.";
                     SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
-                    foreach (SaveLoadData.ObjectData datObjItem in  Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+                    indErr = "9.";
+
+                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                        continue;
+
+                    //Storage.Instance.GridDataG.FieldsD[nameField]
+                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                     {
-                        if(!datObjItem.TagObject.IsPerson())
+                        
+                        foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                         {
-                            prefabName = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject); 
+                            //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
+                            indErr = "10.";
+                            //if (!datObjItem.TagObject.IsPerson())
+                            if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                            datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                            {
+                                indErr = "11.";
+                                prefabName = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                                //Debug.Log("Create Prefab : " + prefabName);
+                            }
                         }
                     }
-                    
+                    indErr = "12.";
+                    //Debug.Log("Bild : " + prefabName);
                     GameObject newField = BildMapObject(prefabName);
                     newField.transform.position = pos;
                     newField.tag = "MapObject";
+                    newField.SetActive(true);
                     //newField.name = nameField;
-                    newField.name = nameField + "_" + prefabName.ToString() + index;
+                    indErr = "13.";
+                    newField.name = "MapPoint_" + nameField + "_" + prefabName.ToString() + index;
+                    indErr = "14.";
+                    //Debug.Log("MapObjects : " + newField.name);
                     MapObjects.Add(nameField, newField);
+                    indErr = "15.";
                     index++;
+                   // }
                 }
+                indErr = "next";
+                schet++;
+                if(schet>10)
+                {
+                    schet = 0;
+                    Debug.Log("Next y=" + y);
+                }
+
             }
+            indErr = "end";
+
         }
+        catch (Exception x)
+        {
+            Debug.Log("############# MapWorld.Create[" + indErr + "] : " + x.Message);
+        }
+        indErr = "ok";
+        Debug.Log("Map Worl is loaded ))");
     }
 
     private void ClearWorld()
     {
-        foreach(var mapObjItem in MapObjects.Values)
+        try
         {
-            Destroy(mapObjItem);
+
+            if (MapObjects == null)
+                return;
+
+            foreach (var mapObjItem in MapObjects.Values)
+            {
+                Destroy(mapObjItem);
+            }
+            MapObjects.Clear();
+        }catch(Exception x)
+        {
+            Debug.Log("############# MapWorld.ClearWorld : " + x.Message);
         }
-        MapObjects.Clear();
     }
 
     private GameObject BildMapObject(SaveLoadData.TypePrefabs prefabName)
@@ -123,7 +216,7 @@ public class MapWorld : MonoBehaviour {
         //        break;
         //}
         
-        newField = (GameObject)Instantiate(prefabMapCell, new Vector3(0, 0, -1), Quaternion.identity);
+        newField = (GameObject)Instantiate(prefabMapCell, new Vector3(10, 10, -10), Quaternion.identity);
         SpriteRenderer sprtRend = newField.GetComponent<SpriteRenderer>();
         switch (prefabName)
         {
@@ -134,7 +227,7 @@ public class MapWorld : MonoBehaviour {
                 sprtRend.color = "#77A7C2".ToColor();
                 break;
             case SaveLoadData.TypePrefabs.PrefabVood:
-                sprtRend.color = "#8ACA84".ToColor();
+                sprtRend.color = "#379200".ToColor();
                 break;
         }
         return newField;

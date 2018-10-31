@@ -268,6 +268,12 @@ public class UIEvents : MonoBehaviour {
             case "MapCreate":
                 Storage.Map.Create();
                 break;
+            case "SavePlayer":
+                Storage.Player.SavePosition();
+                break;
+            case "LoadPlayer":
+                Storage.Player.LoadPositionHero();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -647,7 +653,8 @@ public class UIEvents : MonoBehaviour {
     {
         string path = Storage.Instance.DataPathUserData;
         CommandStore storeComm = SaveLoadData.Serializator.LoadXml<CommandStore>(path);
-        if(storeComm==null)
+        
+        if (storeComm==null)
         {
             Debug.Log("############ LoadCommandTool storeComm is Empty");
             return;
@@ -701,6 +708,8 @@ public class CommandStore
 {
     public List<string> CommadsTemplate { get; set; }
 }
+
+
 
 
 public static class EventsExtensions
