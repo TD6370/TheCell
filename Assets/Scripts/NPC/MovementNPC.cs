@@ -7,7 +7,7 @@ public class MovementNPC : MonoBehaviour {
     public GameObject PrefabStarTrackPoint;
 
     protected Coroutine moveObject;
-    protected SaveLoadData.GameDataNPC _dataNPC;
+    protected ModelNPC.GameDataNPC _dataNPC;
 
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
@@ -59,7 +59,7 @@ public class MovementNPC : MonoBehaviour {
 
     protected virtual void StartMoving()
     {
-        moveObject = StartCoroutine(MoveObjectToPosition<SaveLoadData.GameDataNPC>());
+        moveObject = StartCoroutine(MoveObjectToPosition<ModelNPC.GameDataNPC>());
     }
 
     // Update is called once per frame
@@ -112,7 +112,7 @@ public class MovementNPC : MonoBehaviour {
 
 
 
-    protected IEnumerator MoveObjectToPosition<T>() where T : SaveLoadData.GameDataNPC
+    protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
@@ -221,7 +221,7 @@ public class MovementNPC : MonoBehaviour {
         }
     }
 
-    private bool ResavePositionData<T>() where T : SaveLoadData.GameDataNPC
+    private bool ResavePositionData<T>() where T : ModelNPC.GameDataNPC
     {
         if (Storage.Instance.IsCorrectData)
         {
@@ -281,7 +281,7 @@ public class MovementNPC : MonoBehaviour {
 
 
 
-    protected T FindObjectData<T>(string callFunc) where T : SaveLoadData.GameDataNPC
+    protected T FindObjectData<T>(string callFunc) where T : ModelNPC.GameDataNPC
     {
         //Debug.Log("***************  FindObjectData GO: " + gameObject.name + "  " + gameObject.tag + "    T: " + typeof(T) + "      GO Type: " + this.gameObject.GetType());
 
@@ -346,7 +346,7 @@ public class MovementNPC : MonoBehaviour {
                 }
             }
 
-            SaveLoadData.GameDataBoss dataBoss = _dataNPC as SaveLoadData.GameDataBoss;
+            ModelNPC.GameDataBoss dataBoss = _dataNPC as ModelNPC.GameDataBoss;
             if (dataBoss != null)
             {
                 scriptTrackPoints.ColorTrack = dataBoss.ColorRender;
@@ -425,7 +425,7 @@ public class MovementNPC : MonoBehaviour {
 
     public virtual void UpdateData(string callFunc)
     {
-        _dataNPC = FindObjectData<SaveLoadData.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
+        _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
     public void SetTarget()
@@ -520,7 +520,7 @@ public class MovementNPC : MonoBehaviour {
         }
     }
 
-    public SaveLoadData.GameDataNPC GetData()
+    public ModelNPC.GameDataNPC GetData()
     {
         return _dataNPC;
     }

@@ -41,16 +41,16 @@ public class StoragePerson : MonoBehaviour {
 
     //public Vector3 PersonsTargetPosition { get; set; }
 
-    private SaveLoadData.LevelData _personsData;
-    public SaveLoadData.LevelData PersonsData
+    private ModelNPC.LevelData _personsData;
+    public ModelNPC.LevelData PersonsData
     {
         get { return _personsData; }
     }
 
-    public void PersonsDataInit(SaveLoadData.LevelData _newData = null)
+    public void PersonsDataInit(ModelNPC.LevelData _newData = null)
     {
         if (_newData == null)
-            _personsData = new SaveLoadData.LevelData();
+            _personsData = new ModelNPC.LevelData();
         else
             _personsData = _newData;
     }
@@ -164,13 +164,13 @@ public class StoragePerson : MonoBehaviour {
                 Where(p => p.name.IndexOf(id)!=-1).ToList();
     }
 
-    public IEnumerable<SaveLoadData.ObjectData> GetAllDataPersonsForID(string name)
+    public IEnumerable<ModelNPC.ObjectData> GetAllDataPersonsForID(string name)
     {
         string id = Helper.GetID(name);
         return GetAllDataPersonsForName(id);
     }
 
-    public IEnumerable<SaveLoadData.ObjectData> GetAllDataPersonsForName(string name)
+    public IEnumerable<ModelNPC.ObjectData> GetAllDataPersonsForName(string name)
     {
         return Storage.Instance.GridDataG.FieldsD.
             Select(x => x.Value).
@@ -188,7 +188,7 @@ public class StoragePerson : MonoBehaviour {
         foreach (var item in Storage.Instance.GridDataG.FieldsD)
         {
             string field = item.Key;
-            SaveLoadData.ObjectData dataObj = item.Value.Objects.Find(p => p.NameObject.IndexOf(nameFind) != -1);
+            ModelNPC.ObjectData dataObj = item.Value.Objects.Find(p => p.NameObject.IndexOf(nameFind) != -1);
             if(dataObj!=null)
             {
 
@@ -257,7 +257,7 @@ public class StoragePerson : MonoBehaviour {
             gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
 
             MovementNPC movement = gobj.GetComponent<MovementNPC>();
-            SaveLoadData.ObjectData findData = movement.GetData();
+            ModelNPC.ObjectData findData = movement.GetData();
             var objData = SaveLoadData.FindObjectData(gobj);
             if (findData != objData)
             {
@@ -265,7 +265,7 @@ public class StoragePerson : MonoBehaviour {
                 Debug.Log("#### " + gobj.name + " conflict DATA");
             }
 
-            var dataNPC = findData as SaveLoadData.GameDataNPC;
+            var dataNPC = findData as ModelNPC.GameDataNPC;
             if (dataNPC != null)
             {
                 Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
@@ -284,7 +284,7 @@ public class StoragePerson : MonoBehaviour {
             }
 
 
-            var dataBoss = findData as SaveLoadData.GameDataBoss;
+            var dataBoss = findData as ModelNPC.GameDataBoss;
             if (dataBoss != null)
             {
                 Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
@@ -317,7 +317,7 @@ public class StoragePerson : MonoBehaviour {
         {
             Debug.Log("SetTartgetPositionAll : " + gobj.name + " to : " + posCursorToField.x + "" + posCursorToField.y);
             MovementNPC movem = gobj.GetComponent<MovementNPC>();
-            SaveLoadData.GameDataNPC dataNPC = movem.GetData();
+            ModelNPC.GameDataNPC dataNPC = movem.GetData();
             dataNPC.SetTargetPosition(posCursorToField);
         }
     }
@@ -375,7 +375,7 @@ public static class PersonsExtensions
 public class FindPersonData
 {
     public FindPersonData() { }
-    public SaveLoadData.ObjectData DataObj { get; set; }
+    public ModelNPC.ObjectData DataObj { get; set; }
     public string Field { get; set; }
     public int Index { get; set; }
 }

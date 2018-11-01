@@ -39,7 +39,7 @@ public class UpdateData { //: MonoBehaviour {
         get { return Storage.Instance.DataPathPerson; }
     }
 
-    private SaveLoadData.GridData _GridDataG
+    private ModelNPC.GridData _GridDataG
     {
         get
         {
@@ -104,7 +104,7 @@ public class UpdateData { //: MonoBehaviour {
         foreach (var item in _GridDataG.FieldsD)
         {
             string nameField = item.Key;
-            List<SaveLoadData.ObjectData> resListData = _GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+            List<ModelNPC.ObjectData> resListData = _GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
             if (resListData != null)
             {
                 var resListDataTest = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
@@ -141,9 +141,9 @@ public class UpdateData { //: MonoBehaviour {
         SaveLoadData.Serializator.SaveGridXml(_GridDataG, _datapathLevel, isNewWorld);
     }
 
-    public SaveLoadData.FieldData AddNewFieldInGrid(string newField, string callFunc)
+    public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc)
     {
-        SaveLoadData.FieldData fieldData = new SaveLoadData.FieldData() { NameField = newField };
+        ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = newField };
         _GridDataG.FieldsD.Add(newField, fieldData);
 
         //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
@@ -151,9 +151,9 @@ public class UpdateData { //: MonoBehaviour {
         return fieldData;
     }
 
-    public void AddDataObjectInGrid(SaveLoadData.ObjectData objDataSave, string nameField, string callFunc)
+    public void AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc)
     {
-        SaveLoadData.FieldData fieldData;
+        ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
         {
             fieldData = AddNewFieldInGrid(nameField, callFunc);
@@ -167,9 +167,9 @@ public class UpdateData { //: MonoBehaviour {
         Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
     }
 
-    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false, SaveLoadData.ObjectData dataObjDel = null)
+    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false, ModelNPC.ObjectData dataObjDel = null)
     {
-        SaveLoadData.ObjectData histData = null;
+        ModelNPC.ObjectData histData = null;
         if (Storage.Log.IsSaveHistory)
             histData = _GridDataG.FieldsD[nameField].Objects[index];
         if (isDebug)
@@ -205,11 +205,11 @@ public class UpdateData { //: MonoBehaviour {
         }
     }
 
-    public void UpdateDataObect(string nameField, int index, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
+    public void UpdateDataObect(string nameField, int index, ModelNPC.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
     {
         if (Storage.Log.IsSaveHistory)
         {
-            SaveLoadData.ObjectData oldObj = _GridDataG.FieldsD[nameField].Objects[index];
+            ModelNPC.ObjectData oldObj = _GridDataG.FieldsD[nameField].Objects[index];
             Storage.Log.SaveHistory(setObject.NameObject, "UpdateDataObect", callFunc, nameField, "", oldObj, setObject);
             Storage.Log.SaveHistory(oldObj.NameObject, "UpdateDataObect", callFunc, nameField, "RESAVE", oldObj, setObject);
         }

@@ -369,9 +369,41 @@ public static class Helper { //: MonoBehaviour {
         return true;
     }
 
+    public static Vector2 ValidPiontInZona(ref float x, ref float y, float offset = 0)
+    {
+        offset = Mathf.Abs(offset);
+
+        if (x < Storage.Instance.ZonaReal.X)
+            x = Storage.Instance.ZonaReal.X + offset;
+        if (y > Storage.Instance.ZonaReal.Y) //*-1
+            y = Storage.Instance.ZonaReal.Y - offset;
+        if (x > Storage.Instance.ZonaReal.X2)
+            x = Storage.Instance.ZonaReal.X2 - offset;
+        if (y < Storage.Instance.ZonaReal.Y2) //*-1
+            y = Storage.Instance.ZonaReal.Y + offset;
+        Vector2 result = new Vector2(x, y);
+        return result;
+    }
+
+    public static Vector2 ValidPiontInZonaWorld(ref float x, ref float y, float offset = 0)
+    {
+        offset = Mathf.Abs(offset);
+
+        if (x < 1)
+            x = 1 + Math.Abs(offset);
+        if (y > -1) //*-1
+            y = offset - Math.Abs(offset);
+        if (x > Helper.WidthLevel * Storage.ScaleWorld)
+            x = (Helper.WidthLevel * Storage.ScaleWorld) - Math.Abs(offset);
+        if (y < (Helper.HeightLevel * Storage.ScaleWorld) * (-1)) //*-1
+            y = ((Helper.HeightLevel * Storage.ScaleWorld) - Math.Abs(offset)) * (-1);
+        Vector2 result = new Vector2(x, y);
+        return result;
+    }
+
     #endregion
 
-    
+
 }
 
 public static class HelperExtension

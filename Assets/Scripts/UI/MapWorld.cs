@@ -96,7 +96,7 @@ public class MapWorld : MonoBehaviour {
                     indErr = "8";
                     Color colorCell = Color.clear;
                     indErr = "9";
-                    foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+                    foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                     {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
@@ -109,7 +109,7 @@ public class MapWorld : MonoBehaviour {
                         else
                         {
                             indErr = "12";
-                            SaveLoadData.GameDataBoss bossObj = datObjItem as SaveLoadData.GameDataBoss;
+                            ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
                             if (bossObj != null)
                             {
                                 //Storage //bossObj.Level;

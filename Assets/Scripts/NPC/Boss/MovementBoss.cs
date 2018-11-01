@@ -17,11 +17,11 @@ public class MovementBoss : MovementNPC
 
     public override void UpdateData(string callFunc)
     {
-        _dataNPC = FindObjectData<SaveLoadData.GameDataBoss>(callFunc);// as SaveLoadData.GameDataNPC;
+        _dataNPC = FindObjectData<ModelNPC.GameDataBoss>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
     protected override void StartMoving()
     {
-        moveObject = StartCoroutine(MoveObjectToPosition<SaveLoadData.GameDataBoss>());
+        moveObject = StartCoroutine(MoveObjectToPosition<ModelNPC.GameDataBoss>());
     }
 }

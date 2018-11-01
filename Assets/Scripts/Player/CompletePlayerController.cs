@@ -345,7 +345,7 @@ public class CompletePlayerController : MonoBehaviour {
 
         //var listDataObjects = Storage.Person.GetAllDataPersonsForName(nameField);
 
-        foreach (SaveLoadData.ObjectData dataObj in listDataObjects)
+        foreach (ModelNPC.ObjectData dataObj in listDataObjects)
         {
             if (dataObj.IsReality)
             {

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PersonalData : MonoBehaviour {
 
-    private SaveLoadData.ObjectData m_personalObjectData = null;
-    public SaveLoadData.ObjectData PersonalObjectData
+    private ModelNPC.ObjectData m_personalObjectData = null;
+    public ModelNPC.ObjectData PersonalObjectData
     {
         get {
             if (m_personalObjectData != null)
@@ -37,7 +37,7 @@ public class PersonalData : MonoBehaviour {
         if (PersonalObjectData == null)
         {
             //Debug.Log("CREATE new PersonalObjectData " + this.name);
-            PersonalObjectData = new SaveLoadData.ObjectData()
+            PersonalObjectData = new ModelNPC.ObjectData()
             {
                 NameObject = "Empty",
                 TagObject = SaveLoadData.TypePrefabs.PrefabField.ToString()

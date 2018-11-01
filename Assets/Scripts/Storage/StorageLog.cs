@@ -151,7 +151,7 @@ public class StorageLog //: MonoBehaviour
         return findName;
     }
 
-    public void SaveHistory(string name, string actionName, string callFunc, string field = "", string comment = "", SaveLoadData.ObjectData oldDataObj = null, SaveLoadData.ObjectData newDataObj = null)
+    public void SaveHistory(string name, string actionName, string callFunc, string field = "", string comment = "", ModelNPC.ObjectData oldDataObj = null, ModelNPC.ObjectData newDataObj = null)
     {
         if (!_isSaveHistory)
             return;
@@ -178,8 +178,8 @@ public class StorageLog //: MonoBehaviour
         public string CallFunc { get; set; }
         public string Comment { get; set; }
         public DateTime TimeSave { get; set; }
-        public SaveLoadData.ObjectData OldDataObj { get; set; }
-        public SaveLoadData.ObjectData NewDataObj { get; set; }
+        public ModelNPC.ObjectData OldDataObj { get; set; }
+        public ModelNPC.ObjectData NewDataObj { get; set; }
 
         public HistoryGameObject() { }
 

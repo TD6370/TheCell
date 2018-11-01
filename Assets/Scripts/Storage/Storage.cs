@@ -21,16 +21,16 @@ public class Storage : MonoBehaviour {
 
     public static bool GamePause
     {
-        
+
         get { return (Time.timeScale == 0.0f); }
         set
         {
             if (Time.timeScale == 1.0f)
                 Time.timeScale = 0.0f;
-            else 
-            //if (Time.timeScale == 0.0f)
-            //    Time.timeScale = 0.7f;
-            //else
+            else
+                //if (Time.timeScale == 0.0f)
+                //    Time.timeScale = 0.7f;
+                //else
                 Time.timeScale = 1.0f;
         }
     }
@@ -57,7 +57,7 @@ public class Storage : MonoBehaviour {
 
     private ManagerPalette _Palette;
 
-   private PlayerManager _PlayerManager;
+    private PlayerManager _PlayerManager;
     public static PlayerManager Player
     {
         get
@@ -67,7 +67,7 @@ public class Storage : MonoBehaviour {
     }
 
     private StorageLog _StorageLog;
-    public static StorageLog Log{
+    public static StorageLog Log {
         get
         {
             return Instance._StorageLog;
@@ -143,7 +143,7 @@ public class Storage : MonoBehaviour {
     {
         get { return _limitVerticalLook; }
     }
-    
+
     private int _heroPositionX = 0;
     public int HeroPositionX
     {
@@ -178,8 +178,8 @@ public class Storage : MonoBehaviour {
         get { return _GamesObjectsReal; }
     }
 
-    private SaveLoadData.GridData _GridDataG = null;
-    public SaveLoadData.GridData GridDataG
+    private ModelNPC.GridData _GridDataG = null;
+    public ModelNPC.GridData GridDataG
     {
         get { return _GridDataG; }
     }
@@ -223,7 +223,7 @@ public class Storage : MonoBehaviour {
         get { return m_SelectGameObjectID; }
         set
         {
-            if(m_SelectGameObjectID != value)
+            if (m_SelectGameObjectID != value)
             {
                 if (value == null)
                 {
@@ -235,15 +235,15 @@ public class Storage : MonoBehaviour {
                 Person.SelectedID(value);//m_SelectGameObjectID
             }
             m_SelectGameObjectID = value;
-            if(value == null)
+            if (value == null)
             {
                 Debug.Log("############### SelectGameObjectID set value 2. --- NULL");
             }
         }
     }
 
-    
-    
+
+
     private CompletePlayerController _screiptHero;
     //public CompletePlayerController PlayerController
     //{
@@ -264,8 +264,8 @@ public class Storage : MonoBehaviour {
         Instance = this;
     }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         ZonaField = null;
         ZonaReal = null;
 
@@ -368,7 +368,7 @@ public class Storage : MonoBehaviour {
 
         _PlayerManager = gameObject.AddComponent<PlayerManager>();
 
-        _Palette = gameObject.AddComponent<ManagerPalette>(); 
+        _Palette = gameObject.AddComponent<ManagerPalette>();
     }
 
     private void InitObjectsGrid()
@@ -377,7 +377,7 @@ public class Storage : MonoBehaviour {
         Fields = new Dictionary<string, GameObject>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
         //_GridDataG = new SaveLoadData.GridData();
-        
+
 
         _StorageLog = new StorageLog();
         _StorageLog.Init();
@@ -405,7 +405,7 @@ public class Storage : MonoBehaviour {
 
     public void StopGame()
     {
-        if(_scriptNPC!=null)
+        if (_scriptNPC != null)
             _scriptNPC.StopCrateNPC();
 
         //---
@@ -495,7 +495,7 @@ public class Storage : MonoBehaviour {
         //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
         //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
-        
+
         //Debug.Log("# LoadPathData... " + _datapathLevel);
 
         if (File.Exists(_datapathLevel))
@@ -538,7 +538,7 @@ public class Storage : MonoBehaviour {
         {
             int fX = x - _limitX;
             int fY = y - _limitY;
-            
+
             if (fX < 0) fX = 0;
             if (fY < 0) fY = 0;
             int fX2 = x + _limitX;
@@ -590,9 +590,9 @@ public class Storage : MonoBehaviour {
             //DrawRect(rX,rY,rX2,rY2);
         }
     }
-    
 
-    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, SaveLoadData.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
+
+    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
         if (Storage.Instance.IsLoadingWorld && !NotValid)
         {
@@ -619,7 +619,7 @@ public class Storage : MonoBehaviour {
             return "";
         }
 
-        if(!_GamesObjectsReal.ContainsKey(p_OldField))
+        if (!_GamesObjectsReal.ContainsKey(p_OldField))
         {
             Debug.Log("********** (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("********** UpdatePosition      GamesObjectsReal not found OldField = " + p_OldField);
@@ -641,7 +641,7 @@ public class Storage : MonoBehaviour {
         }
 
         List<GameObject> realObjectsOldField = _GamesObjectsReal[p_OldField];
-        List<SaveLoadData.ObjectData> dataObjectsOldField = _GridDataG.FieldsD[p_OldField].Objects;
+        List<ModelNPC.ObjectData> dataObjectsOldField = _GridDataG.FieldsD[p_OldField].Objects;
 
         if (realObjectsOldField == null)
         {
@@ -660,11 +660,11 @@ public class Storage : MonoBehaviour {
         }
 
         //#TEST -----
-        for (int i = realObjectsOldField.Count - 1; i >= 0;i--)
+        for (int i = realObjectsOldField.Count - 1; i >= 0; i--)
         {
             if (realObjectsOldField[i] == null)
             {
-                Debug.Log("UGP: (" +  p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                Debug.Log("UGP: (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 Debug.Log("^^^^ UpfatePosition  -- remove destroy realObjects");
                 realObjectsOldField.RemoveAt(i);
             }
@@ -676,7 +676,7 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("^^^^ UpfatePosition Not Real object (" + p_NameObject + ") in field: " + p_OldField);
-            if(p_NameObject!=null)
+            if (p_NameObject != null)
                 Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
 
             //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition Not Real");
@@ -727,13 +727,13 @@ public class Storage : MonoBehaviour {
             //return "Error";
             return "";
         }
-            
+
 
         //add to new Field
         if (!_GridDataG.FieldsD.ContainsKey(p_NewField))
         {
             //#!!!!  Debug.Log("SaveListObjectsToData GridData ADD new FIELD : " + posFieldReal);
-            _GridDataG.FieldsD.Add(p_NewField, new SaveLoadData.FieldData());
+            _GridDataG.FieldsD.Add(p_NewField, new ModelNPC.FieldData());
         }
 
         if (p_newPosition != gobj.transform.position)
@@ -761,7 +761,7 @@ public class Storage : MonoBehaviour {
             return "";
         }
         objData.Position = gobj.transform.position;
-        
+
         if (isDestroy)
             objData.IsReality = false;
 
@@ -774,7 +774,7 @@ public class Storage : MonoBehaviour {
         if (!isDestroy)
             _GamesObjectsReal[p_NewField].Add(gobj);
         _GridDataG.FieldsD[p_NewField].Objects.Add(objData);
-        
+
         //remove
         dataObjectsOldField.RemoveAt(indData);
         realObjectsOldField.RemoveAt(indReal);
@@ -782,14 +782,14 @@ public class Storage : MonoBehaviour {
         return gobj.name;
     }
 
-    public GameObject CreatePrefab(SaveLoadData.ObjectData objDataSave)
+    public GameObject CreatePrefab(ModelNPC.ObjectData objDataSave)
     {
         return _scriptGrid.CreatePrefabByName(objDataSave);
     }
 
     public void ClearGridData()
     {
-        _GridDataG = new SaveLoadData.GridData();
+        _GridDataG = new ModelNPC.GridData();
     }
 
     //#TARGET
@@ -818,12 +818,17 @@ public class Storage : MonoBehaviour {
             }
         }
 
-        
+
     }
 
-    
+
 
     #region Destroy
+
+    public void DestroyObject(GameObject gobj)
+    {
+        Destroy(gobj);
+    }
 
     public void DestroyAllGamesObjects()
     {
@@ -938,7 +943,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("+++++ ------- DestroyRealObject ----- !GridData.FieldsD not field=" + nameField);
             return false;
         }
-        List<SaveLoadData.ObjectData> dataObjects = _GridDataG.FieldsD[nameField].Objects;
+        List<ModelNPC.ObjectData> dataObjects = _GridDataG.FieldsD[nameField].Objects;
         int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
         if (!isCorrect)
         {

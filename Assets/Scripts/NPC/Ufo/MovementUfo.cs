@@ -12,7 +12,7 @@ public class MovementUfo : MonoBehaviour {
     private string objID;
     private UIEvents _scriptUIEvents;
     //@SAVE@
-    private SaveLoadData.GameDataUfo _dataUfo;
+    private ModelNPC.GameDataUfo _dataUfo;
     string testId;
     //string testNewName = "";
     string _resName = "";
@@ -112,7 +112,7 @@ public class MovementUfo : MonoBehaviour {
         }
 
         //@SAVE@  var dataUfo = FindObjectData() as SaveLoadData.GameDataUfo;
-        _dataUfo = FindObjectData("MoveObjectToPosition Init") as SaveLoadData.GameDataUfo;
+        _dataUfo = FindObjectData("MoveObjectToPosition Init") as ModelNPC.GameDataUfo;
 
         while (true)
         {
@@ -223,7 +223,7 @@ public class MovementUfo : MonoBehaviour {
             if (oldName != _resName)
             {
                 string callInfo = "ResavePositionData >> oldName(" + oldName + ") != _resName(" + _resName + ")";
-                _dataUfo = FindObjectData(callInfo) as SaveLoadData.GameDataUfo;
+                _dataUfo = FindObjectData(callInfo) as ModelNPC.GameDataUfo;
                 if (_dataUfo == null)
                 {
                     Debug.Log("################## ERROR MoveObjectToPosition dataUfo is Empty   GO:" + this.gameObject.name);
@@ -241,9 +241,9 @@ public class MovementUfo : MonoBehaviour {
         //+++++++++++++++++++++++
     }
 
-    private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
+    private ModelNPC.GameDataUfo FindObjectData(string callFunc)
     {
-        var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataUfo;
+        var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as ModelNPC.GameDataUfo;
 
 
         if (dataUfo == null)
@@ -271,7 +271,7 @@ public class MovementUfo : MonoBehaviour {
     public void UpdateData(string callFunc)
     {
         //Debug.Log("_____________GameObject.UpdateData ________________" + this.name);
-        _dataUfo = FindObjectData(callFunc) as SaveLoadData.GameDataUfo;
+        _dataUfo = FindObjectData(callFunc) as ModelNPC.GameDataUfo;
         //testNewName = dataUfo.NameObject;
     }
 

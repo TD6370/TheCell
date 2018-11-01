@@ -282,7 +282,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    public void CreateDataObject(SaveLoadData.ObjectData dataObj, string fieldName)
+    public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)
     {
         GameObject newGameObject = CreatePrefabByName(dataObj);
         Storage.Instance.GamesObjectsReal[fieldName].Add(newGameObject);
@@ -322,7 +322,7 @@ public class GenerateGridFields : MonoBehaviour {
                 return;
 
             indErr = "3.";
-            List<SaveLoadData.ObjectData> listDataObjectInField = _gridData.FieldsD[p_nameField].Objects;
+            List<ModelNPC.ObjectData> listDataObjectInField = _gridData.FieldsD[p_nameField].Objects;
             indErr = "4.";
             List<GameObject> listGameObjectReal = new List<GameObject>();
 
@@ -434,7 +434,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-    private int ConflictLog(GameObject gobj, string p_nameField, List<SaveLoadData.ObjectData> dataObjects)
+    private int ConflictLog(GameObject gobj, string p_nameField, List<ModelNPC.ObjectData> dataObjects)
     {
         FindPersonData findPersonData = null;
         int indDataNew = -1;
@@ -589,7 +589,7 @@ public class GenerateGridFields : MonoBehaviour {
 
         //@<<@ 
         //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
-        List<SaveLoadData.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[p_nameField].Objects;
+        List<ModelNPC.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[p_nameField].Objects;
         try
         {
             indErr = "1.";
@@ -625,8 +625,8 @@ public class GenerateGridFields : MonoBehaviour {
                         indData = newIndex;
                     }
                 }
-                
-                SaveLoadData.ObjectData dataObj = dataObjects[indData];
+
+                ModelNPC.ObjectData dataObj = dataObjects[indData];
                 if (dataObj == null)
                 {
                     Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
@@ -664,7 +664,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
 
                     //!!!!!!!!!!!!!!!!!!
-                    SaveLoadData.ObjectData dataObjNew = (SaveLoadData.ObjectData)dataObj.Clone();
+                    ModelNPC.ObjectData dataObjNew = (ModelNPC.ObjectData)dataObj.Clone();
                     var name = Helper.CreateName(dataObj.TagObject, posFieldReal, "", gobj.name);
 
 
@@ -846,7 +846,7 @@ public class GenerateGridFields : MonoBehaviour {
             Storage.Data.AddNewFieldInGrid(p_nameField, "SaveNewGameObjectToData");
         }
 
-        List<SaveLoadData.ObjectData> listDataObjectInField = _gridData.FieldsD[p_nameField].Objects;
+        List<ModelNPC.ObjectData> listDataObjectInField = _gridData.FieldsD[p_nameField].Objects;
         if (listDataObjectInField == null)
         {
             Debug.Log("******************* Error SaveNewGameObjectToDat for field: " + p_nameField + " ---  Data Objects  is NULL");
@@ -854,14 +854,14 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         //Debug.Log("______________________________________CALL CreateObjectData 3. @@Create_________________________");
-        SaveLoadData.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
+        ModelNPC.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
 
         if (dataObjectSave == null)
         {
             Debug.Log("******************* Error SaveNewGameObjectToDat  --- CreateObjectData NEW is NULL ---- for gobj: " + p_saveObject);
             return;
         }
-        SaveLoadData.ObjectData objDataOld = null;
+        ModelNPC.ObjectData objDataOld = null;
 
         int indexObjectData = -1;
 
@@ -907,7 +907,7 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
     //+++ CreateObjectData +++ LoadObjectForLook
-    public GameObject CreatePrefabByName(SaveLoadData.ObjectData objData)
+    public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     {
         string typePrefab = objData.TagObject;
         string namePrefab = objData.NameObject;
@@ -929,7 +929,7 @@ public class GenerateGridFields : MonoBehaviour {
         switch (prefabType)
         {
             case SaveLoadData.TypePrefabs.PrefabUfo:
-                var objUfo = objData as SaveLoadData.GameDataUfo;
+                var objUfo = objData as ModelNPC.GameDataUfo;
                 if (objUfo != null)
                 {
                     //LoadObjectForLook:  DATA -->> PERSONA #P#
@@ -943,7 +943,7 @@ public class GenerateGridFields : MonoBehaviour {
             case SaveLoadData.TypePrefabs.PrefabBoss: //$$
 
                 //Debug.Log("################ CreatePrefabByName.. BOSS: " + prefabType);
-                var objBoss = objData as SaveLoadData.GameDataBoss;
+                var objBoss = objData as ModelNPC.GameDataBoss;
                 if (objBoss != null)
                 {
                     //LoadObjectForLook:  DATA -->> PERSONA #P#
