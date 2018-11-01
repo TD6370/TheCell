@@ -61,6 +61,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Graph\DrawGeometry.cs" />
+    <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\NPC\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\NPC\CreateNPC.cs" />
@@ -83,9 +85,8 @@
     <Compile Include="Assets\Scripts\Storage\UpdateData.cs" />
     <Compile Include="Assets\Scripts\Temp.cs" />
     <Compile Include="Assets\Scripts\TileGen.cs" />
-    <Compile Include="Assets\Scripts\UI\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
-    <Compile Include="Assets\Scripts\UI\ManagerPalette.cs" />
+    <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
     <Compile Include="Assets\Scripts\UI\MapWorld.cs" />
     <Compile Include="Assets\Scripts\UI\TrackPointsNavigator.cs" />
     <Compile Include="Assets\Scripts\UI\UIEvents.cs" />
