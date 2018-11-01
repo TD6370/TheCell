@@ -248,4 +248,9 @@ public static class DrawExtensions
         return resColor;
     }
 
+    public static void SetAlpha(this GameObject gobj, Single _alpha = .5f)
+    {
+        gobj.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, _alpha);
+    }
+
 }

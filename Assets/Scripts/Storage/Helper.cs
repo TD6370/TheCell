@@ -130,6 +130,47 @@ public static class Helper { //: MonoBehaviour {
         return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
     }
 
+    public static string GetNameFieldObject(GameObject gobj)
+    {
+        System.Single x = gobj.transform.position.x;
+        System.Single y = gobj.transform.position.y;
+        return GetNameFieldPosit(x, y);
+    }
+
+    public static SaveLoadData.TypePrefabs GetTypePrefab(GameObject gobj)
+    {
+        SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+
+        if (gobj == null)
+            return SaveLoadData.TypePrefabs.PrefabField;
+        if (gobj.tag == null)
+            return SaveLoadData.TypePrefabs.PrefabField;
+        if(string.IsNullOrEmpty(gobj.tag.ToString()))
+            return SaveLoadData.TypePrefabs.PrefabField;
+        if (gobj.tag.ToString().IndexOf("Prefab")==-1)
+            return SaveLoadData.TypePrefabs.PrefabField;
+
+        try
+        {
+            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), gobj.tag.ToString());
+        }catch(Exception x)
+        {
+            Debug.Log("##############SaveLoadData.TypePrefabs GetTypePrefab : " + x.Message);
+        }
+        return prefabType;
+    }
+
+    public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
+    {
+        switch(typePrefab)
+        {
+            case SaveLoadData.TypePrefabs.PrefabRock:
+            case SaveLoadData.TypePrefabs.PrefabVood:
+                return true;
+        }
+        return false;
+    }
+
     public static Vector2 NormalizPosToField(System.Single x, System.Single y)
     {
         x = (int)(x / Storage.ScaleWorld);

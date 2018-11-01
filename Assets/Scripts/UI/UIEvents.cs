@@ -43,8 +43,8 @@ public class UIEvents : MonoBehaviour {
     private SaveLoadData m_scriptData;
     //private List<string> m_CommandLogList = new List<string>();
     private List<string> m_ListLog = new List<string>();
+
     
-   
 
 
     void Awake()
@@ -88,6 +88,16 @@ public class UIEvents : MonoBehaviour {
 
 
         btnTest.onClick.AddListener(TestClick);
+
+        
+        string typePrefub = this.gameObject.tag.ToString();
+
+        SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
+        if (Helper.IsTerra(typePrefab))
+        {
+
+        }
+
     }
 
     // Use this for initialization
@@ -106,8 +116,37 @@ public class UIEvents : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        //AlphaTerra();
     }
+
+
+    //public bool IsMeTerra = false;
+
+    //private void AlphaTerra()
+    //{
+
+
+    //    string typePrefub = this.gameObject.tag.ToString();
+
+    //    SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
+    //    if(Helper.IsTerra(typePrefab))
+    //    {
+    //        float posHeroY = Storage.PlayerController.transform.position.y;
+    //        float gobjY = this.transform.position.y;
+    //        float dist = Math.Abs(gobjY) - Math.Abs(posHeroY);
+    //        bool isNear = false;
+    //        if (dist < 5)
+    //            isNear = true;
+
+    //        if (gobjY > posHeroY && isNear)
+    //        {
+    //            Single _alpha = 0.5f;
+
+    //            //this.gameObject.GetComponent<SpriteRenderer>().color;
+    //            this.gameObject.SetAlpha(_alpha);
+    //        }
+    //    }
+    //}
 
     public string ListLogToString
     {

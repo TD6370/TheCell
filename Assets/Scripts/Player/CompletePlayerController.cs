@@ -391,8 +391,12 @@ public class CompletePlayerController : MonoBehaviour {
         var prefabFind = FindFieldCurrent();
         if (prefabFind != null)
         {
-            //txtLog.text = prefabFind.name.ToString();
+            txtLog.text = prefabFind.name.ToString();
+            Helper.GetNameFieldPosit(prefabFind.transform.position.x, prefabFind.transform.position.y);
+            //Storage.Person.ColorFindCursorObject  Curent  Helper.GetNameFieldObject(prefabFind);
+            //Storage.PlayerController.Cur
             //>>>>>> SetTextLog(prefabFind.name.ToString());
+            Storage.Instance.SelectField = Helper.GetNameFieldObject(prefabFind);
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
         }
     }

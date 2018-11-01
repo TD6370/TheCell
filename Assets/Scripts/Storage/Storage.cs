@@ -213,6 +213,9 @@ public class Storage : MonoBehaviour {
     public event EventID OnSelectGameObjectID;
 
     public Camera MainCamera;
+
+    public string SelectField = "";
+
     //public string SelectGameObjectID="?";
     private string m_SelectGameObjectID = "?";
     public string SelectGameObjectID
