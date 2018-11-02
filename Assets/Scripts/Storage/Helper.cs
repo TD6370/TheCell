@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public static class Helper { //: MonoBehaviour {
@@ -166,6 +169,22 @@ public static class Helper { //: MonoBehaviour {
         {
             case SaveLoadData.TypePrefabs.PrefabRock:
             case SaveLoadData.TypePrefabs.PrefabVood:
+            case SaveLoadData.TypePrefabs.PrefabElka:
+            case SaveLoadData.TypePrefabs.PrefabWallRock:
+            case SaveLoadData.TypePrefabs.PrefabWallWood:
+                return true;
+        }
+        return false;
+    }
+
+    public static bool IsTerraAlpha(SaveLoadData.TypePrefabs typePrefab)
+    {
+        switch (typePrefab)
+        {
+            case SaveLoadData.TypePrefabs.PrefabVood:
+            case SaveLoadData.TypePrefabs.PrefabElka:
+            case SaveLoadData.TypePrefabs.PrefabWallRock:
+            case SaveLoadData.TypePrefabs.PrefabWallWood:
                 return true;
         }
         return false;
@@ -434,6 +453,186 @@ public static class HelperExtension
     }
 
 }
+
+#region Serialize Helper
+
+public class Serializator
+{
+    static Type[] extraTypes = {
+            typeof(ModelNPC.FieldData),
+            typeof(ModelNPC.ObjectData),
+
+            typeof(ModelNPC.GameDataUfo),
+
+            typeof(ModelNPC.GameDataNPC),
+            typeof(ModelNPC.PersonData),
+
+            typeof(ModelNPC.PersonDataBoss),
+            typeof(ModelNPC.GameDataBoss) };
+
+    static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
+    {
+
+        if (isNewWorld)
+        {
+            if (File.Exists(datapath))
+            {
+                try
+                {
+                    File.Delete(datapath);
+                }
+                catch (Exception x)
+                {
+                    Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
+                }
+            }
+        }
+
+        //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+        //## 
+        state.FieldsXML = state.FieldsD.ToList();
+
+        //## 
+        Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+
+        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+
+        FileStream fs = new FileStream(datapath, FileMode.Create);
+
+        serializer.Serialize(fs, state);
+        fs.Close();
+
+        state.FieldsXML = null;
+        //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+    }
+
+    static public ModelNPC.GridData LoadGridXml(string datapath)
+    {
+        string stepErr = "start";
+        ModelNPC.GridData state = null;
+        try
+        {
+            Debug.Log("Loaded Xml GridData start...");
+
+            stepErr = ".1";
+            //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+            stepErr = ".2";
+            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+            stepErr = ".3";
+            FileStream fs = new FileStream(datapath, FileMode.Open);
+            stepErr = ".4";
+            state = (ModelNPC.GridData)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+
+            stepErr = ".6";
+            state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+            stepErr = ".7";
+            Debug.Log("Loaded Xml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+            //## 
+            state.FieldsXML = null;
+        }
+        catch (Exception x)
+        {
+            state = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        return state;
+    }
+
+    static public ModelNPC.LevelData LoadPersonXml(string datapath)
+    {
+        string stepErr = "start";
+        ModelNPC.LevelData state = null;
+        try
+        {
+            Debug.Log("Loaded Xml GridData start...");
+
+            stepErr = ".1";
+            stepErr = ".2";
+            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.LevelData), extraTypes);
+            stepErr = ".3";
+            FileStream fs = new FileStream(datapath, FileMode.Open);
+            stepErr = ".4";
+            state = (ModelNPC.LevelData)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+            stepErr = ".6";
+            state.Persons = state.PersonsXML.ToDictionary(x => x.Key, x => x.Value);
+            stepErr = ".7";
+            Debug.Log("Loaded Xml CasePersonData :" + state.Persons.Count() + "   XML:" + state.PersonsXML.Count() + "     datapath=" + datapath);
+            state.PersonsXML = null;
+        }
+        catch (Exception x)
+        {
+            state = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        return state;
+    }
+
+    static public T LoadXml<T>(string datapath) where T : class
+    {
+        string stepErr = "start";
+        T state = null;
+        try
+        {
+            //Debug.Log("Loaded Xml GridData start...");
+
+            stepErr = ".1";
+            stepErr = ".2";
+            XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+            stepErr = ".3";
+            FileStream fs = new FileStream(datapath, FileMode.Open);
+            stepErr = ".4";
+            state = (T)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+            stepErr = ".6";
+            stepErr = ".7";
+        }
+        catch (Exception x)
+        {
+            state = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        return state;
+    }
+
+    static public void SaveXml<T>(T state, string datapath, bool isResave = false) where T : class
+    {
+
+        if (isResave)
+        {
+            if (File.Exists(datapath))
+            {
+                try
+                {
+                    File.Delete(datapath);
+                }
+                catch (Exception x)
+                {
+                    Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
+                }
+            }
+        }
+
+        XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+
+        FileStream fs = new FileStream(datapath, FileMode.Create);
+
+        serializer.Serialize(fs, state);
+        fs.Close();
+
+    }
+}
+
+#endregion
+
+
 
 
 

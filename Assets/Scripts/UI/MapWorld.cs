@@ -12,6 +12,11 @@ public class MapWorld : MonoBehaviour {
     public GameObject prefabMapCell;
     public GameObject prefabFrameMap;
 
+    //--- TAILS ---
+    public GameObject BackPalette;
+    public Grid GridTails;
+    public GameObject TailsMap;
+
     public int SizeCellMap = 25;
 
     private string[,] colorMap = new string[1000, 1000];

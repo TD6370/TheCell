@@ -12,12 +12,13 @@ public class StoragePerson : MonoBehaviour {
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
-    public TypeModifPerson ModificatorPerson = TypeModifPerson.Alpha;
+    public TypeModifPerson ModificatorPerson = TypeModifPerson.PointPos;
 
     public enum TypeModifPerson
     {
         Alpha, 
-        Kill
+        Kill,
+        PointPos
     }
 
     public Dictionary<string, Sprite> SpriteCollection;
@@ -242,6 +243,9 @@ public class StoragePerson : MonoBehaviour {
 
     public void VeiwCursorGameObjectData(string _fieldCursor)
     {
+
+        Storage.Instance.SelectFieldCursor = _fieldCursor;
+        Storage.Events.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
         //Storage.Events.ListLogClear();
         GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
 
@@ -333,6 +337,10 @@ public class StoragePerson : MonoBehaviour {
                 break;
             case TypeModifPerson.Kill:
                 Storage.Instance.AddDestroyGameObject(gobj);
+                break;
+
+            case TypeModifPerson.PointPos:
+                Storage.Events.PointGO.transform.position = gobj.transform.position;
                 break;
             default:
                 Storage.Events.ListLogAdd = "Empty modificator > " + ModificatorPerson.ToString();

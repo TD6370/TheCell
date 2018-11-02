@@ -13,6 +13,14 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabRock;
     public GameObject PrefabUfo;
     public GameObject PrefabBoss;
+    public GameObject PrefabElka;
+    public GameObject PrefabWallRock;
+    public GameObject PrefabWallWood;
+
+    //--- TAILS ---
+    public GameObject BackPalette;
+    public Grid GridTails;
+    public GameObject TailsMap;
 
     //public GameObject 
     public static float Spacing = 2f;
@@ -27,17 +35,7 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
 
-    static Type[] extraTypes = {
-            typeof(ModelNPC.FieldData),
-            typeof(ModelNPC.ObjectData),
-
-            typeof(ModelNPC.GameDataUfo),
-
-            typeof(ModelNPC.GameDataNPC),
-            typeof(ModelNPC.PersonData),
-
-            typeof(ModelNPC.PersonDataBoss),
-            typeof(ModelNPC.GameDataBoss) };  
+  
 
     private IEnumerable<string> _namesPrefabs
     {   get
@@ -57,15 +55,16 @@ public class SaveLoadData : MonoBehaviour {
         PrefabRock,
         PrefabVood,
         PrefabUfo,
-        PrefabBoss
+        PrefabBoss,
+        PrefabElka,
+        PrefabWallRock,
+        PrefabWallWood,
     }
     
 
     void Start()
     {
         InitData();
-
-        
     }
 
     // Update is called once per frame
@@ -91,6 +90,7 @@ public class SaveLoadData : MonoBehaviour {
         }
 
         int coutCreateObjects = 0;
+        TypePrefabs prefabName = TypePrefabs.PrefabField;
         Debug.Log("# CreateDataGamesObjectsWorld...");
         Storage.Instance.ClearGridData();
 
@@ -106,23 +106,19 @@ public class SaveLoadData : MonoBehaviour {
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
                 {
-
-                    //Type prefab
-                    
-                    //#TT YES BOSS
-                    int intTypePrefab = UnityEngine.Random.Range(1, 5);
-                    //#TT YES UFO
-                    //int intTypePrefab = UnityEngine.Random.Range(1, 4);
-                    //#TT NOT UFO
-                    //int intTypePrefab = UnityEngine.Random.Range(1, 3);
-
-                    TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+                    //GEN -----
+                    prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
+                    if (prefabName == TypePrefabs.PrefabField)
+                        continue;
+                    //-----------
 
                     int _y = y * (-1);
                     Vector3 pos = new Vector3(x, _y, 0) * Spacing;
                     pos.z = -1;
                     if (prefabName == TypePrefabs.PrefabUfo)
                         pos.z = -2;
+
+                    
 
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
@@ -131,6 +127,11 @@ public class SaveLoadData : MonoBehaviour {
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
+
+                    if(objDataSave.TagObject=="8")
+                    {
+                        Debug.Log("@@@@@@@@");
+                    }
 
                     coutCreateObjects++;
 
@@ -144,7 +145,36 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
     }
 
-   
+
+    //GEN -----
+    private TypePrefabs GenObjectWorld()
+    {
+        //Type prefab
+        //++ Elka, WallRock, WallWood
+        int intTypePrefab = UnityEngine.Random.Range(1, 8);
+
+
+        //#TT YES BOSS
+        //int intTypePrefab = UnityEngine.Random.Range(1, 5);
+        //#TT YES UFO
+        //int intTypePrefab = UnityEngine.Random.Range(1, 4);
+        //#TT NOT UFO
+        //int intTypePrefab = UnityEngine.Random.Range(1, 3);
+
+        TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+        int rnd1 = UnityEngine.Random.Range(1, 3);
+        if(rnd1!=1)
+        {
+            prefabName = TypePrefabs.PrefabField;
+        }
+        //TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+
+
+        //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
+        return prefabName;
+    }
+
+
     public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
     {
         ModelNPC.ObjectData newObject;
@@ -297,6 +327,11 @@ public class SaveLoadData : MonoBehaviour {
     {
         try
         {
+            if(namePrefab=="8")
+            {
+                Debug.Log("@@@@@@@@@@@@@@@@@@@@");
+            }
+
             TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
             GameObject resPrefab = null;
 
@@ -314,6 +349,16 @@ public class SaveLoadData : MonoBehaviour {
                 case TypePrefabs.PrefabBoss:
                     resPrefab = Instantiate(PrefabBoss);
                     break;
+                case TypePrefabs.PrefabWallRock:
+                    resPrefab = Instantiate(PrefabWallRock);
+                    break;
+                case TypePrefabs.PrefabWallWood:
+                    resPrefab = Instantiate(PrefabWallWood);
+                    break;
+                case TypePrefabs.PrefabElka:
+                    resPrefab = Instantiate(PrefabElka);
+                    break;
+
                 default:
                     Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
                     break;
@@ -331,201 +376,7 @@ public class SaveLoadData : MonoBehaviour {
 
     
 
-    //---------------------------------------------------------------------------------------------------------------------
-
-    public class Serializator {
-
-        
-        static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
-        {
-
-            if (isNewWorld)
-            {
-                if (File.Exists(datapath))
-                {
-                    try
-                    {
-                        File.Delete(datapath);
-                    }catch(Exception x)
-                    {
-                        Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
-                    }
-                }
-            }
-
-            //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
-            //## 
-            state.FieldsXML = state.FieldsD.ToList();
-
-            //## 
-            Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
-
-            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
-
-		    FileStream fs = new FileStream(datapath, FileMode.Create);
-
-		    serializer.Serialize(fs, state); 
-		    fs.Close();
-
-            state.FieldsXML = null;
-            //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
-	    }
-	
-	    static public ModelNPC.GridData LoadGridXml(string datapath){
-            string stepErr = "start";
-            ModelNPC.GridData state = null;
-            try
-            {
-                Debug.Log("Loaded Xml GridData start...");
-
-                stepErr = ".1";
-                //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
-                stepErr = ".2";
-                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
-                stepErr = ".3";
-                FileStream fs = new FileStream(datapath, FileMode.Open);
-                stepErr = ".4";
-                state = (ModelNPC.GridData)serializer.Deserialize(fs);
-                stepErr = ".5";
-                fs.Close();
-
-                stepErr = ".6";
-                state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
-                stepErr = ".7";
-                Debug.Log("Loaded Xml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
-                //## 
-                state.FieldsXML = null;
-            }
-            catch (Exception x)
-            {
-                state = null;
-                Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
-            }
-
-		    return state;
-	    }
-
-        static public ModelNPC.LevelData LoadPersonXml(string datapath)
-        {
-            string stepErr = "start";
-            ModelNPC.LevelData state = null;
-            try
-            {
-                Debug.Log("Loaded Xml GridData start...");
-
-                stepErr = ".1";
-                stepErr = ".2";
-                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.LevelData), extraTypes);
-                stepErr = ".3";
-                FileStream fs = new FileStream(datapath, FileMode.Open);
-                stepErr = ".4";
-                state = (ModelNPC.LevelData)serializer.Deserialize(fs);
-                stepErr = ".5";
-                fs.Close();
-                stepErr = ".6";
-                state.Persons = state.PersonsXML.ToDictionary(x => x.Key, x => x.Value);
-                stepErr = ".7";
-                Debug.Log("Loaded Xml CasePersonData :" + state.Persons.Count() + "   XML:" + state.PersonsXML.Count() + "     datapath=" + datapath);
-                state.PersonsXML = null;
-            }
-            catch (Exception x)
-            {
-                state = null;
-                Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
-            }
-
-            return state;
-        }
-
-        //static public CommandStore LoadCommandsStore(string datapath)
-        //{
-        //    string stepErr = "start";
-        //    CommandStore state = null;
-        //    try
-        //    {
-        //        Debug.Log("Loaded Xml GridData start...");
-
-        //        stepErr = ".1";
-        //        stepErr = ".2";
-        //        XmlSerializer serializer = new XmlSerializer(typeof(CommandStore), extraTypes);
-        //        stepErr = ".3";
-        //        FileStream fs = new FileStream(datapath, FileMode.Open);
-        //        stepErr = ".4";
-        //        state = (CommandStore)serializer.Deserialize(fs);
-        //        stepErr = ".5";
-        //        fs.Close();
-        //        stepErr = ".6";
-        //        stepErr = ".7";
-        //    }
-        //    catch (Exception x)
-        //    {
-        //        state = null;
-        //        Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
-        //    }
-
-        //    return state;
-        //}
-
-        static public T LoadXml<T>(string datapath) where T : class
-        {
-            string stepErr = "start";
-            T state = null;
-            try
-            {
-                //Debug.Log("Loaded Xml GridData start...");
-
-                stepErr = ".1";
-                stepErr = ".2";
-                XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
-                stepErr = ".3";
-                FileStream fs = new FileStream(datapath, FileMode.Open);
-                stepErr = ".4";
-                state = (T)serializer.Deserialize(fs);
-                stepErr = ".5";
-                fs.Close();
-                stepErr = ".6";
-                stepErr = ".7";
-            }
-            catch (Exception x)
-            {
-                state = null;
-                Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
-            }
-
-            return state;
-        }
-
-        static public void SaveXml<T>(T state, string datapath, bool isResave = false) where T : class
-        {
-
-            if (isResave)
-            {
-                if (File.Exists(datapath))
-                {
-                    try
-                    {
-                        File.Delete(datapath);
-                    }
-                    catch (Exception x)
-                    {
-                        Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapath + " : " + x.Message);
-                    }
-                }
-            }
-
-            XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
-
-            FileStream fs = new FileStream(datapath, FileMode.Create);
-
-            serializer.Serialize(fs, state);
-            fs.Close();
-
-        }
-    }
-
     
-    //------------------------------------------------------------------------------
-    //------------------------------------------------------------------------------
 
     
 

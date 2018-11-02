@@ -27,6 +27,8 @@ public class UIEvents : MonoBehaviour {
     public GameObject contentListExpandPerson;
     public GameObject PrefabExpandPanel;
     public GameObject ScrollListBoxPerson;
+    public GameObject PointGO;
+
     public Text prefabText;
     public Button prefabButtonCommand;
     public static string ColorExpClose = "#FFFFFF";
@@ -691,7 +693,7 @@ public class UIEvents : MonoBehaviour {
     private void LoadCommandTool()
     {
         string path = Storage.Instance.DataPathUserData;
-        CommandStore storeComm = SaveLoadData.Serializator.LoadXml<CommandStore>(path);
+        CommandStore storeComm = Serializator.LoadXml<CommandStore>(path);
         
         if (storeComm==null)
         {
@@ -733,7 +735,7 @@ public class UIEvents : MonoBehaviour {
             };
 
             string path = Storage.Instance.DataPathUserData;
-            SaveLoadData.Serializator.SaveXml<CommandStore>(storeComm, path, true);
+            Serializator.SaveXml<CommandStore>(storeComm, path, true);
         }
         Debug.Log("Save Commands Tool count : " + storeComm.CommadsTemplate.Count);
         //ListLogAdd = "Save Commands Tool count : " + storeComm.CommadsTemplate.Count;

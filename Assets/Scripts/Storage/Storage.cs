@@ -214,7 +214,8 @@ public class Storage : MonoBehaviour {
 
     public Camera MainCamera;
 
-    public string SelectField = "";
+    public string SelectFieldPosHero = "";
+    public string SelectFieldCursor = "";
 
     //public string SelectGameObjectID="?";
     private string m_SelectGameObjectID = "?";
@@ -266,6 +267,11 @@ public class Storage : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+
+        _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
+        _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
+        _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
+
         ZonaField = null;
         ZonaReal = null;
 
@@ -278,6 +284,8 @@ public class Storage : MonoBehaviour {
         //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
         InitObjectsGrid();
 
+        //LoadData();
+
         InitComponents();
 
         //StartGenGrigField();
@@ -285,6 +293,8 @@ public class Storage : MonoBehaviour {
         LoadData();
 
         LoadGameObjects();
+
+        //LoadData();
     }
 
     void Update()
@@ -366,9 +376,22 @@ public class Storage : MonoBehaviour {
         _StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
 
-        _PlayerManager = gameObject.AddComponent<PlayerManager>();
+        //_PlayerManager = gameObject.AddComponent<PlayerManager>();
+        //_PlayerManager = GetComponentInParent<PlayerManager>();
+        _PlayerManager = GetComponent<PlayerManager>();
+        if (_PlayerManager==null)
+        {
+            Debug.Log("########## InitComponents PlayerManager is Empty");
+            return;
+        }
+        _PlayerManager.Init();
 
-        _Palette = gameObject.AddComponent<ManagerPalette>();
+        _Palette = gameObject.GetComponent<ManagerPalette>();
+        if (_Palette == null)
+        {
+            Debug.Log("########## InitComponents _Palette is Empty");
+            return;
+        }
     }
 
     private void InitObjectsGrid()
@@ -494,14 +517,14 @@ public class Storage : MonoBehaviour {
     {
         //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
         //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
-        _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
+        //_datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
 
         //Debug.Log("# LoadPathData... " + _datapathLevel);
 
         if (File.Exists(_datapathLevel))
         {
             //@ST@ _gridData = Serializator.LoadGridXml(_datapathLevel);
-            _GridDataG = SaveLoadData.Serializator.LoadGridXml(_datapathLevel);
+            _GridDataG = Serializator.LoadGridXml(_datapathLevel);
         }
         else
         {
@@ -511,7 +534,7 @@ public class Storage : MonoBehaviour {
         _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
         if (File.Exists(_datapathPerson))
         {
-            var _personsData = SaveLoadData.Serializator.LoadPersonXml(_datapathPerson);
+            var _personsData = Serializator.LoadPersonXml(_datapathPerson);
             _StoragePerson.PersonsDataInit(_personsData);
         }
         else
@@ -519,8 +542,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
 
-        _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
-        _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
+        
 
 
     }
@@ -1009,68 +1031,7 @@ public class Storage : MonoBehaviour {
     //    return position;
     //}
 
-    public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
-    {
-        Debug.Log("DrawTrack Storage ...........");
 
-        //DrawTrack2(trackPoints, colorTrack);
-        //    return;
-
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-        {
-            Debug.Log("LineRenderer is null !!!!");
-            return;
-        }
-
-        lineRenderer.startColor = colorTrack;
-        lineRenderer.endColor = colorTrack;
-
-        //lineRenderer.StartColor(Color.green, Color.green);
-
-        //lineRenderer.SetWidth(0.2F, 0.2F);
-        lineRenderer.startWidth = 0.2F;
-        lineRenderer.endWidth = 0.2F;
-
-       //int size = 2;
-        //lineRenderer.SetVertexCount(size);
-        lineRenderer.positionCount = trackPoints.Count();// size;
-
-        
-        //Vector3 pos1 = new Vector3(posTrack.x, posTrack.y, -2);
-        //lineRenderer.SetPosition(0, pos1);
-        //Vector3 pos2 = new Vector3(posTrack.x + 2, posTrack.y + 2, -2);
-        //lineRenderer.SetPosition(1, pos2);
-        //Vector3 pos3 = new Vector3(posTrack.x - 2, posTrack.y + 2, -2);
-        //lineRenderer.SetPosition(2, pos3);
-        //Vector3 pos4 = new Vector3(posTrack.x - 2, posTrack.y - 2, -2);
-        //lineRenderer.SetPosition(3, pos4);
-        //Vector3 pos5 = new Vector3(posTrack.x + 2, posTrack.y - 2, -2);
-        //lineRenderer.SetPosition(4, pos5);
-        //Vector3 pos6 = new Vector3(posTrack.x, posTrack.y, -2);
-        //lineRenderer.SetPosition(5, pos6);
-        string indErr = "";
-        try
-        {
-            for (int i = 0; i < trackPoints.Count(); i++)
-            {
-                indErr = i.ToString();
-                Vector3 posNext = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
-                indErr += "pos1=" + posNext.x + "x" + posNext.y;
-                if (lineRenderer != null)
-                {
-                    //Debug.Log("?????? DrawTrack lineRenderer i =" + i + "   posNext=" + posNext);
-                    lineRenderer.SetPosition(i, posNext);
-                }
-                else
-                    Debug.Log("####### DrawTrack lineRenderer is null");
-            }
-        }catch(Exception x)
-        {
-            Debug.Log("####### Error DrawTrack (" + indErr + ") : " + x.Message);
-        }
-
-    }
 
     IEnumerator AminateAlphaColor(GameObject obj)
     {

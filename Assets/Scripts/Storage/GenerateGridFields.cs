@@ -390,7 +390,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                 indErr = "14.";
                 dataObj.IsReality = true;
-                indErr = "15.";
+                indErr = "15. dataObj = " + dataObj.NameObject + " " + dataObj.ToString();
                 
                 GameObject newField = CreatePrefabByName(dataObj);
                 indErr = "16.";
@@ -918,49 +918,60 @@ public class GenerateGridFields : MonoBehaviour {
         //GameObject newPrefab = FindPrefab(typePrefab);
         //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
         //----------------2.
-        GameObject newObjGame = FindPrefab(typePrefab);
-        newObjGame.transform.position = pos; //@!@.1
-
-        SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-
-        if (!String.IsNullOrEmpty(newObjGame.tag))
-            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), newObjGame.tag.ToString()); ;
-
-        switch (prefabType)
+        GameObject newObjGame = new GameObject();
+        try
         {
-            case SaveLoadData.TypePrefabs.PrefabUfo:
-                var objUfo = objData as ModelNPC.GameDataUfo;
-                if (objUfo != null)
-                {
-                    //LoadObjectForLook:  DATA -->> PERSONA #P#
-                    objUfo.UpdateGameObject(newObjGame);
-                }
-                else
-                {
-                    Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
-                }
-                break;
-            case SaveLoadData.TypePrefabs.PrefabBoss: //$$
+            newObjGame = FindPrefab(typePrefab);
+            newObjGame.transform.position = pos; //@!@.1
 
-                //Debug.Log("################ CreatePrefabByName.. BOSS: " + prefabType);
-                var objBoss = objData as ModelNPC.GameDataBoss;
-                if (objBoss != null)
-                {
-                    //LoadObjectForLook:  DATA -->> PERSONA #P#
-                    objBoss.UpdateGameObject(newObjGame);
-                }
-                else
-                {
-                    Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
-                }
-                break;
-            default:
-                //Debug.Log("################ CreatePrefabByName.. default Type: " + prefabType);
-                break;
+            SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+
+        
+            if (!String.IsNullOrEmpty(newObjGame.tag))
+                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), newObjGame.tag.ToString()); ;
+
+            switch (prefabType)
+            {
+                case SaveLoadData.TypePrefabs.PrefabUfo:
+                    var objUfo = objData as ModelNPC.GameDataUfo;
+                    if (objUfo != null)
+                    {
+                        //LoadObjectForLook:  DATA -->> PERSONA #P#
+                        objUfo.UpdateGameObject(newObjGame);
+                    }
+                    else
+                    {
+                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+                    }
+                    break;
+                case SaveLoadData.TypePrefabs.PrefabBoss: //$$
+
+                    //Debug.Log("################ CreatePrefabByName.. BOSS: " + prefabType);
+                    var objBoss = objData as ModelNPC.GameDataBoss;
+                    if (objBoss != null)
+                    {
+                        //LoadObjectForLook:  DATA -->> PERSONA #P#
+                        objBoss.UpdateGameObject(newObjGame);
+                    }
+                    else
+                    {
+                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+                    }
+                    break;
+                default:
+                    //Debug.Log("################ CreatePrefabByName.. default Type: " + prefabType);
+                    break;
+            }
+            //.............
+
+            newObjGame.name = namePrefab;
+
         }
-        //.............
+        catch (Exception x)
+        {
+            Debug.Log("############### CreatePrefabByName: tag " + newObjGame.tag + " " + x.Message);
+        }
 
-        newObjGame.name = namePrefab;
         return newObjGame;
     }
 

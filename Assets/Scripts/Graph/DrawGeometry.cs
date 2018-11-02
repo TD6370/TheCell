@@ -198,8 +198,14 @@ public static class DrawExtensions
     public static Color ToColor(this string strColor)
     {
         Color outColor = Color.clear;
-        ColorUtility.TryParseHtmlString(strColor, out outColor);
-
+        try
+        {
+            ColorUtility.TryParseHtmlString(strColor, out outColor);
+        }
+        catch(Exception x)
+        {
+            Debug.Log("##################### ToColor: " + strColor  + " > " + x.Message);
+        }
         return outColor;
     }
 

@@ -138,7 +138,7 @@ public class UpdateData { //: MonoBehaviour {
 
     public void SaveGridGameObjectsXml(bool isNewWorld = false)
     {
-        SaveLoadData.Serializator.SaveGridXml(_GridDataG, _datapathLevel, isNewWorld);
+        Serializator.SaveGridXml(_GridDataG, _datapathLevel, isNewWorld);
     }
 
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc)

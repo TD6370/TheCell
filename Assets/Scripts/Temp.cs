@@ -14,6 +14,68 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
+    //{
+    //    Debug.Log("DrawTrack Storage ...........");
+
+    //    //DrawTrack2(trackPoints, colorTrack);
+    //    //    return;
+
+    //    LineRenderer lineRenderer = GetComponent<LineRenderer>();
+    //    if (lineRenderer == null)
+    //    {
+    //        Debug.Log("LineRenderer is null !!!!");
+    //        return;
+    //    }
+
+    //    lineRenderer.startColor = colorTrack;
+    //    lineRenderer.endColor = colorTrack;
+
+    //    //lineRenderer.StartColor(Color.green, Color.green);
+
+    //    //lineRenderer.SetWidth(0.2F, 0.2F);
+    //    lineRenderer.startWidth = 0.2F;
+    //    lineRenderer.endWidth = 0.2F;
+
+    //   //int size = 2;
+    //    //lineRenderer.SetVertexCount(size);
+    //    lineRenderer.positionCount = trackPoints.Count();// size;
+
+
+    //    //Vector3 pos1 = new Vector3(posTrack.x, posTrack.y, -2);
+    //    //lineRenderer.SetPosition(0, pos1);
+    //    //Vector3 pos2 = new Vector3(posTrack.x + 2, posTrack.y + 2, -2);
+    //    //lineRenderer.SetPosition(1, pos2);
+    //    //Vector3 pos3 = new Vector3(posTrack.x - 2, posTrack.y + 2, -2);
+    //    //lineRenderer.SetPosition(2, pos3);
+    //    //Vector3 pos4 = new Vector3(posTrack.x - 2, posTrack.y - 2, -2);
+    //    //lineRenderer.SetPosition(3, pos4);
+    //    //Vector3 pos5 = new Vector3(posTrack.x + 2, posTrack.y - 2, -2);
+    //    //lineRenderer.SetPosition(4, pos5);
+    //    //Vector3 pos6 = new Vector3(posTrack.x, posTrack.y, -2);
+    //    //lineRenderer.SetPosition(5, pos6);
+    //    string indErr = "";
+    //    try
+    //    {
+    //        for (int i = 0; i < trackPoints.Count(); i++)
+    //        {
+    //            indErr = i.ToString();
+    //            Vector3 posNext = new Vector3(trackPoints[i].x, trackPoints[i].y, -2);
+    //            indErr += "pos1=" + posNext.x + "x" + posNext.y;
+    //            if (lineRenderer != null)
+    //            {
+    //                //Debug.Log("?????? DrawTrack lineRenderer i =" + i + "   posNext=" + posNext);
+    //                lineRenderer.SetPosition(i, posNext);
+    //            }
+    //            else
+    //                Debug.Log("####### DrawTrack lineRenderer is null");
+    //        }
+    //    }catch(Exception x)
+    //    {
+    //        Debug.Log("####### Error DrawTrack (" + indErr + ") : " + x.Message);
+    //    }
+
+    //}
 
     //private void CreateTypesBoss()
     //{

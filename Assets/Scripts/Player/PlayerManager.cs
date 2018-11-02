@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
 
-
+    public Color ColorCurrentField = Color.yellow;
     PlayerData m_playerDataGame;
 
     private void Awake()
@@ -15,6 +15,11 @@ public class PlayerManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        //LoadPlayerData();
+    }
+
+    public void Init()
+    {
         LoadPlayerData();
     }
 	
@@ -27,7 +32,7 @@ public class PlayerManager : MonoBehaviour {
     {
         Debug.Log("Saving player data....");
         string path = Storage.Instance.DataPathPlayer;
-        SaveLoadData.Serializator.SaveXml<PlayerData>(m_playerDataGame, path, true);
+        Serializator.SaveXml<PlayerData>(m_playerDataGame, path, true);
     }
 
     
@@ -35,10 +40,10 @@ public class PlayerManager : MonoBehaviour {
     public void LoadPlayerData()
     {
         Debug.Log("Loading player data....");
-        m_playerDataGame = SaveLoadData.Serializator.LoadXml<PlayerData>(Storage.Instance.DataPathPlayer);
+        m_playerDataGame = Serializator.LoadXml<PlayerData>(Storage.Instance.DataPathPlayer);
         if (m_playerDataGame == null)
         {
-            Debug.Log("############## LoadPlayerData is empty");
+            Debug.Log("############## LoadPlayerData is empty : path=" + Storage.Instance.DataPathPlayer);
             m_playerDataGame = new PlayerData();
         }
     }
@@ -96,6 +101,20 @@ public class PlayerManager : MonoBehaviour {
         Debug.Log("Teleported Hero ))");
     }
 
-    
+    public void RestructGrid()
+    {
+        var prefabFind =  Storage.PlayerController.FindFieldCurrent();
+        if (prefabFind != null)
+        {
+            Storage.Events.ListLogAdd = prefabFind.name.ToString();
+            Helper.GetNameFieldPosit(prefabFind.transform.position.x, prefabFind.transform.position.y);
+            //Storage.Person.ColorFindCursorObject  Curent  Helper.GetNameFieldObject(prefabFind);
+            //Storage.PlayerController.Cur
+            //>>>>>> SetTextLog(prefabFind.name.ToString());
+            Storage.Instance.SelectFieldPosHero = Helper.GetNameFieldObject(prefabFind);
+            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
+        }
+    }
+
 
 }

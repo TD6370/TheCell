@@ -22,8 +22,8 @@ public class CompletePlayerController : MonoBehaviour {
     public float Speed;             //Floating point variable to store the player's movement speed.
     [Space]
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
-    public Text txtLog;
-    public Color ColorCurrentField = Color.yellow;
+    //public Text txtLog;
+    //public Color ColorCurrentField = Color.yellow;
     //public Color ColorSelectedCursorObject = Color.cyan;
     //public Color ColorFindCursorObject = Color.magenta;
     //List<string> listLog = new List<string>();
@@ -108,7 +108,7 @@ public class CompletePlayerController : MonoBehaviour {
 
         if (_movement.x != 0 || _movement.y != 0)
         {
-            RestructGrid();
+            Storage.Player.RestructGrid();
         }
 
         //CalculateDiffCenterHero();
@@ -386,20 +386,20 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-    private void RestructGrid()
-    {
-        var prefabFind = FindFieldCurrent();
-        if (prefabFind != null)
-        {
-            txtLog.text = prefabFind.name.ToString();
-            Helper.GetNameFieldPosit(prefabFind.transform.position.x, prefabFind.transform.position.y);
-            //Storage.Person.ColorFindCursorObject  Curent  Helper.GetNameFieldObject(prefabFind);
-            //Storage.PlayerController.Cur
-            //>>>>>> SetTextLog(prefabFind.name.ToString());
-            Storage.Instance.SelectField = Helper.GetNameFieldObject(prefabFind);
-            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
-        }
-    }
+    //private void RestructGrid()
+    //{
+    //    var prefabFind = FindFieldCurrent();
+    //    if (prefabFind != null)
+    //    {
+    //        txtLog.text = prefabFind.name.ToString();
+    //        Helper.GetNameFieldPosit(prefabFind.transform.position.x, prefabFind.transform.position.y);
+    //        //Storage.Person.ColorFindCursorObject  Curent  Helper.GetNameFieldObject(prefabFind);
+    //        //Storage.PlayerController.Cur
+    //        //>>>>>> SetTextLog(prefabFind.name.ToString());
+    //        Storage.Instance.SelectField = Helper.GetNameFieldObject(prefabFind);
+    //        prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
+    //    }
+    //}
 
     private void BeforeDestroyUfo()
     {
