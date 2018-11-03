@@ -12,9 +12,12 @@ public class ManagerPalette : MonoBehaviour {
     public Color ColorWallWood;// = Color.clear; //"#9F673E".ToColor();
 
     public static Dictionary<string, Color> PaletteColors = new Dictionary<string, Color>();
+    public Dictionary<string, Texture2D> TexturesPrefabs = new Dictionary<string, Texture2D>();
+    public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
+    
 
 
-private void Awake()
+    private void Awake()
     {
         PaletteColors = new Dictionary<string, Color>
         {
@@ -39,6 +42,7 @@ private void Awake()
 
         };
 
+        
         //{ "PrefabVood",ColorVood },
         //{ "PrefabRock",ColorRock },
     }
@@ -64,9 +68,38 @@ private void Awake()
         //    {"PrefabWallWood",ColorWallWood },
 
         //};
-    }
 
-    public static Color GetColor(string nameColor)
+        TexturesPrefabs = new Dictionary<string, Texture2D>
+        {
+            {"PrefabVood", Storage.GridData.PrefabVood.GetComponent<SpriteRenderer>().sprite.texture },
+            {"PrefabElka", Storage.GridData.PrefabElka .GetComponent<SpriteRenderer>().sprite.texture },
+            {"PrefabRock", Storage.GridData.PrefabRock.GetComponent<SpriteRenderer>().sprite.texture },
+            {"PrefabWallRock", Storage.GridData.PrefabWallRock.GetComponent<SpriteRenderer>().sprite.texture },
+            {"PrefabWallWood", Storage.GridData.PrefabWallWood.GetComponent<SpriteRenderer>().sprite.texture },
+            //{"PrefaField", Storage.GridData .GetComponent<SpriteRenderer>().sprite.texture },
+        };
+
+
+        TexturesMaps = new Dictionary<string, Texture2D>
+        {
+            {"PrefabVood", Storage.Map.textureVood },
+            {"PrefabElka", Storage.Map.textureElka },
+            {"PrefabRock", Storage.Map.textureRock },
+            {"PrefabWallRock", Storage.Map.textureWallRock },
+            {"PrefabWallWood", Storage.Map.textureWallWood },
+            {"PrefabField", Storage.Map.textureField },
+        };
+
+        //public Texture2D textureField;
+        //public Texture2D textureRock;
+        //public Texture2D textureVood;
+        //public Texture2D textureElka;
+        //public Texture2D textureWallRock;
+        //public Texture2D textureWallWood;
+
+}
+
+public static Color GetColor(string nameColor)
     {
         return PaletteColors[nameColor];
     }

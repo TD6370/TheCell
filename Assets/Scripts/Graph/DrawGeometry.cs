@@ -258,5 +258,18 @@ public static class DrawExtensions
     {
         gobj.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, _alpha);
     }
+}
 
+public static class TextureExtension
+{
+    public static void DrawPixeles(this Texture2D texture, int startX, int startY, int addSize, int sizeDraw, Color colorCell)
+    {
+        for (int x2 = startX; x2 < startX + addSize; x2++)
+        {
+            for (int y2 = startY; y2 < startY + addSize; y2++)
+            {
+                texture.SetPixel(x2, sizeDraw - y2, colorCell);
+            }
+        }
+    }
 }

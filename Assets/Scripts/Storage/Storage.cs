@@ -56,6 +56,13 @@ public class Storage : MonoBehaviour {
 
 
     private ManagerPalette _Palette;
+    public static ManagerPalette Palette
+    {
+        get
+        {
+            return Instance._Palette;
+        }
+    }
 
     private PlayerManager _PlayerManager;
     public static PlayerManager Player
