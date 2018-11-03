@@ -199,6 +199,12 @@ public static class Helper { //: MonoBehaviour {
 
     public static Vector2 GetPositByField(string nameFiled)
     {
+        if(string.IsNullOrEmpty(nameFiled))
+        {
+            Debug.Log("########## Error GetPositByField nameFiled is Empty");
+            return new Vector2(0, 0);
+        }
+
         string strPos = nameFiled.Replace(FieldKey, "");
         string[] masPos = strPos.Split('x');
         float x;

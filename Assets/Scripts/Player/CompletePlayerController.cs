@@ -11,6 +11,7 @@ using System.Linq;
 public class CompletePlayerController : MonoBehaviour {
 
     public Camera MainCamera;
+    public Camera CameraMap;
     //public GameObject UIController;
     public GameObject ObjectCursor;
     private bool m_IsCursorSelection = false;
@@ -104,7 +105,46 @@ public class CompletePlayerController : MonoBehaviour {
 
         _movement = new Vector2(moveHorizontal, moveVertical);
 
-        rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
+        if (Input.GetKey("m"))
+        {
+            Storage.Map.Create();
+        }
+
+        //if(rb2d.IsSleeping() && MainCamera.enabled)
+        //{
+        //    rb2d.WakeUp();
+        //}
+
+        if (CameraMap.enabled)
+        {
+            //rb2d.Sleep();
+
+            //CameraMap.gameObject.SetActive(true);
+            //Storage.Map.Create();
+            //CameraMap.gameObject.SetActive(true);
+            //CameraMap.transform.position = new Vector3(rb2d.position + _movement * Speed * Time.deltaTime);
+            //CameraMap.transform.position =
+            //    new Vector2(
+            //        CameraMap.transform.position.x + _movement * Speed * Time.deltaTime,
+            //        CameraMap.transform.position.y + _movement * Speed * Time.deltaTime);
+            //CameraMap.transform.position =
+
+            //float translationX = moveHorizontal * Speed * Time.deltaTime;
+            //float translationY = moveVertical * Speed * Time.deltaTime;
+            //CameraMap.transform.Translate(translationX, translationY, 0);
+
+            //---
+            Vector3 movementCam = new Vector3(moveHorizontal, moveVertical, 0f);
+            CameraMap.transform.position += movementCam;
+            //---
+            return;
+        }
+        else
+        {
+            //---Move Hero
+            rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
+            //--------------
+        }
 
         if (_movement.x != 0 || _movement.y != 0)
         {
@@ -129,6 +169,24 @@ public class CompletePlayerController : MonoBehaviour {
         }
         if (Storage.Events.IsCursorVisible)
             _MousePosition = Input.mousePosition;
+    }
+
+
+    public void CameraMapOn(bool isOpenMap)
+    {
+        if (isOpenMap)
+        {
+            rb2d.Sleep();
+            CameraMap.transform.position = MainCamera.transform.position;
+            CameraMap.enabled = true;
+            MainCamera.enabled = false;
+        }
+        else
+        {
+            rb2d.WakeUp();
+            MainCamera.enabled = true;
+            CameraMap.enabled = false;
+        }
     }
 
     void Update()

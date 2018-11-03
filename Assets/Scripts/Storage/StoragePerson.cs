@@ -9,6 +9,34 @@ public class StoragePerson : MonoBehaviour {
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
 
+    public static Texture2D TextureBossRedMap;
+    public Texture2D TextureBossRed;
+    public static Texture2D TextureBossLizardMap;
+    public Texture2D TextureBossLizard;
+    public static Texture2D TextureBossBandosMap;
+    public Texture2D TextureBossBandos;
+    public static Texture2D TextureBossBoobleMap;
+    public Texture2D TextureBossBooble;
+    public static Texture2D TextureBossAlienMap;
+    public Texture2D TextureAlienBoss;
+    public static Texture2D TextureBossDroidMap;
+    public Texture2D TextureBossDroid;
+    public static Texture2D TextureBossArmMap;
+    public Texture2D TextureBossArm;
+    public static Texture2D TextureBossMap;
+    public Texture2D TextureBoss;
+    //public static Texture2D TextureBossMap;
+    //public Texture2D TextureBoss;
+
+    //new TypeBoss() { NameTextura2D = "SpriteBossLizard", Level = 1, },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBossRed", Level = 2, ColorTrack = ManagerPalette.ColorBossLizard, TextureMap = StoragePerson.TextureBossRedMap },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 3, ColorTrack = ManagerPalette.ColorBossBandos  },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 4, ColorTrack = ManagerPalette.ColorBossBooble  },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 5, ColorTrack = ManagerPalette.ColorBossAlien },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBossDroid", Level = 6, ColorTrack = ManagerPalette.ColorBossDroid },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 7, ColorTrack = ManagerPalette.ColorBossArm },
+    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 8, ColorTrack = ManagerPalette.ColorBoss  },
+
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
@@ -59,6 +87,7 @@ public class StoragePerson : MonoBehaviour {
     void Awake()
     {
         PersonsDataInit();
+        LoadTexturesMap();
         LoadSprites();
     }
 
@@ -70,6 +99,18 @@ public class StoragePerson : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
+    }
+
+    private void LoadTexturesMap()
+    {
+        TextureBossRedMap = TextureBossRed;
+        TextureBossLizardMap = TextureBossLizard;
+        TextureBossBandosMap = TextureBossBandos;
+        TextureBossBoobleMap = TextureBossBooble;
+        TextureBossAlienMap = TextureAlienBoss;
+        TextureBossDroidMap = TextureBossDroid;
+        TextureBossArmMap = TextureBossArm;
+        TextureBossMap = TextureBoss;
     }
 
     private void LoadSprites()
@@ -409,17 +450,25 @@ public class TypeBoss
         {
             if (_instance == null)
             {
-                _instance = new TypeBoss();
+                //TextureBossLizardMap = TextureBossLizard;
+                //TextureBossBandosMap = TextureBossBandos;
+                //TextureBossBoobleMap = TextureBossBooble;
+                //TextureBossAlienMap = TextureAlienBoss;
+                //TextureBossDroidMap = TextureBossDroid;
+                //TextureBossArmMap = TextureBossArm;
+                //TextureBossMap =
+
+                        _instance = new TypeBoss();
                 _instance._TypesBoss = new List<TypeBoss>()
                     {
                          new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid },
-                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard, TextureMap= StoragePerson.TextureBossRedMap },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos,  TextureMap= StoragePerson.TextureBossBandosMap  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble,  TextureMap= StoragePerson.TextureBossBoobleMap  },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien,  TextureMap= StoragePerson.TextureBossAlienMap },
+                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid,  TextureMap= StoragePerson.TextureBossDroidMap },
+                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm,  TextureMap= StoragePerson.TextureBossArmMap },
+                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss,  TextureMap= StoragePerson.TextureBossMap  },
                         new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=9, ColorTrack=ManagerPalette.ColorBoss },
                         new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=10, ColorTrack=ManagerPalette.ColorBoss },
                         new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=12, ColorTrack=ManagerPalette.ColorBoss },
@@ -436,6 +485,7 @@ public class TypeBoss
     public string NameTextura2D { get; set; }
     public int Level { get; set; }
     public Color ColorTrack { get; set; }
+    public Texture2D TextureMap { get; set; }
 
     public string GetNameSpriteForIndexLevel(int p_level)
     {
@@ -443,4 +493,25 @@ public class TypeBoss
         string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
         return spriteName;
     }
+
+    public Texture2D GetNameTextureMapForIndexLevel(int p_level)
+    {
+        //string _textureName = NemesTextureBoss[index];
+        Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
+        //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
+        return _texture;
+        //-----
+        //return null;
+    }
+
+    //public Texture2D GetNameTextureMapForIndexLevel(int p_level)
+    //{
+    //    //string _textureName = NemesTextureBoss[index];
+    //    //Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
+    //    //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
+    //    //return _texture;
+    //    //-----
+    //    return null;
+    //}
+
 }

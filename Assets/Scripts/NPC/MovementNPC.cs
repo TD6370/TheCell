@@ -459,6 +459,8 @@ public class MovementNPC : MonoBehaviour {
             style.normal.textColor = Color.black;
         }
 
+        if (Camera.main == null)
+            return;
 
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
         Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);

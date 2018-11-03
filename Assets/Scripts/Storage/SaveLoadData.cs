@@ -444,6 +444,26 @@ public class SaveLoadData : MonoBehaviour {
         return null;
     }
 
+    public Texture2D GetTextuteMapBoss(int index)
+    {
+
+        try
+        {
+            //string _textureName = NemesTextureBoss[index];
+            //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
+            //return _texture;
+            //-----
+        }
+        catch (Exception x)
+        {
+            Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
+        }
+
+        return null;
+    }
+
+    //
+
     public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType)
     {
         ModelNPC.ObjectData objGameBild;

@@ -88,6 +88,8 @@ public class ManagerPalette : MonoBehaviour {
             {"PrefabWallRock", Storage.Map.textureWallRock },
             {"PrefabWallWood", Storage.Map.textureWallWood },
             {"PrefabField", Storage.Map.textureField },
+            {"PrefabHero", Storage.Map.textureHero },
+            
         };
 
         //public Texture2D textureField;

@@ -113,6 +113,8 @@ public class PlayerManager : MonoBehaviour {
             //>>>>>> SetTextLog(prefabFind.name.ToString());
             Storage.Instance.SelectFieldPosHero = Helper.GetNameFieldObject(prefabFind);
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
+
+            Storage.Map.DrawLocationHero();
         }
     }
 
