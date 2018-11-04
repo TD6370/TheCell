@@ -454,6 +454,13 @@ public class MapWorld : MonoBehaviour {
         Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
 
         prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+        BoxCollider2D colliderMap = prefabFrameMap.GetComponent<BoxCollider2D>();
+        if(colliderMap!=null)
+        {
+            //colliderMap.size = new Vector3(texture.width, texture.height, 0);
+            prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(texture.width/100, texture.height / 100, 0);
+        }
+        //transform
     }
 
     private string saveHeroPosField = "";

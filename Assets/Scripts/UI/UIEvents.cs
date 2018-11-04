@@ -11,7 +11,7 @@ public class UIEvents : MonoBehaviour {
     //public static bool IsCursorVisible = true;
     public bool IsCursorVisible = true;
     public bool IsTrackPointsVisible = false;
-    public int LimitLogView = 20;
+    public int LimitLogView = 10;
 
     public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     public Text txtLog;
