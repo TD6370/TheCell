@@ -13,8 +13,8 @@ public class FrameMap : MonoBehaviour {
     float upLevel = 0;
     float speedWheel = 0.02f;
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update() {
 
         float wheel = Input.GetAxis("Mouse ScrollWheel");
 
@@ -39,11 +39,132 @@ public class FrameMap : MonoBehaviour {
         // {
         //    Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize - 1, 6);
         //}
+
+        
+        //-----------------------
+        //Camera cameraMap = Camera.main;
+        Camera cameraMap = Storage.PlayerController.CameraMap;// Camera.main;
+        //Camera cameraMap = Storage.PlayerController.MainCamera;// Camera.main;
+
+        if (!cameraMap.enabled)
+            return;
+
+        Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        // Casts the ray and get the first game object hit
+        Physics.Raycast(ray, out hit);
+
+        //-----------------
+        //RaycastHit hit;
+        ////Using physics
+        ////var hit : RaycastHit;
+        //if (Physics.Raycast(cameraMap.ScreenPointToRay(Input.mousePosition), hit))
+        //{
+
+        //}
+        //we hit
+        //-----------------
+        //Raycast against a specific collider (plane is a gameObject or Transform)
+        //if (plane.collider.Raycast(cameraMap.ScreenPointToRay(Input.mousePosition), hit))
+        //if (this.GetComponent<Collider2D>().Raycast(cameraMap.ScreenPointToRay(Input.mousePosition), hit))
+        //{
+        //    //we hit
+        //}
+
+        //-----------------
+        //Raycast against the plane itself (plane is a Plane)
+        //var enter : float;
+        //if (plane.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition)))
+        //{
+
+        //}
+
+        //-----------------
+        //var t = cameraMap.ScreenPointToRay(Input.mousePosition).GetPoint(enter);
+
+        //-----------------
+
+        //if (!cameraMap.isActiveAndEnabled)
+        //    return;
+        //if (!cameraMap.gameObject.activeSelf)
+        //    return;
+
+
+
+        //-----------------
+        //Debug.Log("This hit at " + hit0.point);
+        //if(hit0.point==new Vector3(0,0,0))
+        //{
+        //    Debug.Log(">>>>>>>>>>>>> YES CLICK");
+        //}
+        //-----------------
+        if (Input.touchCount > 0)
+        {
+            ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            RaycastHit2D hit4 = Physics2D.Raycast(ray.origin, ray.direction);
+            if (hit4 != null)
+            {
+                Debug.Log("MAP raycast hit this gameobject 444444 " + hit4.point.x + "x" + hit4.point.y);
+                Storage.Events.ListLogAdd = "MAP raycast hit this gameobject 44 " + hit4.point.x + "x" + hit4.point.y;
+            }
+        }
+        //-----------------
+        //-----------------
+
+
+        //-----------------------
+        if (cameraMap==null)
+        {
+            Debug.Log("################ cameraMap is EMPTY ");
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray1 = cameraMap.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, Mathf.Infinity);
+            if (hit1.collider != null && hit1.collider.transform == this.gameObject.transform)
+            {
+                // raycast hit this gameobject
+                Debug.Log(">>>>>>>>>>>>>>>>>> raycast hit this gameobject " + hit1.point.x + "x" + hit1.point.y);
+                Storage.Events.ListLogAdd = "MAP raycast hit this gameobject " + hit1.point.x + "x" + hit1.point.y; 
+
+                //var pointX = transform.InverseTransformPoint(hit.point).x;
+                //Debug.Log(">>>>>>>>>>>>>>>>>> pointX " + pointX);
+                //Debug.Log(">>>>>>>>>>>>>>>>>> Dist " + (transform.position.x - hit.point.x));
+            }
+        }
+
+        //------------------
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+
+            if (Physics2D.OverlapPoint(mousePosition))
+            {
+                Debug.Log(">>>>>>>>>>>>>>>>>> do great stuff : mousePosition:" + mousePosition.x + "x" + mousePosition.y);
+                Storage.Events.ListLogAdd = "MAP mousePosition:" + mousePosition.x + "x" + mousePosition.y;
+                //do great stuff
+            }
+        }
+
+
+        //---------------------
+        Ray ray2 = cameraMap.ScreenPointToRay(new Vector3(500, 500, 0));
+        Debug.DrawRay(ray2.origin, ray2.direction * 10, Color.yellow);
+        //---------------------
+
+    }
+
+    void OnMouseDown()
+    {
+        //Print
+        Storage.Events.ListLogAdd = "MAP OnMouseDown";
     }
 
     private void Zooming(float zoom = 1f)
     {
-        //prefabFrameMap.transform.localScale = new Vector3(10F, 10f, 0);
+        //this.gameObject.transform.localScale = new Vector3(zoom, zoom, 0);
         this.gameObject.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(zoom, zoom, 0);
     }
         

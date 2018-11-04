@@ -134,8 +134,11 @@ public class CompletePlayerController : MonoBehaviour {
             //CameraMap.transform.Translate(translationX, translationY, 0);
 
             //---
-            Vector3 movementCam = new Vector3(moveHorizontal, moveVertical, 0f);
-            CameraMap.transform.position += movementCam;
+            float slow = 0.1f;
+            Vector3 movementCam = new Vector3(moveHorizontal * slow * -1, moveVertical * slow * -1, 0f);
+            //CameraMap.transform.position += movementCam;
+
+            Storage.Map.prefabFrameMap.transform.position += movementCam;
             //---
             return;
         }
