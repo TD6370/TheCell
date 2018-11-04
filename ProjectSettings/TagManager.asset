@@ -35,20 +35,20 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LayerBackground
+  - LayerScreen
+  - LayerTerra
+  - LayerTerraDecor
+  - LayerFloor
+  - LayerFlooObjects
+  - LayerObjects
+  - LayerRoof
+  - LayerFly
+  - LayerEffects
+  - LayerForeground
+  - LayerUI
+  - LeyerPresenter
+  - LayerUIEffects
   - 
   - 
   - 
@@ -63,6 +63,45 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: LayerBackground
+    uniqueID: 2410860441
+    locked: 0
+  - name: LayerScreen
+    uniqueID: 1102042169
+    locked: 0
+  - name: LayerTerra
+    uniqueID: 1445392771
+    locked: 0
+  - name: LayerTerraDecor
+    uniqueID: 2858655495
+    locked: 0
   - name: LayerGeometry
     uniqueID: 1432927223
+    locked: 0
+  - name: LayerFloor
+    uniqueID: 3142276597
+    locked: 0
+  - name: LayerFlooObjects
+    uniqueID: 3416631219
+    locked: 0
+  - name: LayerObjects
+    uniqueID: 2507473933
+    locked: 0
+  - name: LayerRoof
+    uniqueID: 2306341251
+    locked: 0
+  - name: LayerForeground
+    uniqueID: 3562309737
+    locked: 0
+  - name: LayerEffects
+    uniqueID: 2470891189
+    locked: 0
+  - name: LayerUI
+    uniqueID: 1273576207
+    locked: 0
+  - name: LeyerPresenter
+    uniqueID: 3476023211
+    locked: 0
+  - name: LayerUIEffects
+    uniqueID: 1455557975
     locked: 0

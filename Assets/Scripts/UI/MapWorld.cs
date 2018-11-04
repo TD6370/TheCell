@@ -20,6 +20,16 @@ public class MapWorld : MonoBehaviour {
     public GameObject prefabMapCell;
     public GameObject prefabFrameMap;
 
+    public float ZoomMap { get; set; }
+    public Vector2 SelectPointField = new Vector2(0, 0);
+    public string SelectFieldMap
+    {
+        get
+        {
+            return Helper.GetNameFieldPosit(SelectPointField.x, SelectPointField.y);
+        }
+    }
+
     //--- TAILS ---
     public GameObject BackPalette;
     public Grid GridTails;
@@ -515,7 +525,20 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
-    private void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
+    public void DrawMapCell(int y, int x, SaveLoadData.TypePrefabs prefabType)
+    {
+        Texture2D textureMap = prefabFrameMap.GetComponent<SpriteRenderer>().sprite.texture;
+        Texture2D textureResult = textureMap;
+
+        DrawTextureTo(SizeCellMap, "?", SizeCellMap - 1, textureResult, y, x, prefabType);
+
+        textureResult.Apply();
+        Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);
+        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+    }
+
+
+    public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
         Texture2D texturePrefab = GetPrefabTexture(prefabType);
         if (texturePrefab == null)

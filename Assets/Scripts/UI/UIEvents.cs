@@ -315,6 +315,9 @@ public class UIEvents : MonoBehaviour {
             case "LoadPlayer":
                 Storage.Player.LoadPositionHero();
                 break;
+            case "LoadGridTiles":
+                Storage.GridData.LoadGridTiles();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;

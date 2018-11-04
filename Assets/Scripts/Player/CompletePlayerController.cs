@@ -135,7 +135,13 @@ public class CompletePlayerController : MonoBehaviour {
 
             //---
             float slow = 0.1f;
-            Vector3 movementCam = new Vector3(moveHorizontal * slow * -1, moveVertical * slow * -1, 0f);
+
+            float speed = 1f;
+            if (Storage.Map.ZoomMap > 1.4)
+                speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
+
+
+            Vector3 movementCam = new Vector3(moveHorizontal * slow * speed *  -1, moveVertical * slow * speed * -1, 0f);
             //CameraMap.transform.position += movementCam;
 
             Storage.Map.prefabFrameMap.transform.position += movementCam;

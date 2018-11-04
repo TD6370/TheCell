@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System;
 using System.IO;
 using System.Linq;
+using UnityEngine.Tilemaps;
 
 public class SaveLoadData : MonoBehaviour {
 
@@ -497,8 +498,75 @@ public class SaveLoadData : MonoBehaviour {
     }
 
     
+    public void LoadGridTiles()
+    {
+        //--- TAILS ---
+        //GameObject BackPalette;
+        // Grid GridTails;
+        //Layer Back
+        //public GameObject TailsMap;
+        //GridTails.
+        //TailsMap.
+
+        //Tilemap tm = TailsMap.GetComponent<Tilemap>();
+
+    //    public class TileTest : MonoBehaviour
+    //{
+    //    void Start()
+    //    {
+            Tilemap tilemap = TailsMap.GetComponent<Tilemap>();
+
+            BoundsInt bounds = tilemap.cellBounds;
+            TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
+
+            for (int x = 0; x < bounds.size.x; x++)
+            {
+                for (int y = 0; y < bounds.size.y; y++)
+                {
+                    TileBase tile = allTiles[x + y * bounds.size.x];
+                    if (tile != null)
+                    {
+                        Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
+                    }
+                    else
+                    {
+                        Debug.Log("x:" + x + " y:" + y + " tile: (null)");
+                    }
+                }
+        //    }
+        //}
+            }
+
+            //---------------------------
+        //In this case if you have, suppose, custom tile TileRoad, inherited from Tile or TileBase, then you can get all TileRoad tiles with call:
+        //TileBase[] = tilemap.GetTiles<RoadTile>();
+
+    }
+
 
 
 }
+
+public static class TilemapExtensions
+{
+    public static T[] GetTiles<T>(this Tilemap tilemap) where T : TileBase
+    {
+        List<T> tiles = new List<T>();
+
+        for (int y = tilemap.origin.y; y < (tilemap.origin.y + tilemap.size.y); y++)
+        {
+            for (int x = tilemap.origin.x; x < (tilemap.origin.x + tilemap.size.x); x++)
+            {
+                T tile = tilemap.GetTile<T>(new Vector3Int(x, y, 0));
+                if (tile != null)
+                {
+                    tiles.Add(tile);
+                }
+            }
+        }
+        return tiles.ToArray();
+    }
+}
+
 
 

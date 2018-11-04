@@ -258,6 +258,7 @@ public static class DrawExtensions
     {
         gobj.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, _alpha);
     }
+
 }
 
 public static class TextureExtension

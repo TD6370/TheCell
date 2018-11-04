@@ -14,6 +14,59 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //private void OnMauseWheel()
+    //{
+    //    float wheel = Input.GetAxis("Mouse ScrollWheel");
+
+    //    if (wheel != 0) // back
+    //    {
+    //        //Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 1);
+    //        if (wheel > 0)
+    //        {
+    //            //--For TEST---
+    //            //upLevel += speedWheel;
+    //            //SizeZoom += (0.06f + upLevel);
+
+    //            //if (SizeZoom >= 1)
+    //            //{
+    //            SizeZoom += 0.1f;
+    //            //}
+    //            //else
+    //            //{
+    //            //    SizeZoom += 0.05f;
+    //            //}
+
+
+    //            if (SizeZoom > limitZoomMax)
+    //                SizeZoom = limitZoomMax;
+    //        }
+    //        else
+    //        {
+    //            //--For TEST---
+    //            //    upLevel -= speedWheel;
+    //            //    if (upLevel < 0)
+    //            //        upLevel = 0;
+    //            //    SizeZoom -= (0.06f + upLevel);
+    //            //if (SizeZoom >= 1)
+    //            //{
+    //            SizeZoom -= 0.1f;
+    //            //}
+    //            //else
+    //            //{
+    //            //    SizeZoom -= 0.05f;
+    //            //}
+
+    //            if (SizeZoom < limitZoomMin)
+    //                SizeZoom = limitZoomMin;
+    //        }
+    //        Zooming(SizeZoom);
+    //    }
+    //    //if (Input.GetAxis("Mouse ScrollWheel") & gt; 0) // forward
+    //    // {
+    //    //    Camera.main.orthographicSize = Mathf.Min(Camera.main.orthographicSize - 1, 6);
+    //    //}
+    //}
+
     //public void DrawTrack(List<Vector3> trackPoints, Color colorTrack)
     //{
     //    Debug.Log("DrawTrack Storage ...........");
