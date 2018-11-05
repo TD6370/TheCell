@@ -284,73 +284,81 @@ public class StoragePerson : MonoBehaviour {
 
     public void VeiwCursorGameObjectData(string _fieldCursor)
     {
-
-        Storage.Instance.SelectFieldCursor = _fieldCursor;
-        Storage.Events.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
-        //Storage.Events.ListLogClear();
-        GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
-
-        if (prefabFind != null)
+        try
         {
-            prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
-        }
+            if (!Storage.Instance.Fields.ContainsKey(_fieldCursor))
+                return;
 
-        foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
-        {
-            Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
+            Storage.Instance.SelectFieldCursor = _fieldCursor;
+            Storage.Events.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
+            //Storage.Events.ListLogClear();
+            GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
 
-            gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
-
-            MovementNPC movement = gobj.GetComponent<MovementNPC>();
-            ModelNPC.ObjectData findData = movement.GetData();
-            var objData = SaveLoadData.FindObjectData(gobj);
-            if (findData != objData)
+            if (prefabFind != null)
             {
-                Storage.Events.ListLogAdd = "#### " + gobj.name + " conflict DATA";
-                Debug.Log("#### " + gobj.name + " conflict DATA");
+                prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
             }
 
-            var dataNPC = findData as ModelNPC.GameDataNPC;
-            if (dataNPC != null)
+            foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
             {
-                Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
-                Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
+                Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
 
-                //#EXPAND
-                Storage.Events.AddExpandPerson(dataNPC.NameObject,
-                    dataNPC.GetParams,
-                    new List<string> { "Pause", "Kill", "StartTrack" },
-                    gobjObservable: gobj);
-            }
-            else
-            {
-                Debug.Log("VeiwCursorGameObjectData: " + gobj.name + "  Not is NPC");
-                //ModifObject(gobj);
-            }
+                gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
 
-
-            var dataBoss = findData as ModelNPC.GameDataBoss;
-            if (dataBoss != null)
-            {
-                Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
-                Debug.Log("YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
-                dataBoss.ColorRender = Color.magenta;
-
-                //#EXPAND
-                Storage.Events.AddExpandPerson(dataBoss.NameObject,
-                    dataBoss.GetParams,
-                    new List<string> { "Pause", "Kill", "StartTrack" },
-                    gobjObservable: gobj);
-            }
-            else
-            {
-                if (gobj.tag == _Boss)
+                MovementNPC movement = gobj.GetComponent<MovementNPC>();
+                ModelNPC.ObjectData findData = movement.GetData();
+                var objData = SaveLoadData.FindObjectData(gobj);
+                if (findData != objData)
                 {
-                    Storage.Events.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
-                    Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                    Storage.Events.ListLogAdd = "#### " + gobj.name + " conflict DATA";
+                    Debug.Log("#### " + gobj.name + " conflict DATA");
                 }
-            }
 
+                var dataNPC = findData as ModelNPC.GameDataNPC;
+                if (dataNPC != null)
+                {
+                    Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
+                    Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
+
+                    //#EXPAND
+                    Storage.Events.AddExpandPerson(dataNPC.NameObject,
+                        dataNPC.GetParams,
+                        new List<string> { "Pause", "Kill", "StartTrack" },
+                        gobjObservable: gobj);
+                }
+                else
+                {
+                    Debug.Log("VeiwCursorGameObjectData: " + gobj.name + "  Not is NPC");
+                    //ModifObject(gobj);
+                }
+
+
+                var dataBoss = findData as ModelNPC.GameDataBoss;
+                if (dataBoss != null)
+                {
+                    Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                    Debug.Log("YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                    dataBoss.ColorRender = Color.magenta;
+
+                    //#EXPAND
+                    Storage.Events.AddExpandPerson(dataBoss.NameObject,
+                        dataBoss.GetParams,
+                        new List<string> { "Pause", "Kill", "StartTrack" },
+                        gobjObservable: gobj);
+                }
+                else
+                {
+                    if (gobj.tag == _Boss)
+                    {
+                        Storage.Events.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                        Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                    }
+                }
+
+            }
+        }catch(Exception x)
+        {
+            Debug.Log("##############  VeiwCursorGameObjectData: " + x.Message);
         }
     }
 

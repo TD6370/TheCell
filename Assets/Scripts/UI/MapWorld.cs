@@ -16,6 +16,7 @@ public class MapWorld : MonoBehaviour {
     public Texture2D textureTest;
 
     public GameObject gobjField;
+    public GameObject MarkerMapWorldCell;
 
     public GameObject prefabMapCell;
     public GameObject prefabFrameMap;
@@ -26,7 +27,7 @@ public class MapWorld : MonoBehaviour {
     {
         get
         {
-            return Helper.GetNameFieldPosit(SelectPointField.x, SelectPointField.y);
+            return Helper.GetNameField(SelectPointField.x, SelectPointField.y);
         }
     }
 
@@ -91,6 +92,8 @@ public class MapWorld : MonoBehaviour {
             DrawLocationHero(true);
         }
     }
+
+    
 
     //private void CameraMapOn(bool isOpenMap)
     //{
@@ -537,6 +540,26 @@ public class MapWorld : MonoBehaviour {
         prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
     }
 
+    public void DrawMapCell(int y, int x, Texture2D texturePrefab)
+    {
+        Texture2D textureMap = prefabFrameMap.GetComponent<SpriteRenderer>().sprite.texture;
+        Texture2D textureResult = textureMap;
+
+        int startX1 = x * SizeCellMap;
+        int startY1 = y * SizeCellMap;
+        int addSize = SizeCellMap - 1;
+
+        // Correct .............
+        startY1 = textureResult.height - startY1 - addSize;
+        //.................
+
+        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
+
+        textureResult.Apply();
+        Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);
+        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+
+    }
 
     public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
@@ -578,7 +601,7 @@ public class MapWorld : MonoBehaviour {
     }
 
 
-    private Texture2D GetPrefabTexture(SaveLoadData.TypePrefabs typePredab)
+    public Texture2D GetPrefabTexture(SaveLoadData.TypePrefabs typePredab)
     {
         //switch(typePredab)
         //{
@@ -611,6 +634,18 @@ public class MapWorld : MonoBehaviour {
         Texture2D textureRes = Storage.Palette.TexturesMaps[strTypePref];
         //Texture2D textureRes = Storage.GridData.PrefabElka.GetComponent<SpriteRenderer>().sprite.texture;
         return textureRes;
+    }
+
+    //public void UpdateMarker(Vector3 posMarker)
+    //{
+        
+    //}
+    public void UpdateMarkerPointCell()
+    {
+        Vector2 pos = Storage.Map.SelectPointField;
+        pos.y *= -1;
+        MarkerMapWorldCell.transform.position = pos * Storage.ScaleWorld;
+        //Storage.Map.SelectPointField;
     }
 
     //public void CreateTextureMap()

@@ -5,13 +5,18 @@ using UnityEngine;
 
 public class FrameMap : MonoBehaviour {
 
+    public GameObject MapCellFrame;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
 
     public float SizeZoom = 1f;
+    [System.NonSerialized]
     public Vector2 SelectPointField = new Vector2(0, 0);
+    [System.NonSerialized]
+    public Vector2 SelectFieldPos = new Vector2(0, 0);
 
     float upLevel = 0;
     float speedWheel = 0.02f;
@@ -30,9 +35,19 @@ public class FrameMap : MonoBehaviour {
 
     }
 
+    private void FixedUpdate()
+    {
+        if (IsActive)
+        {
+            CalculatePointOnMap();
+        }
+    }
+
     private void MouseDownOnChange()
     {
         CalculatePointOnMap();
+
+        ShowSelectorCell();
     }
 
     private void OnMauseWheel()
@@ -58,6 +73,19 @@ public class FrameMap : MonoBehaviour {
         }
     }
 
+    private bool IsActive
+    {
+        get
+        {
+            Camera cameraMap = Storage.PlayerController.CameraMap;
+            if (cameraMap == null)
+            {
+                return false; ;
+            }
+            return cameraMap.enabled;
+        }
+    }
+
     private void CalculatePointOnMap()
     {
         Camera cameraMap = Storage.PlayerController.CameraMap;
@@ -66,6 +94,8 @@ public class FrameMap : MonoBehaviour {
             Debug.Log("################ cameraMap is EMPTY ");
             return;
         }
+        if (!cameraMap.enabled)
+            return;
 
         float mapX = 0;
         float mapY = 0;
@@ -80,7 +110,7 @@ public class FrameMap : MonoBehaviour {
                 
                 NormalizedMapPoint(hit1, colliderMap, out mapX, out mapY);
 
-                Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+                //Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
 
                 if (SizeZoom == 1)
                 {
@@ -114,10 +144,10 @@ public class FrameMap : MonoBehaviour {
 
                     float offsetCenter = 0f;
 
-                    Debug.Log("_zoom===" + _zoom);
+                    //Debug.Log("_zoom===" + _zoom);
                     offsetCenter = OffsetZoomUp(_zoom);
 
-                    Storage.Events.ListLogAdd = "Corrr zoom= " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
+                    //Storage.Events.ListLogAdd = "Corrr zoom= " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
 
                     //mapX = (int)mapX;
                     //mapY = (int)mapY;
@@ -137,21 +167,24 @@ public class FrameMap : MonoBehaviour {
 
                     float offsetCenter = OffsetZoomDown(_zoom);
 
-                    Storage.Events.ListLogAdd = "map = " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+                    //Storage.Events.ListLogAdd = "map = " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
 
                     mapX += offsetCenter;
                     mapY += offsetCenter;
                 }
 
-                Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
+                //Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
                 //Debug.Log("MAP pos = " + mapX + "x" + mapY);
-                Storage.Events.ListLogAdd = "Cell: " + (int)mapX + "x" + (int)mapY;
+                //Storage.Events.ListLogAdd = "Cell: " + (int)mapX + "x" + (int)mapY;
             }
         }
 
         SelectPointField = new Vector2(mapX, mapY);
+        SelectFieldPos = new Vector2((int)mapX, (int)mapY);
         Storage.Map.SelectPointField = SelectPointField;
-        ShowSelectorCell();
+        Storage.Map.UpdateMarkerPointCell();
+
+
     }
 
     private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
@@ -240,54 +273,118 @@ public class FrameMap : MonoBehaviour {
         this.gameObject.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(zoom, zoom, 0);
     }
 
+    Vector3 posOld = new Vector3();
+
     private void ShowSelectorCell()
     {
-        //string nameField = Helper.GetNameField(x, y);
         string nameField = Storage.Map.SelectFieldMap;
+
         if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
         {
             //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
             //continue;
+            Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
+            Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty     " + DateTime.Now;
             return;
         }
 
+        //TEST
+        Storage.Person.VeiwCursorGameObjectData(nameField);
+
         SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
         List<SaveLoadData.TypePrefabs> fieldListPrefbs = new List<SaveLoadData.TypePrefabs>();
+        List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
 
         foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
         {
+            Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
+
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
 
-            //if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-            //datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
-            //{
+            if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+            datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+            {
                 prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
-            //}
-            //else
-            //{
-            //    ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
-            //    if (bossObj != null)
-            //    {
-            //        colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
-            //        if (colorCell == null)
-            //        {
-            //            Debug.Log("############# colorCell Point Map Person is null");
-            //            continue;
-            //        }
-            //        prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
-            //    }
-            //}
-            fieldListPrefbs.Add(prefabType);
+            }
+            else
+            {
+                ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
+                if (bossObj != null)
+                {
+                    prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
+
+                    fieldListPrefbs.Add(prefabType);
+
+                    ////+++DRAW PERSON ---------------------------------
+                    Texture2D personMapTexture = TypeBoss.Instance.GetNameTextureMapForIndexLevel(bossObj.Level);
+                    listPersonsMapTexture.Add(personMapTexture);
+                    //-----------------------------------------------------
+                }
+
+
+            }
+            
+            //fieldListPrefbs.Add(prefabType);
         }
 
         int cellX = (int)SelectPointField.x;
         int cellY = (int)SelectPointField.y;
+        bool _isPerson = false;
 
-        foreach (var typeObj in fieldListPrefbs)
+        for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count; indMap2D++)
         {
-           Storage.Map.DrawMapCell(cellX, cellY, typeObj);
-            continue;
+            Texture2D texturePerson = listPersonsMapTexture[indMap2D];
+            //Storage.Map.DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
+            Storage.Map.DrawMapCell(cellX, cellY, texturePerson);
+
+            Sprite spriteCell = Sprite.Create(texturePerson, new Rect(0.0f, 0.0f, texturePerson.width, texturePerson.height), new Vector2(0.5f, 0.5f), 100.0f);
+            MapCellFrame.GetComponent<SpriteRenderer>().sprite= spriteCell;
+            _isPerson = true;
+            //MapCellFrame.GetComponent<SpriteRenderer>().sprite.texture = texturePerson;
+            break;
         }
+
+        if (!_isPerson)
+        {
+            Texture2D texturePrefab = Storage.Map.GetPrefabTexture(prefabType);
+            if (texturePrefab == null)
+            {
+                Debug.Log("###### ShowSelectorCell  prefabType:" + prefabType + " texturePrefab Is NULL ");
+                //continue;
+            }
+            else
+            {
+                Sprite spriteCell = Sprite.Create(texturePrefab, new Rect(0.0f, 0.0f, texturePrefab.width, texturePrefab.height), new Vector2(0.5f, 0.5f), 100.0f);
+                MapCellFrame.GetComponent<SpriteRenderer>().sprite = spriteCell;
+            }
+
+        }
+        //------------ Location cell
+        Vector2 movementCell= new Vector3(-12.4f, 12.4f);
+
+        //movementCell += new Vector2(SelectPointField.x / Storage.ScaleWorld, SelectPointField.y / Storage.ScaleWorld * (-1));
+
+        //MapCellFrame.transform.position = movementCell;
+        //MapCellFrame.GetComponent<RectTransform>().rect.left = movementCell.x;
+        //MapCellFrame.GetComponent<RectTransform>().rect.top = movementCell.y;
+        //MapCellFrame.GetComponent<RectTransform>().position.x = movementCell.x;
+        //MapCellFrame.GetComponent<RectTransform>().position.y = movementCell.y;
+
+        //MapCellFrame.GetComponent<RectTransform>().position = new Vector3(movementCell.x, movementCell.y, 0);
+        if(posOld == new Vector3())
+            posOld = MapCellFrame.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
+
+        Vector3 newPos = new Vector3(posOld.x + (SelectPointField.x / Storage.ScaleWorld), posOld.y - (SelectPointField.y / Storage.ScaleWorld), -10);
+        MapCellFrame.GetComponent<RectTransform>().position = newPos;
+
+        //----------------------------
+        //if(fieldListPrefbs.Count==0)
+        //    Debug.Log("Selector Cell Field " + nameField + " not Objects " + DateTime.Now);
+        //foreach (var typeObj in fieldListPrefbs)
+        //{
+        //       Storage.Map.DrawMapCell(cellX, cellY, typeObj);
+        //    continue;
+        //}
 
     }
 
