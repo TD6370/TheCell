@@ -105,20 +105,6 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
-    
-
-    //private void CameraMapOn(bool isOpenMap)
-    //{
-    //    if(isOpenMap)
-    //    {
-            
-    //    }
-    //    else
-    //    {
-
-    //    }
-    //}
-
     public void CreateTextureMap1(int scaleCell = 1)
     {
         string indErr = "start";

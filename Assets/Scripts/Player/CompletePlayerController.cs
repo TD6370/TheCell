@@ -261,15 +261,23 @@ public class CompletePlayerController : MonoBehaviour {
         {
             rb2d.Sleep();
             CameraMap.transform.position = MainCamera.transform.position;
-            //Storage.Map.StartPositFrameMap == new Vector3()
             CameraMap.enabled = true;
             MainCamera.enabled = false;
+
+            int LayerUI = LayerMask.NameToLayer("LayerUI");
+            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
+            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
         }
         else
         {
             rb2d.WakeUp();
             MainCamera.enabled = true;
             CameraMap.enabled = false;
+            int LayerUI = LayerMask.NameToLayer("LayerUI");
+            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
+            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
         }
     }
 

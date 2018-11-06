@@ -54,10 +54,13 @@ public class FrameMap : MonoBehaviour {
     public float OffsetCell25 = 37f;
 
     //Mouse wheel
-    float upLevel = 0;
-    float speedWheel = 0.02f;
-    float limitZoomMax = 2.5f;
-    float limitZoomMin = 0.8f;
+    private float upLevel = 0;
+    private float speedWheel = 0.02f;
+    private float limitZoomMax = 2.5f;
+    private float limitZoomMin = 0.8f;
+
+    //9.4 5.7
+    private Vector3 posOld = new Vector3();
 
     // Use this for initialization
     void Start()
@@ -155,8 +158,10 @@ public class FrameMap : MonoBehaviour {
         }
     }
 
+
     private void CalculatePointOnMap()
     {
+        bool isLog = false;
         Camera cameraMap = Storage.PlayerController.CameraMap;
         if (cameraMap == null)
         {
@@ -166,22 +171,32 @@ public class FrameMap : MonoBehaviour {
         if (!cameraMap.enabled)
             return;
 
-        bool isHitCollider = false;
+        //cameraMap
+        Vector2 posClick = new Vector2();
+        bool isMousePos = false;
+
+        //HitTextMousePointOnEbject();
+
         float mapX = 0;
         float mapY = 0;
-        Ray ray1 = cameraMap.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, Mathf.Infinity);
 
-        if (hit1.collider != null && hit1.collider.transform == this.gameObject.transform)
+        Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+        if (Physics2D.OverlapPoint(mousePosition))
+        {
+            Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
+            posClick = mousePosition;
+            isMousePos = true;
+        }
+       
+        if (isMousePos)
         {
             BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
             if (colliderMap != null)
             {
+                NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
 
-                isHitCollider = true;
-                NormalizedMapPoint(hit1, colliderMap, out mapX, out mapY);
-
-                Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+                if (isLog)
+                    Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
 
                 if (SizeZoom == 1)
                 {
@@ -218,7 +233,8 @@ public class FrameMap : MonoBehaviour {
                     //Debug.Log("_zoom===" + _zoom);
                     offsetCenter = OffsetZoomUp(_zoom);
 
-                    Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
+                    if (isLog)
+                        Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
 
                     //mapX = (int)mapX;
                     //mapY = (int)mapY;
@@ -228,7 +244,8 @@ public class FrameMap : MonoBehaviour {
                     Vector3 centerPos = new Vector3(centrW, centrW, 0);
                     float koofOnCenterX = centerPos.x / mapX;
                     float koofOnCenterY = centerPos.y / mapY;
-                    Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
+                    if (isLog)
+                        Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
                     //------------------
 
                     mapX += offsetCenter;
@@ -246,35 +263,27 @@ public class FrameMap : MonoBehaviour {
 
                     float offsetCenter = OffsetZoomDown(_zoom);
 
-                    Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+                    if (isLog)
+                        Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
 
                     mapX += offsetCenter;
                     mapY += offsetCenter;
                 }
 
-                Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
-                //Debug.Log("MAP pos = " + mapX + "x" + mapY);
-            }
-        }
-        else
-        {
-            if (!IsRuntimeViewMarker)
-            {
-                Storage.Events.ListLogAdd = "CalculatePointOnMap Not hit collider " + (int)mapX + "x" + (int)mapY;
+                if (isLog)
+                    Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
             }
         }
 
         SelectPointField = new Vector2(mapX, mapY);
         SelectFieldPos = new Vector2((int)mapX, (int)mapY);
-        Storage.Map.SelectPointField = SelectPointField;
 
-        //if (Storage.Map.SelectFieldMap == "Field0x0")
-        //{
-        //    Debug.Log("######### CalculatePointOnMap FIELD=Field0x0     isHitCollider=" + isHitCollider);
-        //}
+        Storage.Map.SelectPointField = SelectPointField;
 
         Storage.Map.UpdateMarkerPointCell();
     }
+
+
 
     private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
     {
@@ -293,25 +302,24 @@ public class FrameMap : MonoBehaviour {
         mapY = mapY / widthCellPexel * Helper.HeightLevel;
     }
 
-    //public float OffSetZomm1 = 0f;
-    //public float OffSetZomm11 = 4f;
-    //public float OffSetZomm12 = 8f;
-    //public float OffSetZomm13 = 11f;
-    //public float OffSetZomm14 = 14f;
-    //public float OffSetZomm15 = 16f;
-    //public float OffSetZomm16 = 18f;
-    //public float OffSetZomm17 = 20f;
-    //public float OffSetZomm18 = 22f;
-    //public float OffSetZomm19 = 23f;
-    //public float OffSetZomm2 = 25.5f;
-    //public float OffSetZomm21 = 26.5f;
-    //public float OffSetZomm22 = 28f;
-    //public float OffSetZomm23 = 28.5f;
-    //public float OffSetZomm24 = 29.5f;
-    //public float OffSetZomm25 = 30f;
+    private void NormalizedMapPoint(Vector2 hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
+    {
+        float widthCellPexel = 25;
+        float widthMap = colliderMap.size.x;
+        float offSerX = (hit1.x - transform.position.x);
+        float radiusX = widthMap / 2;
+        mapX = offSerX + radiusX;
+        float heightMap = colliderMap.size.y;
+        float offSerY = (hit1.y - transform.position.y);
+        float radiusY = heightMap / 2;
+        mapY = offSerY + radiusY;
+        mapY = widthCellPexel - mapY;
 
-    //public float OffSetZomm08 = -12f;
-    //public float OffSetZomm09 = -5f;
+        mapX = mapX / widthCellPexel * Helper.WidthLevel;
+        mapY = mapY / widthCellPexel * Helper.HeightLevel;
+    }
+
+
 
     private float OffsetZoomDown(float _zoom)
     {
@@ -368,61 +376,6 @@ public class FrameMap : MonoBehaviour {
         return offsetCenter;
     }
 
-    //private static float OffsetZoomDown(float _zoom)
-    //{
-    //    float offsetCenter = 0;
-
-    //    if (_zoom >= 0.8f)
-    //        offsetCenter = -12f;
-    //    //if (_zoom >= 0.85f)
-    //    //    offsetCenter = -7f;
-    //    //if (_zoom >= 0.95f)
-    //    //    offsetCenter = -4f;
-    //    if (_zoom >= 0.9f)
-    //        offsetCenter = -5f;
-    //    return offsetCenter;
-    //}
-
-    //private static float OffsetZoomUp(float _zoom)
-    //{
-    //    float offsetCenter = 0;
-    //    if (_zoom >= 1f)
-    //        offsetCenter = 0;
-    //    if (_zoom >= 1.1f)
-    //        offsetCenter = 4f;// 5f;
-    //    if (_zoom >= 1.2f)
-    //        offsetCenter = 8f; // 10f;
-    //    if (_zoom >= 1.3f)
-    //        offsetCenter = 11f;// 12f;
-    //    if (_zoom >= 1.4f)
-    //        offsetCenter = 14f; //15f
-    //    if (_zoom >= 1.5f)
-    //        offsetCenter = 16f;
-    //    if (_zoom >= 1.6f)
-    //        offsetCenter = 18f;
-    //    if (_zoom >= 1.7f)
-    //        offsetCenter = 20f;
-    //    if (_zoom >= 1.8f)
-    //        offsetCenter = 22f;
-    //    if (_zoom >= 1.9f)
-    //        offsetCenter = 23f;
-    //    //if ((int)_zoom >= 2f)
-    //    //    offsetCenter = 25.5f;// 25f;
-    //    if (_zoom >= 2f)
-    //        offsetCenter = 25.5f;// 25f;
-    //    if (_zoom >= 2.1f)
-    //        offsetCenter = 26.5f;// 25f;
-    //    if (_zoom >= 2.2f)
-    //        offsetCenter = 28f;// 25f;
-    //    if (_zoom >= 2.3f)
-    //        offsetCenter = 28.5f;// 25f;
-    //    if (_zoom >= 2.4f)
-    //        offsetCenter = 29.5f;// 25f;
-    //    if (_zoom >= 2.5f)
-    //        offsetCenter = 30f;// 25f;
-    //    return offsetCenter;
-    //}
-
     void OnMouseDown()
     {
         //Print
@@ -437,8 +390,7 @@ public class FrameMap : MonoBehaviour {
         this.gameObject.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(zoom, zoom, 0);
     }
 
-    //9.4 5.7
-    Vector3 posOld = new Vector3();
+    
 
     private void ShowSelectorCell()
     {
@@ -460,7 +412,7 @@ public class FrameMap : MonoBehaviour {
 
             //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
             //continue;
-            Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
+            //Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
             Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty     " + DateTime.Now;
             return;
         }
@@ -479,6 +431,9 @@ public class FrameMap : MonoBehaviour {
             Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
+
+            Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
+
 
             if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
             datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
@@ -554,6 +509,8 @@ public class FrameMap : MonoBehaviour {
 
     private Vector3 SetLocationCell()
     {
+        bool isLog = false;
+
         //------------ Location cell
         Vector2 movementCell = new Vector3(-12.4f, 12.4f);
 
@@ -607,8 +564,10 @@ public class FrameMap : MonoBehaviour {
             if (koofOnCenterY < 0)
                 koofOnCenterY += 1;
 
-            Storage.Events.ListLogAdd = "New pos Cell: " + newPos.x + "x" + newPos.y;
-            Storage.Events.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
+            if(isLog)
+                Storage.Events.ListLogAdd = "New pos Cell: " + newPos.x + "x" + newPos.y;
+            if (isLog)
+                Storage.Events.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
 
             float korrCellX = offSetOnCenterX / 100;
             float korrCellY = offSetOnCenterY / 100;
@@ -617,7 +576,8 @@ public class FrameMap : MonoBehaviour {
 
             OffsetCell = GetOffsetCell(correctZomm);
 
-            Storage.Events.ListLogAdd = ":: OffsetCell corr: % " + OffsetCell;
+            if (isLog)
+                Storage.Events.ListLogAdd = ":: OffsetCell corr: % " + OffsetCell;
 
             korrCellX *= OffsetCell;
             korrCellY *= OffsetCell;
@@ -625,11 +585,13 @@ public class FrameMap : MonoBehaviour {
             newPos.x -= korrCellX;
             newPos.y += korrCellY;
 
-            Storage.Events.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
+            if (isLog)
+                Storage.Events.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
         }
 
-        
-        Storage.Events.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
+
+        if (isLog)
+            Storage.Events.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
         //<<< @
         //MapCellFrame.transform.SetParent(this.gameObject.transform);
         //----------------------------
@@ -637,160 +599,7 @@ public class FrameMap : MonoBehaviour {
         return newPos;
     }
 
-    //private void SetLocationCell()
-    //{
-    //    //------------ Location cell
-    //    Vector2 movementCell = new Vector3(-12.4f, 12.4f);
-
-    //    //movementCell += new Vector2(SelectPointField.x / Storage.ScaleWorld, SelectPointField.y / Storage.ScaleWorld * (-1));
-
-    //    //MapCellFrame.transform.position = movementCell;
-    //    //MapCellFrame.GetComponent<RectTransform>().rect.left = movementCell.x;
-    //    //MapCellFrame.GetComponent<RectTransform>().rect.top = movementCell.y;
-    //    //MapCellFrame.GetComponent<RectTransform>().position.x = movementCell.x;
-    //    //MapCellFrame.GetComponent<RectTransform>().position.y = movementCell.y;
-
-    //    //MapCellFrame.GetComponent<RectTransform>().position = new Vector3(movementCell.x, movementCell.y, 0);
-
-    //    //if(posOld == new Vector3())
-    //    //    posOld = MapCellFrame.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
-    //    //Vector3 newPos = new Vector3(posOld.x + (SelectPointField.x / Storage.ScaleWorld), posOld.y - (SelectPointField.y / Storage.ScaleWorld), -10);
-
-    //    //!!!!!!!!!!!!!!!
-    //    //@ >>>
-    //    //MapCellFrame.transform.SetParent(null);
-    //    //MapCellFrame.SetActive(false);
-    //    //MapCellFrame.transform.SetParent(this.gameObject.transform);
-    //    //MapCellFrame.SetActive(true);
-    //    //!!!!!!!!!!!!!!!
-
-
-
-    //    if (posOld == new Vector3())
-    //        posOld = MapCellFrame.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
-
-    //    int _koofPosCell = 2;
-
-    //    //float correctPosX = posOld.x + (SelectPointField.x / Storage.ScaleWorld);
-    //    //float correctPosY = posOld.y - (SelectPointField.y / Storage.ScaleWorld);
-    //    float addX = (SelectPointField.x / (Storage.ScaleWorld * _koofPosCell));
-    //    float addY = (SelectPointField.y / (Storage.ScaleWorld * _koofPosCell));
-
-    //    float correctPosX = posOld.x + addX;
-    //    float correctPosY = posOld.y - addY;
-    //    //float correctPosX = posOld.x + SelectPointField.x;
-    //    //float correctPosY = posOld.y - SelectPointField.y;
-
-
-    //    float correctZomm = SizeZoom;
-
-    //    //if(correctZomm>1)
-    //    //{
-    //    //    correctZomm *= (1.1f + Storage.PlayerController.DistMoveCameraMapXY);
-    //    //}
-    //    if (correctZomm > 1)
-    //    {
-    //        Debug.Log("Save normal posit");
-    //    }
-
-    //    //correctPosX /= correctZomm;
-    //    //correctPosY /= correctZomm;
-
-    //    correctPosX -= Storage.Map.DistMoveCameraMap.x;
-    //    correctPosY -= Storage.Map.DistMoveCameraMap.y;
-
-    //    Vector3 newPos = new Vector3(correctPosX, correctPosY, -10);
-
-    //    ValidateStartPosition();
-
-    //    //Correct Offset Zoom
-    //    if (correctZomm > 1)
-    //    {
-    //        //float distanceSenter = Vector3.Distance(Storage.Map.StartPositFrameMap, newPos);
-    //        //float offSetOnCenterX = Storage.Map.StartPositFrameMap.x - newPos.x;
-    //        //float offSetOnCenterY = Storage.Map.StartPositFrameMap.y - newPos.y;
-    //        //float offSetOnCenterX = Storage.Map.StartPositFrameMap.x - newPos.x;
-    //        //float offSetOnCenterY = Storage.Map.StartPositFrameMap.y - newPos.y;
-    //        int x = (int)SelectPointField.x;
-    //        int y = (int)SelectPointField.y;
-    //        //int sizeW = Helper.HeightLevel;
-    //        int centrW = Helper.HeightLevel / 2;
-    //        Vector3 centerPos = new Vector3(centrW, centrW, 0);
-    //        //if (x> centrW)
-    //        //float distanceSenter = Vector3.Distance(SelectPointField, centerPos);
-    //        float offSetOnCenterX = centerPos.x - x;
-    //        float offSetOnCenterY = centerPos.y - y;
-
-    //        float koofOnCenterX = centerPos.x / x;
-    //        float koofOnCenterY = centerPos.y / y;
-    //        if (koofOnCenterX < 0)
-    //            koofOnCenterX += 1;
-    //        if (koofOnCenterY < 0)
-    //            koofOnCenterY += 1;
-
-    //        //if (correctZomm >= 1.1f) {
-    //        //    offSetOnCenterX = OffsetCell11;
-    //        //    offSetOnCenterY = OffsetCell11;
-    //        //}
-    //        Storage.Events.ListLogAdd = "New pos Cell: " + newPos.x + "x" + newPos.y;
-    //        Storage.Events.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
-    //        //Storage.Events.ListLogAdd = "-- Cell offset: " + offSetOnCenterX + "x" + offSetOnCenterY;
-
-    //        //newPos.x += offSetOnCenterX;
-    //        //newPos.y += offSetOnCenterY;
-    //        float korrCellX = offSetOnCenterX / 100;
-    //        float korrCellY = offSetOnCenterY / 100;
-
-    //        //OffsetCell11
-    //        float OffsetCell = 1f;
-
-    //        OffsetCell = GetOffsetCell(correctZomm);
-    //        //if (correctZomm >= 1.1f)
-    //        //    OffsetCell = OffsetCell11;
-    //        //if (correctZomm >= 1.2f)
-    //        //    OffsetCell = OffsetCell11;
-
-    //        Storage.Events.ListLogAdd = ":: OffsetCell corr: % " + OffsetCell;
-
-    //        korrCellX *= OffsetCell;
-    //        korrCellY *= OffsetCell;
-
-    //        //string operCorrX = "";
-    //        //string operCorrY = "";
-
-    //        //if (centerPos.x > x)
-    //        //{
-    //            newPos.x -= korrCellX;
-    //            //operCorrX = "-";
-    //        //}
-    //        //else{
-    //        //    newPos.x += korrCellX;
-    //        //}
-
-    //        //if (centerPos.y > y)
-    //        //{
-    //        //    operCorrY = "-";
-    //            newPos.y += korrCellY;
-    //        //}
-    //        //else
-    //        //{
-    //        //    newPos.y += korrCellY;
-    //        //}
-
-    //        //newPos.x = (int)newPos.x;
-    //        //newPos.y = (int)newPos.y;
-
-    //        Storage.Events.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
-    //        //correctZomm *= (1.1f + Storage.PlayerController.DistMoveCameraMapXY);
-    //    }
-
-    //    MapCellFrame.GetComponent<RectTransform>().position = newPos;
-    //    Storage.Events.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
-    //    //<<< @
-    //    //MapCellFrame.transform.SetParent(this.gameObject.transform);
-    //    //----------------------------
-    //}
-
+   
     private float GetOffsetCell(float correctZomm)
     {
         float OffsetCell = 1f;
@@ -837,6 +646,7 @@ public class FrameMap : MonoBehaviour {
         if (startMapX != 21.8 &&
              startMapY != -6.7)
         {
+            Storage.Map.StartPositFrameMap = new Vector3(21.8f, -6.7f, Storage.Map.StartPositFrameMap.z);
             Debug.Log("############ Incorrect start position Map frame Offset");
         }
         double startCellX = System.Math.Round(posOld.x, 1);
@@ -844,11 +654,13 @@ public class FrameMap : MonoBehaviour {
         if (startCellX != 9.4 &&
              startCellY != 5.7)
         {
+            posOld = new Vector3(9.4f, 5.7f, posOld.z);
             Debug.Log("############ Incorrect start position Map Cell Offset");
         }
     }
 
     #region Rest Hit point
+    Vector2 TestHasPoint = new Vector2();
 
     private void HitTextMousePointOnEbject()
     {
@@ -932,7 +744,10 @@ public class FrameMap : MonoBehaviour {
 
             if (Physics2D.OverlapPoint(mousePosition))
             {
-                Debug.Log(">>>>>>>>>>>>>>>>>> do great stuff : mousePosition:" + mousePosition.x + "x" + mousePosition.y);
+
+                TestHasPoint = mousePosition;
+                //Debug.Log(">>>>>>>>>>>>>>>>>> do great stuff : mousePosition:" + mousePosition.x + "x" + mousePosition.y);
+                //Storage.Events.ListLogAdd = "Physics2D.OverlapPoint(mousePosition) : " + mousePosition.x + "x" + mousePosition.y;
                 //Storage.Events.ListLogAdd = "MAP mousePosition:" + mousePosition.x + "x" + mousePosition.y;
                 //do great stuff
             }
