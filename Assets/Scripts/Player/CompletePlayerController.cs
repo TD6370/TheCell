@@ -14,6 +14,11 @@ public class CompletePlayerController : MonoBehaviour {
     public Camera CameraMap;
     //public GameObject UIController;
     public GameObject ObjectCursor;
+
+    //public Vector3 DistMoveCameraMap = new Vector3();
+    //public float DistMoveCameraMapXY = 0;
+    //public Vector3 StartPositFrameMap = new Vector3();
+
     private bool m_IsCursorSelection = false;
 
     private GenerateGridFields m_scriptGrid;
@@ -70,21 +75,9 @@ public class CompletePlayerController : MonoBehaviour {
 
         //Set Start Position
         rb2d.MovePosition(new Vector2(40, -40));
-
-        //if(UIController==null)
-        //{
-        //    Debug.Log("################## UIController is EMPTY");
-        //    return;
-        //}
-        //m_UIEvents = UIController.GetComponent<UIEvents>();
-        //if (m_UIEvents == null)
-        //{
-        //    Debug.Log("################## m_UIEvents is EMPTY");
-        //    return;
-        //}
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
 
-        //StartCoroutine(StartLoadGridLook());
+        
     }
 
     void Awake()
@@ -105,35 +98,16 @@ public class CompletePlayerController : MonoBehaviour {
 
         _movement = new Vector2(moveHorizontal, moveVertical);
 
-        if (Input.GetKey("m"))
-        {
-            Storage.Map.Create();
-        }
-
-        //if(rb2d.IsSleeping() && MainCamera.enabled)
+        //if (Input.GetKey("m"))
         //{
-        //    rb2d.WakeUp();
+        //    Storage.Map.Create();
         //}
 
         if (CameraMap.enabled)
         {
-            //rb2d.Sleep();
+            if (Storage.Map.StartPositFrameMap == new Vector3())
+                Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
 
-            //CameraMap.gameObject.SetActive(true);
-            //Storage.Map.Create();
-            //CameraMap.gameObject.SetActive(true);
-            //CameraMap.transform.position = new Vector3(rb2d.position + _movement * Speed * Time.deltaTime);
-            //CameraMap.transform.position =
-            //    new Vector2(
-            //        CameraMap.transform.position.x + _movement * Speed * Time.deltaTime,
-            //        CameraMap.transform.position.y + _movement * Speed * Time.deltaTime);
-            //CameraMap.transform.position =
-
-            //float translationX = moveHorizontal * Speed * Time.deltaTime;
-            //float translationY = moveVertical * Speed * Time.deltaTime;
-            //CameraMap.transform.Translate(translationX, translationY, 0);
-
-            //---
             float slow = 0.1f;
 
             float speed = 1f;
@@ -145,6 +119,8 @@ public class CompletePlayerController : MonoBehaviour {
             //CameraMap.transform.position += movementCam;
 
             Storage.Map.prefabFrameMap.transform.position += movementCam;
+            Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
+            Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
             //---
             return;
         }
@@ -180,32 +156,24 @@ public class CompletePlayerController : MonoBehaviour {
             _MousePosition = Input.mousePosition;
     }
 
-
-    public void CameraMapOn(bool isOpenMap)
-    {
-        if (isOpenMap)
-        {
-            rb2d.Sleep();
-            CameraMap.transform.position = MainCamera.transform.position;
-            CameraMap.enabled = true;
-            MainCamera.enabled = false;
-        }
-        else
-        {
-            rb2d.WakeUp();
-            MainCamera.enabled = true;
-            CameraMap.enabled = false;
-        }
-    }
+    public float ActionRate = 0.5f;
+    private float DelayTimer = 0F;
 
     void Update()
     {
-        //GetMousePositionOnScene2()
-        //_MousePosition = Input.mousePosition;
+        if (Input.GetKey("m") && Time.time > DelayTimer)
+        {
+            Storage.Map.Create();
+
+            DelayTimer = Time.time + ActionRate;
+        }
     }
 
     void OnMouseDown()
     {
+        if (!MainCamera.enabled)
+            return;
+
         float nextSize = 8.0f;
         float size = MainCamera.orthographicSize;
         if (size == 8.0f)
@@ -286,6 +254,25 @@ public class CompletePlayerController : MonoBehaviour {
 
     #region Public
 
+
+    public void CameraMapOn(bool isOpenMap)
+    {
+        if (isOpenMap)
+        {
+            rb2d.Sleep();
+            CameraMap.transform.position = MainCamera.transform.position;
+            //Storage.Map.StartPositFrameMap == new Vector3()
+            CameraMap.enabled = true;
+            MainCamera.enabled = false;
+        }
+        else
+        {
+            rb2d.WakeUp();
+            MainCamera.enabled = true;
+            CameraMap.enabled = false;
+        }
+    }
+
     public void Move(Vector2 posMove)
     {
         int Speed = 10;
@@ -305,6 +292,8 @@ public class CompletePlayerController : MonoBehaviour {
         posY = (int)((transform.position.y / scale) - 0.5);
         posY = (int)(Mathf.Abs(posY));
 
+        Storage.Instance.SelectFieldPosHero = Helper.GetNameField(posX, posY);
+
         if (_posLastX == posX && _posLastY == posY)
             return null;
 
@@ -312,6 +301,7 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastY = posY;
 
         _fieldHero = Helper.GetNameField(posX, posY);
+        Storage.Instance.SelectFieldPosHero = _fieldHero;
         _PosHeroToField = new Vector2(posX, posY);
 
         var camera = MainCamera;

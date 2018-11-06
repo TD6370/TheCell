@@ -469,7 +469,7 @@ public class TypeBoss
                         _instance = new TypeBoss();
                 _instance._TypesBoss = new List<TypeBoss>()
                     {
-                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, },
+                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, TextureMap= StoragePerson.TextureBossLizardMap},
                         new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard, TextureMap= StoragePerson.TextureBossRedMap },
                         new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos,  TextureMap= StoragePerson.TextureBossBandosMap  },
                         new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble,  TextureMap= StoragePerson.TextureBossBoobleMap  },
@@ -506,6 +506,11 @@ public class TypeBoss
     {
         //string _textureName = NemesTextureBoss[index];
         Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
+        if(_texture==null)
+        {
+            Debug.Log("########### GetNameTextureMapForIndexLevel Not Texture in TypesBoss level = " + p_level);
+        }
+
         //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
         return _texture;
         //-----

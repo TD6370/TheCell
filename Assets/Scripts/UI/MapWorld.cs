@@ -21,6 +21,10 @@ public class MapWorld : MonoBehaviour {
     public GameObject prefabMapCell;
     public GameObject prefabFrameMap;
 
+    public Vector3 DistMoveCameraMap = new Vector3();
+    public float DistMoveCameraMapXY = 0;
+    public Vector3 StartPositFrameMap = new Vector3();
+
     public float ZoomMap { get; set; }
     public Vector2 SelectPointField = new Vector2(0, 0);
     public string SelectFieldMap
@@ -50,8 +54,11 @@ public class MapWorld : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+
+        //if(StartPositFrameMap == new Vector3())
+        //    StartPositFrameMap = prefabFrameMap.transform.position;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -84,12 +91,17 @@ public class MapWorld : MonoBehaviour {
             CreateTextureMap(SizeCellMap);
             m_IsCreatedMap = true;
             Storage.PlayerController.CameraMapOn(true);
+            DrawLocationHero(true);
         }
         else
         {
             Storage.PlayerController.CameraMapOn(!prefabFrameMap.activeSelf);
             prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
-            DrawLocationHero(true);
+            //DrawLocationHero(true);
+            if (prefabFrameMap.activeSelf)
+            {
+                DrawLocationHero(true);
+            }
         }
     }
 

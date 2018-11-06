@@ -48,18 +48,30 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
-  
-    public void SavePosition()
+
+    public void SavePosition(int x = -1, int y = -1)
     {
         if (m_playerDataGame == null)
         {
             Debug.Log("############## LoadPlayerData is empty");
         }
 
-        m_playerDataGame.SavePosition = Storage.PlayerController.transform.position;
+        if (x != -1 && y != -1)
+        {
+            m_playerDataGame.SavePosition = new Vector3(x, y, m_playerDataGame.SavePosition.y);
+        } else
+        { 
+            m_playerDataGame.SavePosition = Storage.PlayerController.transform.position;
+        }
 
         SavePlayerXML();
         Debug.Log("Save Position HERO : " + Storage.PlayerController.transform.position);
+    }
+
+    public void TeleportHero(int x , int y)
+    {
+        SavePosition(x, y);
+        LoadPositionHero();
     }
 
     public void LoadPositionHero()
@@ -85,16 +97,25 @@ public class PlayerManager : MonoBehaviour {
 
         Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
         //Storage.PlayerController.Move(m_playerDataGame.SavePosition);
-        
 
-        Storage.GenGrid.StartGenGrigField(true);
+        //-------------
+        //Storage.GenGrid.StartGenGrigField(true);
         Storage.PlayerController.FindFieldCurrent();
-        Storage.GenGrid.LoadObjectsNearHero();
-
+            //RestructGrid();
+        //Storage.GenGrid.LoadObjectsNearHero();
         //------------
-        Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
+
+
+        //---------------------------
         Storage.GenGrid.StartGenGrigField(true);
-        Storage.PlayerController.FindFieldCurrent();
+
+                ////Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
+                ////Storage.Instance.SelectFieldPosHero = saveHeroPosField;
+
+                ////Storage.GenGrid.StartGenGrigField(true);
+                ////Storage.PlayerController.FindFieldCurrent();
+        //RestructGrid();
+
         Storage.GenGrid.LoadObjectsNearHero();
         //---------------------
 

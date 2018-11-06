@@ -41,12 +41,12 @@ public class UIEvents : MonoBehaviour {
     public Dropdown dpnMenuCommandTest;
 
     public Camera MainCamera;
-    
+
     private SaveLoadData m_scriptData;
     //private List<string> m_CommandLogList = new List<string>();
     private List<string> m_ListLog = new List<string>();
 
-    
+
 
 
     void Awake()
@@ -66,9 +66,16 @@ public class UIEvents : MonoBehaviour {
 
         btnExit.onClick.AddListener(delegate
         {
-            
+
             ExitGame();
         });
+
+        //tbxTest.OnUpdateSelected += () => { };
+        tbxTest.onValueChange.AddListener(delegate
+        {
+            FindInputCommand();
+        });
+
 
         btnPanelPersonOpen.onClick.AddListener(delegate
         {
@@ -91,7 +98,7 @@ public class UIEvents : MonoBehaviour {
 
         btnTest.onClick.AddListener(TestClick);
 
-        
+
         string typePrefub = this.gameObject.tag.ToString();
 
         SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
@@ -172,7 +179,7 @@ public class UIEvents : MonoBehaviour {
             //Debug.Log(">>>>>>>>>>>>>>> ListLogAdd  Add + " + value + "  IN " + String.Join(",", m_ListLog.ToArray()));
             m_ListLog.Add(value);
             SetTextLog = ListLogToString;
-            
+
         }
     }
     public void ListLogClear()
@@ -191,8 +198,26 @@ public class UIEvents : MonoBehaviour {
         }
     }
 
+    private void FindInputCommand()
+    {
+        //if ((Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter)))
+        if (tbxTest.text.IndexOf("~") != -1)
+        {
+            tbxTest.text = tbxTest.text.Replace("~", "");
+            tbxTest.text = tbxTest.text.Replace(".", ",");
+            Debug.Log("FindInputCommand");
+            //tbxTest.text = ""; //Clear Inputfield text
+            //tbxTest.ActivateInputField(); //Re-focus on the input field
+            //tbxTest.Select();//Re-focus on the input field
+            TestClick();
+        }
+    }
+
+
     private void ExitGame()
     {
+        Storage.Player.SavePosition();
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -200,7 +225,28 @@ public class UIEvents : MonoBehaviour {
 #endif
     }
 
-    
+    public string GetSelectCommandName
+    {
+        get
+        {
+            int selIndex = dpnMenuCommandTest.value;
+            var menuCommands = dpnMenuCommandTest.options.ToArray();
+            string selectCommand = menuCommands[selIndex].text.ToString();
+            return selectCommand;
+        }
+
+    }
+
+    public bool IsCommandTeleport
+    {
+        get
+        {
+            if (GetSelectCommandName == "Teleport")
+                return true;
+            return false;
+        }
+    }
+
 
     private void TestClick()
     {
@@ -317,6 +363,10 @@ public class UIEvents : MonoBehaviour {
                 break;
             case "LoadGridTiles":
                 Storage.GridData.LoadGridTiles();
+                break;
+            case "Teleport":
+                Vector2 posTeleport = GetPositTeleport();
+                Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
                 break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
@@ -745,7 +795,48 @@ public class UIEvents : MonoBehaviour {
 
     }
 
-   
+   private Vector2 GetPositTeleport()
+    {
+        Vector2 posTeleport = new Vector2(10, -10);
+        string[] positInput = tbxTest.text.ToString().Split(',');
+        if(positInput.Length!=2)
+        {
+            Debug.Log("######## GetPositTeleport Input Command not valid: [" + tbxTest.text + "] len=" + positInput.Length);
+            return posTeleport;
+        }
+
+        float x = -1f;
+        float y = -1f;
+        foreach (var posStr in positInput)
+        {
+            float posInt = -1f;
+            if(x==-1f)
+            {
+                if(!float.TryParse(posStr, out x))
+                {
+                    Debug.Log("######## GetPositTeleport posStr X not valid: [" + posStr + "]");
+                    break;
+                }
+            }
+            else
+            {
+                if (!float.TryParse(posStr, out y))
+                {
+                    Debug.Log("######## GetPositTeleport posStr Y not valid: [" + posStr + "]");
+                    break;
+                }
+            }
+        }
+        if(x!=-1f && y!=-1f)
+        {
+            posTeleport = new Vector2(x, y);
+        }
+        else
+        {
+            Debug.Log("######## GetPositTeleport NOT teleporting !!!");
+        }
+        return posTeleport;
+    }
 }
 
 public class CommandStore

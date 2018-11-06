@@ -1636,7 +1636,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.000003406938}
+  m_AnchoredPosition: {x: 8.5, y: 0.000015933436}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -2943,6 +2943,9 @@ MonoBehaviour:
   MarkerMapWorldCell: {fileID: 424099814}
   prefabMapCell: {fileID: 1665423905}
   prefabFrameMap: {fileID: 1088875649}
+  DistMoveCameraMap: {x: 0, y: 0, z: 0}
+  DistMoveCameraMapXY: 0
+  StartPositFrameMap: {x: 0, y: 0, z: 0}
   SelectPointField: {x: 0, y: 0}
   BackPalette: {fileID: 1186496896}
   GridTails: {fileID: 1345113912}
@@ -5698,10 +5701,10 @@ RectTransform:
   m_Father: {fileID: 470054889}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -72.99802, y: -0.39099884}
-  m_SizeDelta: {x: 125.99, y: -13.21}
+  m_AnchoredPosition: {x: -0.0014954, y: -0.393}
+  m_SizeDelta: {x: -20, y: -13.214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1037067973
 MonoBehaviour:
@@ -6366,7 +6369,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapCellFrame: {fileID: 1665423905}
+  KoofPosCell: 1
   SizeZoom: 1
+  IsRuntimeViewMarker: 1
+  OffSetZomm1: 0
+  OffSetZomm11: 4
+  OffSetZomm12: 8
+  OffSetZomm13: 11
+  OffSetZomm14: 13.8
+  OffSetZomm15: 16
+  OffSetZomm16: 18.2
+  OffSetZomm17: 20
+  OffSetZomm18: 22
+  OffSetZomm19: 23
+  OffSetZomm2: 24.6
+  OffSetZomm21: 26.6
+  OffSetZomm22: 26.8
+  OffSetZomm23: 27.8
+  OffSetZomm24: 28.8
+  OffSetZomm25: 30
+  OffSetZomm08: -12
+  OffSetZomm09: -5
+  OffsetCell11: 2
+  OffsetCell12: 5
+  OffsetCell13: 7.5
+  OffsetCell14: 10
+  OffsetCell15: 12
+  OffsetCell16: 14
+  OffsetCell17: 17
+  OffsetCell18: 20
+  OffsetCell19: 22
+  OffsetCell2: 25
+  OffsetCell21: 27
+  OffsetCell22: 29.5
+  OffsetCell23: 31.5
+  OffsetCell24: 35
+  OffsetCell25: 37
 --- !u!4 &1088875653 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4361014767562770, guid: 3cee12aa331608b44a3904303ea398d0,
@@ -10410,6 +10448,7 @@ MonoBehaviour:
   ObjectCursor: {fileID: 816106695}
   Speed: 20
   txtMessage: {fileID: 1171611291}
+  ActionRate: 0.5
 --- !u!114 &1798573870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10665,6 +10704,8 @@ MonoBehaviour:
     m_Options:
     - m_Text: MapCreate
       m_Image: {fileID: 0}
+    - m_Text: Teleport
+      m_Image: {fileID: 0}
     - m_Text: SavePlayer
       m_Image: {fileID: 0}
     - m_Text: LoadPlayer
@@ -10903,7 +10944,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2093528016}
   m_HandleRect: {fileID: 2093528015}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10983,7 +11024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000030517578}
+  m_AnchoredPosition: {x: 8.5, y: 0.000015258789}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -11217,7 +11258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 87.88655}
+  m_AnchoredPosition: {x: 0.3, y: 87.886566}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650

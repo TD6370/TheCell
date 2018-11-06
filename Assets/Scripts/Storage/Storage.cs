@@ -305,6 +305,8 @@ public class Storage : MonoBehaviour {
         LoadGameObjects();
 
         //LoadData();
+
+        
     }
 
     void Update()
@@ -459,6 +461,7 @@ public class Storage : MonoBehaviour {
 
         //TTTT
         _screiptHero.FindFieldCurrent();
+        //Storage.Player.RestructGrid();
 
         //_scriptGrid.StartGenGrigField(isLoadRealtime);
         _scriptGrid.StartGenGrigField(true);
@@ -535,6 +538,19 @@ public class Storage : MonoBehaviour {
         {
             //@ST@ _gridData = Serializator.LoadGridXml(_datapathLevel);
             _GridDataG = Serializator.LoadGridXml(_datapathLevel);
+
+            //--------------
+            //var nameField = "Field20x50";
+            //if (!_GridDataG.FieldsD.ContainsKey(nameField))
+            //{
+            //    Debug.Log("");
+            //}
+            //if (TestExistField(nameField))
+            //{
+            //    Debug.Log("");
+            //}
+            //Debug.Log("");
+            //--------------
         }
         else
         {
@@ -621,6 +637,16 @@ public class Storage : MonoBehaviour {
             //Draw result
             //DrawRect(rX,rY,rX2,rY2);
         }
+    }
+
+    public bool TestExistField(string field)
+    {
+        if (!_GridDataG.FieldsD.ContainsKey(field))
+        {
+            Debug.Log("********** TestExitField      GridData not found Field = " + field);
+            return false;
+        }
+        return true;
     }
 
 
