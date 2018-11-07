@@ -58,6 +58,15 @@ public class Storage : MonoBehaviour {
     public Vector3 PersonsTargetPosition { get; set; }
 
 
+    private DataTilesManager _TilesManager;
+    public static DataTilesManager TilesManager
+    {
+        get
+        {
+            return Instance._TilesManager;
+        }
+    }
+
     private ManagerPalette _Palette;
     public static ManagerPalette Palette
     {
@@ -206,6 +215,13 @@ public class Storage : MonoBehaviour {
         get { return _datapathPerson; }
     }
 
+    private string _datapathTiles = null;
+    public string DataPathTiles
+    {
+        get { return _datapathTiles; }
+    }
+    
+
     private string _datapathUserData = null;
     public string DataPathUserData
     {
@@ -281,6 +297,7 @@ public class Storage : MonoBehaviour {
         _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
         _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
         _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
+        _datapathTiles = Application.dataPath + "/Levels/TilesData.xml";
 
         ZonaField = null;
         ZonaReal = null;
@@ -402,6 +419,13 @@ public class Storage : MonoBehaviour {
         if (_Palette == null)
         {
             Debug.Log("########## InitComponents _Palette is Empty");
+            return;
+        }
+
+        _TilesManager = gameObject.GetComponent<DataTilesManager>();
+        if (_TilesManager == null)
+        {
+            Debug.Log("########## InitComponents _TilesManager is Empty");
             return;
         }
     }

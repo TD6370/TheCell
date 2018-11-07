@@ -85,6 +85,8 @@
     <Compile Include="Assets\Scripts\Storage\UpdateData.cs" />
     <Compile Include="Assets\Scripts\Temp.cs" />
     <Compile Include="Assets\Scripts\TileGen.cs" />
+    <Compile Include="Assets\Scripts\TilesType\DataTilesManager.cs" />
+    <Compile Include="Assets\Scripts\TilesType\TileRoad.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
     <Compile Include="Assets\Scripts\UI\MapWorld.cs" />
@@ -106,6 +108,7 @@
     <None Include="Assets\Levels\TestCorrect\LevelData0.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\Levels\Temp\LevelData0.xml" />
+    <None Include="Assets\Levels\TilesData.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />

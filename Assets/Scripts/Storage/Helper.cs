@@ -474,7 +474,11 @@ public class Serializator
             typeof(ModelNPC.PersonData),
 
             typeof(ModelNPC.PersonDataBoss),
-            typeof(ModelNPC.GameDataBoss) };
+            typeof(ModelNPC.GameDataBoss),
+            typeof(TilesData),
+            typeof(DataTile),
+
+    };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
@@ -578,6 +582,95 @@ public class Serializator
 
         return state;
     }
+
+    static public TilesData LoadTilesXml(string datapath)
+    {
+        string stepErr = "start";
+        TilesData state = null;
+        try
+        {
+            Debug.Log("Loaded Xml GridData start...");
+
+            stepErr = ".1";
+            stepErr = ".2";
+            XmlSerializer serializer = new XmlSerializer(typeof(TilesData), extraTypes);
+            stepErr = ".3";
+            FileStream fs = new FileStream(datapath, FileMode.Open);
+            stepErr = ".4";
+            state = (TilesData)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+            stepErr = ".6";
+            state.TilesD = state.TilesXML.ToDictionary(x => x.Key, x => x.Value);
+            stepErr = ".7";
+            Debug.Log("Loaded Xml CasePersonData :" + state.TilesD.Count() + "     datapath=" + datapath);
+            state.TilesXML = null;
+        }
+        catch (Exception x)
+        {
+            state = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        return state;
+    }
+
+    static public void SaveTilesDataXml(TilesData state, string datapath, bool isNewWorld = false)
+    {
+
+        if (isNewWorld)
+        {
+            if (File.Exists(datapath))
+            {
+                try
+                {
+                    File.Delete(datapath);
+                }
+                catch (Exception x)
+                {
+                    Debug.Log("############# Error TilesData NOT File Delete: " + datapath + " : " + x.Message);
+                }
+            }
+        }
+
+        //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+        //## 
+        state.TilesXML = state.TilesD.ToList();
+
+        //## 
+        Debug.Log("SaveXml GridData D:" + state.TilesD.Count() + "   XML:" + state.TilesXML.Count() + "     datapath=" + datapath);
+
+        XmlSerializer serializer = new XmlSerializer(typeof(TilesData), extraTypes);
+
+        FileStream fs = new FileStream(datapath, FileMode.Create);
+
+        serializer.Serialize(fs, state);
+        fs.Close();
+
+        state.TilesXML = null;
+        //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+    }
+
+    //[XmlRoot("TilesData")]
+    //[XmlInclude(typeof(DataTile))]
+    //public class TilesData
+    //{
+    //    private Dictionary<string, List<DataTile>> CollectionDataMapTales;
+    //    public List<KeyValuePair<string, List<DataTile>>> TilesXML = new List<KeyValuePair<string, List<DataTile>>>();
+    //    public TilesData() { }
+    //}
+
+    //[XmlType("Tile")]
+    //public class DataTile
+    //{
+    //    public int X { get; set; }
+    //    public int Y { get; set; }
+    //    public string Name { get; set; }
+    //    public string Tag { get; set; }
+    //    public bool IsLock { get; set; }
+
+    //    public DataTile() { }
+    //}
 
     static public T LoadXml<T>(string datapath) where T : class
     {

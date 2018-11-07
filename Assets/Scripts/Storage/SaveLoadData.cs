@@ -18,10 +18,10 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabWallRock;
     public GameObject PrefabWallWood;
 
-    //--- TAILS ---
-    public GameObject BackPalette;
-    public Grid GridTails;
-    public GameObject TailsMap;
+    ////--- TAILS ---
+    //public GameObject BackPalette;
+    //public Grid GridTails;
+    //public GameObject TailsMap;
 
     //public GameObject 
     public static float Spacing = 2f;
@@ -497,76 +497,55 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
-    
-    public void LoadGridTiles()
-    {
-        //--- TAILS ---
-        //GameObject BackPalette;
-        // Grid GridTails;
-        //Layer Back
-        //public GameObject TailsMap;
-        //GridTails.
-        //TailsMap.
+   
 
-        //Tilemap tm = TailsMap.GetComponent<Tilemap>();
-
-    //    public class TileTest : MonoBehaviour
+    //public void CreateStructDataTile(string NameStructMap, BoundsInt boundsStruct, TileBase[] allTiles, BoundsInt boundsMap)
     //{
-    //    void Start()
+    //    int countFindTiles = 0;
+    //    List<DataTile> listDataTiles = new List<DataTile>();
+
+    //    int startX = boundsStruct.x + Math.Abs(boundsMap.x);
+    //    int startY = boundsStruct.y + Math.Abs(boundsMap.y);
+    //    int boundsSizeX = startX + boundsStruct.size.x;
+    //    int boundsSizeY = startY + boundsStruct.size.y;
+
+
+
+    //    for (int x = startX; x < boundsSizeX; x++)
     //    {
-            Tilemap tilemap = TailsMap.GetComponent<Tilemap>();
+    //        for (int y = startY; y < boundsSizeY; y++)
+    //        {
+    //            TileBase tile = allTiles[x + y * boundsMap.size.x];
 
-            BoundsInt bounds = tilemap.cellBounds;
-            TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
 
-            for (int x = 0; x < bounds.size.x; x++)
-            {
-                for (int y = 0; y < bounds.size.y; y++)
-                {
-                    TileBase tile = allTiles[x + y * bounds.size.x];
-                    if (tile != null)
-                    {
-                        Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
-                    }
-                    else
-                    {
-                        Debug.Log("x:" + x + " y:" + y + " tile: (null)");
-                    }
-                }
-        //    }
-        //}
-            }
+    //            if (tile != null)
+    //            {
+    //                int cellX = x + -startX;
+    //                int cellY = y + -startY;
 
-            //---------------------------
-        //In this case if you have, suppose, custom tile TileRoad, inherited from Tile or TileBase, then you can get all TileRoad tiles with call:
-        //TileBase[] = tilemap.GetTiles<RoadTile>();
+    //                DataTile dataTiles = new DataTile()
+    //                {
+    //                    X = cellX,
+    //                    Y = cellY,
+    //                    NameTales = tile.name
+    //                };
 
-    }
+    //                listDataTiles.Add(dataTiles);
+    //                countFindTiles++;
+    //            }
+    //        }
+    //    }
+
+    //    CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+
+    //}
+
 
 
 
 }
 
-public static class TilemapExtensions
-{
-    public static T[] GetTiles<T>(this Tilemap tilemap) where T : TileBase
-    {
-        List<T> tiles = new List<T>();
 
-        for (int y = tilemap.origin.y; y < (tilemap.origin.y + tilemap.size.y); y++)
-        {
-            for (int x = tilemap.origin.x; x < (tilemap.origin.x + tilemap.size.x); x++)
-            {
-                T tile = tilemap.GetTile<T>(new Vector3Int(x, y, 0));
-                if (tile != null)
-                {
-                    tiles.Add(tile);
-                }
-            }
-        }
-        return tiles.ToArray();
-    }
-}
 
 
 

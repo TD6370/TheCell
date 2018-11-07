@@ -14,6 +14,106 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public void LoadGridTiles_Test()
+    //{
+
+    //    int countFindTiles = 0;
+    //    //--- TAILS ---
+    //    //GameObject BackPalette;
+    //    // Grid GridTails;
+    //    //Layer Back
+    //    //public GameObject TailsMap;
+    //    //GridTails.
+    //    //TailsMap.
+
+
+    //    string NameStructMap = "Bild1";
+
+    //    CollectionDataMapTales = new Dictionary<string, List<DataTile>>();
+    //    List<DataTile> listDataTiles = new List<DataTile>();
+
+
+    //    Tilemap tilemap = TailsMap.GetComponent<Tilemap>();
+
+    //    BoundsInt bounds = tilemap.cellBounds;
+    //    TileBase[] allTiles = tilemap.GetTilesBlock(bounds);
+
+    //    for (int x = 0; x < bounds.size.x; x++)
+    //    {
+    //        for (int y = 0; y < bounds.size.y; y++)
+    //        {
+    //            TileBase tile = allTiles[x + y * bounds.size.x];
+    //            if (tile != null)
+    //            {
+    //                //Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
+    //                //int cellX = x + bounds.x;
+    //                //int cellY = y + bounds.y;
+    //                int cellX = x;// + bounds.x;
+    //                int cellY = y;// + bounds.y;
+
+    //                DataTile dataTiles = new DataTile()
+    //                {
+    //                    //X = x,
+    //                    //Y = y,
+    //                    X = cellX,
+    //                    Y = cellY,
+    //                    NameTales = tile.name
+    //                };
+
+    //                listDataTiles.Add(dataTiles);
+    //                countFindTiles++;
+    //            }
+    //            else
+    //            {
+    //                //Debug.Log("x:" + x + " y:" + y + " tile: (null)");
+    //            }
+    //        }
+    ////    }
+    ////}
+    //    }
+
+    //    CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+
+    //    foreach(var item in CollectionDataMapTales)
+    //    {
+    //        foreach(DataTile tileData in CollectionDataMapTales[item.Key])
+    //        {
+    //            Storage.Events.ListLogAdd = "DataTile : " + tileData.NameTales + " " + tileData.X + "x" + tileData.Y;
+    //            Debug.Log("DataTile : " + tileData.NameTales + " " + tileData.X + "x" + tileData.Y);
+    //        }
+    //    }
+
+    //    //foreach (var itemT in allTiles)
+    //    //{
+    //    //    if(itemT!=null)
+    //    //        Debug.Log("Tile info: " + itemT.name + "    " + itemT.GetInstanceID() + " -- " + itemT.ToString() ); // + itemT.GetTileData.position);
+    //    //}
+
+    //    Storage.Events.ListLogAdd = "Count fid liles: " + countFindTiles;
+
+    //    //---------------------------
+    //    //In this case if you have, suppose, custom tile TileRoad, inherited from Tile or TileBase, then you can get all TileRoad tiles with call:
+    //    //TileBase[] = tilemap.GetTiles<RoadTile>();
+
+    //}
+
+    //public void CreateDataTiles()
+    //{
+    //    CreateStructDataTile("BildTest1", new BoundsInt(new Vector3Int(0, 0, 0), new Vector3Int(3, 3, 0)));
+
+
+    //    foreach (var item in CollectionDataMapTales)
+    //    {
+    //        Storage.Events.ListLogAdd = "Structure : " + item.Key;
+    //        foreach (DataTile tileData in CollectionDataMapTales[item.Key])
+    //        {
+    //            Storage.Events.ListLogAdd = "DataTile : " + tileData.NameTales + " " + tileData.X + "x" + tileData.Y;
+    //            Debug.Log("DataTile : " + tileData.NameTales + " " + tileData.X + "x" + tileData.Y);
+    //        }
+    //    }
+
+    //}
+
     //private void CalculatePointOnMap_()
     //{
     //    bool isLog = false;
