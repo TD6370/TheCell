@@ -180,6 +180,8 @@ public class FrameMap : MonoBehaviour {
         float mapX = 0;
         float mapY = 0;
 
+        
+
         Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePosition))
         {
@@ -664,6 +666,10 @@ public class FrameMap : MonoBehaviour {
 
     private void HitTextMousePointOnEbject()
     {
+        //-----------------------
+        //Collider2D[] hitColliders = new Collider2D[1];
+        //hitCollidersP
+        //if (Physics2D.OverlapPointNonAlloc(mousePosition, hitColliders))
         //-----------------------
         //Camera cameraMap = Camera.main;
         Camera cameraMap = Storage.PlayerController.CameraMap;// Camera.main;
