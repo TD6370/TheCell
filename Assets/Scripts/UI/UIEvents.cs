@@ -361,8 +361,11 @@ public class UIEvents : MonoBehaviour {
             case "LoadPlayer":
                 Storage.Player.LoadPositionHero();
                 break;
-            case "LoadGridTiles":
-                Storage.TilesManager.LoadGridTiles();
+            //case "LoadGridTiles":
+            //    Storage.TilesManager.LoadGridTiles();
+            //    break;
+            case "UpdateGridTiles":
+                Storage.TilesManager.UpdateGridTiles();
                 break;
             case "Teleport":
                 Vector2 posTeleport = GetPositTeleport();

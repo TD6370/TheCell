@@ -9,20 +9,20 @@ public class DataTilesManager : MonoBehaviour {
 
     //--- TAILS ---
     public GameObject BackPalette;
-    public Grid GridTails;
-    public GameObject TailsMapBackLayer;
+    public Grid GridTiles;
+    public GameObject TilesMapBackLayer;
 
     private Texture2D[] m_listTexturs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
     private TileBase[] m_listTiles;// = Resources.LoadAll<TileBase>("Textures/Terra/Floor/Tiles/");
     public Dictionary<string, Texture2D> CollectionTextureTiles;
     public Dictionary<string, TileBase> CollectionTiles;
 
-    private Dictionary<string, List<DataTile>> m_CollectionDataMapTales;
-    public Dictionary<string, List<DataTile>> DataMapTales
+    private Dictionary<string, List<DataTile>> m_CollectionDataMapTiles;
+    public Dictionary<string, List<DataTile>> DataMapTiles
     {
         get
         {
-            return m_CollectionDataMapTales;
+            return m_CollectionDataMapTiles;
         }
     }
 
@@ -37,21 +37,30 @@ public class DataTilesManager : MonoBehaviour {
 		
 	}
 
-    
-
-    public void LoadGridTiles()
+    public void UpdateGridTiles()
     {
         CreateDataTiles();
 
         LoadTextures();
+
+        Storage.PaletteMap.LoadListConstructsControl();
     }
 
     public void CreateDataTiles()
     {
-        m_CollectionDataMapTales = new Dictionary<string, List<DataTile>>();
+        List<TilesMapLocation> ListTilesMapLocations = new List<TilesMapLocation>();
+
+        //--- Init tiles constructions
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildTest1", Row = 0, Size = 3 });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildpolKochBol", Row = 0, Size = 3 });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDvor", Row = 0, Size = 5 });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildBoloto", Row = 0, Size = 5 });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildZal", Row = 0, Size = 10 });
+
+        m_CollectionDataMapTiles = new Dictionary<string, List<DataTile>>();
         List<DataTile> listDataTiles = new List<DataTile>();
 
-        Tilemap tilemap = TailsMapBackLayer.GetComponent<Tilemap>();
+        Tilemap tilemap = TilesMapBackLayer.GetComponent<Tilemap>();
 
         BoundsInt boundsMap = tilemap.cellBounds;
 
@@ -60,20 +69,41 @@ public class DataTilesManager : MonoBehaviour {
 
         TileBase[] allTiles = tilemap.GetTilesBlock(boundsMap);
 
-        CreateStructDataTile("BildTest1", new Rect(0, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
-        CreateStructDataTile("BildpolKochBol", new Rect(3, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
+        //CreateStructDataTile("BildTest1", new Rect(0, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
+        //CreateStructDataTile("BildpolKochBol", new Rect(3, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
+        //CreateStructDataTile("BildpolKochBol", new Rect(6, 0, 5, 5), allTiles, boundsMap, TypesStructure.Terra);
 
-        foreach (var item in m_CollectionDataMapTales)
+        //----------  Create tiles
+        int HeightRow = 5;
+        int index = 0;
+        //int offsetX = 0;
+        int startX = 0;// offsetX + itemTile.Size;
+        foreach (var itemTile in ListTilesMapLocations)
+        {
+            int startY = itemTile.Row * HeightRow;
+            itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
+            CreateStructDataTile(itemTile.Name, itemTile.Position, allTiles, boundsMap, itemTile.TypeTile);
+            index++;
+            startX += itemTile.Size;
+            itemTile.Index = index;
+        }
+        //-----------------------
+
+        //-------- Report
+        foreach (var item in m_CollectionDataMapTiles)
         {
             Storage.Events.ListLogAdd = "Structure : " + item.Key;
-            foreach (DataTile tileData in m_CollectionDataMapTales[item.Key])
+            foreach (DataTile tileData in m_CollectionDataMapTiles[item.Key])
             {
                 Storage.Events.ListLogAdd = "DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y;
                 Debug.Log("DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y);
             }
         }
+        //-----------------
 
         SaveTilesData();
+
+        
     }
 
     public void CreateStructDataTile(string NameStructMap, Rect boundsStruct, TileBase[] allTiles, BoundsInt boundsMap, TypesStructure p_tag)
@@ -112,7 +142,7 @@ public class DataTilesManager : MonoBehaviour {
             }
         }
 
-        m_CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+        m_CollectionDataMapTiles.Add(NameStructMap, listDataTiles);
 
     }
 
@@ -146,14 +176,14 @@ public class DataTilesManager : MonoBehaviour {
 
         TilesData data = Serializator.LoadTilesXml(Storage.Instance.DataPathTiles);
         if(data!=null)
-            m_CollectionDataMapTales = data.TilesD;
+            m_CollectionDataMapTiles = data.TilesD;
     }
 
     public void SaveTilesData()
     {
         TilesData tilesDataSavw = new TilesData()
         {
-            TilesD = m_CollectionDataMapTales
+            TilesD = m_CollectionDataMapTiles
         };
         Serializator.SaveTilesDataXml(tilesDataSavw, Storage.Instance.DataPathTiles, true);
     }
@@ -215,6 +245,17 @@ public enum TypesStructure
     Person
 }
 
+public class TilesMapLocation
+{
+    public string Name;
+    public Rect Position;
+    public int Row;
+    public int Size;
+    public int Index;
+    public TypesStructure TypeTile = TypesStructure.Terra;
+    public TilesMapLocation() { }
+}
+
 [XmlRoot("TilesData")]
 [XmlInclude(typeof(DataTile))]
 public class TilesData
@@ -227,6 +268,21 @@ public class TilesData
 
     public TilesData() { }
 }
+
+
+
+//[XmlType("Construction")]
+//public class DataConstructionTiles
+//{
+//    public int Wight { get; set; }
+//    public int Height { get; set; }
+
+//    //[XmlType("Tile")]
+//    List<DataTile> ListDataTile { get; set; }
+
+//    public DataConstructionTiles() { }
+//}
+
 
 [XmlType("Tile")]
 public class DataTile

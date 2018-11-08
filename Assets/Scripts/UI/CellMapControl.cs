@@ -1,29 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CellMapControl : MonoBehaviour {
 
     PaletteMapController _scriptMap;
-    public DataTile DataTileCell;
     public GameObject ContentGridMap;
+    public Text TittleCell;
+    public Text InfoCell;
+
+    private DataTile m_DataTileCell;
+    public DataTile DataTileCell
+    {
+        get
+        {
+            return m_DataTileCell;
+        }
+        set
+        {
+            m_DataTileCell = value;
+
+            if (m_DataTileCell != null)
+            {
+                TittleCell.text = PosX + "x" + PosY;
+                InfoCell.text = m_DataTileCell.Name;
+            }
+        }
+    }
 
     public int PosX
     {
         get
         {
-            return DataTileCell.X;
+            return m_DataTileCell.X;
         }
     }
     public int PosY
     {
         get
         {
-            return DataTileCell.Y;
+            return m_DataTileCell.Y;
         }
     }
-
-    
 
     // Use this for initialization
     void Start () {
@@ -50,7 +69,25 @@ public class CellMapControl : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        _scriptMap.SelectedCellMap(DataTileCell);
+        _scriptMap.SelectedCellMap(m_DataTileCell);
     }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        
+    }
+
+    //private void OnGUI()
+    //{
+    //    if (DataTileCell != null)
+    //    {
+    //        //Vector3 posInfo = ContentGridMap.transform.position - this.transform.position;
+    //        //Vector2 posInfo = new Vector2(this.transform.position.x, ContentGridMap.transform.position.y - this.transform.position.y);
+    //        //Vector2 posInfo = new Vector2(this.transform.position.x, this.transform.position.y - ContentGridMap.transform.position.y);
+    //        Vector2 posInfo = new Vector2();
+    //        Rect rectInfo = new Rect(posInfo, new Vector2(100, 50));
+    //        GUI.Label(rectInfo, PosX + "x" + PosY);
+    //    }
+    //}
 
 }
