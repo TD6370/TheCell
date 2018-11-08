@@ -40,6 +40,9 @@ public class Storage : MonoBehaviour {
 
     public GameObject HeroObject;
     public GameObject UIController;
+    public GameObject FramePaletteMap;
+    public GameObject ContentGridPaletteMap;
+    
     //_scriptEvents = UIController.GetComponent<UIEvents>();
 
     public ZonaFieldLook ZonaField { get; set; }
@@ -64,6 +67,15 @@ public class Storage : MonoBehaviour {
         get
         {
             return Instance._TilesManager;
+        }
+    }
+
+    private PaletteMapController _PaletteMapController;
+    public static PaletteMapController PaletteMap
+    {
+        get
+        {
+            return Instance._PaletteMapController;
         }
     }
 
@@ -426,6 +438,13 @@ public class Storage : MonoBehaviour {
         if (_TilesManager == null)
         {
             Debug.Log("########## InitComponents _TilesManager is Empty");
+            return;
+        }
+
+        _PaletteMapController = ContentGridPaletteMap.GetComponent<PaletteMapController>();
+        if (_PaletteMapController == null)
+        {
+            Debug.Log("########## InitComponents _PaletteMapController is Empty");
             return;
         }
     }

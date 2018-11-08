@@ -154,6 +154,13 @@ public class CompletePlayerController : MonoBehaviour {
         }
         if (Storage.Events.IsCursorVisible)
             _MousePosition = Input.mousePosition;
+
+        //if (Input.GetKey("m"))
+        //{
+        //    Storage.Map.Create();
+
+        //    //DelayTimer = Time.time + ActionRate;
+        //}
     }
 
     public float ActionRate = 0.5f;
@@ -166,6 +173,12 @@ public class CompletePlayerController : MonoBehaviour {
             Storage.Map.Create();
 
             DelayTimer = Time.time + ActionRate;
+        }
+
+        if (Input.GetKey("p") && Time.time > DelayTimer)
+        {
+            Storage.PaletteMap.Show();
+            DelayTimer = Time.time + ActionRate/2;
         }
     }
 

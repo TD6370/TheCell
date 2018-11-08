@@ -67,6 +67,12 @@ public class MovementNPC : MonoBehaviour {
     {
     }
 
+    private void OnMouseDown()
+    {
+        SelectedGameObject();
+    }
+
+
     private void InitData()
     {
         m_material = this.GetComponent<Renderer>().material;
@@ -467,11 +473,7 @@ public class MovementNPC : MonoBehaviour {
         GUI.Label(position1, objID, style);
     }
 
-    private void OnMouseDown()
-    {
-        SelectedGameObject();
-    }
-
+   
     private void SelectedGameObject()
     {
 

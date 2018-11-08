@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\TileGen.cs" />
     <Compile Include="Assets\Scripts\TilesType\DataTilesManager.cs" />
     <Compile Include="Assets\Scripts\TilesType\TileRoad.cs" />
+    <Compile Include="Assets\Scripts\UI\CellMapControl.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
     <Compile Include="Assets\Scripts\UI\MapWorld.cs" />

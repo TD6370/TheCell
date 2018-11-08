@@ -17,7 +17,15 @@ public class DataTilesManager : MonoBehaviour {
     public Dictionary<string, Texture2D> CollectionTextureTiles;
     public Dictionary<string, TileBase> CollectionTiles;
 
-    private Dictionary<string, List<DataTile>> CollectionDataMapTales;
+    private Dictionary<string, List<DataTile>> m_CollectionDataMapTales;
+    public Dictionary<string, List<DataTile>> DataMapTales
+    {
+        get
+        {
+            return m_CollectionDataMapTales;
+        }
+    }
+
 
     // Use this for initialization
     void Start () {
@@ -40,7 +48,7 @@ public class DataTilesManager : MonoBehaviour {
 
     public void CreateDataTiles()
     {
-        CollectionDataMapTales = new Dictionary<string, List<DataTile>>();
+        m_CollectionDataMapTales = new Dictionary<string, List<DataTile>>();
         List<DataTile> listDataTiles = new List<DataTile>();
 
         Tilemap tilemap = TailsMapBackLayer.GetComponent<Tilemap>();
@@ -55,10 +63,10 @@ public class DataTilesManager : MonoBehaviour {
         CreateStructDataTile("BildTest1", new Rect(0, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
         CreateStructDataTile("BildpolKochBol", new Rect(3, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
 
-        foreach (var item in CollectionDataMapTales)
+        foreach (var item in m_CollectionDataMapTales)
         {
             Storage.Events.ListLogAdd = "Structure : " + item.Key;
-            foreach (DataTile tileData in CollectionDataMapTales[item.Key])
+            foreach (DataTile tileData in m_CollectionDataMapTales[item.Key])
             {
                 Storage.Events.ListLogAdd = "DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y;
                 Debug.Log("DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y);
@@ -104,7 +112,7 @@ public class DataTilesManager : MonoBehaviour {
             }
         }
 
-        CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+        m_CollectionDataMapTales.Add(NameStructMap, listDataTiles);
 
     }
 
@@ -138,14 +146,14 @@ public class DataTilesManager : MonoBehaviour {
 
         TilesData data = Serializator.LoadTilesXml(Storage.Instance.DataPathTiles);
         if(data!=null)
-            CollectionDataMapTales = data.TilesD;
+            m_CollectionDataMapTales = data.TilesD;
     }
 
     public void SaveTilesData()
     {
         TilesData tilesDataSavw = new TilesData()
         {
-            TilesD = CollectionDataMapTales
+            TilesD = m_CollectionDataMapTales
         };
         Serializator.SaveTilesDataXml(tilesDataSavw, Storage.Instance.DataPathTiles, true);
     }

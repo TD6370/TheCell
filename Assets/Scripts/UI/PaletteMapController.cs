@@ -7,6 +7,9 @@ public class PaletteMapController : MonoBehaviour {
 
     public GameObject FramePaletteMap;
     public Button btnClose;
+    public Dropdown ListConstructsControl;
+
+    private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
 
     public int sizeCellMap = 20;
 
@@ -21,9 +24,21 @@ public class PaletteMapController : MonoBehaviour {
 
         btnClose.onClick.AddListener(delegate
         {
-            FramePaletteMap.SetActive(false);
+            Show(false);
         });
+
+
     }
+
+    private void LateUpdate()
+    {
+        LoadListConstructsControl();
+    }
+
+    // Update is called once per frame
+    void Update () {
+		
+	}
 
     private void ResizeScaleGrid()
     {
@@ -32,6 +47,57 @@ public class PaletteMapController : MonoBehaviour {
         m_GridMap = this.gameObject.GetComponent<GridLayoutGroup>();
         m_GridMap.cellSize = newSize;
     }
+
+
+    private void LoadListConstructsControl()
+    {
+        if(ListConstructsControl == null)
+        {
+            Debug.Log("###### LoadListConstructsContro  ListConstructsControl is Empty");
+            return;
+        }
+        if(Storage.TilesManager == null)
+        {
+            Debug.Log("###### LoadListConstructsContro  TilesManager is Empty");
+            return;
+        }
+        if (Storage.TilesManager.DataMapTales == null)
+        {
+            Debug.Log("###### LoadListConstructsContro  DataMapTales is Empty");
+            return;
+        }
+
+        m_ListConstructsOptopnsData = new List<Dropdown.OptionData>();
+        foreach (var itemTileData in Storage.TilesManager.DataMapTales)
+        {
+            m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = itemTileData.Key });
+        }
+        //Dropdown.OptionData optionTileConstruct = new Dropdown.OptionData() { text = "Prefab Tail 01." };
+        //m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = "Prefab Tail 01." });
+        //m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = "Prefab Tail 02." });
+
+        ListConstructsControl.ClearOptions();
+        ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
+    }
+
+    public void Show(bool isClose = false)
+    {
+        if(!isClose)
+        {
+            FramePaletteMap.SetActive(!FramePaletteMap.activeSelf);
+        }
+        else
+        {
+            FramePaletteMap.SetActive(false);
+        }
+            //ContentGridPaletteMap
+    }
+
+    public void SelectedCellMap(DataTile DataTileCell)
+    {
+
+    }
+
 
 
     //--- fixed Bug ---
@@ -45,11 +111,4 @@ public class PaletteMapController : MonoBehaviour {
     //    int hSize = Mathf.FloorToInt(width / sizeButt);
     //    lg.constraintCount = hSize;
     //}
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
-
-
 }
