@@ -12,13 +12,22 @@ public class PaletteMapController : MonoBehaviour {
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
 
+    public Button btnOnPaint;
+    public Button btnPaste;
+    public Button btnBrush;
+    public Button btnClear;
+    public Button btnReloadWorld;
+    public Button btnRefreshMap;
+
+    public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
+
+    public bool IsPaintsOn = false;
+
     private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
     private List<GameObject> m_listCallsOnPalette;
     private List<string> m_ListNamesStructurs;
 
     public int sizeCellMap = 20;
-
-    
 
     private GridLayoutGroup m_GridMap;
 
@@ -32,10 +41,9 @@ public class PaletteMapController : MonoBehaviour {
     {
         //ResizeScaleGrid();
 
-        btnClose.onClick.AddListener(delegate
-        {
-            Show(false);
-        });
+        InitEventsButtonMenu();
+
+        
 
         m_listCallsOnPalette = new List<GameObject>();
 
@@ -79,6 +87,32 @@ public class PaletteMapController : MonoBehaviour {
         }
 
         LoadConstructOnPalette(m_ListNamesStructurs[dpntStructurs.value]);
+    }
+
+    private void InitEventsButtonMenu()
+    {
+        btnClose.onClick.AddListener(delegate
+        {
+            Show(false);
+        });
+        btnOnPaint.onClick.AddListener(delegate
+        {
+            IsPaintsOn = !IsPaintsOn;
+        });
+        btnPaste.onClick.AddListener(delegate
+        {
+
+        });
+        btnReloadWorld.onClick.AddListener(delegate
+        {
+
+        });
+        btnRefreshMap.onClick.AddListener(delegate
+        {
+
+        });
+
+
     }
 
     private void LoadConstructOnPalette(string keyStruct)
@@ -210,6 +244,31 @@ public class PaletteMapController : MonoBehaviour {
         SelectedCell = DataTileCell;
     }
 
+    public void PaintAction()
+    {
+        
+
+        //ToolBarPaletteMapAction ModePaint
+        switch (ModePaint)
+        {
+            case ToolBarPaletteMapAction.Paste:
+                SaveConstructTileInGridData();
+                break;
+            case ToolBarPaletteMapAction.Clear:
+                break;
+        }
+    }
+
+    private void SaveConstructTileInGridData()
+    {
+        string field = Storage.Instance.SelectFieldPosHero;
+        var listTiles = Storage.TilesManager.DataMapTiles[SelectedStructure];
+        foreach(DataTile itemTile in listTiles)
+        {
+            //Storage.GridData.
+            Storage.GridData.AddConstructInGridData(field, itemTile);
+        }
+    }
 
     //--- fixed Bug ---
     //void Start()
@@ -222,4 +281,11 @@ public class PaletteMapController : MonoBehaviour {
     //    int hSize = Mathf.FloorToInt(width / sizeButt);
     //    lg.constraintCount = hSize;
     //}
+}
+
+public enum ToolBarPaletteMapAction
+{
+    None,
+    Paste,
+    Clear,
 }

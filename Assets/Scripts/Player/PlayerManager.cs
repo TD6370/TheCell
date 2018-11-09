@@ -136,6 +136,12 @@ public class PlayerManager : MonoBehaviour {
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
 
             Storage.Map.DrawLocationHero();
+
+            if(Storage.PaletteMap.IsPaintsOn)
+            {
+                Storage.PaletteMap.PaintAction();
+            }
+
         }
     }
 

@@ -396,7 +396,7 @@ public class ModelNPC
         }
     }
 
-
+  
     [XmlType("Boss")]
     public class GameDataBoss : PersonDataBoss
     //public class GameDataBoss : GameDataNPC
@@ -528,4 +528,29 @@ public class ModelNPC
         }
     }
 
+    [XmlType("Terra")]
+    public class TerraData : ObjectData
+    {
+        public string TileName { get; set; }
+        public int Index { get; set; }
+        public bool IsGen { get; set; }
+        public int Resources { get; set; }
+
+        public TerraData() { }
+
+        public void UpdateImageByTile(GameObject gobj)
+        {
+
+        }
+    }
+
+    [XmlType("Wall")]
+    public class WallData : TerraData
+    {
+        public int Defence { get; set; }
+        public string Debuff { get; set; }
+        public int HP { get; set; }
+        public string ParentId { get; set; }
+    }
 }
+

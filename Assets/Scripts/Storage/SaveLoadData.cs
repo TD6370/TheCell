@@ -478,6 +478,10 @@ public class SaveLoadData : MonoBehaviour {
                 objGameBild = new ModelNPC.GameDataBoss(); //$$
                 break;
 
+            case SaveLoadData.TypePrefabs.PrefabField:
+                objGameBild = new ModelNPC.TerraData(); //$$
+                break;
+
             default:
                 objGameBild = new ModelNPC.ObjectData();
                 break;
@@ -497,7 +501,51 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
-   
+    public void AddConstructInGridData(string nameField, DataTile itemTile)
+    {
+        TypePrefabs prefabName = TypePrefabs.PrefabField;
+
+        //public enum TypesStructure
+        //{
+        //    Terra,
+        //    Floor,
+        //    Wall,
+        //    Person
+        //}
+
+        TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
+        if (structType == TypesStructure.Terra)
+        {
+            prefabName = TypePrefabs.PrefabField; 
+        }
+        if (structType == TypesStructure.Person || structType == TypesStructure.Wall)
+        {
+            prefabName = GetPrefabByTile(itemTile.Name);
+        }
+
+        int y = 0;
+        int x = 0;
+        int _y = y * (-1);
+        Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+        pos.z = -1;
+        if (prefabName == TypePrefabs.PrefabUfo)
+            pos.z = -2;
+
+        string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+        ModelNPC.ObjectData objDataSave = BildObjectData(prefabName);
+        objDataSave.NameObject = nameObject;
+        objDataSave.TagObject = prefabName.ToString();
+        objDataSave.Position = pos;
+
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+    }
+
+    private TypePrefabs GetPrefabByTile(string TileName)
+    {
+
+        return TypePrefabs.PrefabField;
+    }
+
 
     //public void CreateStructDataTile(string NameStructMap, BoundsInt boundsStruct, TileBase[] allTiles, BoundsInt boundsMap)
     //{
