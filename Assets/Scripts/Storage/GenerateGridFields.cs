@@ -906,6 +906,7 @@ public class GenerateGridFields : MonoBehaviour {
         return _sctiptData.FindPrefab(namePrefab);
     }
 
+    //--------------- LINK: public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
     //+++ CreateObjectData +++ LoadObjectForLook
     public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     {
@@ -941,7 +942,7 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is Model ObjectDataUfo !!!!");
                     }
                     break;
                 case SaveLoadData.TypePrefabs.PrefabBoss: //$$
@@ -950,12 +951,22 @@ public class GenerateGridFields : MonoBehaviour {
                     var objBoss = objData as ModelNPC.GameDataBoss;
                     if (objBoss != null)
                     {
-                        //LoadObjectForLook:  DATA -->> PERSONA #P#
                         objBoss.UpdateGameObject(newObjGame);
                     }
                     else
                     {
-                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is ObjectDataUfo !!!!");
+                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is Model ObjectDataUfo !!!!");
+                    }
+                    break;
+                case SaveLoadData.TypePrefabs.PrefabField:
+                    var objTerra = objData as ModelNPC.TerraData;
+                    if (objTerra != null)
+                    {
+                        objTerra.UpdateGameObject(newObjGame);
+                    }
+                    else
+                    {
+                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is TerraData !!!!");
                     }
                     break;
                 default:

@@ -188,6 +188,23 @@ public class DataTilesManager : MonoBehaviour {
         Serializator.SaveTilesDataXml(tilesDataSavw, Storage.Instance.DataPathTiles, true);
     }
 
+    public string GenNameTileTerra()
+    {
+        string nameTile = "";
+        int ind = 0;
+        int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
+        foreach(var tileItem in CollectionTiles)
+        {
+            if (ind == selectedInd)
+            {
+                TileBase tile = CollectionTiles[tileItem.Key];
+                nameTile = tile.name;
+            }
+            ind++;
+        }
+        return nameTile;
+    }
+
 }
 
 public static class TilemapExtensions

@@ -46,7 +46,8 @@ public class StoragePerson : MonoBehaviour {
     {
         Alpha, 
         Kill,
-        PointPos
+        PointPos,
+        Paint,
     }
 
     public Dictionary<string, Sprite> SpriteCollection;

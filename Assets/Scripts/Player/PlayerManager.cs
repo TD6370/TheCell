@@ -122,6 +122,7 @@ public class PlayerManager : MonoBehaviour {
         Debug.Log("Teleported Hero ))");
     }
 
+    //public void RestructGrid(bool isMouseClick = false)
     public void RestructGrid()
     {
         var prefabFind =  Storage.PlayerController.FindFieldCurrent();
@@ -137,10 +138,10 @@ public class PlayerManager : MonoBehaviour {
 
             Storage.Map.DrawLocationHero();
 
-            if(Storage.PaletteMap.IsPaintsOn)
-            {
-                Storage.PaletteMap.PaintAction();
-            }
+            //if(Storage.PaletteMap.IsPaintsOn)
+            //{
+            //    Storage.PaletteMap.PaintAction();
+            //}
 
         }
     }

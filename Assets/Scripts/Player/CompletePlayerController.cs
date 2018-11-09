@@ -522,14 +522,11 @@ public class CompletePlayerController : MonoBehaviour {
         //MOUSE ON CLICK
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
-            _positionLastTarget = _rectCursor;
-
             _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
-            _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
-            Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
-            if (Storage.Instance.IsTartgetPositionAll)
-                Storage.Person.SetTartgetPositionAll(posCursorToField);
+            Storage.Events.CursorClickAction(posCursorToField, _fieldCursor);
+
+            _positionLastTarget = _rectCursor;
         }
 
         if (_RotateMenu == true)
@@ -607,9 +604,12 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-    public void CursorSelectionOn()
+    public void CursorSelectionOn(bool isOn = false)
     {
-        m_IsCursorSelection = !m_IsCursorSelection;
+        if (isOn)
+            m_IsCursorSelection = true;
+        else
+            m_IsCursorSelection = !m_IsCursorSelection;
     }
 
     float offsetCursorX = 0;

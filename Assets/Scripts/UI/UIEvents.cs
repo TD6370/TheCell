@@ -371,6 +371,9 @@ public class UIEvents : MonoBehaviour {
                 Vector2 posTeleport = GetPositTeleport();
                 Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
                 break;
+            case "GenWorldExtremal":
+                Storage.GridData.CreateDataGamesObjectsExtremalWorld();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -430,6 +433,24 @@ public class UIEvents : MonoBehaviour {
                 break;
         }
 
+    }
+
+    public void CursorClickAction(Vector2 posCursorToField, string _fieldCursor)
+    {
+        string _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
+
+        if (Storage.PaletteMap.IsCursorOn)
+        {
+            Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
+        }
+
+        if (Storage.PaletteMap.IsPaintsOn)
+        {
+            Storage.PaletteMap.PaintAction();
+        }
+
+        if (Storage.Instance.IsTartgetPositionAll)
+            Storage.Person.SetTartgetPositionAll(posCursorToField);
     }
 
     public void CreateCommandLogText(string p_text, Color color, Transform p_parent)

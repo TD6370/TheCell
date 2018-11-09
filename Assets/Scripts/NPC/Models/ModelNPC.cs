@@ -70,8 +70,6 @@ public class ModelNPC
 
         }
 
-
-
         public object Clone()
         {
             return this.MemberwiseClone();
@@ -396,7 +394,7 @@ public class ModelNPC
         }
     }
 
-  
+
     [XmlType("Boss")]
     public class GameDataBoss : PersonDataBoss
     //public class GameDataBoss : GameDataNPC
@@ -454,10 +452,8 @@ public class ModelNPC
 
         }
 
-        public GameDataBoss()
-            : base()
+        public GameDataBoss() : base()
         {
-
             Speed = 5;
 
             if (m_ColorRender != Color.clear)
@@ -534,23 +530,49 @@ public class ModelNPC
         public string TileName { get; set; }
         public int Index { get; set; }
         public bool IsGen { get; set; }
-        public int Resources { get; set; }
+        public int BlockResources { get; set; }
 
         public TerraData() { }
 
-        public void UpdateImageByTile(GameObject gobj)
+        public override void UpdateGameObject(GameObject objGame)
+        {
+            {
+                if (!Storage.TilesManager.CollectionTextureTiles.ContainsKey(TileName))
+                {
+                    Debug.Log("############## NOT Update new Sprite " + NameObject + " not found TileName: " + TileName);
+                    return;
+                }
+
+                Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[TileName];
+                Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+                if (spriteTile != null)
+                {
+                    objGame.GetComponent<SpriteRenderer>().sprite = spriteTile;
+                }
+                else
+                {
+                    Debug.Log("############## NOT Update new Sprite " + NameObject + " by TileName L " + TileName);
+                }
+            }
+        }
+
+        public class SpritesPrefabs
         {
 
+            //public Sprite GetSprite(string NameTile)
+            //{
+            //    return new Sprite();
+            //}
         }
-    }
 
-    [XmlType("Wall")]
-    public class WallData : TerraData
-    {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
+        [XmlType("Wall")]
+        public class WallData : TerraData
+        {
+            public int Defence { get; set; }
+            public string Debuff { get; set; }
+            public int HP { get; set; }
+            public string ParentId { get; set; }
+        }
     }
 }
 

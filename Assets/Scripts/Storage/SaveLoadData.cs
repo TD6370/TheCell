@@ -175,7 +175,58 @@ public class SaveLoadData : MonoBehaviour {
         return prefabName;
     }
 
+    public void CreateDataGamesObjectsExtremalWorld()
+    {
+        int coutCreateObjects = 0;
+        TypePrefabs prefabName = TypePrefabs.PrefabField;
+        Debug.Log("# CreateDataGamesObjectsWorld...");
+        Storage.Instance.ClearGridData();
 
+        for (int y = 0; y < Helper.HeightLevel; y++)
+        {
+            for (int x = 0; x < Helper.WidthLevel; x++)
+            {
+                int intRndCount = UnityEngine.Random.Range(0, 3);
+
+                int maxObjectInField = 10;
+                string nameField = Helper.GetNameField(x, y);
+
+                List<GameObject> ListNewObjects = new List<GameObject>();
+                for (int i = 0; i < maxObjectInField; i++)
+                {
+                    //GEN -----
+                    //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
+                    //if (prefabName == TypePrefabs.PrefabField)
+                    //continue;
+                    //-----------
+                    prefabName = TypePrefabs.PrefabBoss;
+
+                    int _y = y * (-1);
+                    Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+                    pos.z = -1;
+                    if (prefabName == TypePrefabs.PrefabUfo)
+                        pos.z = -2;
+
+                    string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName);
+                    objDataSave.NameObject = nameObject;
+                    objDataSave.TagObject = prefabName.ToString();
+                    objDataSave.Position = pos;
+
+                    coutCreateObjects++;
+
+                    Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+                }
+            }
+        }
+
+        Storage.Data.SaveGridGameObjectsXml(true);
+
+        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
+    }
+
+
+    //--------------- LINK: public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
     {
         ModelNPC.ObjectData newObject;
@@ -212,6 +263,23 @@ public class SaveLoadData : MonoBehaviour {
                 //newObject2.UpdateGameObject(p_gobject);
                 newObject.UpdateGameObject(p_gobject);
                 break;
+            case TypePrefabs.PrefabField:
+                newObject = new ModelNPC.TerraData
+                {
+                    NameObject = p_gobject.name,
+                    TagObject = p_gobject.tag,
+                    Position = p_gobject.transform.position,
+                    Index = 0,
+                    BlockResources = 100,
+                    TileName = Storage.TilesManager.GenNameTileTerra(),
+                    IsGen = false
+                };
+                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
+                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "  TYPE: " + newObject.GetType());
+                //newObject2.UpdateGameObject(p_gobject);
+                newObject.UpdateGameObject(p_gobject);
+                break;
+
             default:
                 //Debug.Log("_______________________CreateObjectData_____________default " + prefabType);
                 //var newObject3 = new ObjectData()
@@ -266,7 +334,6 @@ public class SaveLoadData : MonoBehaviour {
                 newObject = objects[index] as ModelNPC.GameDataUfo;
                 break;
             case TypePrefabs.PrefabBoss:
-                newObject = new ModelNPC.GameDataBoss();
                 nameField = Helper.GetNameFieldByName(p_gobject.name);
                 //Debug.Log("FindObjectData ------------ nameField :" + nameField);
 
@@ -293,7 +360,7 @@ public class SaveLoadData : MonoBehaviour {
                 //    Debug.Log("t2=null ");
                 //else Debug.Log("t2 type=" + t2.GetType());
 
-                if (newObject==null)
+                if (newObject == null)
                 {
                     Debug.Log("FindObjectData ------------newObject is null ");
                     Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
@@ -307,7 +374,32 @@ public class SaveLoadData : MonoBehaviour {
                     TagObject = p_gobject.tag,
                     Position = p_gobject.transform.position
                 };
+                nameField = Helper.GetNameFieldByName(p_gobject.name);
+                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                {
+                    objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+                    index = objects.FindIndex(p => p.NameObject == p_gobject.name);
+                    if (index == -1)
+                    {
+                        Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                        return null;
+                    }
+                    newObject = objects[index] as ModelNPC.GameDataBoss;
+                    if (newObject == null)
+                    {
+                        Debug.Log("FindObjectData ------------newObject is null ");
+                        Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
+                    }
+                }
                 break;
+            //default:
+            //    newObject = new ModelNPC.ObjectData()
+            //    {
+            //        NameObject = p_gobject.name,
+            //        TagObject = p_gobject.tag,
+            //        Position = p_gobject.transform.position
+            //    };
+            //    break;
         }
 
         //Debug.Log("FindObjectData -------- newObject: " + newObject);
@@ -374,14 +466,6 @@ public class SaveLoadData : MonoBehaviour {
         }
         return null;
     }
-
-    
-
-    
-
-    
-
-   
 
     public Sprite GetSpriteBossTrue(int index)
     {
@@ -477,7 +561,6 @@ public class SaveLoadData : MonoBehaviour {
             case SaveLoadData.TypePrefabs.PrefabBoss:
                 objGameBild = new ModelNPC.GameDataBoss(); //$$
                 break;
-
             case SaveLoadData.TypePrefabs.PrefabField:
                 objGameBild = new ModelNPC.TerraData(); //$$
                 break;
@@ -520,7 +603,9 @@ public class SaveLoadData : MonoBehaviour {
         }
         if (structType == TypesStructure.Person || structType == TypesStructure.Wall)
         {
-            prefabName = GetPrefabByTile(itemTile.Name);
+            prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
+            //prefabName = GetPrefabByTile(itemTile.Name);
+            //GameObject prefab = Storage.GridData.FindPrefab(itemTile.Name);
         }
 
         int y = 0;

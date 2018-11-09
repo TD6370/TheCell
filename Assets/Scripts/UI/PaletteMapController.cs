@@ -18,10 +18,12 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnClear;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
+    public Button btnCursor;
 
     public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
 
     public bool IsPaintsOn = false;
+    public bool IsCursorOn = false;
 
     private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
     private List<GameObject> m_listCallsOnPalette;
@@ -97,11 +99,24 @@ public class PaletteMapController : MonoBehaviour {
         });
         btnOnPaint.onClick.AddListener(delegate
         {
+            //ToolBarPaletteMapAction 
+            ModePaint = ToolBarPaletteMapAction.Cursor;
+
+
             IsPaintsOn = !IsPaintsOn;
+            if(IsPaintsOn)
+                Storage.PlayerController.CursorSelectionOn(true);
         });
+        btnCursor.onClick.AddListener(delegate
+        {
+            //IsCursorOn = !IsCursorOn;
+            ModePaint = ToolBarPaletteMapAction.Cursor;
+        });
+        
+
         btnPaste.onClick.AddListener(delegate
         {
-
+            ModePaint = ToolBarPaletteMapAction.Paste;
         });
         btnReloadWorld.onClick.AddListener(delegate
         {
@@ -246,8 +261,6 @@ public class PaletteMapController : MonoBehaviour {
 
     public void PaintAction()
     {
-        
-
         //ToolBarPaletteMapAction ModePaint
         switch (ModePaint)
         {
@@ -288,4 +301,5 @@ public enum ToolBarPaletteMapAction
     None,
     Paste,
     Clear,
+    Cursor
 }
