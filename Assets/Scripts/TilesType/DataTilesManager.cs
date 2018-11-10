@@ -13,8 +13,42 @@ public class DataTilesManager : MonoBehaviour {
     public GameObject TilesMapBackLayer;
 
     private Texture2D[] m_listTexturs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+    public  Texture2D[] ListTexturs
+    {
+        get{
+            if(m_listTexturs==null)
+                m_listTexturs = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+
+            return m_listTexturs;
+        }
+    }
+
     private TileBase[] m_listTiles;// = Resources.LoadAll<TileBase>("Textures/Terra/Floor/Tiles/");
-    public Dictionary<string, Texture2D> CollectionTextureTiles;
+
+    private Dictionary<string, Texture2D> m_collectionTextureTiles;
+    public Dictionary<string, Texture2D> CollectionTextureTiles
+    {
+        get
+        {
+            if(m_collectionTextureTiles==null)
+                LoadTextures();
+            return m_collectionTextureTiles;
+        }
+
+    }
+
+    public Dictionary<string, Sprite> m_collectionSpriteTiles;
+    public Dictionary<string, Sprite> CollectionSpriteTiles
+    {
+        get {
+            if (m_collectionSpriteTiles == null)
+                LoadTextures();
+            return m_collectionSpriteTiles;
+        }
+    }
+
+
+
     public Dictionary<string, TileBase> CollectionTiles;
 
     private Dictionary<string, List<DataTile>> m_CollectionDataMapTiles;
@@ -148,8 +182,9 @@ public class DataTilesManager : MonoBehaviour {
 
     public void LoadTextures()
     {
-        CollectionTextureTiles = new Dictionary<string, Texture2D>();
+        m_collectionTextureTiles = new Dictionary<string, Texture2D>();
         CollectionTiles = new Dictionary<string, TileBase>();
+        m_collectionSpriteTiles = new Dictionary<string, Sprite>();
 
         m_listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/");
         foreach (var tileItem in m_listTiles)
@@ -163,15 +198,18 @@ public class DataTilesManager : MonoBehaviour {
         }
 
         //m_listTiles = Resources.LoadAll<TileBase>("Textures/Terra/Floor/Tiles/");
-        m_listTexturs = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
-        foreach (var imageItem in m_listTexturs)
+        
+        foreach (var imageItem in ListTexturs)
         {
-            if (CollectionTextureTiles.ContainsKey(imageItem.name))
+            if (m_collectionTextureTiles.ContainsKey(imageItem.name))
             {
                 Debug.Log("########## LoadTextures CollectionTextureTiles already exit :" + imageItem.name);
                 continue;
             }
-            CollectionTextureTiles.Add(imageItem.name, imageItem);
+            m_collectionTextureTiles.Add(imageItem.name, imageItem);
+
+            Sprite spriteTile = Sprite.Create(imageItem, new Rect(0.0f, 0.0f, imageItem.width, imageItem.height), new Vector2(0.5f, 0.5f), 100.0f);
+            m_collectionSpriteTiles.Add(imageItem.name, spriteTile);
         }
 
         TilesData data = Serializator.LoadTilesXml(Storage.Instance.DataPathTiles);
@@ -188,20 +226,39 @@ public class DataTilesManager : MonoBehaviour {
         Serializator.SaveTilesDataXml(tilesDataSavw, Storage.Instance.DataPathTiles, true);
     }
 
+    private string[] m_listNameTiles;
+
+
     public string GenNameTileTerra()
     {
-        string nameTile = "";
-        int ind = 0;
-        int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
-        foreach(var tileItem in CollectionTiles)
+        string nameTile = "TileNone";
+
+        if(ListTexturs == null || ListTexturs.Length ==0)
         {
-            if (ind == selectedInd)
-            {
-                TileBase tile = CollectionTiles[tileItem.Key];
-                nameTile = tile.name;
-            }
-            ind++;
+            Debug.Log("###### GenNameTileTerra listTexturs is Empty");
+            return nameTile;
         }
+
+        //int ind = 0;
+        //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
+        int selectedInd = UnityEngine.Random.Range(0, ListTexturs.Length - 1);
+        
+        //foreach(var tileItem in CollectionTiles)
+        //{
+        //    if (ind == selectedInd)
+        //    {
+        //        TileBase tile = CollectionTiles[tileItem.Key];
+        //        nameTile = tile.name;
+        //    }
+        //    ind++;
+        //}
+        if (selectedInd> ListTexturs.Length -1)
+        {
+            Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
+            return nameTile;
+        }
+
+        nameTile = ListTexturs[selectedInd].name;
         return nameTile;
     }
 

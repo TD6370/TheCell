@@ -17,6 +17,7 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabElka;
     public GameObject PrefabWallRock;
     public GameObject PrefabWallWood;
+    public GameObject PrefabField;
 
     ////--- TAILS ---
     //public GameObject BackPalette;
@@ -109,8 +110,8 @@ public class SaveLoadData : MonoBehaviour {
                 {
                     //GEN -----
                     prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
-                    if (prefabName == TypePrefabs.PrefabField)
-                        continue;
+                    //if (prefabName == TypePrefabs.PrefabField)
+                    //    continue;
                     //-----------
 
                     int _y = y * (-1);
@@ -119,12 +120,10 @@ public class SaveLoadData : MonoBehaviour {
                     if (prefabName == TypePrefabs.PrefabUfo)
                         pos.z = -2;
 
-                    
-
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName);
+                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
@@ -208,7 +207,7 @@ public class SaveLoadData : MonoBehaviour {
                         pos.z = -2;
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName);
+                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
@@ -264,14 +263,15 @@ public class SaveLoadData : MonoBehaviour {
                 newObject.UpdateGameObject(p_gobject);
                 break;
             case TypePrefabs.PrefabField:
-                newObject = new ModelNPC.TerraData
+                //newObject = new ModelNPC.TerraData(isGen: true)
+                newObject = new ModelNPC.TerraData()
                 {
                     NameObject = p_gobject.name,
                     TagObject = p_gobject.tag,
                     Position = p_gobject.transform.position,
                     Index = 0,
                     BlockResources = 100,
-                    TileName = Storage.TilesManager.GenNameTileTerra(),
+                    //TileName = Storage.TilesManager.GenNameTileTerra(),
                     IsGen = false
                 };
                 Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
@@ -451,6 +451,9 @@ public class SaveLoadData : MonoBehaviour {
                 case TypePrefabs.PrefabElka:
                     resPrefab = Instantiate(PrefabElka);
                     break;
+                case TypePrefabs.PrefabField:
+                    resPrefab = Instantiate(PrefabField);
+                    break;
 
                 default:
                     Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
@@ -549,7 +552,7 @@ public class SaveLoadData : MonoBehaviour {
 
     //
 
-    public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType)
+    public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType, bool isTerraGen = false)
     {
         ModelNPC.ObjectData objGameBild;
 
@@ -562,6 +565,7 @@ public class SaveLoadData : MonoBehaviour {
                 objGameBild = new ModelNPC.GameDataBoss(); //$$
                 break;
             case SaveLoadData.TypePrefabs.PrefabField:
+                //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
                 objGameBild = new ModelNPC.TerraData(); //$$
                 break;
 
@@ -617,10 +621,20 @@ public class SaveLoadData : MonoBehaviour {
             pos.z = -2;
 
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-        ModelNPC.ObjectData objDataSave = BildObjectData(prefabName);
+        ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, false);
         objDataSave.NameObject = nameObject;
         objDataSave.TagObject = prefabName.ToString();
         objDataSave.Position = pos;
+        if(structType == TypesStructure.Terra)
+        {
+            var objTerra = objDataSave as ModelNPC.TerraData;
+            if(objTerra==null)
+            {
+                Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
+                return;
+            }
+            objTerra.TileName = itemTile.Name;
+        }
 
         Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
     }

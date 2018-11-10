@@ -774,7 +774,7 @@ public class UIEvents : MonoBehaviour {
         
         if (storeComm==null)
         {
-            Debug.Log("############ LoadCommandTool storeComm is Empty");
+            Debug.Log("############ LoadCommandTool storeComm is Empty  path=" + path);
             return;
         }
         else

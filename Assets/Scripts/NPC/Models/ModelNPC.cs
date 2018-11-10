@@ -47,6 +47,7 @@ public class ModelNPC
     //++++
     [XmlType("Object")] //++
     [XmlInclude(typeof(PersonData))]
+    [XmlInclude(typeof(TerraData))]
     //[XmlInclude(typeof(GameDataNPC))] //$$
 
     public class ObjectData : ICloneable
@@ -532,19 +533,51 @@ public class ModelNPC
         public bool IsGen { get; set; }
         public int BlockResources { get; set; }
 
-        public TerraData() { }
+        //public TerraData(bool isGen) {
+        public TerraData()
+        {
+            bool isGen = true;
+
+            if (Storage.TilesManager==null)
+            {
+                Debug.Log("######## Init TerraData: Storage.TilesManager is Empty");
+                return;
+            }
+            if (Storage.TilesManager.ListTexturs == null)
+            {
+                Debug.Log("######## Init TerraData: TilesManager.ListTexturs is Empty");
+                return;
+            }
+
+            if (isGen)
+                TileName = Storage.TilesManager.GenNameTileTerra();
+            else
+                TileName = Storage.TilesManager.ListTexturs[0].name;
+        }
 
         public override void UpdateGameObject(GameObject objGame)
         {
             {
-                if (!Storage.TilesManager.CollectionTextureTiles.ContainsKey(TileName))
+                //return;
+
+                if (Storage.TilesManager == null)
+                {
+                    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager  is Empty");
+                    return;
+                }
+                if (Storage.TilesManager.CollectionSpriteTiles == null)
+                {
+                    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager.CollectionTextureTiles  is Empty");
+                    return;
+                }
+
+                if (!Storage.TilesManager.CollectionSpriteTiles.ContainsKey(TileName))
                 {
                     Debug.Log("############## NOT Update new Sprite " + NameObject + " not found TileName: " + TileName);
                     return;
                 }
 
-                Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[TileName];
-                Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+                Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
                 if (spriteTile != null)
                 {
                     objGame.GetComponent<SpriteRenderer>().sprite = spriteTile;
@@ -555,24 +588,19 @@ public class ModelNPC
                 }
             }
         }
-
-        public class SpritesPrefabs
-        {
-
-            //public Sprite GetSprite(string NameTile)
-            //{
-            //    return new Sprite();
-            //}
-        }
-
-        [XmlType("Wall")]
-        public class WallData : TerraData
-        {
-            public int Defence { get; set; }
-            public string Debuff { get; set; }
-            public int HP { get; set; }
-            public string ParentId { get; set; }
-        }
     }
+
+    [XmlType("Wall")]
+    public class WallData : TerraData
+    {
+        public int Defence { get; set; }
+        public string Debuff { get; set; }
+        public int HP { get; set; }
+        public string ParentId { get; set; }
+
+        //public WallData(bool isGen) : base(isGen) { }
+        public WallData() { }
+    }
+
 }
 

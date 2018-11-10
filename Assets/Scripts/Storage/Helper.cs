@@ -477,11 +477,14 @@ public class Serializator
             typeof(ModelNPC.GameDataBoss),
             typeof(TilesData),
             typeof(DataTile),
+            typeof(ModelNPC.WallData),
+            typeof(ModelNPC.TerraData)
 
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
+        string indErr = "start";
 
         if (isNewWorld)
         {
@@ -489,6 +492,7 @@ public class Serializator
             {
                 try
                 {
+                    indErr = "delete";
                     File.Delete(datapath);
                 }
                 catch (Exception x)
@@ -498,22 +502,35 @@ public class Serializator
             }
         }
 
-        //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
-        //## 
-        state.FieldsXML = state.FieldsD.ToList();
+        try
+        {
+            indErr = "1";
+            //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+            //## 
+            state.FieldsXML = state.FieldsD.ToList();
+            indErr = "2";
+            //## 
+            Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
 
-        //## 
-        Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+            indErr = "3";
+            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
 
-        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+            indErr = "5";
+            FileStream fs = new FileStream(datapath, FileMode.Create);
 
-        FileStream fs = new FileStream(datapath, FileMode.Create);
+            indErr = "6";
+            serializer.Serialize(fs, state);
 
-        serializer.Serialize(fs, state);
-        fs.Close();
+            indErr = "7";
+            fs.Close();
 
-        state.FieldsXML = null;
-        //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+            indErr = "8";
+            state.FieldsXML = null;
+            //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+        }catch(Exception x)
+        {
+            Debug.Log("######### SaveGridXml: " + x.Message + "     to :" + datapath);
+        }
     }
 
     static public ModelNPC.GridData LoadGridXml(string datapath)
