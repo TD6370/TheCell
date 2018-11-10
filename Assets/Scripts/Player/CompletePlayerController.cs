@@ -77,7 +77,7 @@ public class CompletePlayerController : MonoBehaviour {
         rb2d.MovePosition(new Vector2(40, -40));
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
 
-        
+        //Storage.PaletteMap.Show();
     }
 
     void Awake()
@@ -523,6 +523,7 @@ public class CompletePlayerController : MonoBehaviour {
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
             _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
+            Storage.Instance.SelectFieldCursor = _fieldCursor;
 
             Storage.Events.CursorClickAction(posCursorToField, _fieldCursor);
 

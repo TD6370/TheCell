@@ -236,14 +236,14 @@ public static class Helper { //: MonoBehaviour {
         //}
 
 
-        Debug.Log("----- GetPositByField (" + nameFiled + ") : " + x + "x" + y);
+        //Debug.Log("----- GetPositByField (" + nameFiled + ") : " + x + "x" + y);
         return new Vector2(x, y);
     }
 
     public static string GetNameFieldByName(string nameGameObject)
     {
-
-        int start = nameGameObject.IndexOf(FieldKey);
+        
+        int start = nameGameObject.LastIndexOf(FieldKey);
         string result = "";
         string resultInfo = "";
         int valid = 0;

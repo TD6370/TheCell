@@ -36,19 +36,17 @@ public class DataTilesManager : MonoBehaviour {
         }
 
     }
-
-    public Dictionary<string, Sprite> m_collectionSpriteTiles;
+    private Dictionary<string, Sprite> m_collectionSpriteTiles;
     public Dictionary<string, Sprite> CollectionSpriteTiles
     {
-        get {
+        get
+        {
             if (m_collectionSpriteTiles == null)
                 LoadTextures();
             return m_collectionSpriteTiles;
         }
+
     }
-
-
-
     public Dictionary<string, TileBase> CollectionTiles;
 
     private Dictionary<string, List<DataTile>> m_CollectionDataMapTiles;

@@ -333,9 +333,9 @@ public class Storage : MonoBehaviour {
 
         LoadGameObjects();
 
-        //LoadData();
-
+        LoadDefaultUI();
         
+        //LoadData();
     }
 
     void Update()
@@ -530,6 +530,13 @@ public class Storage : MonoBehaviour {
             //Debug.Log("III ....Sart Crate NPC......");
             _scriptNPC.SartCrateNPC();
         }
+
+        
+    }
+
+    private void LoadDefaultUI()
+    {
+        PaletteMap.Show();
     }
 
     IEnumerator StartFindLookObjects()

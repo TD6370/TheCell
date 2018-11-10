@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //LoadPlayerData();
+        
     }
 
     public void Init()

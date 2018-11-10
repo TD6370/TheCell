@@ -284,6 +284,8 @@ public class UIEvents : MonoBehaviour {
         {
             case "None":
                 txtMessage.text = "...";
+                //TEST
+                Storage.Events.ListLogAdd = Helper.GetNameFieldByName("PrefabField_Field21x9_a87f");
                 break;
             case "SaveWorld":
                 txtMessage.text = "Level saving...";

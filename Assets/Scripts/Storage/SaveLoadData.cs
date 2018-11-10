@@ -588,7 +588,7 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
-    public void AddConstructInGridData(string nameField, DataTile itemTile)
+    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
 
@@ -637,7 +637,7 @@ public class SaveLoadData : MonoBehaviour {
             objTerra.TileName = itemTile.Name;
         }
 
-        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField);
     }
 
     private TypePrefabs GetPrefabByTile(string TileName)

@@ -179,23 +179,30 @@ public class StoragePerson : MonoBehaviour {
 
     public IEnumerable<GameObject> GetAllRealPersons(string field, bool  isModif = false)
     {
-        //var count1= Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList().Count();
-        //Debug.Log("PERSON PAIR (" + field + ")  COUNT " + count1);
-
-        foreach (GameObject gobjItem in Storage.Instance.GamesObjectsReal.
-            Where(p => p.Key == field).
-            SelectMany(x => x.Value).ToList())
+        try
         {
-            if(isModif)
-            {
-                ModifObject(gobjItem);
-            }
-            Debug.Log("OBJECT(" + field + ") : " + gobjItem);
-        }
+            //var count1= Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).ToList().Count();
+            //Debug.Log("PERSON PAIR (" + field + ")  COUNT " + count1);
 
-        return Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).
-                SelectMany(x => x.Value).
-                Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
+            foreach (GameObject gobjItem in Storage.Instance.GamesObjectsReal.
+                Where(p => p.Key == field).
+                SelectMany(x => x.Value).ToList())
+            {
+                if (isModif)
+                {
+                    ModifObject(gobjItem);
+                }
+                Debug.Log("OBJECT(" + field + ") : " + gobjItem);
+            }
+
+            return Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).
+                    SelectMany(x => x.Value).
+                    Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
+        }catch(Exception x)
+        {
+            Debug.Log("###### GetAllRealPersons: " + x.Message);
+        }
+        return null;
     }
 
     public IEnumerable<GameObject> GetAllRealPersonsForID(string name)

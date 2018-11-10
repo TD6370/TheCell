@@ -18,6 +18,7 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnBrush;
     public Toggle btnClear;
     public Toggle btnCursor;
+    public Toggle btnOnLayer;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
     
@@ -34,6 +35,7 @@ public class PaletteMapController : MonoBehaviour {
     public int sizeCellMap = 20;
     public float ActionRate = 0.5f;
     private float DelayTimer = 0F;
+    private bool m_PasteOnLayer = false;
 
     private GridLayoutGroup m_GridMap;
 
@@ -149,6 +151,16 @@ public class PaletteMapController : MonoBehaviour {
             }
         });
 
+        btnOnLayer.onValueChanged.AddListener(delegate
+        {
+            if (btnOnLayer.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Clear;
+                m_PasteOnLayer = btnOnLayer.isOn;
+            }
+        });
+
+
         btnReloadWorld.onClick.AddListener(delegate
         {
             Storage.Events.ReloadWorld();
@@ -157,6 +169,8 @@ public class PaletteMapController : MonoBehaviour {
         {
             Storage.Map.Create(true);
         });
+
+        
 
     }
 
@@ -193,9 +207,11 @@ public class PaletteMapController : MonoBehaviour {
 
             GameObject cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
             cellMap.transform.SetParent(this.gameObject.transform);
-           
-            Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
-            Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+            //Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
+            //Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+            Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
+
             //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
             cellMap.GetComponent<Image>().sprite = spriteTile;
             cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
@@ -275,6 +291,8 @@ public class PaletteMapController : MonoBehaviour {
     {
         if(!isClose)
         {
+            if (!FramePaletteMap.activeSelf && m_ListNamesStructurs.Count==0)
+                LoadListConstructsControl();
             FramePaletteMap.SetActive(!FramePaletteMap.activeSelf);
         }
         else
@@ -295,38 +313,62 @@ public class PaletteMapController : MonoBehaviour {
         switch (ModePaint)
         {
             case ToolBarPaletteMapAction.Paste:
-                if (Time.time > DelayTimer)
-                {
-                    SaveConstructTileInGridData();
-                    DefaultModeOn();
-
-                    DelayTimer = Time.time + ActionRate;
-                }
+                Paste();
                 break;
             case ToolBarPaletteMapAction.Clear:
                 break;
         }
     }
 
+    private void Paste()
+    {
+        if (Time.time > DelayTimer)
+        {
+            SaveConstructTileInGridData();
+            Storage.GenGrid.ReloadGridLook();
+            DefaultModeOn();
 
+            DelayTimer = Time.time + ActionRate;
+        }
+    }
 
     private void SaveConstructTileInGridData()
     {
-        
-
-        string fieldStart = Storage.Instance.SelectFieldPosHero;
+        //string fieldStart = Storage.Instance.SelectFieldPosHero;
+        string fieldStart = Storage.Instance.SelectFieldCursor;
         var listTiles = Storage.TilesManager.DataMapTiles[SelectedStructure];
 
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+        bool isClearLayer = !m_PasteOnLayer;
+
+        int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
         foreach (DataTile itemTile in listTiles)
         {
-            //Storage.GridData.
-            posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, itemTile.Y);
-            //Vector2 posStructNew = new Vector2(posStructFieldNew.x * Storage.ScaleWorld, posStructFieldNew.y * Storage.ScaleWorld * (-1));
+            //Correct position
+            posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
+
             string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
 
-            Storage.GridData.AddConstructInGridData(fieldNew, itemTile);
+            if (isClearLayer)
+                ClearLayerForStructure(fieldNew);
+
+            Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+        }
+        
+    }
+
+    private void ClearLayerForStructure(string field)
+    {
+        //Destroy All Objects
+        if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
+        {
+            var listObjs = Storage.Instance.GamesObjectsReal[field];
+            foreach (var obj in listObjs.ToArray())
+            {
+                Storage.Instance.AddDestroyGameObject(obj);
+            }
         }
     }
 
