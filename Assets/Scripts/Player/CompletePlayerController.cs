@@ -604,10 +604,10 @@ public class CompletePlayerController : MonoBehaviour {
         }
     }
 
-    public void CursorSelectionOn(bool isOn = false)
+    public void CursorSelectionOn(bool? isOn = null)
     {
-        if (isOn)
-            m_IsCursorSelection = true;
+        if (isOn.HasValue)
+            m_IsCursorSelection = isOn.Value;
         else
             m_IsCursorSelection = !m_IsCursorSelection;
     }

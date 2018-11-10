@@ -612,8 +612,9 @@ public class SaveLoadData : MonoBehaviour {
             //GameObject prefab = Storage.GridData.FindPrefab(itemTile.Name);
         }
 
-        int y = 0;
-        int x = 0;
+        Vector2 posStruct = Helper.GetPositByField(nameField);
+        int x = (int)posStruct.x;
+        int y = (int)posStruct.y;
         int _y = y * (-1);
         Vector3 pos = new Vector3(x, _y, 0) * Spacing;
         pos.z = -1;

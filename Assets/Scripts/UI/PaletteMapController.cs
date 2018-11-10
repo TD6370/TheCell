@@ -12,24 +12,28 @@ public class PaletteMapController : MonoBehaviour {
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
 
-    public Button btnOnPaint;
-    public Button btnPaste;
-    public Button btnBrush;
-    public Button btnClear;
+    //public Button btnOnPaint;
+    public Toggle btnOnPaint;
+    public Toggle btnPaste;
+    public Toggle btnBrush;
+    public Toggle btnClear;
+    public Toggle btnCursor;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
-    public Button btnCursor;
+    
 
     public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
 
     public bool IsPaintsOn = false;
-    public bool IsCursorOn = false;
+    //public bool IsCursorOn = false;
 
     private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
     private List<GameObject> m_listCallsOnPalette;
     private List<string> m_ListNamesStructurs;
 
     public int sizeCellMap = 20;
+    public float ActionRate = 0.5f;
+    private float DelayTimer = 0F;
 
     private GridLayoutGroup m_GridMap;
 
@@ -91,42 +95,68 @@ public class PaletteMapController : MonoBehaviour {
         LoadConstructOnPalette(m_ListNamesStructurs[dpntStructurs.value]);
     }
 
+    private void DefaultModeOn()
+    {
+        ModePaint = ToolBarPaletteMapAction.Cursor;
+        btnCursor.isOn = true;
+        btnPaste.isOn = false;
+        btnClear.isOn = false;
+    }
+
     private void InitEventsButtonMenu()
     {
         btnClose.onClick.AddListener(delegate
         {
             Show(false);
         });
-        btnOnPaint.onClick.AddListener(delegate
+        btnOnPaint.onValueChanged.AddListener(delegate
         {
-            //ToolBarPaletteMapAction 
-            ModePaint = ToolBarPaletteMapAction.Cursor;
-
-
-            IsPaintsOn = !IsPaintsOn;
-            if(IsPaintsOn)
+            IsPaintsOn = btnOnPaint.isOn;
+            if (IsPaintsOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Cursor;
                 Storage.PlayerController.CursorSelectionOn(true);
+                DefaultModeOn();
+            }
         });
-        btnCursor.onClick.AddListener(delegate
+        btnCursor.onValueChanged.AddListener(delegate
         {
-            //IsCursorOn = !IsCursorOn;
-            ModePaint = ToolBarPaletteMapAction.Cursor;
+            Storage.PlayerController.CursorSelectionOn(btnCursor.isOn);
+            if (btnCursor.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Cursor;
+                btnPaste.isOn = false;
+                btnClear.isOn = false;
+            }
         });
-        
 
-        btnPaste.onClick.AddListener(delegate
+        btnPaste.onValueChanged.AddListener(delegate
         {
-            ModePaint = ToolBarPaletteMapAction.Paste;
+            if (btnPaste.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Paste;
+                //btnCursor.isOn = false;
+                btnClear.isOn = false;
+            }
         });
+        btnClear.onValueChanged.AddListener(delegate
+        {
+            if (btnClear.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Clear;
+                btnPaste.isOn = false;
+                //btnCursor.isOn = false;
+            }
+        });
+
         btnReloadWorld.onClick.AddListener(delegate
         {
-
+            Storage.Events.ReloadWorld();
         });
         btnRefreshMap.onClick.AddListener(delegate
         {
-
+            Storage.Map.Create(true);
         });
-
 
     }
 
@@ -265,21 +295,38 @@ public class PaletteMapController : MonoBehaviour {
         switch (ModePaint)
         {
             case ToolBarPaletteMapAction.Paste:
-                SaveConstructTileInGridData();
+                if (Time.time > DelayTimer)
+                {
+                    SaveConstructTileInGridData();
+                    DefaultModeOn();
+
+                    DelayTimer = Time.time + ActionRate;
+                }
                 break;
             case ToolBarPaletteMapAction.Clear:
                 break;
         }
     }
 
+
+
     private void SaveConstructTileInGridData()
     {
-        string field = Storage.Instance.SelectFieldPosHero;
+        
+
+        string fieldStart = Storage.Instance.SelectFieldPosHero;
         var listTiles = Storage.TilesManager.DataMapTiles[SelectedStructure];
-        foreach(DataTile itemTile in listTiles)
+
+        Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+        Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+        foreach (DataTile itemTile in listTiles)
         {
             //Storage.GridData.
-            Storage.GridData.AddConstructInGridData(field, itemTile);
+            posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, itemTile.Y);
+            //Vector2 posStructNew = new Vector2(posStructFieldNew.x * Storage.ScaleWorld, posStructFieldNew.y * Storage.ScaleWorld * (-1));
+            string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
+
+            Storage.GridData.AddConstructInGridData(fieldNew, itemTile);
         }
     }
 

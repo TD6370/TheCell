@@ -273,6 +273,11 @@ public class UIEvents : MonoBehaviour {
         Storage.Instance.SelectGameObjectID = tbxTest.text;
     }
 
+    public void ReloadWorld()
+    {
+        StartCoroutine(StartReloadWorld());
+    }
+
     public void CommandExecute(string selectCommand)
     {
         switch (selectCommand)
@@ -299,7 +304,7 @@ public class UIEvents : MonoBehaviour {
                 //txtMessage.text = "Level loading...";
                 //Storage.Instance.LoadLevels();
                 //txtMessage.text = "Level loaded.";
-                StartCoroutine(StartReloadWorld());
+                ReloadWorld();
                 break;
             case "CreateWorld":
                 txtMessage.text = "Create Level...";
@@ -439,7 +444,8 @@ public class UIEvents : MonoBehaviour {
     {
         string _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
-        if (Storage.PaletteMap.IsCursorOn)
+        //if (Storage.PaletteMap.IsCursorOn)
+        if(Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Cursor)
         {
             Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
         }
