@@ -122,15 +122,15 @@ public class DataTilesManager : MonoBehaviour {
         //-----------------------
 
         //-------- Report
-        foreach (var item in m_CollectionDataMapTiles)
-        {
-            Storage.Events.ListLogAdd = "Structure : " + item.Key;
-            foreach (DataTile tileData in m_CollectionDataMapTiles[item.Key])
-            {
-                Storage.Events.ListLogAdd = "DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y;
-                Debug.Log("DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y);
-            }
-        }
+        //foreach (var item in m_CollectionDataMapTiles)
+        //{
+        //    Storage.Events.ListLogAdd = "Structure : " + item.Key;
+        //    foreach (DataTile tileData in m_CollectionDataMapTiles[item.Key])
+        //    {
+        //        Storage.Events.ListLogAdd = "DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y;
+        //        Debug.Log("DataTile : " + tileData.Name + " " + tileData.X + "x" + tileData.Y);
+        //    }
+        //}
         //-----------------
 
         SaveTilesData();
@@ -213,6 +213,11 @@ public class DataTilesManager : MonoBehaviour {
         TilesData data = Serializator.LoadTilesXml(Storage.Instance.DataPathTiles);
         if(data!=null)
             m_CollectionDataMapTiles = data.TilesD;
+        else
+        {
+            Debug.Log("############ Not load Tiles from XML " + Storage.Instance.DataPathTiles);
+            Storage.TilesManager.UpdateGridTiles();
+        }
     }
 
     public void SaveTilesData()

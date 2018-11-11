@@ -252,7 +252,7 @@ public class ModelNPC
             return newName;
         }
 
-        public virtual string Upadete(GameObject gobj)
+        public virtual string Update(GameObject gobj)
         {
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;

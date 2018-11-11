@@ -238,6 +238,13 @@ public class MovementNPC : MonoBehaviour {
         if (!string.IsNullOrEmpty(_resName) && _resName != this.gameObject.name)
         {
             Debug.Log("################## ERROR MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + _resName);
+            return true;
+        }
+
+        if(Storage.Data.IsUpdatingLocationPersonGlobal)
+        {
+            Debug.Log("_______________ResavePositionData  RETURN IsUpdatingLocationPerson_______________");
+            return true;
         }
 
         string oldName = this.gameObject.name;
@@ -515,7 +522,7 @@ public class MovementNPC : MonoBehaviour {
     public void SaveData()
     {
         //string _nameField = Helper.GetNameFieldByName(_dataNPC.NameObject);
-        _dataNPC.Upadete(this.gameObject);
+        _dataNPC.Update(this.gameObject);
 
         if (this.gameObject == null)
         {

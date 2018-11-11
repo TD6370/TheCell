@@ -22,6 +22,8 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnReloadWorld;
     public Button btnRefreshMap;
 
+    private List<Toggle> m_listToggleMode;
+
     public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
 
     public bool IsPaintsOn = false;
@@ -42,6 +44,11 @@ public class PaletteMapController : MonoBehaviour {
     private void Awake()
     {
         m_GridMap = this.gameObject.GetComponent<GridLayoutGroup>();
+        m_listToggleMode = new List<Toggle>()
+        {
+             btnPaste,
+             btnClear
+        };
     }
 
     // Use this for initialization
@@ -130,6 +137,10 @@ public class PaletteMapController : MonoBehaviour {
                 btnPaste.isOn = false;
                 btnClear.isOn = false;
             }
+            else if (ModePaint == ToolBarPaletteMapAction.Cursor)
+            {
+                ModePaint = ToolBarPaletteMapAction.None;
+            }
         });
 
         btnPaste.onValueChanged.AddListener(delegate
@@ -140,6 +151,10 @@ public class PaletteMapController : MonoBehaviour {
                 //btnCursor.isOn = false;
                 btnClear.isOn = false;
             }
+            else if(ModePaint == ToolBarPaletteMapAction.Paste)
+            {
+                ModePaint = ToolBarPaletteMapAction.None;
+            }
         });
         btnClear.onValueChanged.AddListener(delegate
         {
@@ -148,6 +163,10 @@ public class PaletteMapController : MonoBehaviour {
                 ModePaint = ToolBarPaletteMapAction.Clear;
                 btnPaste.isOn = false;
                 //btnCursor.isOn = false;
+            }
+            else if (ModePaint == ToolBarPaletteMapAction.Clear)
+            {
+                ModePaint = ToolBarPaletteMapAction.None;
             }
         });
 
@@ -172,6 +191,23 @@ public class PaletteMapController : MonoBehaviour {
 
         
 
+    }
+
+    private void UncheckModeTool(Toggle toggleOn, ToolBarPaletteMapAction actionMode)
+    {
+        if (toggleOn.isOn)
+        {
+            ModePaint = actionMode;
+            foreach (var toggleItem in m_listToggleMode)
+            {
+                if (toggleItem.Equals(toggleOn))
+                    toggleItem.isOn = false;
+            }
+        }
+        else if (ModePaint == actionMode)
+        {
+            ModePaint = ToolBarPaletteMapAction.None;
+        }
     }
 
     private void LoadConstructOnPalette(string keyStruct)
@@ -244,9 +280,10 @@ public class PaletteMapController : MonoBehaviour {
         m_GridMap.cellSize = newSize;
     }
 
-    private void CteateDatatTilesOnMapTiles()
+    private void UpdateTiles()
     {
-        Storage.TilesManager.CreateDataTiles();
+        //Storage.TilesManager.CreateDataTiles();
+        Storage.TilesManager.UpdateGridTiles();
     }
 
 
@@ -334,6 +371,19 @@ public class PaletteMapController : MonoBehaviour {
 
     private void SaveConstructTileInGridData()
     {
+        if(string.IsNullOrEmpty(SelectedConstruction))
+        {
+            Storage.Events.SetTittle = "No selected construction";
+            return;
+        }
+
+        if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+        {
+            Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
+            Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
+            return;
+        }
+
         //string fieldStart = Storage.Instance.SelectFieldPosHero;
         string fieldStart = Storage.Instance.SelectFieldCursor;
         var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];

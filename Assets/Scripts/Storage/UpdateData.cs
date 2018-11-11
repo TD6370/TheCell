@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class UpdateData { //: MonoBehaviour {
 
-    bool isTestSlow = true;
+    bool isTestSlow = false;// true;
 
-    public UpdateData()
-    {
+    public bool IsUpdatingLocationPersonGlobal { get; set; }
+    public int UpdatingLocationPersonLocal { get; set; }
 
-    }
+
+    //public UpdateData()
+    //{
+
+    //}
 
     //private static UpdateData _instance;
     //public static UpdateData Instance
@@ -173,7 +177,12 @@ public class UpdateData { //: MonoBehaviour {
             var ind = fieldData.Objects.FindIndex(p => p.NameObject == objDataSave.NameObject);
             if (ind != -1)
             {
-                Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE: " + nameField + "      in " + nameField + "    " + callFunc);
+
+                Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE:   in " + nameField + "    " + callFunc);
+
+                //var gobj = fieldData.Objects.Find(p => p.NameObject == objDataSave.NameObject);
+                //if (gobj != null)
+                    //Storage.Instance.AddDestroyGameObject(gobj.NameObject);
                 Storage.Log.GetHistory(objDataSave.NameObject);
                 return false;
             }

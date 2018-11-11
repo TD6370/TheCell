@@ -367,7 +367,7 @@ public class MovementUfo : MonoBehaviour {
 
         //Storage.Data.AddDataObjectInGrid(_dataUfo, field, "SaveData");
         //Debug.Log("SSSSSSSSSSSSS SaveData ++ NextPosition   : " + this.name);
-        _dataUfo.Upadete(this.gameObject);
+        _dataUfo.Update(this.gameObject);
 
         if (this.gameObject == null)
         {

@@ -61,6 +61,8 @@ public class CompletePlayerController : MonoBehaviour {
     private GUIStyle styleLabel = new GUIStyle();
     private bool m_isFindFieldCurrent = false;
 
+    private bool m_isAfterUpdatePosHero = false;
+
     #region Events
 
     void Start()
@@ -131,9 +133,19 @@ public class CompletePlayerController : MonoBehaviour {
             //--------------
         }
 
-        if (_movement.x != 0 || _movement.y != 0)
+        if (_movement.x != 0 || _movement.y != 0 || m_isAfterUpdatePosHero)
         {
-            Storage.Player.RestructGrid();
+
+            if (Storage.Data.UpdatingLocationPersonLocal == 0)
+            {
+                m_isAfterUpdatePosHero = false;
+                Storage.Player.RestructGrid();
+            }
+            else
+            {
+                m_isAfterUpdatePosHero = true;
+                Debug.Log("_________ Update Position Hero_____________ UpdatingLocationPersonLocal = " + Storage.Data.UpdatingLocationPersonLocal);
+            }
         }
 
         //CalculateDiffCenterHero();
@@ -349,9 +361,8 @@ public class CompletePlayerController : MonoBehaviour {
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
         m_isFindFieldCurrent = true;
         //StartCoroutine(StartLoadGridLook());
-        LoadGridLook();
 
-        
+        LoadGridAllZoneLook();
 
         if (!Storage.Instance.Fields.ContainsKey(_fieldHero))
             return null;
@@ -400,7 +411,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     }
 
-    private void LoadGridLook()
+    private void LoadGridAllZoneLook()
     {
         //int CountAdd = 0;
         //Debug.Log("______________________LoadObjectsNearHero__________________");

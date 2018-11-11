@@ -469,9 +469,19 @@ public class UIEvents : MonoBehaviour {
     {
         string _infoPoint = "Cursor :" + posCursorToField + "\nfind:" + _fieldCursor;
 
+        CursorClickAction(_fieldCursor, _infoPoint);
+
+        if (Storage.Instance.IsTartgetPositionAll)
+            Storage.Person.SetTartgetPositionAll(posCursorToField);
+    }
+
+    public void CursorClickAction(string _fieldCursor, string _infoPoint = "")
+    {
         //if (Storage.PaletteMap.IsCursorOn)
-        if(Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Cursor)
+        if (Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Cursor)
         {
+            if(string.IsNullOrEmpty(_infoPoint))
+                _infoPoint = "Cursor : " + _fieldCursor;
             Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
         }
 
@@ -479,9 +489,6 @@ public class UIEvents : MonoBehaviour {
         {
             Storage.PaletteMap.PaintAction();
         }
-
-        if (Storage.Instance.IsTartgetPositionAll)
-            Storage.Person.SetTartgetPositionAll(posCursorToField);
     }
 
     public void CreateCommandLogText(string p_text, Color color, Transform p_parent)

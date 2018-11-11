@@ -708,6 +708,12 @@ public class Storage : MonoBehaviour {
             return "";
         }
 
+        if (Storage.Data.IsUpdatingLocationPersonGlobal)
+        {
+            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
+            return "";
+        }
+
         if (Storage.Instance.IsCorrectData && !NotValid)
         {
             Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
@@ -848,7 +854,6 @@ public class Storage : MonoBehaviour {
             return "";
         }
 
-
         //add to new Field
         if (!_GridDataG.FieldsD.ContainsKey(p_NewField))
         {
@@ -860,20 +865,69 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("############### ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Helper.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
-
-
-
             return "";
         }
 
-        //Debug.Log("--------------------PRED NAME :" + objDataNow.NameObject);
+        if (Storage.Data.IsUpdatingLocationPersonGlobal)
+        {
+            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
+            return "";
+        }
+
+        //VALID ==============================================================
+        string nameObjectTest = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        if (Storage.Instance.GridDataG.FieldsD.ContainsKey(p_NewField))
+        {
+            var indT1 = Storage.Instance.GridDataG.FieldsD[p_NewField].Objects.FindIndex(p => p.NameObject == nameObjectTest);
+            if (indT1 != -1)
+            {
+                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
+                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE DATA: " + nameObjectTest + "      in " + p_NewField);
+                //Storage.Log.GetHistory(objDataSave.NameObject);
+
+                //<< fix: >>
+                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
+                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
+                Storage.Data.RemoveDataObjectInGrid(p_NewField, indT1, "UpdatePosition");
+                //return "";
+            }
+        }
+        if (Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
+        {
+            var indT2 = Storage.Instance.GamesObjectsReal[p_NewField].FindIndex(p => p != null && p.name == nameObjectTest); ;
+            if (indT2 != -1)
+            {
+                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
+                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE REAL: " + nameObjectTest + "      in " + p_NewField);
+                //Storage.Log.GetHistory(objDataSave.NameObject);
+
+                //<< fix: >>
+                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p.name == nameObjectTest).ToList())
+                {
+                    if(!findGobj.Equals(thisGameObject))
+                    {
+                        //Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
+                        Destroy(findGobj);
+                    }
+                    else
+                    {
+                        Debug.Log("*** find for Destroy Real obj --- is ME : " + findGobj.name);
+                    }
+                }
+                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
+                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
+                Storage.Data.RemoveRealObject(indT2, p_NewField, "UpdatePosition");
+                //return "";
+            }
+        }
+        //==============================================================
+
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        Storage.Data.UpdatingLocationPersonLocal++;
+
         objData.NameObject = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
         gobj.name = objData.NameObject;
-        //Debug.Log("--------------------POST NAME :" + objDataNow.NameObject);
 
-        //Debug.Log("UpdateGamePosition TEST POSITION GameObj ref: " + p_newPosition + "     GameObj realObjects: " + gobj.transform.position);
-
-        //@POS@ Debug.Log("---- SET POS --- GO:" + gobj.name + "    DO:" + objData.NameObject);
         if (p_newPosition != gobj.transform.position)
         {
             Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -890,24 +944,32 @@ public class Storage : MonoBehaviour {
             _GamesObjectsReal.Add(p_NewField, new List<GameObject>());
         }
 
+        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
+        if (!resAddData)
+        {
+            Storage.Data.UpdatingLocationPersonLocal--;
+            return "";
+        }
+
         //add
         if (!isDestroy)
         {
             //_GamesObjectsReal[p_NewField].Add(gobj);
             bool resAddReal = Storage.Data.AddRealObject(gobj, p_NewField, "UpdateGamePosition from: " + p_OldField);
             if (!resAddReal)
+            {
+                Storage.Data.UpdatingLocationPersonLocal--;
                 return "";
+            }
         }
-        
-        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
-        if (!resAddData)
-            return "";
 
         //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
 
         //remove
         dataObjectsOldField.RemoveAt(indData);
         realObjectsOldField.RemoveAt(indReal);
+
+        Storage.Data.UpdatingLocationPersonLocal--;
 
         return gobj.name;
     }

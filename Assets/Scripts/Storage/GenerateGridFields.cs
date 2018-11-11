@@ -122,11 +122,14 @@ public class GenerateGridFields : MonoBehaviour {
         
         int countField = (int)GridX * (int)GridY;
 
-        
+        Storage.Data.IsUpdatingLocationPersonGlobal = true;
+
+
         if (!m_onLoadFields && (Storage.Instance.Fields.Count < countField || countField == 0))
         {
             
             Debug.Log("!!!!! Fields.Count =" + _fields.Count + "   Grid Field Limit =" + countField);
+            Storage.Data.IsUpdatingLocationPersonGlobal = false;
             return;
         }
         {
@@ -280,6 +283,8 @@ public class GenerateGridFields : MonoBehaviour {
                 }
             }
         }
+
+        Storage.Data.IsUpdatingLocationPersonGlobal = false;
     }
 
     public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)

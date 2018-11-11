@@ -402,7 +402,18 @@ public class FrameMap : MonoBehaviour {
         this.gameObject.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(zoom, zoom, 0);
     }
 
-    
+    private void SelectCellAction(string nameField)
+    {
+        Storage.Instance.SelectFieldCursor = nameField;
+        Storage.Events.CursorClickAction(nameField);
+
+        //Storage.Person.VeiwCursorGameObjectData(nameField);
+        //if (Storage.PaletteMap.IsPaintsOn)
+        //{
+        //    Storage.Instance.SelectFieldCursor = nameField;
+        //    Storage.PaletteMap.PaintAction();
+        //}
+    }
 
     private void ShowSelectorCell()
     {
@@ -430,10 +441,9 @@ public class FrameMap : MonoBehaviour {
         }
 
         //Celect Cell on World
-        Storage.Person.VeiwCursorGameObjectData(nameField);
+        SelectCellAction(nameField);
 
         //Draw Icon on Cell Map
-
         SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
         List<SaveLoadData.TypePrefabs> fieldListPrefbs = new List<SaveLoadData.TypePrefabs>();
         List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
@@ -557,7 +567,7 @@ public class FrameMap : MonoBehaviour {
 
         if (correctZomm > 1)
         {
-            Debug.Log("Save normal posit");
+            //Debug.Log("Save normal posit");
         }
 
         correctPosX -= Storage.Map.DistMoveCameraMap.x;
