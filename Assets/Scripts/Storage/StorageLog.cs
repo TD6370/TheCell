@@ -109,7 +109,7 @@ public class StorageLog //: MonoBehaviour
         string id = Helper.GetID(nameObj);
         var resListById = _listHistoryGameObject.Where(p => { return p.Name.IndexOf(id) != -1; }).OrderBy(p => p.TimeSave);
         if (resListById!=null && resListById.Count() > 0)
-            Debug.Log("** Find hyst: " + id + " :::::");
+            Debug.Log("::::::::::::::::::::::::: Find hyst: " + id + " :::::");
         foreach (var obj in resListById)
         {
             
@@ -119,7 +119,7 @@ public class StorageLog //: MonoBehaviour
         Debug.Log("GAME: -----------------------------------");
         var listRealObjs = Storage.Person.GetAllRealPersonsForID(nameObj);
         if (listRealObjs != null && listRealObjs.Count() > 0)
-            Debug.Log("** Find Real: " + id + " :::::");
+            Debug.Log("::::::::::::::::::::::::: Find Real: " + id + " :::::");
         foreach (var obj in listRealObjs)
         {
             i1++;
@@ -127,17 +127,23 @@ public class StorageLog //: MonoBehaviour
         }
         var listDataObjs = Storage.Person.GetAllDataPersonsForID(nameObj);
         if (listDataObjs != null && listDataObjs.Count() > 0)
-            Debug.Log("** Find DATA: " + id + " :::::");
+            Debug.Log("::::::::::::::::::::::::: Find DATA: " + id + " :::::");
         foreach (var obj in listDataObjs)
         {
             i1++;
             Debug.Log(i1 + ".   " + obj.ToString());
         }
 
+        var DataObj = Storage.Person.GetFindPersonsDataForName(nameObj);
+        if (DataObj != null) { 
+            Debug.Log("::::::::::::::::::::::::: Find Pesron DATA: " + id + " :::::");
+            Debug.Log("DP:  [" + DataObj.Field + "][" + DataObj.Index + "] " + DataObj.DataObj );
+        }
+
         string field = Helper.GetNameFieldByName(nameObj);
         var listDataObjsInField = Storage.Person.GetAllDataPersonsForName(field);
         if (listDataObjsInField != null && listDataObjsInField.Count() > 0)
-            Debug.Log("** Find in Field: " + field + " :::::");
+            Debug.Log("::::::::::::::::::::::::: Find in Field: " + field + " :::::");
         foreach (var obj in listDataObjsInField)
         {
             i1++;

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class UpdateData { //: MonoBehaviour {
 
+    bool isTestSlow = true;
+
     public UpdateData()
     {
 
@@ -151,7 +153,7 @@ public class UpdateData { //: MonoBehaviour {
         return fieldData;
     }
 
-    public void AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false)
+    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false)
     {
         ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
@@ -166,9 +168,22 @@ public class UpdateData { //: MonoBehaviour {
         if (isClaerField)
             fieldData.Objects.Clear();
 
+        if (isTestSlow)
+        {
+            var ind = fieldData.Objects.FindIndex(p => p.NameObject == objDataSave.NameObject);
+            if (ind != -1)
+            {
+                Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE: " + nameField + "      in " + nameField + "    " + callFunc);
+                Storage.Log.GetHistory(objDataSave.NameObject);
+                return false;
+            }
+        }
+
         fieldData.Objects.Add(objDataSave);
 
         Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
+
+        return true;
     }
 
     public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false, ModelNPC.ObjectData dataObjDel = null)
@@ -266,11 +281,28 @@ public class UpdateData { //: MonoBehaviour {
         //! SaveHistory("", "RemoveFieldRealObject", callFunc, nameField);
     }
 
-    public void AddRealObject(GameObject p_saveObject, string nameField, string callFunc)
+    public bool AddRealObject(GameObject p_saveObject, string nameField, string callFunc)
     {
+        if(p_saveObject==null || p_saveObject.name == null)
+        {
+            Debug.Log("######## AddRealObject is DESTROYED: in " + nameField + "    " + callFunc);
+            return false;
+        }
+
+        if (isTestSlow)
+        {
+            int ind = _GamesObjectsReal[nameField].FindIndex(p => p!=null && p.name == p_saveObject.name);
+            if(ind!=-1)
+            {
+                Debug.Log("######## AddRealObject is DUBLICATE: " + p_saveObject.name + "   in " + nameField + "    " + callFunc);
+                Storage.Log.GetHistory(p_saveObject.name);
+                return false;
+            }
+        }
         _GamesObjectsReal[nameField].Add(p_saveObject);
 
         Storage.Log.SaveHistory(p_saveObject.name, "AddRealObject", callFunc, nameField);
+        return true;
     }
 
     public void RemoveRealObject(int indexDel, string nameField, string callFunc)

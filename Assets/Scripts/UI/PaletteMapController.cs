@@ -8,7 +8,7 @@ public class PaletteMapController : MonoBehaviour {
     public GameObject FramePaletteMap;
     public Button btnClose;
     public Dropdown ListConstructsControl;
-    public string SelectedStructure { get; set; }
+    public string SelectedConstruction { get; set; }
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
 
@@ -21,21 +21,21 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnOnLayer;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
-    
 
     public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
 
     public bool IsPaintsOn = false;
     //public bool IsCursorOn = false;
+    private bool m_PasteOnLayer = false;
 
     private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
     private List<GameObject> m_listCallsOnPalette;
-    private List<string> m_ListNamesStructurs;
+    private List<string> m_ListNamesConstructs;
 
     public int sizeCellMap = 20;
     public float ActionRate = 0.5f;
     private float DelayTimer = 0F;
-    private bool m_PasteOnLayer = false;
+    
 
     private GridLayoutGroup m_GridMap;
 
@@ -55,7 +55,7 @@ public class PaletteMapController : MonoBehaviour {
 
         m_listCallsOnPalette = new List<GameObject>();
 
-        m_ListNamesStructurs = new List<string>();
+        m_ListNamesConstructs = new List<string>();
 
         ListConstructsControl.onValueChanged.AddListener(delegate {
             DropdownValueChanged(ListConstructsControl);
@@ -88,13 +88,13 @@ public class PaletteMapController : MonoBehaviour {
         //LoadConstructOnPalette(dpntStructurs.value);
         //LoadConstructOnPalette(dpntStructurs.itemText.ToString() + " .2");
         //string selectStructure = 
-        if(dpntStructurs.value > m_ListNamesStructurs.Count-1)
+        if(dpntStructurs.value > m_ListNamesConstructs.Count-1)
         {
-            Debug.Log("######## DropdownValueChanged NOT dpntStructurs.value[" + dpntStructurs.value  + "] > m_ListNmeStructurs.Length[" + m_ListNamesStructurs.Count + "]");
+            Debug.Log("######## DropdownValueChanged NOT dpntStructurs.value[" + dpntStructurs.value  + "] > m_ListNmeStructurs.Length[" + m_ListNamesConstructs.Count + "]");
             return;
         }
 
-        LoadConstructOnPalette(m_ListNamesStructurs[dpntStructurs.value]);
+        LoadConstructOnPalette(m_ListNamesConstructs[dpntStructurs.value]);
     }
 
     private void DefaultModeOn()
@@ -177,15 +177,15 @@ public class PaletteMapController : MonoBehaviour {
     private void LoadConstructOnPalette(string keyStruct)
     {
         Debug.Log("Selected struct :" + keyStruct);
-        SelectedStructure = keyStruct;
+        SelectedConstruction = keyStruct;
 
-        if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedStructure))
+        if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
         {
-            Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedStructure);
+            Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedConstruction);
             return;
         }
 
-        var listTiles = Storage.TilesManager.DataMapTiles[SelectedStructure];
+        var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
 
         float col = listTiles.Count;
         //sizeCellMap = listTiles.Count;
@@ -271,12 +271,12 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        m_ListNamesStructurs.Clear();
+        m_ListNamesConstructs.Clear();
         m_ListConstructsOptopnsData = new List<Dropdown.OptionData>();
         
         foreach (var itemTileData in Storage.TilesManager.DataMapTiles)
         {
-            m_ListNamesStructurs.Add(itemTileData.Key);
+            m_ListNamesConstructs.Add(itemTileData.Key);
             m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = itemTileData.Key });
         }
         //Dropdown.OptionData optionTileConstruct = new Dropdown.OptionData() { text = "Prefab Tail 01." };
@@ -291,7 +291,7 @@ public class PaletteMapController : MonoBehaviour {
     {
         if(!isClose)
         {
-            if (!FramePaletteMap.activeSelf && m_ListNamesStructurs.Count==0)
+            if (!FramePaletteMap.activeSelf && m_ListNamesConstructs.Count==0)
                 LoadListConstructsControl();
             FramePaletteMap.SetActive(!FramePaletteMap.activeSelf);
         }
@@ -336,7 +336,7 @@ public class PaletteMapController : MonoBehaviour {
     {
         //string fieldStart = Storage.Instance.SelectFieldPosHero;
         string fieldStart = Storage.Instance.SelectFieldCursor;
-        var listTiles = Storage.TilesManager.DataMapTiles[SelectedStructure];
+        var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
 
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);

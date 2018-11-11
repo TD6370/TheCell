@@ -6,6 +6,7 @@ using UnityEngine;
 public class FrameMap : MonoBehaviour {
 
     public GameObject MapCellFrame;
+    public GameObject MapCellBorder;
 
     public float KoofPosCell = 1f;
 
@@ -95,6 +96,8 @@ public class FrameMap : MonoBehaviour {
         if (IsActive && IsRuntimeViewMarker)
         {
             CalculatePointOnMap();
+
+            UpdateBorderCellLocation();
         }
     }
 
@@ -145,6 +148,13 @@ public class FrameMap : MonoBehaviour {
         }
     }
 
+    public void Show(bool isShow = true)
+    {
+        this.gameObject.SetActive(isShow);
+        IsRuntimeViewMarker = isShow;
+        
+    }
+
     private bool IsActive
     {
         get
@@ -185,7 +195,7 @@ public class FrameMap : MonoBehaviour {
         Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePosition))
         {
-            Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
+            //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
             posClick = mousePosition;
             isMousePos = true;
         }
@@ -415,7 +425,7 @@ public class FrameMap : MonoBehaviour {
             //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
             //continue;
             //Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
-            Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty     " + DateTime.Now;
+            //Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty [" + DateTime.Now.ToShortTimeString() + "]";
             return;
         }
 
@@ -507,6 +517,16 @@ public class FrameMap : MonoBehaviour {
         }
 
         MapCellFrame.GetComponent<RectTransform>().position = SetLocationCell();
+    }
+
+    public void UpdateBorderCellLocation()
+    {
+        if(MapCellBorder==null)
+        {
+            Debug.Log("########### UpdateBorderCellLocation : MapCellBorder is Empty");
+            return;
+        }
+        MapCellBorder.GetComponent<RectTransform>().position = SetLocationCell(); 
     }
 
     private Vector3 SetLocationCell()

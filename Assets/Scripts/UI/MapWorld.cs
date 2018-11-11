@@ -35,6 +35,21 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    private FrameMap m_Frame;
+    public FrameMap Frame
+    {
+        get
+        {
+            if (m_Frame == null)
+            {
+                m_Frame = prefabFrameMap.GetComponent<FrameMap>();
+                if (m_Frame == null)
+                    Debug.Log("########### MapWorld.Frame is empty");
+            }
+            return m_Frame;
+        }
+    }
+
     //--- TAILS ---
     public GameObject BackPalette;
     public Grid GridTails;
@@ -72,8 +87,9 @@ public class MapWorld : MonoBehaviour {
         //prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
         prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, 0);
         //prefabFrameMap.transform.localScale = new Vector3(10F, 10f, 0);
-        prefabFrameMap.SetActive(true);
+        
         prefabFrameMap.transform.SetParent(Storage.PlayerController.transform);
+        Frame.Show(true);
     }
 
    public bool IsOpen
@@ -88,20 +104,29 @@ public class MapWorld : MonoBehaviour {
     {
         if (!m_IsCreatedMap || isNewCreate)
         {
-            CreateTextureMap(SizeCellMap);
+            CreateTextureMap(SizeCellMap); //<--- CreateFrameMap()
             m_IsCreatedMap = true;
             Storage.PlayerController.CameraMapOn(true);
             DrawLocationHero(true);
         }
         else
         {
-            Storage.PlayerController.CameraMapOn(!prefabFrameMap.activeSelf);
-            prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
-            //DrawLocationHero(true);
-            if (prefabFrameMap.activeSelf)
-            {
-                DrawLocationHero(true);
-            }
+            Show();
+        }
+    }
+
+    public void Show()
+    {
+        bool isShow = !prefabFrameMap.activeSelf;
+        Storage.PlayerController.CameraMapOn(isShow);
+        //prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
+        Frame.Show(isShow);
+
+        Storage.Map.MarkerMapWorldCell.SetActive(isShow);
+        //DrawLocationHero(true);
+        if (isShow)
+        {
+            DrawLocationHero(true);
         }
     }
 

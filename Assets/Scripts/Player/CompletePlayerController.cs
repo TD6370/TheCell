@@ -163,23 +163,22 @@ public class CompletePlayerController : MonoBehaviour {
         //}
     }
 
-    public float ActionRate = 0.5f;
-    private float DelayTimer = 0F;
+   
 
     void Update()
     {
-        if (Input.GetKey("m") && Time.time > DelayTimer)
-        {
-            Storage.Map.Create();
+        //if (Input.GetKey("m") && Time.time > DelayTimer)
+        //{
+        //    Storage.Map.Create();
 
-            DelayTimer = Time.time + ActionRate;
-        }
+        //    DelayTimer = Time.time + ActionRate;
+        //}
 
-        if (Input.GetKey("p") && Time.time > DelayTimer)
-        {
-            Storage.PaletteMap.Show();
-            DelayTimer = Time.time + ActionRate/2;
-        }
+        //if (Input.GetKey("p") && Time.time > DelayTimer)
+        //{
+        //    Storage.PaletteMap.Show();
+        //    DelayTimer = Time.time + ActionRate/2;
+        //}
     }
 
     void OnMouseDown()

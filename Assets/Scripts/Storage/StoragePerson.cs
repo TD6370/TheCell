@@ -174,7 +174,7 @@ public class StoragePerson : MonoBehaviour {
 
         return Storage.Instance.GamesObjectsReal.
                 SelectMany(x => x.Value).
-                Where(p => p.tag == _Ufo || p.tag == _Boss).ToList();
+                Where(p => p!=null && (p.tag == _Ufo || p.tag == _Boss)).ToList();
     }
 
     public IEnumerable<GameObject> GetAllRealPersons(string field, bool  isModif = false)

@@ -46,7 +46,8 @@ public class UIEvents : MonoBehaviour {
     //private List<string> m_CommandLogList = new List<string>();
     private List<string> m_ListLog = new List<string>();
 
-
+    public float ActionRate = 0.5f;
+    private float DelayTimer = 0F;
 
 
     void Awake()
@@ -126,6 +127,18 @@ public class UIEvents : MonoBehaviour {
     void Update()
     {
         //AlphaTerra();
+        if (Input.GetKey("m") && Time.time > DelayTimer)
+        {
+            Storage.Map.Create();
+
+            DelayTimer = Time.time + ActionRate;
+        }
+
+        if (Input.GetKey("p") && Time.time > DelayTimer)
+        {
+            Storage.PaletteMap.Show();
+            DelayTimer = Time.time + ActionRate / 2;
+        }
     }
 
 
@@ -283,55 +296,55 @@ public class UIEvents : MonoBehaviour {
         switch (selectCommand)
         {
             case "None":
-                txtMessage.text = "...";
+                SetTittle = "...";
                 //TEST
                 Storage.Events.ListLogAdd = Helper.GetNameFieldByName("PrefabField_Field21x9_a87f");
                 break;
             case "SaveWorld":
-                txtMessage.text = "Level saving...";
+                SetTittle = "Level saving...";
                 m_scriptData.SaveLevel();
-                txtMessage.text = "Level saved.";
+                SetTittle = "Level saved.";
                 break;
             case "LoadWorld":
                 //m_scriptData
 
-                txtMessage.text = "Level loading...";
+                SetTittle = "Level loading...";
                 Storage.Instance.LoadLevels();
-                txtMessage.text = "Level loaded.";
+                SetTittle = "Level loaded.";
                 break;
             case "ReloadWorld":
-                txtMessage.text = "Reload Level...";
-                //txtMessage.text = "Level saving...";
+                SetTittle = "Reload Level...";
+                //SetTittle = "Level saving...";
                 //m_scriptData.SaveLevel();
-                //txtMessage.text = "Level loading...";
+                //SetTittle = "Level loading...";
                 //Storage.Instance.LoadLevels();
-                //txtMessage.text = "Level loaded.";
+                //SetTittle = "Level loaded.";
                 ReloadWorld();
                 break;
             case "CreateWorld":
-                txtMessage.text = "Create Level...";
+                SetTittle = "Create Level...";
                 Storage.Instance.CreateWorld();
                 break;
             case "TartgetPositionAll":
-                txtMessage.text = @"TartgetPositionAll On\Off...";
+                SetTittle = @"TartgetPositionAll On\Off...";
                 //Storage.Instance.IsTartgetPositionAll = true;
                 Storage.Instance.IsTartgetPositionAllOn();
                 break;
             case "LoadXML":
-                txtMessage.text = "LoadXML...";
+                SetTittle = "LoadXML...";
                 Storage.Instance.LoadData();
                 break;
             case "Pause":
                 //Debug.Log("CommandExecuteParson(" + selectCommand + ") :  " + selectCommand);
-                txtMessage.text = "Game Pause...";
+                SetTittle = "Game Pause...";
                 Storage.GamePause = !Storage.GamePause;
                 break;
             case "ClearLog":
-                txtMessage.text = "Clear Log...";
+                SetTittle = "Clear Log...";
                 ListLogClear();
                 break;
             case "LogPerson":
-                txtMessage.text = "Create Expand Pesron Test...";
+                SetTittle = "Create Expand Pesron Test...";
 
                 //CreateCommandLogButton("TEST", Color.gray, contentListExpandPerson.transform);
                 //break;
@@ -341,7 +354,7 @@ public class UIEvents : MonoBehaviour {
                     gobjObservable: null);
                 break;
             case "CursorSelection":
-                txtMessage.text = @"Cursor selection On\Off...";
+                SetTittle = @"Cursor selection On\Off...";
                 Storage.PlayerController.CursorSelectionOn();
                 break;
             case "ClearCommands":
@@ -379,7 +392,17 @@ public class UIEvents : MonoBehaviour {
                 Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
                 break;
             case "GenWorldExtremal":
+                Storage.GamePause = true;
+                Storage.Instance.StopGame();
                 Storage.GridData.CreateDataGamesObjectsExtremalWorld();
+                //Storage.GamePause = false;
+                //Storage.Instance.IsLoadingWorld = true;
+                //Storage.Instance.LoadGameObjects(true);
+                //Storage.Instance.LoadData();
+                //Storage.GenGrid.LoadObjectsNearHero();
+                //Storage.Instance.IsLoadingWorld = false;
+                ReloadWorld();
+                Storage.GenGrid.LoadObjectsNearHero();
                 break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
@@ -405,10 +428,10 @@ public class UIEvents : MonoBehaviour {
         switch (selectCommand)
         {
             case "None":
-                txtMessage.text = "...";
+                SetTittle = "...";
                 break;
             case "Pause":
-                txtMessage.text = "Level saving...";
+                SetTittle = "Level saving...";
                 if(movem==null)
                 {
                     Debug.Log("############ CommandExecuteParson(" + selectCommand  + ") : " + gobjObservable.name  + " MovementNPC is Empty");
@@ -627,16 +650,16 @@ public class UIEvents : MonoBehaviour {
 
             yield return new WaitForSeconds(0.3f);
 
-            txtMessage.text = "Level saving...";
+            SetTittle = "Level saving...";
             m_scriptData.SaveLevel();
 
             yield return new WaitForSeconds(0.3f);
 
             isSave = true;
         }
-        txtMessage.text = "Level loading...";
+        SetTittle = "Level loading...";
         Storage.Instance.LoadLevels();
-        txtMessage.text = "Level loaded.";
+        SetTittle = "Level loaded.";
     }
 
     public void SetTestText(string text)
@@ -868,6 +891,18 @@ public class UIEvents : MonoBehaviour {
             Debug.Log("######## GetPositTeleport NOT teleporting !!!");
         }
         return posTeleport;
+    }
+
+    public string SetTittle
+    {
+        get
+        {
+            return txtMessage.text;
+        }
+        set
+        {
+            txtMessage.text = value;
+        }
     }
 }
 

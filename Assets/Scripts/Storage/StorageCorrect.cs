@@ -135,6 +135,8 @@ public class StorageCorrect : MonoBehaviour {
     //@CD@ //--- CORRECT -----
     public void CorrectData(GameObject realGO, GameObject thisGO, string callFunc)
     {
+        return;
+
         if (Storage.Instance.IsCorrectData)
         {
             Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");

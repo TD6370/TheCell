@@ -498,7 +498,7 @@ public class Storage : MonoBehaviour {
         LoadGameObjects(true, true);
     }
 
-    private void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false)
+    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false)
     {
         Debug.Log("III LoadGameObjects ::::_______________");
 
@@ -783,7 +783,7 @@ public class Storage : MonoBehaviour {
         if (indReal == -1)
         {
             Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("^^^^ UpfatePosition Not Real object (" + p_NameObject + ") in field: " + p_OldField);
+            Debug.Log("######## UpfatePosition Not Real object (" + p_NameObject + ") in field: " + p_OldField);
             if (p_NameObject != null)
                 Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
 
@@ -791,9 +791,21 @@ public class Storage : MonoBehaviour {
 
 
             //return "Error";
+            //var DataObj = Storage.Person.GetFindPersonsDataForName(p_NameObject);
+            //if (DataObj != null)
+            //{
+            //Debug.Log("::::::::::::::::::::::::: Find Pesron DATA: " + p_NameObject + " :::::");
+            //Debug.Log("))))))))) :  [" + DataObj.Field + "][" + DataObj.Index + "] " + DataObj.DataObj);
 
-            Storage.Log.GetHistory(p_NameObject);
-            return "";
+            Debug.Log("+++++++ Add New Real Object " + thisGameObject + "   in field: "  + p_NewField);
+            Storage.Data.AddRealObject(thisGameObject, p_NewField, "UpdateGamePosition");
+            realObjectsOldField = _GamesObjectsReal[p_NewField];
+            indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
+            if (indReal == -1)
+            {
+                Storage.Log.GetHistory(p_NameObject);
+                return "";
+            }
         }
         int indData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
         if (indData == -1)
@@ -812,7 +824,7 @@ public class Storage : MonoBehaviour {
                 Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- objects ZERO !!!!!");
             //--------------------
 
-            Storage.Fix.CorrectData(p_NameObject, "UpfatePosition IN DATA");
+            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition IN DATA");
 
 
             return "Error";
@@ -880,8 +892,18 @@ public class Storage : MonoBehaviour {
 
         //add
         if (!isDestroy)
-            _GamesObjectsReal[p_NewField].Add(gobj);
-        _GridDataG.FieldsD[p_NewField].Objects.Add(objData);
+        {
+            //_GamesObjectsReal[p_NewField].Add(gobj);
+            bool resAddReal = Storage.Data.AddRealObject(gobj, p_NewField, "UpdateGamePosition from: " + p_OldField);
+            if (!resAddReal)
+                return "";
+        }
+        
+        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
+        if (!resAddData)
+            return "";
+
+        //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
 
         //remove
         dataObjectsOldField.RemoveAt(indData);

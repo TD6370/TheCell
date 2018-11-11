@@ -218,14 +218,11 @@ public class ModelNPC
                     Storage.Log.GetHistory(gobj.name);
                     //gobj.PlayAnimation();
                     //Destroy(gobj, 3f);
-
                     //Storage.Instance.AddDestroyRealObject(gobj);
                     //@CD@
                     _isError = true;
                     Storage.Fix.CorrectData(null, gobj, "NextPosition");
                     return "Error";
-
-
                 }
 
                 bool isInZona = true;
