@@ -450,7 +450,7 @@ public class FrameMap : MonoBehaviour {
 
         foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
         {
-            Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
+            //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
 

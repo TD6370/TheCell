@@ -28,6 +28,7 @@ TagManager:
   - Hero
   - PanelPaletteMap
   - PrefabField
+  - PaletteCell
   layers:
   - Default
   - TransparentFX

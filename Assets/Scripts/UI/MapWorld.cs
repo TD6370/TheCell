@@ -576,7 +576,15 @@ public class MapWorld : MonoBehaviour {
         startY1 = textureResult.height - startY1 - addSize;
         //.................
 
-        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
+        try
+        {
+            Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("######### DrawMapCell :" + ex.Message);
+            return;
+        }
 
         textureResult.Apply();
         Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);

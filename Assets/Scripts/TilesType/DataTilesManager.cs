@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,14 +12,26 @@ public class DataTilesManager : MonoBehaviour {
     public GameObject BackPalette;
     public Grid GridTiles;
     public GameObject TilesMapBackLayer;
+    public GameObject TilesMapPrefabLayer;
 
     private Texture2D[] m_listTexturs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
     public  Texture2D[] ListTexturs
     {
         get{
-            if(m_listTexturs==null)
-                m_listTexturs = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+            if (m_listTexturs == null)
+            {
+                try
+                {
+                    var listTexturs = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/").ToList();
+                    var listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
+                    listTexturs.AddRange(listTextursPrefabs);
+                    m_listTexturs = listTexturs.ToArray();
+                }catch(Exception x)
+                {
+                    Debug.Log("############ ListTexturs init: " + x.Message);
+                }
 
+            }
             return m_listTexturs;
         }
     }
@@ -49,8 +62,16 @@ public class DataTilesManager : MonoBehaviour {
     }
     public Dictionary<string, TileBase> CollectionTiles;
 
-    private Dictionary<string, List<DataTile>> m_CollectionDataMapTiles;
-    public Dictionary<string, List<DataTile>> DataMapTiles
+    //private Dictionary<string, List<DataTile>> m_CollectionDataMapTiles;
+    //public Dictionary<string, List<DataTile>> DataMapTiles
+    //{
+    //    get
+    //    {
+    //        return m_CollectionDataMapTiles;
+    //    }
+    //}
+    private Dictionary<string, DataConstructionTiles> m_CollectionDataMapTiles;
+    public Dictionary<string, DataConstructionTiles> DataMapTiles
     {
         get
         {
@@ -88,24 +109,24 @@ public class DataTilesManager : MonoBehaviour {
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDvor", Row = 0, Size = 5 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildBoloto", Row = 0, Size = 5 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildZal", Row = 0, Size = 10 });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPrefab", Row = 0, Size = 5, TypeTile = TypesStructure.TerraPrefab });
 
-        m_CollectionDataMapTiles = new Dictionary<string, List<DataTile>>();
+        //m_CollectionDataMapTiles = new Dictionary<string, List<DataTile>>();
+        m_CollectionDataMapTiles = new Dictionary<string, DataConstructionTiles>();
+
         List<DataTile> listDataTiles = new List<DataTile>();
 
-        Tilemap tilemap = TilesMapBackLayer.GetComponent<Tilemap>();
+        if (TilesMapBackLayer == null)
+        {
+            Debug.Log("##### TilesMapBackLayer is Empty");
+            return;
+        }
+        Tilemap tilemapTerra = TilesMapBackLayer.GetComponent<Tilemap>();
+        BoundsInt boundsMapTerra = tilemapTerra.cellBounds;
+        TileBase[] allTilesTerra = tilemapTerra.GetTilesBlock(boundsMapTerra);
+        Dictionary<string, List<DataTile>> listDataMapTilesTerra = new Dictionary<string, List<DataTile>>();
 
-        BoundsInt boundsMap = tilemap.cellBounds;
-
-        //BoundsInt bounds = new BoundsInt(boundsStruct.x + boundsMap.x, boundsStruct.y + boundsMap.y, boundsStruct.size);
-        //BoundsInt bounds = new BoundsInt(new Vector3Int(boundsStruct.x - boundsMap.x, boundsStruct.y - boundsMap.y, 0), new Vector3Int(boundsStruct.size.x, boundsStruct.size.y, 1));
-
-        TileBase[] allTiles = tilemap.GetTilesBlock(boundsMap);
-
-        //CreateStructDataTile("BildTest1", new Rect(0, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
-        //CreateStructDataTile("BildpolKochBol", new Rect(3, 0, 3, 3), allTiles, boundsMap, TypesStructure.Terra);
-        //CreateStructDataTile("BildpolKochBol", new Rect(6, 0, 5, 5), allTiles, boundsMap, TypesStructure.Terra);
-
-        //----------  Create tiles
+        //----------  Create tiles Terra
         int HeightRow = 5;
         int index = 0;
         //int offsetX = 0;
@@ -114,12 +135,69 @@ public class DataTilesManager : MonoBehaviour {
         {
             int startY = itemTile.Row * HeightRow;
             itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
-            CreateStructDataTile(itemTile.Name, itemTile.Position, allTiles, boundsMap, itemTile.TypeTile);
+            var listDataTilesRes = CreateStructDataTile(itemTile.Name, itemTile.Position, allTilesTerra, boundsMapTerra, itemTile.TypeTile);
+
+            listDataMapTilesTerra.Add(itemTile.Name, listDataTilesRes);
+
             index++;
             startX += itemTile.Size;
             itemTile.Index = index;
         }
         //-----------------------
+
+        //----------  Create tiles Prefabs
+        List<TypesStructure> prefabValid = new List<TypesStructure>()
+        {
+            TypesStructure.Prefab,
+             TypesStructure.FloorPrefab,
+             TypesStructure.TerraPrefab,
+             TypesStructure.TerraFloorPrefab
+        };
+
+        if(TilesMapPrefabLayer==null)
+        {
+            Debug.Log("##### TilesMapPrefabLayer is Empty");
+            return;
+        }
+
+        Tilemap tilemapPrefab = TilesMapPrefabLayer.GetComponent<Tilemap>();
+        BoundsInt boundsMapPrefab = tilemapPrefab.cellBounds;
+        TileBase[] allTilesPrefab = tilemapPrefab.GetTilesBlock(boundsMapPrefab);
+        Dictionary<string, List<DataTile>> listDataMapTilesPrefabs = new Dictionary<string, List<DataTile>>();
+
+        HeightRow = 5;
+        index = 0;
+        startX = 0;
+
+        //foreach (var itemTile in ListTilesMapLocations.Where(p => prefabValid.Contains(p.TypeTile)))
+        foreach (var itemTile in ListTilesMapLocations)
+        {
+            int startY = itemTile.Row * HeightRow;
+            if (prefabValid.Contains(itemTile.TypeTile))
+            {
+                itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
+                var listDataTilesRes = CreateStructDataTile(itemTile.Name, itemTile.Position, allTilesPrefab, boundsMapPrefab, TypesStructure.Prefab);
+                listDataMapTilesPrefabs.Add(itemTile.Name, listDataTilesRes);
+            }
+            index++;
+            startX += itemTile.Size;
+            itemTile.Index = index;
+        }
+        //-----------------------
+      
+        foreach (var itemTile in ListTilesMapLocations)
+        {
+            DataConstructionTiles newDataConstr = new DataConstructionTiles();
+            newDataConstr.Name = itemTile.Name;
+            newDataConstr.Height = itemTile.Size;
+            newDataConstr.Wight = itemTile.Size;
+            if(listDataMapTilesTerra.ContainsKey(itemTile.Name))
+                newDataConstr.ListDataTileTerra = listDataMapTilesTerra[itemTile.Name];
+            if (listDataMapTilesPrefabs.ContainsKey(itemTile.Name))
+                newDataConstr.ListDataTilePrefabs = listDataMapTilesPrefabs[itemTile.Name];
+
+            m_CollectionDataMapTiles.Add(itemTile.Name, newDataConstr);
+        }
 
         //-------- Report
         //foreach (var item in m_CollectionDataMapTiles)
@@ -138,7 +216,7 @@ public class DataTilesManager : MonoBehaviour {
         
     }
 
-    public void CreateStructDataTile(string NameStructMap, Rect boundsStruct, TileBase[] allTiles, BoundsInt boundsMap, TypesStructure p_tag)
+    public List<DataTile> CreateStructDataTile(string NameStructMap, Rect boundsStruct, TileBase[] allTiles, BoundsInt boundsMap, TypesStructure p_tag)
     {
         int countFindTiles = 0;
         List<DataTile> listDataTiles = new List<DataTile>();
@@ -174,8 +252,8 @@ public class DataTilesManager : MonoBehaviour {
             }
         }
 
-        m_CollectionDataMapTiles.Add(NameStructMap, listDataTiles);
-
+        return listDataTiles;
+        //m_CollectionDataMapTiles.Add(NameStructMap, listDataTiles);
     }
 
     public void LoadTextures()
@@ -184,7 +262,11 @@ public class DataTilesManager : MonoBehaviour {
         CollectionTiles = new Dictionary<string, TileBase>();
         m_collectionSpriteTiles = new Dictionary<string, Sprite>();
 
-        m_listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/");
+        var listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/").ToList();
+        var listTilesPrefabs = Resources.LoadAll<Tile>("Textures/TilesPrefab/Tiles/").ToList();
+        listTiles.AddRange(listTilesPrefabs);
+        m_listTiles = listTiles.ToArray();
+
         foreach (var tileItem in m_listTiles)
         {
             if (CollectionTiles.ContainsKey(tileItem.name))
@@ -318,8 +400,12 @@ public enum TypesStructure
 {
     Terra,
     Floor,
-    Wall,
-    Person
+    Prefab,
+    Person,
+    TerraFloor,
+    TerraPrefab,
+    FloorPrefab,
+    TerraFloorPrefab,
 }
 
 public class TilesMapLocation
@@ -333,33 +419,48 @@ public class TilesMapLocation
     public TilesMapLocation() { }
 }
 
+//[XmlRoot("TilesData")]
+//[XmlInclude(typeof(DataTile))]
+//public class TilesData
+//{
+//    //private Dictionary<string, List<DataTile>> CollectionDataMapTales;
+//    public List<KeyValuePair<string, List<DataTile>>> TilesXML = new List<KeyValuePair<string, List<DataTile>>>();
+
+//    [XmlIgnore]
+//    public Dictionary<string, List<DataTile>> TilesD = new Dictionary<string, List<DataTile>>();
+
+//    public TilesData() { }
+//}
+
 [XmlRoot("TilesData")]
 [XmlInclude(typeof(DataTile))]
 public class TilesData
 {
     //private Dictionary<string, List<DataTile>> CollectionDataMapTales;
-    public List<KeyValuePair<string, List<DataTile>>> TilesXML = new List<KeyValuePair<string, List<DataTile>>>();
+    public List<KeyValuePair<string, DataConstructionTiles>> TilesXML = new List<KeyValuePair<string, DataConstructionTiles>>();
 
     [XmlIgnore]
-    public Dictionary<string, List<DataTile>> TilesD = new Dictionary<string, List<DataTile>>();
+    public Dictionary<string, DataConstructionTiles> TilesD = new Dictionary<string, DataConstructionTiles>();
 
     public TilesData() { }
 }
 
+[XmlType("Construction")]
+public class DataConstructionTiles
+{
+    public string Name { get; set; }
 
+    public int Wight { get; set; }
+    public int Height { get; set; }
 
-//[XmlType("Construction")]
-//public class DataConstructionTiles
-//{
-//    public int Wight { get; set; }
-//    public int Height { get; set; }
+    //[XmlType("Tile")]
+    public List<DataTile> ListDataTileTerra { get; set; }
+    public List<DataTile> ListDataTileFloor { get; set; }
+    public List<DataTile> ListDataTilePrefabs { get; set; }
+    public List<DataTile> ListDataTilePerson { get; set; }
 
-//    //[XmlType("Tile")]
-//    List<DataTile> ListDataTile { get; set; }
-
-//    public DataConstructionTiles() { }
-//}
-
+    public DataConstructionTiles() { }
+}
 
 [XmlType("Tile")]
 public class DataTile

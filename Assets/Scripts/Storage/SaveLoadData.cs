@@ -718,7 +718,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             prefabName = TypePrefabs.PrefabField; 
         }
-        if (structType == TypesStructure.Person || structType == TypesStructure.Wall)
+        if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
         {
             prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
             //prefabName = GetPrefabByTile(itemTile.Name);

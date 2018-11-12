@@ -478,9 +478,9 @@ public class Serializator
             typeof(ModelNPC.GameDataBoss),
             typeof(TilesData),
             typeof(DataTile),
+            typeof(DataConstructionTiles),
             typeof(ModelNPC.WallData),
             typeof(ModelNPC.TerraData)
-
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)

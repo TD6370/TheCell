@@ -210,56 +210,162 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    //private void LoadConstructOnPalette(string keyStruct)
+    //{
+    //    Debug.Log("Selected struct :" + keyStruct);
+    //    SelectedConstruction = keyStruct;
+
+    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+    //    {
+    //        Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedConstruction);
+    //        return;
+    //    }
+
+    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+
+    //    float col = listTiles.Count;
+    //    //sizeCellMap = listTiles.Count;
+    //    int countColumnMap = (int)Mathf.Sqrt(col);
+    //    m_GridMap.constraintCount = countColumnMap;
+
+    //    foreach(var oldCell in m_listCallsOnPalette)
+    //    {
+    //        Destroy(oldCell);
+    //    }
+    //    m_listCallsOnPalette.Clear();
+
+    //    ResizeScaleGrid(countColumnMap);
+
+    //    foreach (DataTile itemTileData in listTiles)
+    //    {
+    //        string namePrefab = itemTileData.Name;
+    //        string nameTexture = itemTileData.Name;
+
+    //        GameObject cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+    //        cellMap.transform.SetParent(this.gameObject.transform);
+
+    //        //Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
+    //        //Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+    //        Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
+
+    //        //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
+    //        cellMap.GetComponent<Image>().sprite = spriteTile;
+    //        cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
+    //        cellMap.SetActive(true);
+
+    //        m_listCallsOnPalette.Add(cellMap);
+
+    //        //Add prefab in World
+    //        //GameObject prefabGameObject = Storage.GridData.FindPrefab(namePrefab);
+    //    }
+    //}
+
     private void LoadConstructOnPalette(string keyStruct)
     {
         Debug.Log("Selected struct :" + keyStruct);
         SelectedConstruction = keyStruct;
 
-        if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+        if (!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
         {
             Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedConstruction);
             return;
         }
 
-        var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+        DataConstructionTiles dataTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
 
-        float col = listTiles.Count;
-        //sizeCellMap = listTiles.Count;
-        int countColumnMap = (int)Mathf.Sqrt(col);
+
+        //float col = listTiles.Count;
+        //int countColumnMap = (int)Mathf.Sqrt(col);
+        int countColumnMap = dataTiles.Height;
         m_GridMap.constraintCount = countColumnMap;
 
-        foreach(var oldCell in m_listCallsOnPalette)
+        GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
+        for(int i=0;i< gobjCells.Length;i++)
         {
-            Destroy(oldCell);
+            Destroy(gobjCells[i]);
         }
+        //foreach (var oldCell in m_listCallsOnPalette)
+        //{
+        //    if(oldCell!=null)
+        //        Destroy(oldCell);
+        //}
         m_listCallsOnPalette.Clear();
 
         ResizeScaleGrid(countColumnMap);
 
+        if (dataTiles.ListDataTileTerra != null && dataTiles.ListDataTileTerra.Count > 0)
+        {
+            LoadLayerConstrOnPalette(keyStruct, dataTiles.ListDataTileTerra);
+        }
+        if (dataTiles.ListDataTileFloor != null && dataTiles.ListDataTileFloor.Count > 0)
+        {
+            LoadLayerConstrOnPalette(keyStruct, dataTiles.ListDataTileFloor);
+        }
+        if (dataTiles.ListDataTilePrefabs != null && dataTiles.ListDataTilePrefabs.Count > 0)
+        {
+            LoadLayerConstrOnPalette(keyStruct, dataTiles.ListDataTilePrefabs, countColumnMap);
+        }
+        if (dataTiles.ListDataTilePerson != null && dataTiles.ListDataTilePerson.Count > 0)
+        {
+            LoadLayerConstrOnPalette(keyStruct, dataTiles.ListDataTilePerson);
+        }
+
+    }
+
+    private void LoadLayerConstrOnPalette(string keyStruct, List<DataTile> listTiles, int size=1)
+    {
+        bool isOnLayer = (m_listCallsOnPalette.Count > 0);
+
+        int index = 0;
         foreach (DataTile itemTileData in listTiles)
         {
             string namePrefab = itemTileData.Name;
             string nameTexture = itemTileData.Name;
+            bool isUpdate = (isOnLayer && m_listCallsOnPalette.Count > index);
 
-            GameObject cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-            cellMap.transform.SetParent(this.gameObject.transform);
+            GameObject cellMap;
+            if (isUpdate)
+            {
+                int newIndex = 0;
+                //int newIndex = itemTileData.X * itemTileData.Y;
+                //int newIndex = (itemTileData.X+1) * (itemTileData.Y+1);
+                //newIndex--;
 
-            //Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
-            //Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+                //int newIndex = itemTileData.X + (itemTileData.Y * size);
+                //itemTileData.Name = itemTileData.X + "x" + itemTileData.Y + " [" + newIndex + "]";
+                //foreach (GameObject item in m_listCallsOnPalette)
+                for (int i=0; i< m_listCallsOnPalette.Count; i++)
+                {
+                    GameObject item = m_listCallsOnPalette[i];
+                    var dataCell = item.GetComponent<CellMapControl>().DataTileCell;
+                    if(dataCell.X == itemTileData.X && dataCell.Y == itemTileData.Y)
+                    {
+                        newIndex = i;
+                        break;
+                    }
+                }
+                cellMap = m_listCallsOnPalette[newIndex];
+            }
+            else
+            {
+                //test
+                //itemTileData.Name += " " + index;
+                cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+                cellMap.transform.SetParent(this.gameObject.transform);
+            }
             Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
 
-            //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
             cellMap.GetComponent<Image>().sprite = spriteTile;
             cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
             cellMap.SetActive(true);
+            
+            if(isUpdate)
+                m_listCallsOnPalette[index] = cellMap;
+            else
+                m_listCallsOnPalette.Add(cellMap);
 
-            m_listCallsOnPalette.Add(cellMap);
-
-            //Add prefab in World
-            //GameObject prefabGameObject = Storage.GridData.FindPrefab(namePrefab);
+            index++;
         }
-
-        
     }
 
     private void ResizeScaleGrid(int column)
@@ -369,15 +475,55 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    //private void SaveConstructTileInGridData()
+    //{
+    //    if(string.IsNullOrEmpty(SelectedConstruction))
+    //    {
+    //        Storage.Events.SetTittle = "No selected construction";
+    //        return;
+    //    }
+
+    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+    //    {
+    //        Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
+    //        Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
+    //        return;
+    //    }
+
+    //    //string fieldStart = Storage.Instance.SelectFieldPosHero;
+    //    string fieldStart = Storage.Instance.SelectFieldCursor;
+    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+
+    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+    //    bool isClearLayer = !m_PasteOnLayer;
+
+    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+    //    foreach (DataTile itemTile in listTiles)
+    //    {
+    //        //Correct position
+    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
+
+    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
+
+    //        if (isClearLayer)
+    //            ClearLayerForStructure(fieldNew);
+
+    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+    //    }
+
+    //}
+
     private void SaveConstructTileInGridData()
     {
-        if(string.IsNullOrEmpty(SelectedConstruction))
+        if (string.IsNullOrEmpty(SelectedConstruction))
         {
             Storage.Events.SetTittle = "No selected construction";
             return;
         }
 
-        if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+        if (!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
         {
             Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
             Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
@@ -385,9 +531,31 @@ public class PaletteMapController : MonoBehaviour {
         }
 
         //string fieldStart = Storage.Instance.SelectFieldPosHero;
-        string fieldStart = Storage.Instance.SelectFieldCursor;
-        var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+        
+        //var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+        DataConstructionTiles dataTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
 
+        if (dataTiles.ListDataTileTerra != null && dataTiles.ListDataTileTerra.Count > 0)
+        {
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileTerra);
+        }
+        if (dataTiles.ListDataTileFloor != null && dataTiles.ListDataTileFloor.Count > 0)
+        {
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileFloor);
+        }
+        if (dataTiles.ListDataTilePrefabs != null && dataTiles.ListDataTilePrefabs.Count > 0)
+        {
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePrefabs);
+        }
+        if (dataTiles.ListDataTilePerson != null && dataTiles.ListDataTilePerson.Count > 0)
+        {
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePerson);
+        }
+    }
+
+    private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles)
+    {
+        string fieldStart = Storage.Instance.SelectFieldCursor;
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
@@ -406,7 +574,6 @@ public class PaletteMapController : MonoBehaviour {
 
             Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
         }
-        
     }
 
     private void ClearLayerForStructure(string field)
