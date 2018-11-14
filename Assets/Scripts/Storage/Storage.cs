@@ -61,6 +61,16 @@ public class Storage : MonoBehaviour {
     public Vector3 PersonsTargetPosition { get; set; }
 
 
+    
+    private DrawGeometry _DrawGeom;
+    public static DrawGeometry DrawGeom
+    {
+        get
+        {
+            return Instance._DrawGeom;
+        }
+    }
+
     private DataTilesManager _TilesManager;
     public static DataTilesManager TilesManager
     {
@@ -447,6 +457,15 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _PaletteMapController is Empty");
             return;
         }
+
+        _DrawGeom = GetComponent<DrawGeometry>();
+        if (_DrawGeom == null)
+        {
+            Debug.Log("########## InitComponents _DrawGeom is Empty");
+            return;
+        }
+        //DrawGeometry 
+
     }
 
     private void InitObjectsGrid()
@@ -686,6 +705,9 @@ public class Storage : MonoBehaviour {
             //Debug.Log("ZonaReal: X:" + ZonaReal.X + " Y:" + ZonaReal.Y + " X2:" + ZonaReal.X2 + " Y2:" + ZonaReal.Y2);
             //Draw result
             //DrawRect(rX,rY,rX2,rY2);
+
+            if(DrawGeom!=null)
+                DrawGeom.DrawRect(rX, rY, rX2, rY2);
         }
     }
 

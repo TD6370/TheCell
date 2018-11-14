@@ -100,6 +100,13 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    public void Refresh()
+    {
+        CreateTextureMap(SizeCellMap, true);
+        m_IsCreatedMap = true;
+        //DrawLocationHero(true);
+    }
+
     public void Create(bool isNewCreate = false)
     {
         if (!m_IsCreatedMap || isNewCreate)
@@ -348,14 +355,15 @@ public class MapWorld : MonoBehaviour {
         prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
     }
 
-    public void CreateTextureMap(int scaleCell = 1)
+    public void CreateTextureMap(int scaleCell = 1, bool isRefresh = false)
     {
         string indErr = "start";
         int sizeMap = Helper.HeightLevel;
         int sizeDraw = Helper.HeightLevel * scaleCell;
         int addSize = scaleCell - 1;
 
-        CreateFrameMap();
+        if(!isRefresh)
+            CreateFrameMap();
 
         List<Color> colorsPersons = new List<Color>();
         List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();

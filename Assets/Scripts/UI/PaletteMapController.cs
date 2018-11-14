@@ -20,6 +20,7 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnClear;
     public Toggle btnCursor;
     public Toggle btnOnLayer;
+    public Toggle btnTeleport;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
     public Button btnUp;
@@ -51,7 +52,8 @@ public class PaletteMapController : MonoBehaviour {
         m_listToggleMode = new List<Toggle>()
         {
              btnPaste,
-             btnClear
+             btnClear,
+             btnTeleport
         };
     }
 
@@ -93,6 +95,36 @@ public class PaletteMapController : MonoBehaviour {
         LoadListConstructsControl();
     }
 
+    public void PaintAction()
+    {
+        //ToolBarPaletteMapAction ModePaint
+        switch (ModePaint)
+        {
+            case ToolBarPaletteMapAction.Paste:
+                Paste();
+                break;
+            case ToolBarPaletteMapAction.Clear:
+                Clear();
+                break;
+            case ToolBarPaletteMapAction.Teleport:
+                break;
+            case ToolBarPaletteMapAction.Transfer:
+                TeleportHero();
+                break;
+
+        }
+        if(Storage.Map.IsOpen)
+            Storage.Map.Refresh();
+    }
+
+    private void TeleportHero()
+    {
+        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+        posTransferHeroY *= -1;
+        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+    }
+
     void DropdownValueChanged(Dropdown dpntStructurs)
     {
         //LoadConstructOnPalette(dpntStructurs.captionText.ToString());
@@ -114,6 +146,7 @@ public class PaletteMapController : MonoBehaviour {
         btnCursor.isOn = true;
         btnPaste.isOn = false;
         btnClear.isOn = false;
+        btnTeleport.isOn = false;
     }
 
     private void InitEventsButtonMenu()
@@ -140,6 +173,7 @@ public class PaletteMapController : MonoBehaviour {
                 ModePaint = ToolBarPaletteMapAction.Cursor;
                 btnPaste.isOn = false;
                 btnClear.isOn = false;
+                btnTeleport.isOn = false;
             }
             else if (ModePaint == ToolBarPaletteMapAction.Cursor)
             {
@@ -154,6 +188,7 @@ public class PaletteMapController : MonoBehaviour {
                 ModePaint = ToolBarPaletteMapAction.Paste;
                 //btnCursor.isOn = false;
                 btnClear.isOn = false;
+                btnTeleport.isOn = false;
             }
             else if(ModePaint == ToolBarPaletteMapAction.Paste)
             {
@@ -167,12 +202,27 @@ public class PaletteMapController : MonoBehaviour {
                 ModePaint = ToolBarPaletteMapAction.Clear;
                 btnPaste.isOn = false;
                 //btnCursor.isOn = false;
+                btnTeleport.isOn = false;
             }
             else if (ModePaint == ToolBarPaletteMapAction.Clear)
             {
                 ModePaint = ToolBarPaletteMapAction.None;
             }
         });
+        btnTeleport.onValueChanged.AddListener(delegate
+        {
+            if (btnTeleport.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Teleport;
+                btnPaste.isOn = false;
+                btnCursor.isOn = false;
+            }
+            else if (ModePaint == ToolBarPaletteMapAction.Teleport)
+            {
+                ModePaint = ToolBarPaletteMapAction.None;
+            }
+        });
+
 
         btnOnLayer.onValueChanged.AddListener(delegate
         {
@@ -233,56 +283,6 @@ public class PaletteMapController : MonoBehaviour {
             ModePaint = ToolBarPaletteMapAction.None;
         }
     }
-
-    //private void LoadConstructOnPalette(string keyStruct)
-    //{
-    //    Debug.Log("Selected struct :" + keyStruct);
-    //    SelectedConstruction = keyStruct;
-
-    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
-    //    {
-    //        Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedConstruction);
-    //        return;
-    //    }
-
-    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
-
-    //    float col = listTiles.Count;
-    //    //sizeCellMap = listTiles.Count;
-    //    int countColumnMap = (int)Mathf.Sqrt(col);
-    //    m_GridMap.constraintCount = countColumnMap;
-
-    //    foreach(var oldCell in m_listCallsOnPalette)
-    //    {
-    //        Destroy(oldCell);
-    //    }
-    //    m_listCallsOnPalette.Clear();
-
-    //    ResizeScaleGrid(countColumnMap);
-
-    //    foreach (DataTile itemTileData in listTiles)
-    //    {
-    //        string namePrefab = itemTileData.Name;
-    //        string nameTexture = itemTileData.Name;
-
-    //        GameObject cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-    //        cellMap.transform.SetParent(this.gameObject.transform);
-
-    //        //Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
-    //        //Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
-    //        Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
-
-    //        //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
-    //        cellMap.GetComponent<Image>().sprite = spriteTile;
-    //        cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
-    //        cellMap.SetActive(true);
-
-    //        m_listCallsOnPalette.Add(cellMap);
-
-    //        //Add prefab in World
-    //        //GameObject prefabGameObject = Storage.GridData.FindPrefab(namePrefab);
-    //    }
-    //}
 
     private void LoadConstructOnPalette(string keyStruct)
     {
@@ -351,13 +351,6 @@ public class PaletteMapController : MonoBehaviour {
             if (isUpdate)
             {
                 int newIndex = 0;
-                //int newIndex = itemTileData.X * itemTileData.Y;
-                //int newIndex = (itemTileData.X+1) * (itemTileData.Y+1);
-                //newIndex--;
-
-                //int newIndex = itemTileData.X + (itemTileData.Y * size);
-                //itemTileData.Name = itemTileData.X + "x" + itemTileData.Y + " [" + newIndex + "]";
-                //foreach (GameObject item in m_listCallsOnPalette)
                 for (int i=0; i< m_listCallsOnPalette.Count; i++)
                 {
                     GameObject item = m_listCallsOnPalette[i];
@@ -446,9 +439,6 @@ public class PaletteMapController : MonoBehaviour {
             m_ListNamesConstructs.Add(itemTileData.Key);
             m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = itemTileData.Key });
         }
-        //Dropdown.OptionData optionTileConstruct = new Dropdown.OptionData() { text = "Prefab Tail 01." };
-        //m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = "Prefab Tail 01." });
-        //m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = "Prefab Tail 02." });
 
         ListConstructsControl.ClearOptions();
         ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
@@ -474,19 +464,7 @@ public class PaletteMapController : MonoBehaviour {
         SelectedCell = DataTileCell;
     }
 
-    public void PaintAction()
-    {
-        //ToolBarPaletteMapAction ModePaint
-        switch (ModePaint)
-        {
-            case ToolBarPaletteMapAction.Paste:
-                Paste();
-                break;
-            case ToolBarPaletteMapAction.Clear:
-                Clear();
-                break;
-        }
-    }
+   
 
     private void Clear()
     {
@@ -647,5 +625,7 @@ public enum ToolBarPaletteMapAction
     None,
     Paste,
     Clear,
-    Cursor
+    Cursor,
+    Teleport,
+    Transfer
 }

@@ -14,6 +14,56 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //private void LoadConstructOnPalette(string keyStruct)
+    //{
+    //    Debug.Log("Selected struct :" + keyStruct);
+    //    SelectedConstruction = keyStruct;
+
+    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+    //    {
+    //        Debug.Log("######### LoadConstructOnPalette: TilesManager.DataMapTiles  Not find SelectedStructure: " + SelectedConstruction);
+    //        return;
+    //    }
+
+    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+
+    //    float col = listTiles.Count;
+    //    //sizeCellMap = listTiles.Count;
+    //    int countColumnMap = (int)Mathf.Sqrt(col);
+    //    m_GridMap.constraintCount = countColumnMap;
+
+    //    foreach(var oldCell in m_listCallsOnPalette)
+    //    {
+    //        Destroy(oldCell);
+    //    }
+    //    m_listCallsOnPalette.Clear();
+
+    //    ResizeScaleGrid(countColumnMap);
+
+    //    foreach (DataTile itemTileData in listTiles)
+    //    {
+    //        string namePrefab = itemTileData.Name;
+    //        string nameTexture = itemTileData.Name;
+
+    //        GameObject cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+    //        cellMap.transform.SetParent(this.gameObject.transform);
+
+    //        //Texture2D textureTile = Storage.TilesManager.CollectionTextureTiles[nameTexture];
+    //        //Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+    //        Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
+
+    //        //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
+    //        cellMap.GetComponent<Image>().sprite = spriteTile;
+    //        cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
+    //        cellMap.SetActive(true);
+
+    //        m_listCallsOnPalette.Add(cellMap);
+
+    //        //Add prefab in World
+    //        //GameObject prefabGameObject = Storage.GridData.FindPrefab(namePrefab);
+    //    }
+    //}
+
     //private void SaveConstructTileInGridData()
     //{
     //    if(string.IsNullOrEmpty(SelectedConstruction))

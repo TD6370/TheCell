@@ -7,6 +7,12 @@ using UnityEngine.UI;
 
 public class DrawGeometry : MonoBehaviour
 {
+    private LineRenderer m_lineRenderer;
+
+    private void Awake()
+    {
+        m_lineRenderer = GetComponent<LineRenderer>();
+    }
 
     // Use this for initialization
     void Start()
@@ -29,6 +35,34 @@ public class DrawGeometry : MonoBehaviour
 
     //string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender); 
     //ColorUtility.TryParseHtmlString(color, out outColor);
+
+    public void DrawRect(float x, float y, float x2, float y2)
+    {
+        //m_lineRenderer = GetComponent<LineRenderer>();
+        if (m_lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        //lineRenderer.SetColors(c1, c2);
+        m_lineRenderer.SetColors(Color.green, Color.green);
+        m_lineRenderer.SetWidth(0.2F, 0.2F);
+        int size = 5;
+        m_lineRenderer.SetVertexCount(size);
+
+        Vector3 pos1 = new Vector3(x, y, -2);
+        m_lineRenderer.SetPosition(0, pos1);
+        Vector3 pos2 = new Vector3(x2, y, -2);
+        m_lineRenderer.SetPosition(1, pos2);
+        Vector3 pos3 = new Vector3(x2, y2, -2);
+        m_lineRenderer.SetPosition(2, pos3);
+        Vector3 pos4 = new Vector3(x, y2, -2);
+        m_lineRenderer.SetPosition(3, pos4);
+        Vector3 pos5 = new Vector3(x, y, -2);
+        m_lineRenderer.SetPosition(4, pos5);
+    }
 
     #region DrawLine
     /*

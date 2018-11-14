@@ -115,7 +115,7 @@ public class FrameMap : MonoBehaviour {
 
     private void RunTeleportHero()
     {
-        if (Storage.Events.IsCommandTeleport)
+        if (Storage.Events.IsCommandTeleport || Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Teleport)
         {
             Storage.Map.Create();
             int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
