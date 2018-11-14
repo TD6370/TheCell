@@ -14,6 +14,46 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //private void SaveConstructTileInGridData()
+    //{
+    //    if(string.IsNullOrEmpty(SelectedConstruction))
+    //    {
+    //        Storage.Events.SetTittle = "No selected construction";
+    //        return;
+    //    }
+
+    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
+    //    {
+    //        Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
+    //        Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
+    //        return;
+    //    }
+
+    //    //string fieldStart = Storage.Instance.SelectFieldPosHero;
+    //    string fieldStart = Storage.Instance.SelectFieldCursor;
+    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+
+    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+    //    bool isClearLayer = !m_PasteOnLayer;
+
+    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+    //    foreach (DataTile itemTile in listTiles)
+    //    {
+    //        //Correct position
+    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
+
+    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
+
+    //        if (isClearLayer)
+    //            ClearLayerForStructure(fieldNew);
+
+    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+    //    }
+
+    //}
+
     //public void LoadGridTiles_Test()
     //{
 

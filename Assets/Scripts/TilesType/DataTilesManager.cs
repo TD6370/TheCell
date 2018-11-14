@@ -121,6 +121,9 @@ public class DataTilesManager : MonoBehaviour {
             Debug.Log("##### TilesMapBackLayer is Empty");
             return;
         }
+
+
+        //Layer Terra
         Tilemap tilemapTerra = TilesMapBackLayer.GetComponent<Tilemap>();
         BoundsInt boundsMapTerra = tilemapTerra.cellBounds;
         TileBase[] allTilesTerra = tilemapTerra.GetTilesBlock(boundsMapTerra);
@@ -136,7 +139,6 @@ public class DataTilesManager : MonoBehaviour {
             int startY = itemTile.Row * HeightRow;
             itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
             var listDataTilesRes = CreateStructDataTile(itemTile.Name, itemTile.Position, allTilesTerra, boundsMapTerra, itemTile.TypeTile);
-
             listDataMapTilesTerra.Add(itemTile.Name, listDataTilesRes);
 
             index++;
@@ -160,6 +162,7 @@ public class DataTilesManager : MonoBehaviour {
             return;
         }
 
+        //Layer Prefub
         Tilemap tilemapPrefab = TilesMapPrefabLayer.GetComponent<Tilemap>();
         BoundsInt boundsMapPrefab = tilemapPrefab.cellBounds;
         TileBase[] allTilesPrefab = tilemapPrefab.GetTilesBlock(boundsMapPrefab);
@@ -170,7 +173,7 @@ public class DataTilesManager : MonoBehaviour {
         startX = 0;
 
         //foreach (var itemTile in ListTilesMapLocations.Where(p => prefabValid.Contains(p.TypeTile)))
-        foreach (var itemTile in ListTilesMapLocations)
+        foreach (var itemTile in ListTilesMapLocations) //Where Exist Prefab strucrure
         {
             int startY = itemTile.Row * HeightRow;
             if (prefabValid.Contains(itemTile.TypeTile))
@@ -398,6 +401,7 @@ public static class TilemapExtensions
 
 public enum TypesStructure
 {
+    None,
     Terra,
     Floor,
     Prefab,

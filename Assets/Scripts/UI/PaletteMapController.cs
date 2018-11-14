@@ -11,6 +11,7 @@ public class PaletteMapController : MonoBehaviour {
     public string SelectedConstruction { get; set; }
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
+    public int SizeBrush =1;
 
     //public Button btnOnPaint;
     public Toggle btnOnPaint;
@@ -21,6 +22,9 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnOnLayer;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
+    public Button btnUp;
+    public Button btnDown;
+    public InputField btxSizeBrush;
 
     private List<Toggle> m_listToggleMode;
 
@@ -174,9 +178,9 @@ public class PaletteMapController : MonoBehaviour {
         {
             if (btnOnLayer.isOn)
             {
-                ModePaint = ToolBarPaletteMapAction.Clear;
-                m_PasteOnLayer = btnOnLayer.isOn;
+                //ModePaint = ToolBarPaletteMapAction.Clear;
             }
+            m_PasteOnLayer = btnOnLayer.isOn;
         });
 
 
@@ -190,7 +194,27 @@ public class PaletteMapController : MonoBehaviour {
         });
 
         
+        btnUp.onClick.AddListener(delegate
+        {
+            SizeBrush+=3;
+            btxSizeBrush.text = SizeBrush.ToString();
 
+        });
+        btnDown.onClick.AddListener(delegate
+        {
+            SizeBrush-=3;
+            btxSizeBrush.text = SizeBrush.ToString();
+        });
+
+        btxSizeBrush.text = SizeBrush.ToString();
+        btxSizeBrush.onValueChange.AddListener(delegate
+        {
+            SizeBrush = int.Parse(btxSizeBrush.text);
+        });
+
+        //    public Button btnUp;
+        //public Button btnDown;
+        //public InputField btxSizeBrush;
     }
 
     private void UncheckModeTool(Toggle toggleOn, ToolBarPaletteMapAction actionMode)
@@ -459,7 +483,28 @@ public class PaletteMapController : MonoBehaviour {
                 Paste();
                 break;
             case ToolBarPaletteMapAction.Clear:
+                Clear();
                 break;
+        }
+    }
+
+    private void Clear()
+    {
+        string fieldStart = Storage.Instance.SelectFieldCursor;
+        Vector2 posFieldClear = Helper.GetPositByField(fieldStart);
+        string fieldNew = "";
+        int sizeClear = SizeBrush;
+        int sizeClearX = (int)posFieldClear.x + sizeClear;
+        int sizeClearY = (int)posFieldClear.y + sizeClear;
+
+
+        for (int x = (int)posFieldClear.x; x <  sizeClearX; x++)
+        {
+            for (int y = (int)posFieldClear.y; y < sizeClearY; y++)
+            {
+                fieldNew = Helper.GetNameField(x, y);
+                ClearLayerForStructure(fieldNew);
+            }
         }
     }
 
@@ -474,46 +519,6 @@ public class PaletteMapController : MonoBehaviour {
             DelayTimer = Time.time + ActionRate;
         }
     }
-
-    //private void SaveConstructTileInGridData()
-    //{
-    //    if(string.IsNullOrEmpty(SelectedConstruction))
-    //    {
-    //        Storage.Events.SetTittle = "No selected construction";
-    //        return;
-    //    }
-
-    //    if(!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
-    //    {
-    //        Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
-    //        Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
-    //        return;
-    //    }
-
-    //    //string fieldStart = Storage.Instance.SelectFieldPosHero;
-    //    string fieldStart = Storage.Instance.SelectFieldCursor;
-    //    var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
-
-    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
-    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
-
-    //    bool isClearLayer = !m_PasteOnLayer;
-
-    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
-    //    foreach (DataTile itemTile in listTiles)
-    //    {
-    //        //Correct position
-    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
-
-    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
-
-    //        if (isClearLayer)
-    //            ClearLayerForStructure(fieldNew);
-
-    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
-    //    }
-
-    //}
 
     private void SaveConstructTileInGridData()
     {
@@ -537,23 +542,24 @@ public class PaletteMapController : MonoBehaviour {
 
         if (dataTiles.ListDataTileTerra != null && dataTiles.ListDataTileTerra.Count > 0)
         {
-            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileTerra);
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileTerra, dataTiles, TypesStructure.Terra);
         }
         if (dataTiles.ListDataTileFloor != null && dataTiles.ListDataTileFloor.Count > 0)
         {
-            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileFloor);
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileFloor, dataTiles);
         }
         if (dataTiles.ListDataTilePrefabs != null && dataTiles.ListDataTilePrefabs.Count > 0)
         {
-            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePrefabs);
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePrefabs, dataTiles, TypesStructure.Prefab);
         }
         if (dataTiles.ListDataTilePerson != null && dataTiles.ListDataTilePerson.Count > 0)
         {
-            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePerson);
+            SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTilePerson, dataTiles);
         }
     }
 
-    private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles)
+    
+    private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles, DataConstructionTiles dataTiles, TypesStructure typeCell = TypesStructure.None)
     {
         string fieldStart = Storage.Instance.SelectFieldCursor;
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
@@ -561,9 +567,16 @@ public class PaletteMapController : MonoBehaviour {
 
         bool isClearLayer = !m_PasteOnLayer;
 
-        int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+
+        posStructFieldStart.y--; //#fix
+
+        //int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+        int size = dataTiles.Height;
         foreach (DataTile itemTile in listTiles)
         {
+            if (typeCell != TypesStructure.None)
+                itemTile.Tag = typeCell.ToString();
+
             //Correct position
             posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
 
@@ -575,6 +588,33 @@ public class PaletteMapController : MonoBehaviour {
             Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
         }
     }
+
+
+    //private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles, TypesStructure typeCell = TypesStructure.None)
+    //{
+    //    string fieldStart = Storage.Instance.SelectFieldCursor;
+    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+    //    bool isClearLayer = !m_PasteOnLayer;
+
+    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+    //    foreach (DataTile itemTile in listTiles)
+    //    {
+    //        if(typeCell != TypesStructure.None)
+    //            itemTile.Tag = typeCell.ToString();
+
+    //        //Correct position
+    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
+
+    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
+
+    //        if (isClearLayer)
+    //            ClearLayerForStructure(fieldNew);
+
+    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+    //    }
+    //}
 
     private void ClearLayerForStructure(string field)
     {

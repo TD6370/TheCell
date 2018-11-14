@@ -229,6 +229,8 @@ public class UIEvents : MonoBehaviour {
 
     private void ExitGame()
     {
+        Storage.GridData.SaveLevel();
+
         Storage.Player.SavePosition();
 
 #if UNITY_EDITOR
