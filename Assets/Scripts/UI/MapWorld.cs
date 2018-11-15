@@ -72,7 +72,7 @@ public class MapWorld : MonoBehaviour {
 
         //if(StartPositFrameMap == new Vector3())
         //    StartPositFrameMap = prefabFrameMap.transform.position;
-
+        prefabFrameMap.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -125,6 +125,7 @@ public class MapWorld : MonoBehaviour {
     public void Show()
     {
         bool isShow = !prefabFrameMap.activeSelf;
+
         Storage.PlayerController.CameraMapOn(isShow);
         //prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
         Frame.Show(isShow);
@@ -133,7 +134,13 @@ public class MapWorld : MonoBehaviour {
         //DrawLocationHero(true);
         if (isShow)
         {
+            Storage.DrawGeom.DrawClear();
             DrawLocationHero(true);
+            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+            if (distMap > 30f)
+            {
+                Frame.Restart();
+            }
         }
     }
 
@@ -686,6 +693,22 @@ public class MapWorld : MonoBehaviour {
         MarkerMapWorldCell.transform.position = pos * Storage.ScaleWorld;
         //Storage.Map.SelectPointField;
     }
+
+    //public void ShowBorderBrush()
+    //{
+
+    //    Vector2 pos = Storage.Map.SelectPointField;
+    //    pos.y *= -1;
+    //    var position = pos * Storage.ScaleWorld;
+
+    //    float size = Storage.PaletteMap.SizeBrush;
+    //    float sizeX = position.x + size;
+    //    float sizeY = position.y + size;
+
+
+    //    if (Storage.DrawGeom != null)
+    //        Storage.DrawGeom.DrawRect(position.x, position.y, sizeX, sizeY);
+    //}
 
     //public void CreateTextureMap()
     //{

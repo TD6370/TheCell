@@ -36,7 +36,12 @@ public class DrawGeometry : MonoBehaviour
     //string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender); 
     //ColorUtility.TryParseHtmlString(color, out outColor);
 
-    public void DrawRect(float x, float y, float x2, float y2)
+    public void DrawClear()
+    {
+        m_lineRenderer.positionCount = 0;
+    }
+            
+    public void DrawRect(float x, float y, float x2, float y2, Color color, float width = 0.2f )
     {
         //m_lineRenderer = GetComponent<LineRenderer>();
         if (m_lineRenderer == null)
@@ -45,10 +50,12 @@ public class DrawGeometry : MonoBehaviour
             return;
         }
 
+        //color = Color.green;
         //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         //lineRenderer.SetColors(c1, c2);
-        m_lineRenderer.SetColors(Color.green, Color.green);
-        m_lineRenderer.SetWidth(0.2F, 0.2F);
+        m_lineRenderer.SetColors(color, color);
+        m_lineRenderer.startColor = Color.red;
+        m_lineRenderer.SetWidth(width, width);
         int size = 5;
         m_lineRenderer.SetVertexCount(size);
 

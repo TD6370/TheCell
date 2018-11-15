@@ -98,6 +98,9 @@ public class FrameMap : MonoBehaviour {
             CalculatePointOnMap();
 
             UpdateBorderCellLocation();
+
+            Storage.Map.UpdateMarkerPointCell();
+            //Storage.Map.ShowBorderBrush();
         }
     }
 
@@ -152,7 +155,13 @@ public class FrameMap : MonoBehaviour {
     {
         this.gameObject.SetActive(isShow);
         IsRuntimeViewMarker = isShow;
-        
+    }
+
+    public void Restart()
+    {
+        Storage.Map.StartPositFrameMap = new Vector3();
+        Vector2 posHero = Storage.PlayerController.transform.position;
+        transform.position = new Vector3(posHero.x, posHero.y, 0);
     }
 
     private bool IsActive
@@ -168,6 +177,176 @@ public class FrameMap : MonoBehaviour {
         }
     }
 
+
+    /*
+    private void CalculatePointOnMap_()
+    {
+        //bool isLog = false;
+        bool isLog = true;
+
+        Camera cameraMap = Storage.PlayerController.CameraMap;
+        if (cameraMap == null)
+        {
+            Debug.Log("################ cameraMap is EMPTY ");
+            return;
+        }
+        if (!cameraMap.enabled)
+            return;
+
+        //cameraMap
+        Vector2 posClick = new Vector2();
+        bool isMousePos = false;
+
+        //HitTextMousePointOnEbject();
+
+        float mapX = 0;
+        float mapY = 0;
+
+        
+
+
+        Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+        if (Physics2D.OverlapPoint(mousePosition))
+        {
+            //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
+            posClick = mousePosition;
+            isMousePos = true;
+        }
+       
+        if (isMousePos)
+        {
+            BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
+            if (colliderMap != null)
+            {
+                if (isLog)
+                    Storage.Events.ListLogAdd = "Original mouse=" + mousePosition.x + "x" + mousePosition.y;
+                NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
+                //++++++++++++
+                //posClick.y *= (-1);
+                //var mouseXandYNormalized1 = Rect.PointToNormalized(new Rect(0,0, colliderMap.size.x , colliderMap.size.y ), posClick);
+                //mapX = mouseXandYNormalized1.x * 100;
+                //mapY = mouseXandYNormalized1.y * 100;
+                //mapX += transform.position.x;
+                //mapY += transform.position.y;
+
+                //var mouseXandYNormalized2 = Rect.NormalizedToPoint(new Rect(0, 0, colliderMap.size.x, colliderMap.size.y), posClick);
+                //mapX = mouseXandYNormalized2.x;
+                //mapY = mouseXandYNormalized2.y;
+                //++++++++++++
+
+                if (isLog)
+                {
+                    Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+                    Storage.Events.ListLogAdd = "mouse=" + posClick.x + "x" + posClick.y;
+                    
+                }
+                //Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+
+                if (SizeZoom == 1)
+                {
+
+                }
+                else if (SizeZoom > 1f)
+                {
+
+                    float _zoom = SizeZoom;
+
+                    #region Test
+                    //TEST --------------------
+                    //float mapY_T1 = (int)mapY;
+                    //float mapX_T1 = (int)mapX;
+                    //mapY_T1 = (int)(mapY_T1 / _zoom);
+                    //mapX_T1 = (int)(mapX_T1 / _zoom);
+
+                    //Storage.Events.ListLogAdd = "Corrr zoom T1= " + (int)mapX_T1 + "x" + (int)mapY_T1;
+
+                    //float mapY_T2 = (int)(mapY / _zoom);
+                    //float mapX_T2 = (int)(mapX / _zoom);
+
+                    //Storage.Events.ListLogAdd = "Corrr zoom T2= " + (int)mapX_T2 + "x" + (int)mapY_T2;
+                    //---------------------------
+                    #endregion
+
+                    mapY = (mapY / _zoom);
+                    mapX = (mapX / _zoom);
+
+                    //<<#
+                    //_zoom = (float)System.Math.Round(_zoom, 1);
+
+                    float offsetCenter = 0f;
+
+                    //Debug.Log("_zoom===" + _zoom);
+
+                    //<<#
+                    //offsetCenter = OffsetZoomUp(_zoom);
+
+                    //+++++++++++++++
+                    Vector2 mouseXandY = new Vector2(mapX, mapY);
+                    
+                    RectTransform rt = (RectTransform)this.gameObject.transform;
+                    //Rect screenRect = new Rect(0f, 0f, this.gameObject.GetComponent<SpriteRenderer>().sprite.rect.width, this.gameObject.GetComponent<SpriteRenderer>().sprite.rect.height);
+                    Rect screenRect = new Rect(0f, 0f, colliderMap.size.x, colliderMap.size.y);
+                    Rect screenRect3 = new Rect(0f, 0f, rt.rect.x, rt.rect.y);
+
+                    //realHeight = xptoExample.sprite.rect.height;
+
+                    //Rect.PointToNormalized
+                    //Rect.NormalizedToPoint
+                    var mouseXandYNormalized = Rect.PointToNormalized(screenRect,  mouseXandY);
+                    mapX = mouseXandYNormalized.x;
+                    mapY = mouseXandYNormalized.y;
+                    //+++++++++++++++++++++++
+
+                    if (isLog)
+                        Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
+
+                    //mapX = (int)mapX;
+                    //mapY = (int)mapY;
+
+                    //!!! CORR DISTANCE
+                    //int centrW = Helper.HeightLevel / 2;
+                    //Vector3 centerPos = new Vector3(centrW, centrW, 0);
+                    //float koofOnCenterX = centerPos.x / mapX;
+                    //float koofOnCenterY = centerPos.y / mapY;
+                    //if (isLog)
+                    //    Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
+                    ////------------------
+
+                    //mapX += offsetCenter;
+                    //mapY += offsetCenter;
+                }
+                else
+                {
+                    float _zoom = SizeZoom;
+
+                    //mapX = (int)mapX;
+                    //mapY = (int)mapY;
+
+                    mapY = (int)(mapY / _zoom);
+                    mapX = (int)(mapX / _zoom);
+
+                    float offsetCenter = OffsetZoomDown(_zoom);
+
+                    if (isLog)
+                        Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+
+                    mapX += offsetCenter;
+                    mapY += offsetCenter;
+                }
+
+                if (isLog)
+                    Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
+            }
+        }
+
+        SelectPointField = new Vector2(mapX, mapY);
+        SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+
+        Storage.Map.SelectPointField = SelectPointField;
+
+        Storage.Map.UpdateMarkerPointCell();
+    }
+    */
 
     private void CalculatePointOnMap()
     {
@@ -190,7 +369,9 @@ public class FrameMap : MonoBehaviour {
         float mapX = 0;
         float mapY = 0;
 
-        
+        //Rect.PointToNormalized
+        //Rect.NormalizedToPoint
+
 
         Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
         if (Physics2D.OverlapPoint(mousePosition))
@@ -199,7 +380,7 @@ public class FrameMap : MonoBehaviour {
             posClick = mousePosition;
             isMousePos = true;
         }
-       
+
         if (isMousePos)
         {
             BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
@@ -292,10 +473,11 @@ public class FrameMap : MonoBehaviour {
 
         Storage.Map.SelectPointField = SelectPointField;
 
-        Storage.Map.UpdateMarkerPointCell();
+        //Storage.Map.UpdateMarkerPointCell();
+        //Storage.Map.ShowBorderBrush();
+
+       
     }
-
-
 
     private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
     {

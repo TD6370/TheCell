@@ -14,6 +14,33 @@ public class TEmp : MonoBehaviour {
 
     }
 
+
+    //private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles, TypesStructure typeCell = TypesStructure.None)
+    //{
+    //    string fieldStart = Storage.Instance.SelectFieldCursor;
+    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+    //    bool isClearLayer = !m_PasteOnLayer;
+
+    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
+    //    foreach (DataTile itemTile in listTiles)
+    //    {
+    //        if(typeCell != TypesStructure.None)
+    //            itemTile.Tag = typeCell.ToString();
+
+    //        //Correct position
+    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
+
+    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
+
+    //        if (isClearLayer)
+    //            ClearLayerForStructure(fieldNew);
+
+    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+    //    }
+    //}
+
     //private void LoadConstructOnPalette(string keyStruct)
     //{
     //    Debug.Log("Selected struct :" + keyStruct);

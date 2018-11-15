@@ -11,7 +11,21 @@ public class PaletteMapController : MonoBehaviour {
     public string SelectedConstruction { get; set; }
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
-    public int SizeBrush =1;
+
+    private int m_SizeBrush = 4;
+    public int SizeBrush
+    {
+        get
+        {
+            return m_SizeBrush;
+        }
+        set
+        {
+            m_SizeBrush = value;
+            btxSizeBrush.text = m_SizeBrush.ToString();
+        }
+
+    }
 
     //public Button btnOnPaint;
     public Toggle btnOnPaint;
@@ -88,6 +102,46 @@ public class PaletteMapController : MonoBehaviour {
 		
 	}
 
+
+    private void FixedUpdate()
+    {
+        if (IsPaintsOn && !Storage.Map.IsOpen)
+        {
+            switch (ModePaint)
+            {
+                case ToolBarPaletteMapAction.Paste:
+                case ToolBarPaletteMapAction.Clear:
+                    ShowBorderBrush();
+                    break;
+            }
+        }
+       
+    }
+
+    public void ShowBorderBrush()
+    {
+
+        //Storage.Events.ListLogAdd = Storage.Instance.SelectFieldCursor;
+        //Storage.Events.ListLogAdd = Helper.GetNameFieldPosit(Storage.PlayerController.PosCursorToField.x, Storage.PlayerController.PosCursorToField.y);
+        string filed = Helper.GetNameFieldPosit(Storage.PlayerController.PosCursorToField.x, Storage.PlayerController.PosCursorToField.y);
+        Vector2 position = Helper.GetPositByField(filed);
+        position *= Storage.ScaleWorld;
+
+        position.x -= 1f;
+        position.y -= 1f;
+
+        float size = SizeBrush * Storage.ScaleWorld;
+        float sizeX = position.x + size;
+        float sizeY = position.y + size;
+
+        position.y *= -1;
+        sizeY *= -1;
+
+        if (Storage.DrawGeom != null)
+            Storage.DrawGeom.DrawRect(position.x, position.y , sizeX, sizeY, Color.blue, 0.05f);
+    }
+
+
     IEnumerator LoadMap()
     {
         yield return new WaitForSeconds(0.3f);
@@ -147,6 +201,7 @@ public class PaletteMapController : MonoBehaviour {
         btnPaste.isOn = false;
         btnClear.isOn = false;
         btnTeleport.isOn = false;
+        Storage.DrawGeom.DrawClear();
     }
 
     private void InitEventsButtonMenu()
@@ -192,6 +247,7 @@ public class PaletteMapController : MonoBehaviour {
             }
             else if(ModePaint == ToolBarPaletteMapAction.Paste)
             {
+                Storage.DrawGeom.DrawClear();
                 ModePaint = ToolBarPaletteMapAction.None;
             }
         });
@@ -206,6 +262,7 @@ public class PaletteMapController : MonoBehaviour {
             }
             else if (ModePaint == ToolBarPaletteMapAction.Clear)
             {
+                Storage.DrawGeom.DrawClear();
                 ModePaint = ToolBarPaletteMapAction.None;
             }
         });
@@ -301,6 +358,8 @@ public class PaletteMapController : MonoBehaviour {
         //float col = listTiles.Count;
         //int countColumnMap = (int)Mathf.Sqrt(col);
         int countColumnMap = dataTiles.Height;
+        SizeBrush = countColumnMap;
+
         m_GridMap.constraintCount = countColumnMap;
 
         GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
@@ -456,7 +515,8 @@ public class PaletteMapController : MonoBehaviour {
         {
             FramePaletteMap.SetActive(false);
         }
-            //ContentGridPaletteMap
+        Storage.DrawGeom.DrawClear();
+        //ContentGridPaletteMap
     }
 
     public void SelectedCellMap(DataTile DataTileCell)
@@ -475,13 +535,14 @@ public class PaletteMapController : MonoBehaviour {
         int sizeClearX = (int)posFieldClear.x + sizeClear;
         int sizeClearY = (int)posFieldClear.y + sizeClear;
 
+        bool isClearDataGrid = Storage.Map.IsOpen;
 
         for (int x = (int)posFieldClear.x; x <  sizeClearX; x++)
         {
             for (int y = (int)posFieldClear.y; y < sizeClearY; y++)
             {
                 fieldNew = Helper.GetNameField(x, y);
-                ClearLayerForStructure(fieldNew);
+                ClearLayerForStructure(fieldNew, isClearDataGrid);
             }
         }
     }
@@ -568,33 +629,8 @@ public class PaletteMapController : MonoBehaviour {
     }
 
 
-    //private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles, TypesStructure typeCell = TypesStructure.None)
-    //{
-    //    string fieldStart = Storage.Instance.SelectFieldCursor;
-    //    Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
-    //    Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
-    //    bool isClearLayer = !m_PasteOnLayer;
-
-    //    int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
-    //    foreach (DataTile itemTile in listTiles)
-    //    {
-    //        if(typeCell != TypesStructure.None)
-    //            itemTile.Tag = typeCell.ToString();
-
-    //        //Correct position
-    //        posStructFieldNew = posStructFieldStart + new Vector2(itemTile.X, size - itemTile.Y);
-
-    //        string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
-
-    //        if (isClearLayer)
-    //            ClearLayerForStructure(fieldNew);
-
-    //        Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
-    //    }
-    //}
-
-    private void ClearLayerForStructure(string field)
+    private void ClearLayerForStructure(string field, bool isClearData = false)
     {
         //Destroy All Objects
         if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
@@ -603,6 +639,28 @@ public class PaletteMapController : MonoBehaviour {
             foreach (var obj in listObjs.ToArray())
             {
                 Storage.Instance.AddDestroyGameObject(obj);
+            }
+        }
+
+
+        //Faste
+        //if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
+        //{
+        //    var listObjs = Storage.Instance.GamesObjectsReal[field];
+        //    foreach (var obj in listObjs.ToArray())
+        //    {
+        //        //Storage.Instance.AddDestroyGameObject(obj);
+        //        Destroy(obj);
+        //    }
+        //    Storage.Instance.GamesObjectsReal[field].Clear();
+        //}
+
+        if (isClearData)
+        {
+            //Destroy All DATA Objects
+            if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
+            {
+                Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
             }
         }
     }

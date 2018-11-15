@@ -706,8 +706,8 @@ public class Storage : MonoBehaviour {
             //Draw result
             //DrawRect(rX,rY,rX2,rY2);
 
-            if(DrawGeom!=null)
-                DrawGeom.DrawRect(rX, rY, rX2, rY2);
+            //if(DrawGeom!=null)
+            //    DrawGeom.DrawRect(rX, rY, rX2, rY2);
         }
     }
 

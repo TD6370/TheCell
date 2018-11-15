@@ -15,6 +15,7 @@ public class CompletePlayerController : MonoBehaviour {
     //public GameObject UIController;
     public GameObject ObjectCursor;
 
+    public Vector2 PosCursorToField { get; private set; }
     //public Vector3 DistMoveCameraMap = new Vector3();
     //public float DistMoveCameraMapXY = 0;
     //public Vector3 StartPositFrameMap = new Vector3();
@@ -39,7 +40,7 @@ public class CompletePlayerController : MonoBehaviour {
     private int _count;				//Integer to store the number of pickups collected so far.
     private int _posLastX = 0;
     private int _posLastY = 0;
-    
+
 
     private Vector2 _movement;
 
@@ -107,22 +108,23 @@ public class CompletePlayerController : MonoBehaviour {
 
         if (CameraMap.enabled)
         {
-            if (Storage.Map.StartPositFrameMap == new Vector3())
-                Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
+            MovementMap(moveHorizontal, moveVertical);
+            //if (Storage.Map.StartPositFrameMap == new Vector3())
+            //    Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
 
-            float slow = 0.1f;
+            //float slow = 0.1f;
 
-            float speed = 1f;
-            if (Storage.Map.ZoomMap > 1.4)
-                speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
+            //float speed = 1f;
+            //if (Storage.Map.ZoomMap > 1.4)
+            //    speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
 
 
-            Vector3 movementCam = new Vector3(moveHorizontal * slow * speed *  -1, moveVertical * slow * speed * -1, 0f);
-            //CameraMap.transform.position += movementCam;
+            //Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0f);
+            ////CameraMap.transform.position += movementCam;
 
-            Storage.Map.prefabFrameMap.transform.position += movementCam;
-            Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
-            Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
+            //Storage.Map.prefabFrameMap.transform.position += movementCam;
+            //Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
+            //Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
             //---
             return;
         }
@@ -154,7 +156,7 @@ public class CompletePlayerController : MonoBehaviour {
             Application.Quit();
         }
 
-        if (Input.GetMouseButtonDown(0) &&  m_IsCursorSelection)
+        if (Input.GetMouseButtonDown(0) && m_IsCursorSelection)
         {
             //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
             _MousePositionClick = Input.mousePosition;
@@ -175,7 +177,7 @@ public class CompletePlayerController : MonoBehaviour {
         //}
     }
 
-   
+
 
     void Update()
     {
@@ -278,6 +280,25 @@ public class CompletePlayerController : MonoBehaviour {
 
     #region Public
 
+    private void MovementMap(float moveHorizontal, float moveVertical)
+    {
+        if (Storage.Map.StartPositFrameMap == new Vector3())
+            Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
+
+        float slow = 0.1f;
+
+        float speed = 1f;
+        if (Storage.Map.ZoomMap > 1.4)
+            speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
+
+
+        Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0f);
+        //CameraMap.transform.position += movementCam;
+
+        Storage.Map.prefabFrameMap.transform.position += movementCam;
+        Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
+        Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
+    }
 
     public void CameraMapOn(bool isOpenMap)
     {
@@ -498,7 +519,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     
 
-    Vector2 posCursorToField;
+    
     private Vector2 m_lastMousePosition;
     private void CursorEvents()
     {
@@ -532,10 +553,10 @@ public class CompletePlayerController : MonoBehaviour {
         //MOUSE ON CLICK
         if (m_IsCursorSelection && _positionLastTarget != _rectCursor)
         {
-            _fieldCursor = Helper.GetNameFieldPosit(posCursorToField.x, posCursorToField.y);
+            _fieldCursor = Helper.GetNameFieldPosit(PosCursorToField.x, PosCursorToField.y);
             Storage.Instance.SelectFieldCursor = _fieldCursor;
 
-            Storage.Events.CursorClickAction(posCursorToField, _fieldCursor);
+            Storage.Events.CursorClickAction(PosCursorToField, _fieldCursor);
 
             _positionLastTarget = _rectCursor;
         }
@@ -631,7 +652,7 @@ public class CompletePlayerController : MonoBehaviour {
         yield return null;
 
         //posCursorToField = CalculatePosCutsorToGrid();
-        posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
+        PosCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
         //m_lastMousePosition = _MousePosition;
 
         yield return null;
@@ -660,8 +681,8 @@ public class CompletePlayerController : MonoBehaviour {
             }
             //ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
             ObjectCursor.transform.position = new Vector3(
-                posCursorToField.x - offsetCursorX, 
-                posCursorToField.y + offsetCursorY, 
+                PosCursorToField.x - offsetCursorX, 
+                PosCursorToField.y + offsetCursorY, 
                 -5);
         }
         else
