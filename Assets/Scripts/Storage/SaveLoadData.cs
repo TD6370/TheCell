@@ -713,6 +713,12 @@ public class SaveLoadData : MonoBehaviour {
         //    Person
         //}
 
+        if (itemTile == null)
+        {
+            Debug.Log("####### AddConstructInGridData  itemTile == null");
+            return;
+        }
+
         TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
         if (structType == TypesStructure.Terra)
         {

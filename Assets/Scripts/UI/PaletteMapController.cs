@@ -53,13 +53,25 @@ public class PaletteMapController : MonoBehaviour {
     private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
     private List<GameObject> m_listCallsOnPalette;
     private List<string> m_ListNamesConstructs;
+    private List<TypesBrushGrid> ListTypesBrushes;
 
     public int sizeCellMap = 20;
     public float ActionRate = 0.5f;
     private float DelayTimer = 0F;
+    private bool isPaletteBrushOn = false;
     
-
     private GridLayoutGroup m_GridMap;
+
+    private GameObject lastSelectCellPalette;
+    private GameObject lastBorderCellPalette;
+
+    enum TypesBrushGrid
+    {
+        Prefabs,
+        Brushes,
+        PaintBrush,
+        OptionsGeneric
+    }
 
     private void Awake()
     {
@@ -68,8 +80,18 @@ public class PaletteMapController : MonoBehaviour {
         {
              btnPaste,
              btnClear,
-             btnTeleport
+             btnTeleport,
+             btnBrush
         };
+
+        ListTypesBrushes = new List<TypesBrushGrid>
+        {
+            TypesBrushGrid.Prefabs,
+            TypesBrushGrid.Brushes,
+            TypesBrushGrid.PaintBrush,
+            TypesBrushGrid.OptionsGeneric
+        };
+
     }
 
     // Use this for initialization
@@ -79,16 +101,11 @@ public class PaletteMapController : MonoBehaviour {
 
         InitEventsButtonMenu();
 
-        
-
         m_listCallsOnPalette = new List<GameObject>();
 
         m_ListNamesConstructs = new List<string>();
 
-        ListConstructsControl.onValueChanged.AddListener(delegate {
-            DropdownValueChanged(ListConstructsControl);
-        });
-
+     
         //--------- After Update
         StartCoroutine(LoadMap());
     }
@@ -99,9 +116,11 @@ public class PaletteMapController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update ()
+    {
+        if (IsPaintsOn)
+            OnMauseWheel();
+    }
 
 
     private void FixedUpdate()
@@ -117,6 +136,26 @@ public class PaletteMapController : MonoBehaviour {
             }
         }
        
+    }
+
+    private void OnMauseWheel()
+    {
+        float wheel = Input.GetAxis("Mouse ScrollWheel");
+
+        if (wheel != 0) // back
+        {
+            //Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize - 1, 1);
+            if (wheel > 0)
+            {
+                SizeBrush++;
+            }
+            else
+            {
+                SizeBrush--;
+                if (SizeBrush < 1)
+                    SizeBrush =1;
+            }
+        }
     }
 
     public void ShowBorderBrush()
@@ -147,8 +186,23 @@ public class PaletteMapController : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.3f);
 
-        LoadListConstructsControl();
+        if (isPaletteBrushOn)
+        {
+            LoadListBrushTypesControl();
+            yield return null;
+            PrefabsOnPalette();
+            //LoadTypeBrushOnPalette(TypesBrushGrid.Brushes);
+        }
+        else
+        {
+            LoadListConstructsControl();
+        }
     }
+
+    //private void LoadPalette()
+    //{
+    //    StartCoroutine(LoadMap());
+    //}
 
     public void PaintAction()
     {
@@ -186,8 +240,40 @@ public class PaletteMapController : MonoBehaviour {
             Debug.Log("######## DropdownValueChanged NOT dpntStructurs.value[" + dpntStructurs.value  + "] > m_ListNmeStructurs.Length[" + m_ListNamesConstructs.Count + "]");
             return;
         }
+        if (isPaletteBrushOn)
+        {
+            LoadTypeBrushOnPalette(ListTypesBrushes[dpntStructurs.value]);
+        }
+        else
+        {
+            LoadConstructOnPalette(m_ListNamesConstructs[dpntStructurs.value]);
+        }
+    }
 
-        LoadConstructOnPalette(m_ListNamesConstructs[dpntStructurs.value]);
+    public void Show(bool isClose = false)
+    {
+        if (!isClose)
+        {
+            if (!FramePaletteMap.activeSelf && m_ListNamesConstructs.Count == 0)
+                LoadListConstructsControl();
+            FramePaletteMap.SetActive(!FramePaletteMap.activeSelf);
+        }
+        else
+        {
+            FramePaletteMap.SetActive(false);
+        }
+        Storage.DrawGeom.DrawClear();
+        //ContentGridPaletteMap
+
+        //----------
+        //IsPaintsOn = btnOnPaint.isOn;
+        IsPaintsOn = FramePaletteMap.activeSelf;
+        if (IsPaintsOn)
+        {
+            ModePaint = ToolBarPaletteMapAction.Cursor;
+            Storage.PlayerController.CursorSelectionOn(true);
+            DefaultModeOn();
+        }
     }
 
     private void DefaultModeOn()
@@ -197,24 +283,25 @@ public class PaletteMapController : MonoBehaviour {
         btnPaste.isOn = false;
         btnClear.isOn = false;
         btnTeleport.isOn = false;
+        btnBrush.isOn = false;
         Storage.DrawGeom.DrawClear();
     }
 
     private void InitEventsButtonMenu()
     {
+        ListConstructsControl.onValueChanged.AddListener(delegate {
+            DropdownValueChanged(ListConstructsControl);
+        });
+
+
         btnClose.onClick.AddListener(delegate
         {
             Show(false);
         });
         btnOnPaint.onValueChanged.AddListener(delegate
         {
-            IsPaintsOn = btnOnPaint.isOn;
-            if (IsPaintsOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Cursor;
-                Storage.PlayerController.CursorSelectionOn(true);
-                DefaultModeOn();
-            }
+            isPaletteBrushOn = !isPaletteBrushOn;
+            StartCoroutine(LoadMap());
         });
         btnCursor.onValueChanged.AddListener(delegate
         {
@@ -262,6 +349,23 @@ public class PaletteMapController : MonoBehaviour {
                 ModePaint = ToolBarPaletteMapAction.None;
             }
         });
+        
+        btnBrush.onValueChanged.AddListener(delegate
+        {
+            if (btnBrush.isOn)
+            {
+                ModePaint = ToolBarPaletteMapAction.Brush;
+                btnPaste.isOn = false;
+                //btnCursor.isOn = false;
+                btnTeleport.isOn = false;
+            }
+            else if (ModePaint == ToolBarPaletteMapAction.Brush)
+            {
+                Storage.DrawGeom.DrawClear();
+                ModePaint = ToolBarPaletteMapAction.None;
+            }
+        });
+
         btnTeleport.onValueChanged.AddListener(delegate
         {
             if (btnTeleport.isOn)
@@ -337,7 +441,7 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-
+    
     public void PrefabsOnPalette()
     {
        List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
@@ -345,15 +449,22 @@ public class PaletteMapController : MonoBehaviour {
 
         //int countColumnMap = listTextures[0].width;
         int countColumnMap = 6;
-        SizeBrush = countColumnMap;
-
+        SizeBrush = 1;
+        //m_GridMap.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        //m_GridMap.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        m_GridMap.childAlignment = TextAnchor.UpperLeft;
         m_GridMap.constraintCount = countColumnMap;
+        ResizeScaleGrid(countColumnMap,1.1f);
 
         GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
         for (int i = 0; i < gobjCells.Length; i++)
         {
             Destroy(gobjCells[i]);
         }
+
+        m_listCallsOnPalette.Clear();
+
+        //m_GridMap.constraintCount = countColumnMap;
 
         int index = 0;
         foreach (var item in listTextures)
@@ -368,6 +479,22 @@ public class PaletteMapController : MonoBehaviour {
             
             m_listCallsOnPalette.Add(cellMap);
             index++;
+        }
+    }
+
+    private void LoadTypeBrushOnPalette(TypesBrushGrid selectTypeBrush)
+    {
+        switch(selectTypeBrush)
+        {
+            case TypesBrushGrid.Prefabs:
+                PrefabsOnPalette();
+                break;
+            case TypesBrushGrid.Brushes:
+                break;
+            case TypesBrushGrid.PaintBrush:
+                break;
+            case TypesBrushGrid.OptionsGeneric:
+                break;
         }
     }
 
@@ -390,6 +517,8 @@ public class PaletteMapController : MonoBehaviour {
         int countColumnMap = dataTiles.Height;
         SizeBrush = countColumnMap;
 
+        //m_GridMap.startCorner = GridLayoutGroup.Corner.LowerLeft;
+        m_GridMap.childAlignment = TextAnchor.MiddleLeft;
         m_GridMap.constraintCount = countColumnMap;
 
         GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
@@ -483,10 +612,10 @@ public class PaletteMapController : MonoBehaviour {
     }
 
 
-    private void ResizeScaleGrid(int column)
+    private void ResizeScaleGrid(int column, float ratio = 0.9f)
     {
         float size = this.gameObject.GetComponent<RectTransform>().rect.width;
-        float ratio = 0.9f;
+        
         float sizeCorr = (size / column) * ratio;
         Vector2 newSize = new Vector2(sizeCorr, sizeCorr);
         m_GridMap.cellSize = newSize;
@@ -507,6 +636,21 @@ public class PaletteMapController : MonoBehaviour {
         Storage.TilesManager.UpdateGridTiles();
     }
 
+   
+
+    public void LoadListBrushTypesControl()
+    {
+        m_ListConstructsOptopnsData = new List<Dropdown.OptionData>();
+
+       
+        foreach (var item in ListTypesBrushes)
+        {
+            m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = item.ToString() });
+        }
+
+        ListConstructsControl.ClearOptions();
+        ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
+    }
 
     public void LoadListConstructsControl()
     {
@@ -542,27 +686,24 @@ public class PaletteMapController : MonoBehaviour {
         ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
     }
 
-    public void Show(bool isClose = false)
-    {
-        if(!isClose)
-        {
-            if (!FramePaletteMap.activeSelf && m_ListNamesConstructs.Count==0)
-                LoadListConstructsControl();
-            FramePaletteMap.SetActive(!FramePaletteMap.activeSelf);
-        }
-        else
-        {
-            FramePaletteMap.SetActive(false);
-        }
-        Storage.DrawGeom.DrawClear();
-        //ContentGridPaletteMap
-    }
-
-    public void SelectedCellMap(DataTile DataTileCell)
+    public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
         SelectedCell = DataTileCell;
-    }
 
+        if (lastSelectCellPalette != null)
+            lastSelectCellPalette.GetComponent<Image>().color = Color.clear;
+
+        if (lastBorderCellPalette != null)
+            lastBorderCellPalette.SetActive(false);
+
+        selCellPalette.GetComponent<Image>().color = "#FFD600".ToColor();
+
+        borderCellPalette.SetActive(true);
+
+        lastBorderCellPalette = borderCellPalette;
+        lastSelectCellPalette = selCellPalette;
+    }
+    
     private void Clear()
     {
         string fieldStart = Storage.Instance.SelectFieldCursor;
@@ -587,6 +728,12 @@ public class PaletteMapController : MonoBehaviour {
     private void BrushCells()
     {
         DataTile sel = SelectedCell;
+        if(sel==null)
+        {
+            Debug.Log("######## BrushCells SelectedCell is empty");
+            return;
+        }
+
 
         string fieldStart = Storage.Instance.SelectFieldCursor;
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
@@ -597,6 +744,7 @@ public class PaletteMapController : MonoBehaviour {
             ClearLayerForStructure(fieldStart);
 
         Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
+        Storage.GenGrid.LoadObjectsNearHero();
     }
 
     private void Paste()
@@ -604,7 +752,10 @@ public class PaletteMapController : MonoBehaviour {
         if (Time.time > DelayTimer)
         {
             SaveConstructTileInGridData();
-            Storage.GenGrid.ReloadGridLook();
+            if(Storage.Map.IsOpen)
+                Storage.GenGrid.ReloadGridLook();
+            else
+                Storage.GenGrid.LoadObjectsNearHero();
             DefaultModeOn();
 
             DelayTimer = Time.time + ActionRate;

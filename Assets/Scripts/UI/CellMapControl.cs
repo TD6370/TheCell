@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CellMapControl : MonoBehaviour {
+public class CellMapControl : MonoBehaviour, IPointerDownHandler {
 
     PaletteMapController _scriptMap;
     public GameObject ContentGridMap;
     public Text TittleCell;
     public Text InfoCell;
+    public GameObject BorderCellPalette;
 
     private DataTile m_DataTileCell;
     public DataTile DataTileCell
@@ -59,17 +61,20 @@ public class CellMapControl : MonoBehaviour {
             Debug.Log("###### scriptMap is Empty");
             return;
         }
-        
+
+        BorderCellPalette.SetActive(false);
+
     }
+
 
     // Update is called once per frame
     void Update () {
 	    	
 	}
 
-    private void OnMouseDown()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        _scriptMap.SelectedCellMap(m_DataTileCell);
+        _scriptMap.SelectedCellMap(m_DataTileCell, this.gameObject, BorderCellPalette);
     }
 
     private void OnAnimatorIK(int layerIndex)

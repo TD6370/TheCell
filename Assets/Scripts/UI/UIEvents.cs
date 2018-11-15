@@ -100,13 +100,13 @@ public class UIEvents : MonoBehaviour {
         btnTest.onClick.AddListener(TestClick);
 
 
-        string typePrefub = this.gameObject.tag.ToString();
+        //string typePrefub = this.gameObject.tag.ToString();
 
-        SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
-        if (Helper.IsTerra(typePrefab))
-        {
+        //SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
+        //if (Helper.IsTerra(typePrefab))
+        //{
 
-        }
+        //}
 
     }
 
