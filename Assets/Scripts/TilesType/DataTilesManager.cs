@@ -259,6 +259,8 @@ public class DataTilesManager : MonoBehaviour {
         //m_CollectionDataMapTiles.Add(NameStructMap, listDataTiles);
     }
 
+
+
     public void LoadTextures()
     {
         m_collectionTextureTiles = new Dictionary<string, Texture2D>();

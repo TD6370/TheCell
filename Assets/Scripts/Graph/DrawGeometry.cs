@@ -50,11 +50,19 @@ public class DrawGeometry : MonoBehaviour
             return;
         }
 
+        //float alpha = 1.0f;
+        //Gradient gradient = new Gradient();
+        //gradient.SetKeys(
+        //    new GradientColorKey[] { new GradientColorKey(Color.green, 0.0f), new GradientColorKey(Color.red, 1.0f) },
+        //    new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+        //    );
+        //m_lineRenderer.colorGradient = gradient;
+
         //color = Color.green;
         //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
         //lineRenderer.SetColors(c1, c2);
         m_lineRenderer.SetColors(color, color);
-        m_lineRenderer.startColor = Color.red;
+        //m_lineRenderer.startColor = Color.red;
         m_lineRenderer.SetWidth(width, width);
         int size = 5;
         m_lineRenderer.SetVertexCount(size);

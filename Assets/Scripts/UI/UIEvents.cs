@@ -406,6 +406,9 @@ public class UIEvents : MonoBehaviour {
                 ReloadWorld();
                 Storage.GenGrid.LoadObjectsNearHero();
                 break;
+            case "LoadPrefabsOnPalette":
+                Storage.PaletteMap.PrefabsOnPalette();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;

@@ -120,6 +120,17 @@ public class MapWorld : MonoBehaviour {
         {
             Show();
         }
+
+        if (IsOpen)
+        {
+            Storage.DrawGeom.DrawClear();
+            DrawLocationHero(true);
+            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+            if (distMap > 30f)
+            {
+                Frame.Restart();
+            }
+        }
     }
 
     public void Show()
@@ -132,16 +143,16 @@ public class MapWorld : MonoBehaviour {
 
         Storage.Map.MarkerMapWorldCell.SetActive(isShow);
         //DrawLocationHero(true);
-        if (isShow)
-        {
-            Storage.DrawGeom.DrawClear();
-            DrawLocationHero(true);
-            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
-            if (distMap > 30f)
-            {
-                Frame.Restart();
-            }
-        }
+        //if (isShow)
+        //{
+        //    Storage.DrawGeom.DrawClear();
+        //    DrawLocationHero(true);
+        //    float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+        //    if (distMap > 30f)
+        //    {
+        //        Frame.Restart();
+        //    }
+        //}
     }
 
     public void CreateTextureMap1(int scaleCell = 1)

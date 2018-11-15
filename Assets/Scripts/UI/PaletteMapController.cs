@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -165,19 +166,14 @@ public class PaletteMapController : MonoBehaviour {
             case ToolBarPaletteMapAction.Transfer:
                 TeleportHero();
                 break;
-
+            case ToolBarPaletteMapAction.Brush:
+                BrushCells();
+                break;
         }
         if(Storage.Map.IsOpen)
             Storage.Map.Refresh();
     }
 
-    private void TeleportHero()
-    {
-        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
-        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
-        posTransferHeroY *= -1;
-        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
-    }
 
     void DropdownValueChanged(Dropdown dpntStructurs)
     {
@@ -341,6 +337,40 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+
+    public void PrefabsOnPalette()
+    {
+       List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
+        //listTextures
+
+        //int countColumnMap = listTextures[0].width;
+        int countColumnMap = 6;
+        SizeBrush = countColumnMap;
+
+        m_GridMap.constraintCount = countColumnMap;
+
+        GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
+        for (int i = 0; i < gobjCells.Length; i++)
+        {
+            Destroy(gobjCells[i]);
+        }
+
+        int index = 0;
+        foreach (var item in listTextures)
+        {
+            var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+            cellMap.transform.SetParent(this.gameObject.transform);
+            Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
+
+            cellMap.GetComponent<Image>().sprite = spriteTile;
+            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+            cellMap.SetActive(true);
+            
+            m_listCallsOnPalette.Add(cellMap);
+            index++;
+        }
+    }
+
     private void LoadConstructOnPalette(string keyStruct)
     {
         Debug.Log("Selected struct :" + keyStruct);
@@ -444,6 +474,15 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    private void TeleportHero()
+    {
+        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+        posTransferHeroY *= -1;
+        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+    }
+
+
     private void ResizeScaleGrid(int column)
     {
         float size = this.gameObject.GetComponent<RectTransform>().rect.width;
@@ -524,8 +563,6 @@ public class PaletteMapController : MonoBehaviour {
         SelectedCell = DataTileCell;
     }
 
-   
-
     private void Clear()
     {
         string fieldStart = Storage.Instance.SelectFieldCursor;
@@ -545,6 +582,21 @@ public class PaletteMapController : MonoBehaviour {
                 ClearLayerForStructure(fieldNew, isClearDataGrid);
             }
         }
+    }
+
+    private void BrushCells()
+    {
+        DataTile sel = SelectedCell;
+
+        string fieldStart = Storage.Instance.SelectFieldCursor;
+        Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+        Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
+
+        bool isClearLayer = !m_PasteOnLayer;
+        if (isClearLayer)
+            ClearLayerForStructure(fieldStart);
+
+        Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
     }
 
     private void Paste()
@@ -685,5 +737,6 @@ public enum ToolBarPaletteMapAction
     Clear,
     Cursor,
     Teleport,
-    Transfer
+    Transfer,
+    Brush
 }
