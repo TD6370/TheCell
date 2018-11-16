@@ -2,8 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class FrameMap : MonoBehaviour {
+public class FrameMap : MonoBehaviour, IPointerClickHandler
+{
 
     public GameObject MapCellFrame;
     public GameObject MapCellBorder;
@@ -63,10 +66,32 @@ public class FrameMap : MonoBehaviour {
     //9.4 5.7
     private Vector3 posOld = new Vector3();
 
+    //public GraphicRaycaster m_Raycaster;
+    //private PointerEventData m_PointerEventData;
+    //public EventSystem m_EventSystem;
+
+    Camera cameraMap;// = Storage.PlayerController.CameraMap;
+    BoxCollider2D colliderMap;
+
     // Use this for initialization
     void Start()
     {
+        cameraMap = Storage.PlayerController.CameraMap;
+        colliderMap = GetComponent<BoxCollider2D>();
 
+        //-------------- Raycast
+        ////Fetch the Raycaster from the GameObject (the Canvas)
+        //m_Raycaster = GetComponent<GraphicRaycaster>();
+        //if (m_Raycaster == null)
+        //{
+        //    Debug.Log("###### Raycaster == null");
+        //}
+        ////Fetch the Event System from the Scene
+        //m_EventSystem = GetComponent<EventSystem>();
+        //if (m_EventSystem == null)
+        //{
+        //    Debug.Log("###### EventSystem == null");
+        //}
     }
 
     // Update is called once per frame
@@ -74,6 +99,17 @@ public class FrameMap : MonoBehaviour {
 
         if (!IsActive)
         {
+            return;
+        }
+
+        
+    }
+
+    private void FixedUpdate()
+    {
+        if (Time.time < Storage.PaletteMap.DelayTimerPaletteUse)
+        {
+            //Debug.Log("!!!!!!!!! MAP CAST STOP !!!!!! ");
             return;
         }
 
@@ -89,43 +125,76 @@ public class FrameMap : MonoBehaviour {
             //After CalculatePointOnMap
             MouseDownSpecOnChange();
         }
-    }
-
-    private void FixedUpdate()
-    {
+        //return;//#FIX
         if (IsActive && IsRuntimeViewMarker)
         {
             CalculatePointOnMap();
-
             UpdateBorderCellLocation();
-
             Storage.Map.UpdateMarkerPointCell();
             //Storage.Map.ShowBorderBrush();
         }
+        //EventsUI();
+
     }
+
+    public void OnPointerClick(PointerEventData data)
+    {
+        // This will only execute if the objects collider was the first hit by the click's raycast
+        Debug.Log("---------------------------OnPointerClick   WP:" + data.worldPosition + "  POS:" + data.position + "  PP:" + data.pointerPress.name);
+        MouseDownOnChange();
+    }
+
+    void OnMouseDown()
+    {
+        //Print
+        Storage.Events.ListLogAdd = "MAP OnMouseDown";
+    }
+
+    //private void EventsUI()
+    //{
+    //    //Check if the left Mouse button is clicked
+    //    //if (Input.GetKey(KeyCode.Mouse0))
+    //    //{
+    //        //Set up the new Pointer Event
+      
+    //    if (m_Raycaster == null || m_EventSystem == null)
+    //    {
+    //        return;
+    //    }
+
+    //    m_PointerEventData = new PointerEventData(m_EventSystem);
+    //    if (m_PointerEventData == null)
+    //    {
+    //        Debug.Log("####### EventsU MAP ### PointerEventData==null");
+    //        return;
+    //    }
+
+    //    //Set the Pointer Event Position to that of the mouse position
+    //    m_PointerEventData.position = Input.mousePosition;
+
+    //    //cameraMap = Storage.PlayerController.CameraMap;
+    //    //m_PointerEventData.position = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+
+    //    //Create a list of Raycast Results
+    //    List<RaycastResult> results = new List<RaycastResult>();
+
+    //        //Raycast using the Graphics Raycaster and mouse click position
+    //        m_Raycaster.Raycast(m_PointerEventData, results);
+
+    //        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+    //        foreach (RaycastResult result in results)
+    //        {
+    //            Debug.Log(">>>>>>>>>> Hit MAP ### " + result.gameObject.name);
+    //        }
+    //    //}
+
+    //}
 
     private void MouseDownOnChange()
     {
         CalculatePointOnMap();
 
         ShowSelectorCell();
-    }
-
-    private void MouseDownSpecOnChange()
-    {
-        RunTeleportHero();
-    }
-
-    private void RunTeleportHero()
-    {
-        if (Storage.Events.IsCommandTeleport || Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Teleport)
-        {
-            Storage.Map.Create();
-            int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
-            int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
-            posTransferHeroY *= -1;
-            Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
-        }
     }
 
     private void OnMauseWheel()
@@ -150,6 +219,25 @@ public class FrameMap : MonoBehaviour {
             Zooming(SizeZoom);
         }
     }
+
+    private void MouseDownSpecOnChange()
+    {
+        RunTeleportHero();
+    }
+
+    private void RunTeleportHero()
+    {
+        if (Storage.Events.IsCommandTeleport || Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Teleport)
+        {
+            Storage.Map.Create();
+            int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+            int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+            posTransferHeroY *= -1;
+            Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+        }
+    }
+
+   
 
     public void Show(bool isShow = true)
     {
@@ -351,7 +439,7 @@ public class FrameMap : MonoBehaviour {
     private void CalculatePointOnMap()
     {
         bool isLog = false;
-        Camera cameraMap = Storage.PlayerController.CameraMap;
+        //Camera cameraMap = Storage.PlayerController.CameraMap;
         if (cameraMap == null)
         {
             Debug.Log("################ cameraMap is EMPTY ");
@@ -359,6 +447,8 @@ public class FrameMap : MonoBehaviour {
         }
         if (!cameraMap.enabled)
             return;
+
+      
 
         //cameraMap
         Vector2 posClick = new Vector2();
@@ -372,9 +462,29 @@ public class FrameMap : MonoBehaviour {
         //Rect.PointToNormalized
         //Rect.NormalizedToPoint
 
+        //int LayerUI = LayerMask.NameToLayer("LayerUI");
+        //int LayerViewUI = LayerMask.NameToLayer("UI");
+        //int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+
+        //------------
+        //Ray ray1 = cameraMap.ScreenPointToRay(Input.mousePosition);
+        ////RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f, LayerViewUI);
+        //RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f);
+        ////if (hit1.collider != null && hit1.collider.transform == this.gameObject.transform)
+        //if (hit1.collider != null)
+        //{
+        //    //Debug.Log("-------------GetRayIntersection On GOBJ: " + hit1.collider.gameObject.name);
+        //}
+        //----------------
 
         Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
-        if (Physics2D.OverlapPoint(mousePosition))
+        //if (Physics2D.OverlapPoint(mousePosition))
+
+        //Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition, LayerUI);
+        Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition);
+
+        //if (Physics2D.OverlapPoint(mousePosition, LayerViewUI))
+        if (clickedCollider)
         {
             //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
             posClick = mousePosition;
@@ -383,9 +493,13 @@ public class FrameMap : MonoBehaviour {
 
         if (isMousePos)
         {
-            BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
-            if (colliderMap != null)
+            //BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
+            //if (colliderMap != null)
+            //if(clickedCollider.Equals(colliderMap))
+            if(clickedCollider.gameObject.name.Equals(colliderMap.gameObject.name))
             {
+                //Debug.Log("-------------Point On GOBJ: " + clickedCollider.gameObject.name);
+
                 NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
 
                 if (isLog)
@@ -570,12 +684,7 @@ public class FrameMap : MonoBehaviour {
         return offsetCenter;
     }
 
-    void OnMouseDown()
-    {
-        //Print
-        Storage.Events.ListLogAdd = "MAP OnMouseDown";
-    }
-
+    
     private void Zooming(float zoom = 1f)
     {
         Storage.Map.ZoomMap = SizeZoom;

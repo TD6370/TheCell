@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PaletteMapController : MonoBehaviour {
@@ -58,7 +59,13 @@ public class PaletteMapController : MonoBehaviour {
     private GameObject lastSelectCellPalette;
     private GameObject lastBorderCellPalette;
 
+    public GraphicRaycaster m_Raycaster;
+    private PointerEventData m_PointerEventData;
+    public EventSystem m_EventSystem;
+    public Canvas CanvasUI;
 
+    public float DelayTimerPaletteUse = 0f;
+    public float ActionRatePaletteUse = 0.5f;
 
     public enum TypesBrushGrid
     {
@@ -66,27 +73,6 @@ public class PaletteMapController : MonoBehaviour {
         Brushes,
         PaintBrush,
         OptionsGeneric
-    }
-
-    private void Awake()
-    {
-        m_GridMap = this.gameObject.GetComponent<GridLayoutGroup>();
-        m_listToggleMode = new List<Toggle>()
-        {
-             btnPaste,
-             btnClear,
-             btnTeleport,
-             btnBrush
-        };
-
-        ListTypesBrushes = new List<TypesBrushGrid>
-        {
-            TypesBrushGrid.Prefabs,
-            TypesBrushGrid.Brushes,
-            TypesBrushGrid.PaintBrush,
-            TypesBrushGrid.OptionsGeneric
-        };
-
     }
 
 
@@ -104,34 +90,34 @@ public class PaletteMapController : MonoBehaviour {
     }
 
     //Count 
-    private int m_OptionGen1 = 1;
-    public int OptionGen1 {
+    private int m_OptionGenCount1 = 1;
+    public int OptionGenCount {
         get {
-            return m_OptionGen1;
+            return m_OptionGenCount1;
         }
         set {
-            m_OptionGen1 = value;
-            btxIntGenOption1.text = m_OptionGen1.ToString();
+            m_OptionGenCount1 = value;
+            btxIntGenOption1.text = m_OptionGenCount1.ToString();
         }
     }
     private void CorrectOptionGenCount()
     {
-        OptionGen1 = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent / 100;
+        OptionGenCount = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent2 / 100;
     }
 
 
     //Percent
-    private int m_OptionGenPercent = 100;
+    private int m_OptionGenPercent2 = 100;
     public int OptionGenPercent {
         get {
-            if (btxIntGenOption2.text != m_OptionGenPercent.ToString())
-                btxIntGenOption2.text = m_OptionGenPercent.ToString();
-            return m_OptionGenPercent;
+            if (btxIntGenOption2.text != m_OptionGenPercent2.ToString())
+                btxIntGenOption2.text = m_OptionGenPercent2.ToString();
+            return m_OptionGenPercent2;
         }
         set {
-            m_OptionGenPercent = value;
+            m_OptionGenPercent2 = value;
             CorrectOptionGenCount();
-            btxIntGenOption2.text = m_OptionGenPercent.ToString();
+            btxIntGenOption2.text = m_OptionGenPercent2.ToString();
         }
     }
 
@@ -162,6 +148,38 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    int LayerUI;
+    int LayerViewUI;
+    int LayerObjects;
+
+    
+
+
+    private void Awake()
+    {
+        LayerUI = LayerMask.NameToLayer("LayerUI");
+        LayerViewUI = LayerMask.NameToLayer("UI");
+        LayerObjects = LayerMask.NameToLayer("LayerObjects");
+
+        m_GridMap = this.gameObject.GetComponent<GridLayoutGroup>();
+        m_listToggleMode = new List<Toggle>()
+        {
+             btnPaste,
+             btnClear,
+             btnTeleport,
+             btnBrush
+        };
+
+        ListTypesBrushes = new List<TypesBrushGrid>
+        {
+            TypesBrushGrid.Prefabs,
+            TypesBrushGrid.Brushes,
+            TypesBrushGrid.PaintBrush,
+            TypesBrushGrid.OptionsGeneric
+        };
+
+    }
+
 
     // Use this for initialization
     void Start()
@@ -179,6 +197,38 @@ public class PaletteMapController : MonoBehaviour {
         StartCoroutine(LoadMap());
 
         OptionGenPercent = 100;
+
+
+        if(CanvasUI==null)
+        {
+            Debug.Log("###### PletteMapController Start CanvasUI is empty");
+            return;
+        }
+
+        //-------------- Raycast
+        //Fetch the Raycaster from the GameObject (the Canvas)
+        //m_Raycaster = CanvasUI.GetComponent<GraphicRaycaster>();
+        //m_Raycaster = GetComponent<GraphicRaycaster>();
+        m_Raycaster = FramePaletteMap.GetComponent<GraphicRaycaster>();
+        if (m_Raycaster == null)
+        {
+            Debug.Log("###### Raycaster is empty");
+        }
+        //Fetch the Event System from the Scene
+        //m_EventSystem = CanvasUI.GetComponent<EventSystem>();
+        //m_EventSystem = GetComponent<EventSystem>();
+        m_EventSystem = FramePaletteMap.GetComponent<EventSystem>();
+        if (m_EventSystem == null)
+        {
+            Debug.Log("###### EventSystem is empty");
+        }
+
+        m_PointerEventData = new PointerEventData(m_EventSystem);
+        if (m_PointerEventData == null)
+        {
+            Debug.Log("####### EventsUI Palette PointerEventData is empty");
+        }
+
     }
 
     private void LateUpdate()
@@ -189,26 +239,82 @@ public class PaletteMapController : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (IsPaintsOn)
-            OnMauseWheel();
-    }
+        
 
+        //IsPaintsOn
+        EventsUI();
+    }
 
     private void FixedUpdate()
     {
-        if (IsPaintsOn && !Storage.Map.IsOpen)
+        if (IsPaintsOn)
         {
-            switch (ModePaint)
+            if (Input.GetMouseButtonDown(2))
             {
-                case ToolBarPaletteMapAction.Paste:
-                case ToolBarPaletteMapAction.Brush:
-                case ToolBarPaletteMapAction.Clear:
-                    ShowBorderBrush();
-                    break;
+                DefaultModeOn();
+            }
+
+            if (!Storage.Map.IsOpen)
+            {
+                switch (ModePaint)
+                {
+                    case ToolBarPaletteMapAction.Paste:
+                    case ToolBarPaletteMapAction.Brush:
+                    case ToolBarPaletteMapAction.Clear:
+                        ShowBorderBrush();
+                        break;
+                }
             }
         }
-       
     }
+
+    private void EventsUI()
+    {
+        if (!IsPaintsOn)
+            return;
+
+        //Check if the left Mouse button is clicked
+        //if (Input.GetKey(KeyCode.Mouse0))
+        //{
+        //Set up the new Pointer Event
+
+        //if (m_Raycaster == null || m_EventSystem == null)
+        //{
+        //    return;
+        //}
+
+        //m_PointerEventData = new PointerEventData(m_EventSystem);
+        //if (m_PointerEventData == null)
+        //{
+        //    Debug.Log("####### EventsUI Palette PointerEventData==null");
+        //    return;
+        //}
+
+        //Set the Pointer Event Position to that of the mouse position
+        m_PointerEventData.position = Input.mousePosition;
+
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        //foreach (RaycastResult result in results)
+        //{
+        //    //Debug.Log(">>>>>>>>>> Hit Palette " + result.gameObject.name);
+        //}
+
+        if (results.Count > 0)
+        {
+            OnMauseWheel();
+            DelayTimerPaletteUse = Time.time + ActionRatePaletteUse;
+        }
+        //}
+
+    }
+
 
     private void OnMauseWheel()
     {
@@ -346,6 +452,11 @@ public class PaletteMapController : MonoBehaviour {
             Storage.PlayerController.CursorSelectionOn(true);
             DefaultModeOn();
         }
+
+        
+        //Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
+        Physics.IgnoreLayerCollision(LayerViewUI, LayerObjects, IsPaintsOn);
+        Physics.IgnoreLayerCollision(LayerViewUI, LayerUI, IsPaintsOn);
     }
 
     private void DefaultModeOn()
@@ -477,7 +588,7 @@ public class PaletteMapController : MonoBehaviour {
 
         btxIntGenOption1.onValueChange.AddListener(delegate
         {
-            OptionGen1 = int.Parse(btxIntGenOption1.text);
+            OptionGenCount = int.Parse(btxIntGenOption1.text);
         });
         btxIntGenOption2.onValueChange.AddListener(delegate
         {
@@ -824,7 +935,7 @@ public class PaletteMapController : MonoBehaviour {
         else
         {
             //Generic
-            int CountObjects = OptionGen1;
+            int CountObjects = OptionGenCount;
             int Percent = OptionGenPercent;
             int SubsystemSegments = OptionGen3;
             int SubsystemLevel = OptionGen4;
@@ -930,10 +1041,10 @@ public class PaletteMapController : MonoBehaviour {
     }
 
     public void UpOptionGen1() {
-        OptionGen1++;
+        OptionGenCount++;
     }
     public void UpOptionGen2() {
-        OptionGenPercent++;
+        OptionGenPercent+=10;
     }
     public void UpOptionGen3() {
         OptionGen3++;
@@ -944,10 +1055,10 @@ public class PaletteMapController : MonoBehaviour {
     }
 
     public void DownOptionGen1() {
-        OptionGen1--;
+        OptionGenCount--;
     }
     public void DownOptionGen2() {
-        OptionGenPercent--;
+        OptionGenPercent-=10;
     }
     public void DownOptionGen3()
     {
@@ -958,8 +1069,24 @@ public class PaletteMapController : MonoBehaviour {
         OptionGen4--;
     }
 
+    //public void OptionGenOnChanged1()
+    //{
+    //    OptionGen1 = int.Parse(btxIntGenOption1.text);
+    //}
+    //public void OptionGenOnChanged2()
+    //{
+    //    OptionGenPercent = int.Parse(btxIntGenOption2.text);
+    //}
+    //public void OptionGenOnChanged3()
+    //{
+    //    OptionGen3 = int.Parse(btxIntGenOption3.text);
+    //}
+    //public void OptionGenOnChanged4()
+    //{
+    //    OptionGen4 = int.Parse(btxIntGenOption4.text);
+    //}
 
-    private void ClearLayerForStructure(string field, bool isClearData = false)
+private void ClearLayerForStructure(string field, bool isClearData = false)
     {
         //Destroy All Objects
         if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
