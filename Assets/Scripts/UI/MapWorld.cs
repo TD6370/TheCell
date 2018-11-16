@@ -57,7 +57,7 @@ public class MapWorld : MonoBehaviour {
 
     public int SizeCellMap = 25;
 
-    private string[,] colorMap = new string[1000, 1000];
+    //private string[,] colorMap = new string[1000, 1000];
     private bool m_IsCreatedMap = false;
 
     public Dictionary<string, GameObject> MapObjects;

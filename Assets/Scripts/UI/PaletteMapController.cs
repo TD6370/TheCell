@@ -13,21 +13,6 @@ public class PaletteMapController : MonoBehaviour {
     public DataTile SelectedCell { get; set; }
     public GameObject PrefabCellMapPalette;
 
-    private int m_SizeBrush = 4;
-    public int SizeBrush
-    {
-        get
-        {
-            return m_SizeBrush;
-        }
-        set
-        {
-            m_SizeBrush = value;
-            btxSizeBrush.text = m_SizeBrush.ToString();
-        }
-
-    }
-
     //public Button btnOnPaint;
     public Toggle btnOnPaint;
     public Toggle btnPaste;
@@ -41,10 +26,18 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnUp;
     public Button btnDown;
     public InputField btxSizeBrush;
+    public InputField btxIntGenOption1;
+    public InputField btxIntGenOption2;
+    public InputField btxIntGenOption3;
+    public InputField btxIntGenOption4;
+    public InputField btxIntGenOption5;
+
+    public GameObject ToolBarBrushPalette;
 
     private List<Toggle> m_listToggleMode;
 
     public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
+    public TypesBrushGrid SelectedTypeBrush = TypesBrushGrid.Prefabs;
 
     public bool IsPaintsOn = false;
     //public bool IsCursorOn = false;
@@ -65,7 +58,9 @@ public class PaletteMapController : MonoBehaviour {
     private GameObject lastSelectCellPalette;
     private GameObject lastBorderCellPalette;
 
-    enum TypesBrushGrid
+
+
+    public enum TypesBrushGrid
     {
         Prefabs,
         Brushes,
@@ -94,6 +89,80 @@ public class PaletteMapController : MonoBehaviour {
 
     }
 
+
+    private int m_SizeBrush = 4;
+    public int SizeBrush
+    {
+        get {
+            return m_SizeBrush;
+        }
+        set {
+            m_SizeBrush = value;
+            CorrectOptionGenCount();
+            btxSizeBrush.text = m_SizeBrush.ToString();
+        }
+    }
+
+    //Count 
+    private int m_OptionGen1 = 1;
+    public int OptionGen1 {
+        get {
+            return m_OptionGen1;
+        }
+        set {
+            m_OptionGen1 = value;
+            btxIntGenOption1.text = m_OptionGen1.ToString();
+        }
+    }
+    private void CorrectOptionGenCount()
+    {
+        OptionGen1 = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent / 100;
+    }
+
+
+    //Percent
+    private int m_OptionGenPercent = 100;
+    public int OptionGenPercent {
+        get {
+            if (btxIntGenOption2.text != m_OptionGenPercent.ToString())
+                btxIntGenOption2.text = m_OptionGenPercent.ToString();
+            return m_OptionGenPercent;
+        }
+        set {
+            m_OptionGenPercent = value;
+            CorrectOptionGenCount();
+            btxIntGenOption2.text = m_OptionGenPercent.ToString();
+        }
+    }
+
+    //Fragments
+    private int m_OptionGen3 = 1;
+    public int OptionGen3 {
+        get {
+            if (btxIntGenOption3.text != m_OptionGen3.ToString())
+                btxIntGenOption3.text = m_OptionGen3.ToString();
+            return m_OptionGen3;
+        }
+        set {
+            m_OptionGen3 = value;
+            btxIntGenOption3.text = m_OptionGen3.ToString();
+        }
+    }
+
+    //Level
+    private int m_OptionGen4 = 1;
+    public int OptionGen4 {
+        get {
+            if (btxIntGenOption4.text != m_OptionGen4.ToString())
+                btxIntGenOption4.text = m_OptionGen4.ToString();
+            return m_OptionGen4;
+        }
+        set { m_OptionGen4 = value;
+            btxIntGenOption4.text = m_OptionGen4.ToString();
+        }
+    }
+
+
     // Use this for initialization
     void Start()
     {
@@ -108,6 +177,8 @@ public class PaletteMapController : MonoBehaviour {
      
         //--------- After Update
         StartCoroutine(LoadMap());
+
+        OptionGenPercent = 100;
     }
 
     private void LateUpdate()
@@ -130,6 +201,7 @@ public class PaletteMapController : MonoBehaviour {
             switch (ModePaint)
             {
                 case ToolBarPaletteMapAction.Paste:
+                case ToolBarPaletteMapAction.Brush:
                 case ToolBarPaletteMapAction.Clear:
                     ShowBorderBrush();
                     break;
@@ -287,6 +359,64 @@ public class PaletteMapController : MonoBehaviour {
         Storage.DrawGeom.DrawClear();
     }
 
+    private bool UncheckModeTool(Toggle toggleOn, ToolBarPaletteMapAction actionMode)
+    {
+        if (toggleOn.isOn)
+        {
+            ModePaint = actionMode;
+            foreach (var toggleItem in m_listToggleMode)
+            {
+                if (!toggleItem.name.Equals(toggleOn.name))
+                    toggleItem.isOn = false;
+            }
+        }
+        else if (ModePaint == actionMode)
+        {
+            ModePaint = ToolBarPaletteMapAction.None;
+        }
+        Storage.DrawGeom.DrawClear();
+        
+
+        return toggleOn.isOn;
+    }
+
+    private void InitEventsButtonMenuOtions()
+    {
+        btnCursor.onValueChanged.AddListener(delegate
+        {
+            Storage.PlayerController.CursorSelectionOn(btnCursor.isOn);
+            UncheckModeTool(btnCursor, ToolBarPaletteMapAction.Cursor);
+
+        });
+
+        btnPaste.onValueChanged.AddListener(delegate
+        {
+            UncheckModeTool(btnPaste, ToolBarPaletteMapAction.Paste);
+
+        });
+        btnClear.onValueChanged.AddListener(delegate
+        {
+            UncheckModeTool(btnClear, ToolBarPaletteMapAction.Clear);
+
+        });
+
+        btnBrush.onValueChanged.AddListener(delegate
+        {
+            if(UncheckModeTool(btnBrush, ToolBarPaletteMapAction.Brush))
+            {
+                //ToolBarBrushPalette.SetActive(true);
+            }
+
+        });
+
+        btnTeleport.onValueChanged.AddListener(delegate
+        {
+            UncheckModeTool(btnTeleport, ToolBarPaletteMapAction.Teleport);
+
+        });
+
+    }
+
     private void InitEventsButtonMenu()
     {
         ListConstructsControl.onValueChanged.AddListener(delegate {
@@ -303,83 +433,8 @@ public class PaletteMapController : MonoBehaviour {
             isPaletteBrushOn = !isPaletteBrushOn;
             StartCoroutine(LoadMap());
         });
-        btnCursor.onValueChanged.AddListener(delegate
-        {
-            Storage.PlayerController.CursorSelectionOn(btnCursor.isOn);
-            if (btnCursor.isOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Cursor;
-                btnPaste.isOn = false;
-                btnClear.isOn = false;
-                btnTeleport.isOn = false;
-            }
-            else if (ModePaint == ToolBarPaletteMapAction.Cursor)
-            {
-                ModePaint = ToolBarPaletteMapAction.None;
-            }
-        });
 
-        btnPaste.onValueChanged.AddListener(delegate
-        {
-            if (btnPaste.isOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Paste;
-                //btnCursor.isOn = false;
-                btnClear.isOn = false;
-                btnTeleport.isOn = false;
-            }
-            else if(ModePaint == ToolBarPaletteMapAction.Paste)
-            {
-                Storage.DrawGeom.DrawClear();
-                ModePaint = ToolBarPaletteMapAction.None;
-            }
-        });
-        btnClear.onValueChanged.AddListener(delegate
-        {
-            if (btnClear.isOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Clear;
-                btnPaste.isOn = false;
-                //btnCursor.isOn = false;
-                btnTeleport.isOn = false;
-            }
-            else if (ModePaint == ToolBarPaletteMapAction.Clear)
-            {
-                Storage.DrawGeom.DrawClear();
-                ModePaint = ToolBarPaletteMapAction.None;
-            }
-        });
-        
-        btnBrush.onValueChanged.AddListener(delegate
-        {
-            if (btnBrush.isOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Brush;
-                btnPaste.isOn = false;
-                //btnCursor.isOn = false;
-                btnTeleport.isOn = false;
-            }
-            else if (ModePaint == ToolBarPaletteMapAction.Brush)
-            {
-                Storage.DrawGeom.DrawClear();
-                ModePaint = ToolBarPaletteMapAction.None;
-            }
-        });
-
-        btnTeleport.onValueChanged.AddListener(delegate
-        {
-            if (btnTeleport.isOn)
-            {
-                ModePaint = ToolBarPaletteMapAction.Teleport;
-                btnPaste.isOn = false;
-                btnCursor.isOn = false;
-            }
-            else if (ModePaint == ToolBarPaletteMapAction.Teleport)
-            {
-                ModePaint = ToolBarPaletteMapAction.None;
-            }
-        });
-
+        InitEventsButtonMenuOtions();
 
         btnOnLayer.onValueChanged.AddListener(delegate
         {
@@ -404,14 +459,15 @@ public class PaletteMapController : MonoBehaviour {
         btnUp.onClick.AddListener(delegate
         {
             SizeBrush+=3;
-            btxSizeBrush.text = SizeBrush.ToString();
+            //btxSizeBrush.text = SizeBrush.ToString();
 
         });
         btnDown.onClick.AddListener(delegate
         {
             SizeBrush-=3;
-            btxSizeBrush.text = SizeBrush.ToString();
         });
+
+        
 
         btxSizeBrush.text = SizeBrush.ToString();
         btxSizeBrush.onValueChange.AddListener(delegate
@@ -419,33 +475,28 @@ public class PaletteMapController : MonoBehaviour {
             SizeBrush = int.Parse(btxSizeBrush.text);
         });
 
-        //    public Button btnUp;
-        //public Button btnDown;
-        //public InputField btxSizeBrush;
-    }
-
-    private void UncheckModeTool(Toggle toggleOn, ToolBarPaletteMapAction actionMode)
-    {
-        if (toggleOn.isOn)
+        btxIntGenOption1.onValueChange.AddListener(delegate
         {
-            ModePaint = actionMode;
-            foreach (var toggleItem in m_listToggleMode)
-            {
-                if (toggleItem.Equals(toggleOn))
-                    toggleItem.isOn = false;
-            }
-        }
-        else if (ModePaint == actionMode)
+            OptionGen1 = int.Parse(btxIntGenOption1.text);
+        });
+        btxIntGenOption2.onValueChange.AddListener(delegate
         {
-            ModePaint = ToolBarPaletteMapAction.None;
-        }
+            OptionGenPercent = int.Parse(btxIntGenOption2.text);
+        });
+        btxIntGenOption3.onValueChange.AddListener(delegate
+        {
+            OptionGen3 = int.Parse(btxIntGenOption3.text);
+        });
+        btxIntGenOption4.onValueChange.AddListener(delegate
+        {
+            OptionGen4 = int.Parse(btxIntGenOption4.text);
+        });
     }
 
     
     public void PrefabsOnPalette()
     {
        List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
-        //listTextures
 
         //int countColumnMap = listTextures[0].width;
         int countColumnMap = 6;
@@ -484,7 +535,10 @@ public class PaletteMapController : MonoBehaviour {
 
     private void LoadTypeBrushOnPalette(TypesBrushGrid selectTypeBrush)
     {
-        switch(selectTypeBrush)
+        ToolBarBrushPalette.SetActive(false);
+        SelectedTypeBrush = selectTypeBrush;
+
+        switch (selectTypeBrush)
         {
             case TypesBrushGrid.Prefabs:
                 PrefabsOnPalette();
@@ -494,6 +548,7 @@ public class PaletteMapController : MonoBehaviour {
             case TypesBrushGrid.PaintBrush:
                 break;
             case TypesBrushGrid.OptionsGeneric:
+                ToolBarBrushPalette.SetActive(true);
                 break;
         }
     }
@@ -691,7 +746,7 @@ public class PaletteMapController : MonoBehaviour {
         SelectedCell = DataTileCell;
 
         if (lastSelectCellPalette != null)
-            lastSelectCellPalette.GetComponent<Image>().color = Color.clear;
+            lastSelectCellPalette.GetComponent<Image>().color = Color.white;
 
         if (lastBorderCellPalette != null)
             lastBorderCellPalette.SetActive(false);
@@ -728,7 +783,7 @@ public class PaletteMapController : MonoBehaviour {
     private void BrushCells()
     {
         DataTile sel = SelectedCell;
-        if(sel==null)
+        if (sel == null)
         {
             Debug.Log("######## BrushCells SelectedCell is empty");
             return;
@@ -740,10 +795,53 @@ public class PaletteMapController : MonoBehaviour {
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
         bool isClearLayer = !m_PasteOnLayer;
-        if (isClearLayer)
-            ClearLayerForStructure(fieldStart);
+        //if (isClearLayer)
+        //    ClearLayerForStructure(fieldStart);
 
-        Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
+
+        //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
+
+        //---------- Brush zone
+        int size = SizeBrush;
+        int sizeX = (int)posStructFieldNew.x + size;
+        int sizeY = (int)posStructFieldNew.y + size;
+
+        if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric)
+        { 
+            for (int x = (int)posStructFieldNew.x; x < sizeX; x++)
+            {
+                for (int y = (int)posStructFieldNew.y; y < sizeY; y++)
+                {
+                    //posStructFieldNew = posStructFieldStart + new Vector2(sizeX, sizeY);
+                    string fieldNew = Helper.GetNameField(x, y);
+                    if (isClearLayer)
+                        ClearLayerForStructure(fieldNew);
+
+                    Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                }
+            }
+        }
+        else
+        {
+            //Generic
+            int CountObjects = OptionGen1;
+            int Percent = OptionGenPercent;
+            int SubsystemSegments = OptionGen3;
+            int SubsystemLevel = OptionGen4;
+            //int CountObjects = OptionGen1;
+            for (int i =0; i< CountObjects;i++)
+            {
+                int x = Random.Range((int)posStructFieldNew.x, sizeX);
+                int y = Random.Range((int)posStructFieldNew.y, sizeY);
+                string fieldNew = Helper.GetNameField(x, y);
+                if (isClearLayer)
+                    ClearLayerForStructure(fieldNew);
+
+                Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+            }
+        }
+        //-------------
+
         Storage.GenGrid.LoadObjectsNearHero();
     }
 
@@ -831,6 +929,34 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    public void UpOptionGen1() {
+        OptionGen1++;
+    }
+    public void UpOptionGen2() {
+        OptionGenPercent++;
+    }
+    public void UpOptionGen3() {
+        OptionGen3++;
+    }
+    public void UpOptionGen4()
+    {
+        OptionGen4++;
+    }
+
+    public void DownOptionGen1() {
+        OptionGen1--;
+    }
+    public void DownOptionGen2() {
+        OptionGenPercent--;
+    }
+    public void DownOptionGen3()
+    {
+        OptionGen3--;
+    }
+    public void DownOptionGen4()
+    {
+        OptionGen4--;
+    }
 
 
     private void ClearLayerForStructure(string field, bool isClearData = false)
