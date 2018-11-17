@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FrameMap : MonoBehaviour, IPointerClickHandler
+public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 {
 
     public GameObject MapCellFrame;
@@ -67,8 +67,12 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
     private Vector3 posOld = new Vector3();
 
     //public GraphicRaycaster m_Raycaster;
-    //private PointerEventData m_PointerEventData;
-    //public EventSystem m_EventSystem;
+    public Physics2DRaycaster m_Raycaster;
+    private PointerEventData m_PointerEventData;
+    private EventSystem m_EventSystem;
+
+    public float ActionRate = 0.2f;
+    private float DelayTimer = 0F;
 
     Camera cameraMap;// = Storage.PlayerController.CameraMap;
     BoxCollider2D colliderMap;
@@ -81,17 +85,18 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
 
         //-------------- Raycast
         ////Fetch the Raycaster from the GameObject (the Canvas)
-        //m_Raycaster = GetComponent<GraphicRaycaster>();
-        //if (m_Raycaster == null)
-        //{
-        //    Debug.Log("###### Raycaster == null");
-        //}
+        m_Raycaster = cameraMap.GetComponent<Physics2DRaycaster>();
+        if (m_Raycaster == null)
+        {
+            Debug.Log("###### Raycaster == null");
+        }
         ////Fetch the Event System from the Scene
         //m_EventSystem = GetComponent<EventSystem>();
-        //if (m_EventSystem == null)
-        //{
-        //    Debug.Log("###### EventSystem == null");
-        //}
+        m_EventSystem = cameraMap.GetComponent<EventSystem>();
+        if (m_EventSystem == null)
+        {
+            Debug.Log("###### EventSystem == null");
+        }
     }
 
     // Update is called once per frame
@@ -102,7 +107,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        
+
     }
 
     private void FixedUpdate()
@@ -117,7 +122,11 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
 
         if (Input.GetMouseButtonDown(0))
         {
-            MouseDownOnChange();
+            if (Time.time > DelayTimer)
+            {
+                DelayTimer = Time.time + ActionRate;
+                MouseDownOnChange();
+            }
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -139,56 +148,81 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData data)
     {
+        Storage.Events.ListLogAdd = "Event 2. OnPointerClick";
         // This will only execute if the objects collider was the first hit by the click's raycast
-        Debug.Log("---------------------------OnPointerClick   WP:" + data.worldPosition + "  POS:" + data.position + "  PP:" + data.pointerPress.name);
-        MouseDownOnChange();
+        //Debug.Log("---------------------------OnPointerClick   WP:" + data.worldPosition + "  POS:" + data.position + "  PP:" + data.pointerPress.name);
+        //MouseDownOnChange();
     }
 
     void OnMouseDown()
     {
+        Storage.Events.ListLogAdd = "Event 2. OnMouseDown";
         //Print
+        //Debug.Log("---------------------------OnMouseDown  ");
         Storage.Events.ListLogAdd = "MAP OnMouseDown";
     }
 
-    //private void EventsUI()
-    //{
-    //    //Check if the left Mouse button is clicked
-    //    //if (Input.GetKey(KeyCode.Mouse0))
-    //    //{
-    //        //Set up the new Pointer Event
-      
-    //    if (m_Raycaster == null || m_EventSystem == null)
-    //    {
-    //        return;
-    //    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //string info = eventData.selectedObject == null ? "" : eventData.selectedObject.name;
+        //Debug.Log("cursor entered UI element." + eventData.position + "     " + info);
+        //CalculatePointOnMap(true);
 
-    //    m_PointerEventData = new PointerEventData(m_EventSystem);
-    //    if (m_PointerEventData == null)
-    //    {
-    //        Debug.Log("####### EventsU MAP ### PointerEventData==null");
-    //        return;
-    //    }
+    }
 
-    //    //Set the Pointer Event Position to that of the mouse position
-    //    m_PointerEventData.position = Input.mousePosition;
+    //public void OnMouseOver(PointerEventData eventData)
+    public void OnMouseOver()
+    {
+        Storage.Events.ListLogAdd = "Event 3. OnMouseOver";
+        //string info = eventData.selectedObject == null ? "" : eventData.selectedObject.name;
+        Debug.Log("cursor over UI element.");
+        CalculatePointOnMap(true);
+    }
+    
 
-    //    //cameraMap = Storage.PlayerController.CameraMap;
-    //    //m_PointerEventData.position = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+    private void EventsUI()
+    {
+        //Check if the left Mouse button is clicked
+        //if (Input.GetKey(KeyCode.Mouse0))
+        //{
+        //Set up the new Pointer Event
+        //var  m_Raycaster = GetComponent<Physics2DRaycaster>();
+        if (m_Raycaster == null || m_EventSystem == null)
+        {
+            Debug.Log("####### EventsU MAP ### m_Raycaster==null");
+            return;
+        }
 
-    //    //Create a list of Raycast Results
-    //    List<RaycastResult> results = new List<RaycastResult>();
+        m_PointerEventData = new PointerEventData(m_EventSystem);
+        if (m_PointerEventData == null)
+        {
+            Debug.Log("####### EventsU MAP ### PointerEventData==null");
+            return;
+        }
 
-    //        //Raycast using the Graphics Raycaster and mouse click position
-    //        m_Raycaster.Raycast(m_PointerEventData, results);
+        //Set the Pointer Event Position to that of the mouse position
+        //m_PointerEventData.position = Input.mousePosition;
 
-    //        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-    //        foreach (RaycastResult result in results)
-    //        {
-    //            Debug.Log(">>>>>>>>>> Hit MAP ### " + result.gameObject.name);
-    //        }
-    //    //}
+        //cameraMap = Storage.PlayerController.CameraMap;
+        //m_PointerEventData.position = cameraMap.ScreenToWorldPoint(Input.mousePosition);
 
-    //}
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        foreach (RaycastResult result in results)
+        {
+            Storage.Events.ListLogAdd = "Event 4. MAP Raycaster event";
+            Debug.Log(">>>>>>>>>> Hit MAP Raycaster event ### " + result.gameObject.name);
+        }
+
+        //Debug.Log(">>>>>>>>>> Hit MAP ### Not result....");
+        //}
+
+    }
 
     private void MouseDownOnChange()
     {
@@ -436,7 +470,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
     }
     */
 
-    private void CalculatePointOnMap()
+    private void CalculatePointOnMap(bool isMousePos = false)
     {
         bool isLog = false;
         //Camera cameraMap = Storage.PlayerController.CameraMap;
@@ -448,56 +482,44 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
         if (!cameraMap.enabled)
             return;
 
-      
 
-        //cameraMap
+        //----------------
+        //Collider2D clickedCollider = null;
         Vector2 posClick = new Vector2();
-        bool isMousePos = false;
 
-        //HitTextMousePointOnEbject();
+        if (!isMousePos)
+        {
+            isMousePos = HitTextMousePointOnEbject();
+            if (!isMousePos)
+                return;
+        }
 
         float mapX = 0;
         float mapY = 0;
 
-        //Rect.PointToNormalized
-        //Rect.NormalizedToPoint
+        //...........
+        //Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+        //Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition, LayerObjects);
+        //clickedCollider = Physics2D.OverlapPoint(mousePosition);
+        ////----------------
 
-        //int LayerUI = LayerMask.NameToLayer("LayerUI");
-        //int LayerViewUI = LayerMask.NameToLayer("UI");
-        //int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-
-        //------------
-        //Ray ray1 = cameraMap.ScreenPointToRay(Input.mousePosition);
-        ////RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f, LayerViewUI);
-        //RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f);
-        ////if (hit1.collider != null && hit1.collider.transform == this.gameObject.transform)
-        //if (hit1.collider != null)
+        ////if (Physics2D.OverlapPoint(mousePosition, LayerViewUI))
+        //if (clickedCollider)
         //{
-        //    //Debug.Log("-------------GetRayIntersection On GOBJ: " + hit1.collider.gameObject.name);
+        //    //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
+        //    posClick = mousePosition;
+        //    isMousePos = true;
         //}
-        //----------------
+        //...........
 
-        Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
-        //if (Physics2D.OverlapPoint(mousePosition))
-
-        //Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition, LayerUI);
-        Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition);
-
-        //if (Physics2D.OverlapPoint(mousePosition, LayerViewUI))
-        if (clickedCollider)
+        if (isMousePos) //Any collider on map
         {
-            //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
-            posClick = mousePosition;
-            isMousePos = true;
-        }
-
-        if (isMousePos)
-        {
-            //BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
+            posClick = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+            BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
             //if (colliderMap != null)
-            //if(clickedCollider.Equals(colliderMap))
-            if(clickedCollider.gameObject.name.Equals(colliderMap.gameObject.name))
-            {
+            ////if(clickedCollider.Equals(colliderMap))
+            ////if (clickedCollider.gameObject.name.Equals(colliderMap.gameObject.name))
+            //{
                 //Debug.Log("-------------Point On GOBJ: " + clickedCollider.gameObject.name);
 
                 NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
@@ -579,19 +601,15 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
 
                 if (isLog)
                     Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
-            }
+
+                SelectPointField = new Vector2(mapX, mapY);
+                SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+                Storage.Map.SelectPointField = SelectPointField;
+            //}
         }
-
-        SelectPointField = new Vector2(mapX, mapY);
-        SelectFieldPos = new Vector2((int)mapX, (int)mapY);
-
-        Storage.Map.SelectPointField = SelectPointField;
-
-        //Storage.Map.UpdateMarkerPointCell();
-        //Storage.Map.ShowBorderBrush();
-
-       
     }
+
+
 
     private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
     {
@@ -728,13 +746,22 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
             //continue;
             //Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
             //Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty [" + DateTime.Now.ToShortTimeString() + "]";
-            return;
+            //return;
+            Storage.Data.AddNewFieldInGrid(nameField, "ShowSelectorCell");
         }
 
         //Celect Cell on World
         SelectCellAction(nameField);
 
         //Draw Icon on Cell Map
+        DrawIconCell(nameField);
+
+        MapCellFrame.GetComponent<RectTransform>().position = SetLocationCell();
+    }
+
+    //Draw Icon on Cell Map
+    private void DrawIconCell(string nameField)
+    {
         SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
         List<SaveLoadData.TypePrefabs> fieldListPrefbs = new List<SaveLoadData.TypePrefabs>();
         List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
@@ -744,9 +771,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
             //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
-
             Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
-
 
             if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
             datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
@@ -816,8 +841,6 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
             }
 
         }
-
-        MapCellFrame.GetComponent<RectTransform>().position = SetLocationCell();
     }
 
     public void UpdateBorderCellLocation()
@@ -827,7 +850,40 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
             Debug.Log("########### UpdateBorderCellLocation : MapCellBorder is Empty");
             return;
         }
-        MapCellBorder.GetComponent<RectTransform>().position = SetLocationCell(); 
+        var posNew = SetLocationCell();
+        MapCellBorder.GetComponent<RectTransform>().position = posNew;
+
+        var lineRender = MapCellBorder.GetComponent<LineRenderer>();
+        if(lineRender!=null)
+        {
+            //float factor = 0.12f;
+            float factor = 1f / (Storage.ScaleWorld*2);
+            float ratio = factor * SizeZoom;
+            int sizeBrush = Storage.PaletteMap.SizeBrush;
+            //float size = sizeBrush * Storage.ScaleWorld * ratio;
+            float size = sizeBrush  * ratio;
+            //Storage.DrawGeom.DrawRect(position.x, position.y, sizeX, sizeY, Color.blue, 0.05f);
+
+            posNew.y -= size;
+            posNew.x -= 0.1f * SizeZoom;
+            posNew.y += 0.1f * SizeZoom;
+
+            float sizeY = posNew.y + size;
+            float sizeX = posNew.x + size;
+
+            //if (sizeBrush > 1)
+            //{
+                lineRender.OnDrawRect(posNew.x, posNew.y, sizeX, sizeY, Color.blue, 0.1f);
+            //}
+            //else
+            //{
+            //    lineRender.positionCount = 0;
+            //}
+        }
+        else
+        {
+            Debug.Log("######## UpdateBorderCellLocation LineRenderer is empty");
+        }
     }
 
     private Vector3 SetLocationCell()
@@ -985,7 +1041,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
     #region Rest Hit point
     Vector2 TestHasPoint = new Vector2();
 
-    private void HitTextMousePointOnEbject()
+    private bool HitTextMousePointOnEbject()
     {
         //-----------------------
         //Collider2D[] hitColliders = new Collider2D[1];
@@ -997,7 +1053,58 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
         //Camera cameraMap = Storage.PlayerController.MainCamera;// Camera.main;
 
         if (!cameraMap.enabled)
-            return;
+            return false;
+
+
+        Collider2D clickedCollider = null;
+        //----------------
+        //var eventSys = EventSystem.current;
+        var eventSys = this.gameObject.GetComponent<EventSystem>();
+        PointerEventData pointerData = new PointerEventData(eventSys);
+        pointerData.position = Input.mousePosition; // use the position from controller as start of raycast instead of mousePosition.
+        List<RaycastResult> results = new List<RaycastResult>();
+        //EventSystem.current.RaycastAll(pointerData, results);
+        eventSys.RaycastAll(pointerData, results);
+        if (results.Count > 0)
+        {
+
+            int resFind = results.FindIndex(p => p.gameObject.name == gameObject.name);
+            if (resFind != -1)
+                return true;
+
+            //foreach (var item in results)
+            //{
+            //    //Storage.Events.ListLogAdd = item.gameObject.name + "  L: " + item.gameObject.layer;
+            //    if (item.gameObject.name.Equals(gameObject.name))
+            //    {
+            //        Storage.Events.ListLogAdd = item.gameObject.name + "  YES";
+            //        return true;
+            //    }
+            //}
+
+            ////WorldUI is my layer name
+            //var intLUI = LayerMask.NameToLayer("LayerUI");
+            //if (results[0].gameObject.layer == intLUI)
+            //{
+            //    string dbg = "1. Root Element: {0} \n GrandChild Element: {1}";
+            //    Debug.Log(string.Format(dbg, results[results.Count - 1].gameObject.name, results[0].gameObject.name));
+            //    //Debug.Log("Root Element: "+results[results.Count-1].gameObject.name);
+            //    //Debug.Log("GrandChild Element: "+results[0].gameObject.name);
+            //    results.Clear();
+            //}
+            //if (results[0].gameObject.name.Equals(name))
+            //{
+            //    clickedCollider = results[0].gameObject.GetComponent<Collider2D>();
+
+            //    //string dbg = "2. Root Element: {0} \n GrandChild Element: {1}";
+            //    Storage.Events.ListLogAdd = "clickedCollider YES";
+            //    // Debug.Log(string.Format(dbg, results[results.Count - 1].gameObject.name, results[0].gameObject.name));
+            //    return true;
+            //}
+        }
+        //----------------
+        return false;
+
 
         Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -1085,6 +1192,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler
         Ray ray2 = cameraMap.ScreenPointToRay(new Vector3(500, 500, 0));
         Debug.DrawRay(ray2.origin, ray2.direction * 10, Color.yellow);
         //---------------------
+
+        return false;
     }
     #endregion
 

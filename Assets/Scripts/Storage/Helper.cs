@@ -198,6 +198,14 @@ public static class Helper { //: MonoBehaviour {
         return new Vector2(x, Mathf.Abs((int)y));
     }
 
+    public static Vector2 NormalizFieldToPos(System.Single x, System.Single y)
+    {
+        x = (int)(x * Storage.ScaleWorld);
+        y = (int)(y * Storage.ScaleWorld);
+        y *= -1;
+        return new Vector2(x, y);
+    }
+
     public static Vector2 GetPositByField(string nameFiled)
     {
         if(string.IsNullOrEmpty(nameFiled))
@@ -329,9 +337,28 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
+    public static bool IsValidFieldInZona(float checkX, float checkY)
+    {
+        bool result = true;
+        //string field = Helper.GetNameField(checkX, checkY);
+        var posField = Helper.NormalizFieldToPos(checkX, checkY);
+        float x = posField.x;
+        float y = posField.y;
+
+        if (x < Storage.Instance.ZonaReal.X)
+            return false;
+        if (y > Storage.Instance.ZonaReal.Y) //*-1
+            return false;
+        if (x > Storage.Instance.ZonaReal.X2)
+            return false;
+        if (y < Storage.Instance.ZonaReal.Y2) //*-1
+            return false;
+        return result;
+    }
+
     #endregion
 
-    
+
 
     #region Gen Grid Field
 

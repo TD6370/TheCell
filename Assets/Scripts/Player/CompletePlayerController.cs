@@ -309,10 +309,16 @@ public class CompletePlayerController : MonoBehaviour {
             CameraMap.enabled = true;
             MainCamera.enabled = false;
 
+            
+
             int LayerUI = LayerMask.NameToLayer("LayerUI");
             int LayerObjects = LayerMask.NameToLayer("LayerObjects");
             Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
             Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
+
+            //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
+
+            //CameraMap.cullingMask = LayerObjects;
         }
         else
         {

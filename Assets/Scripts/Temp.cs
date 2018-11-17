@@ -15,6 +15,198 @@ public class TEmp : MonoBehaviour {
     }
 
 
+    //private void CalculatePointOnMap()
+    //{
+    //    bool isLog = false;
+    //    //Camera cameraMap = Storage.PlayerController.CameraMap;
+    //    if (cameraMap == null)
+    //    {
+    //        Debug.Log("################ cameraMap is EMPTY ");
+    //        return;
+    //    }
+    //    if (!cameraMap.enabled)
+    //        return;
+
+    //    Collider2D clickedCollider = null;
+    //    //----------------
+    //    //var eventSys = EventSystem.current;
+    //    var eventSys = this.gameObject.GetComponent<EventSystem>();
+    //    PointerEventData pointerData = new PointerEventData(eventSys);
+    //    pointerData.position = Input.mousePosition; // use the position from controller as start of raycast instead of mousePosition.
+    //    List<RaycastResult> results = new List<RaycastResult>();
+    //    //EventSystem.current.RaycastAll(pointerData, results);
+    //    eventSys.RaycastAll(pointerData, results);
+    //    if (results.Count > 0)
+    //    {
+    //        foreach(var item in results)
+    //        {
+    //            Storage.Events.ListLogAdd = item.gameObject.name + "  L: " + item.gameObject.layer;
+    //        }
+
+    //        //WorldUI is my layer name
+    //        var intLUI = LayerMask.NameToLayer("LayerUI");
+    //        if (results[0].gameObject.layer == intLUI)
+    //        {
+    //            string dbg = "1. Root Element: {0} \n GrandChild Element: {1}";
+    //            Debug.Log(string.Format(dbg, results[results.Count - 1].gameObject.name, results[0].gameObject.name));
+    //            //Debug.Log("Root Element: "+results[results.Count-1].gameObject.name);
+    //            //Debug.Log("GrandChild Element: "+results[0].gameObject.name);
+    //            results.Clear();
+    //        }
+    //        if (results[0].gameObject.name.Equals(colliderMap.gameObject.name))
+    //        {
+    //            clickedCollider = results[0].gameObject.GetComponent<Collider2D>();
+
+    //            string dbg = "2. Root Element: {0} \n GrandChild Element: {1}";
+    //            Debug.Log(string.Format(dbg, results[results.Count - 1].gameObject.name, results[0].gameObject.name));
+    //        }
+    //    }
+    //    //----------------
+
+
+    //        //cameraMap
+    //        Vector2 posClick = new Vector2();
+    //    bool isMousePos = false;
+
+    //    //HitTextMousePointOnEbject();
+
+    //    float mapX = 0;
+    //    float mapY = 0;
+
+    //    //Rect.PointToNormalized
+    //    //Rect.NormalizedToPoint
+
+    //    int LayerUI = LayerMask.NameToLayer("LayerUI");
+    //    int LayerViewUI = LayerMask.NameToLayer("UI");
+    //    int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+
+    //    //------------
+    //    //Collider2D clickedCollider = null;
+    //    Ray ray1 = cameraMap.ScreenPointToRay(Input.mousePosition);
+    //    //RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f, LayerViewUI);
+    //    RaycastHit2D hit1 = Physics2D.GetRayIntersection(ray1, 15f, LayerUI);
+    //    //if (hit1.collider != null && hit1.collider.transform == this.gameObject.transform)
+    //    if (hit1.collider != null)
+    //    {
+    //        //Debug.Log("-------------GetRayIntersection On GOBJ: " + hit1.collider.gameObject.name);
+    //        clickedCollider = hit1.collider;
+    //    }
+    //    //----------------
+
+    //    Vector2 mousePosition = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+    //    //Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition, LayerObjects);
+    //    //Collider2D clickedCollider = Physics2D.OverlapPoint(mousePosition);
+    //    //----------------
+
+    //    //if (Physics2D.OverlapPoint(mousePosition, LayerViewUI))
+    //    if (clickedCollider)
+    //    {
+    //        //Storage.Events.ListLogAdd = "3. Physics2D.OverlapPoint(TestHasPoint) : " + TestHasPoint.x + "x" + TestHasPoint.y;
+    //        posClick = mousePosition;
+    //        isMousePos = true;
+    //    }
+
+    //    if (isMousePos)
+    //    {
+    //        //BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
+    //        //if (colliderMap != null)
+    //        //if(clickedCollider.Equals(colliderMap))
+    //        if(clickedCollider.gameObject.name.Equals(colliderMap.gameObject.name))
+    //        {
+    //            //Debug.Log("-------------Point On GOBJ: " + clickedCollider.gameObject.name);
+
+    //            NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
+
+    //            if (isLog)
+    //                Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+
+    //            if (SizeZoom == 1)
+    //            {
+
+    //            }
+    //            else if (SizeZoom > 1f)
+    //            {
+
+    //                float _zoom = SizeZoom;
+
+    //                #region Test
+    //                //TEST --------------------
+    //                //float mapY_T1 = (int)mapY;
+    //                //float mapX_T1 = (int)mapX;
+    //                //mapY_T1 = (int)(mapY_T1 / _zoom);
+    //                //mapX_T1 = (int)(mapX_T1 / _zoom);
+
+    //                //Storage.Events.ListLogAdd = "Corrr zoom T1= " + (int)mapX_T1 + "x" + (int)mapY_T1;
+
+    //                //float mapY_T2 = (int)(mapY / _zoom);
+    //                //float mapX_T2 = (int)(mapX / _zoom);
+
+    //                //Storage.Events.ListLogAdd = "Corrr zoom T2= " + (int)mapX_T2 + "x" + (int)mapY_T2;
+    //                //---------------------------
+    //                #endregion
+
+    //                mapY = (mapY / _zoom);
+    //                mapX = (mapX / _zoom);
+
+    //                _zoom = (float)System.Math.Round(_zoom, 1);
+
+    //                float offsetCenter = 0f;
+
+    //                //Debug.Log("_zoom===" + _zoom);
+    //                offsetCenter = OffsetZoomUp(_zoom);
+
+    //                if (isLog)
+    //                    Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
+
+    //                //mapX = (int)mapX;
+    //                //mapY = (int)mapY;
+
+    //                //!!! CORR DISTANCE
+    //                int centrW = Helper.HeightLevel / 2;
+    //                Vector3 centerPos = new Vector3(centrW, centrW, 0);
+    //                float koofOnCenterX = centerPos.x / mapX;
+    //                float koofOnCenterY = centerPos.y / mapY;
+    //                if (isLog)
+    //                    Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
+    //                //------------------
+
+    //                mapX += offsetCenter;
+    //                mapY += offsetCenter;
+    //            }
+    //            else
+    //            {
+    //                float _zoom = SizeZoom;
+
+    //                //mapX = (int)mapX;
+    //                //mapY = (int)mapY;
+
+    //                mapY = (int)(mapY / _zoom);
+    //                mapX = (int)(mapX / _zoom);
+
+    //                float offsetCenter = OffsetZoomDown(_zoom);
+
+    //                if (isLog)
+    //                    Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+
+    //                mapX += offsetCenter;
+    //                mapY += offsetCenter;
+    //            }
+
+    //            if (isLog)
+    //                Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
+
+    //            SelectPointField = new Vector2(mapX, mapY);
+    //            SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+    //            Storage.Map.SelectPointField = SelectPointField;
+    //        }
+    //    }
+
+    //    //SelectPointField = new Vector2(mapX, mapY);
+    //    //SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+    //    //Storage.Map.SelectPointField = SelectPointField;
+    //}
+
+
     //private void SaveLayerConstrTileInGridData(string keyStruct, List<DataTile> listTiles, TypesStructure typeCell = TypesStructure.None)
     //{
     //    string fieldStart = Storage.Instance.SelectFieldCursor;

@@ -224,6 +224,44 @@ public class DrawGeometry : MonoBehaviour
 
 public static class DrawExtensions
 {
+    public static void OnDrawRect(this LineRenderer sender, float x, float y, float x2, float y2, Color color, float width = 0.2f)
+    {
+        //m_lineRenderer = GetComponent<LineRenderer>();
+        if (sender == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        //float alpha = 1.0f;
+        //Gradient gradient = new Gradient();
+        //gradient.SetKeys(
+        //    new GradientColorKey[] { new GradientColorKey(Color.green, 0.0f), new GradientColorKey(Color.red, 1.0f) },
+        //    new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+        //    );
+        //m_lineRenderer.colorGradient = gradient;
+
+        //color = Color.green;
+        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        //lineRenderer.SetColors(c1, c2);
+        sender.SetColors(color, color);
+        //m_lineRenderer.startColor = Color.red;
+        sender.SetWidth(width, width);
+        int size = 5;
+        sender.SetVertexCount(size);
+
+        Vector3 pos1 = new Vector3(x, y, -2);
+        sender.SetPosition(0, pos1);
+        Vector3 pos2 = new Vector3(x2, y, -2);
+        sender.SetPosition(1, pos2);
+        Vector3 pos3 = new Vector3(x2, y2, -2);
+        sender.SetPosition(2, pos3);
+        Vector3 pos4 = new Vector3(x, y2, -2);
+        sender.SetPosition(3, pos4);
+        Vector3 pos5 = new Vector3(x, y, -2);
+        sender.SetPosition(4, pos5);
+    }
+
     public static void SetColor(this Button btn, string strColorBack ="", string strColorText="")
     {
         if (!String.IsNullOrEmpty(strColorBack))

@@ -62,6 +62,14 @@ public class MapWorld : MonoBehaviour {
 
     public Dictionary<string, GameObject> MapObjects;
 
+
+    //List<Color> colorsPersons;
+    List<SaveLoadData.TypePrefabs> listPersonsTypes;
+    List<Texture2D> listPersonsPrefabTexture;
+    List<Texture2D> listPersonsMapTexture;
+    Texture2D textureMap;
+    Sprite spriteMap;
+
     private void Awake()
     {
         MapObjects = new Dictionary<string, GameObject>();
@@ -70,6 +78,7 @@ public class MapWorld : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+        InitImageMap();
         //if(StartPositFrameMap == new Vector3())
         //    StartPositFrameMap = prefabFrameMap.transform.position;
         prefabFrameMap.SetActive(false);
@@ -100,21 +109,38 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    private void InitImageMap()
+    {
+        //colorsPersons = new List<Color>();
+        //texture = new Texture2D(sizeDraw, sizeDraw);
+        int sizeDraw = Helper.HeightLevel * SizeCellMap;
+        textureMap = new Texture2D(sizeDraw, sizeDraw);
+        listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
+        listPersonsPrefabTexture = new List<Texture2D>();
+        listPersonsMapTexture = new List<Texture2D>();
+    }
+
     public void Refresh()
     {
         CreateTextureMap(SizeCellMap, true);
+        //StartCoroutine(CreateTextureMap(SizeCellMap, true));
         m_IsCreatedMap = true;
         //DrawLocationHero(true);
     }
 
     public void Create(bool isNewCreate = false)
     {
+        if (Storage.Instance.SelectFieldPosHero != saveHeroPosField)
+            isNewCreate = true;
+
         if (!m_IsCreatedMap || isNewCreate)
         {
             CreateTextureMap(SizeCellMap); //<--- CreateFrameMap()
+            //StartCoroutine(CreateTextureMap(SizeCellMap));
+
             m_IsCreatedMap = true;
             Storage.PlayerController.CameraMapOn(true);
-            DrawLocationHero(true);
+            //DrawLocationHero(true);
         }
         else
         {
@@ -124,7 +150,7 @@ public class MapWorld : MonoBehaviour {
         if (IsOpen)
         {
             Storage.DrawGeom.DrawClear();
-            DrawLocationHero(true);
+            //DrawLocationHero(true);
             float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
             if (distMap > 30f)
             {
@@ -155,223 +181,390 @@ public class MapWorld : MonoBehaviour {
         //}
     }
 
-    public void CreateTextureMap1(int scaleCell = 1)
-    {
-        string indErr = "start";
-        int sizeMap = Helper.HeightLevel;
-        int sizeDraw = Helper.HeightLevel * scaleCell;
-        int addSize = scaleCell - 1;
+    //public void CreateTextureMap1(int scaleCell = 1)
+    //{
+    //    string indErr = "start";
+    //    int sizeMap = Helper.HeightLevel;
+    //    int sizeDraw = Helper.HeightLevel * scaleCell;
+    //    int addSize = scaleCell - 1;
 
-        CreateFrameMap();
+    //    CreateFrameMap();
 
-        //---------------
-        //Texture2D textureCopy = textureField;
-        //Texture2D textureSource = new Texture2D(textureCopy.width + 50, textureCopy.height + 50);
-        //if (textureSource.format.ToString() != textureCopy.format.ToString())
-        //{
-        //    Debug.Log(".......... Start CopyTexture   Formats source:" + textureSource.format.ToString());
-        //    Debug.Log(".......... Start CopyTexture " + textureSource.format + "  Formats texturePrefab:" + textureCopy.format.ToString());
-        //    return;
-        //}
-        //Graphics.CopyTexture(textureCopy, 0, 0, 0, 0, textureCopy.width, textureCopy.height, textureSource, 0, 0, 20, 20);
-        //Sprite spriteNew = Sprite.Create(textureSource, new Rect(0.0f, 0.0f, textureSource.width, textureSource.height), new Vector2(0.5f, 0.5f), 100.0f);
-        //prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteNew;
-        //return;
-        //-----------------
+    //    //---------------
+    //    //Texture2D textureCopy = textureField;
+    //    //Texture2D textureSource = new Texture2D(textureCopy.width + 50, textureCopy.height + 50);
+    //    //if (textureSource.format.ToString() != textureCopy.format.ToString())
+    //    //{
+    //    //    Debug.Log(".......... Start CopyTexture   Formats source:" + textureSource.format.ToString());
+    //    //    Debug.Log(".......... Start CopyTexture " + textureSource.format + "  Formats texturePrefab:" + textureCopy.format.ToString());
+    //    //    return;
+    //    //}
+    //    //Graphics.CopyTexture(textureCopy, 0, 0, 0, 0, textureCopy.width, textureCopy.height, textureSource, 0, 0, 20, 20);
+    //    //Sprite spriteNew = Sprite.Create(textureSource, new Rect(0.0f, 0.0f, textureSource.width, textureSource.height), new Vector2(0.5f, 0.5f), 100.0f);
+    //    //prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteNew;
+    //    //return;
+    //    //-----------------
 
-        List<Color> colorsPersons = new List<Color>();
-        bool isPerson = false;
-        Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+    //    List<Color> colorsPersons = new List<Color>();
+    //    bool isPerson = false;
+    //    Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
 
-        try
-        {
-            indErr = "1";
-            
-            for (int y = 0; y < sizeMap; y++)
-            {
-                indErr = "2";
-                for (int x = 0; x < sizeMap; x++)
-                {
-                    indErr = "3";
-                    isPerson = false;
-                    indErr = "4";
-                    colorsPersons.Clear();
-                    indErr = "5";
-                    string nameField = Helper.GetNameField(x, y);
-                    indErr = "6";
-                    SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-                    indErr = "7";
-                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
-                    {
-                        DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
-                        continue;
-                    }
-                    indErr = "8";
-                    Color colorCell = Color.clear;
-                    indErr = "9";
-                    foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
-                    {
-                        indErr = "10";
-                        //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
-                        if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                        datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
-                        {
-                            indErr = "11";
-                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
-                        }
-                        else
-                        {
-                            indErr = "12";
-                            ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
-                            if (bossObj != null)
-                            {
-                                //Storage //bossObj.Level;
-                                colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
-                                if (colorCell == null)
-                                {
-                                    Debug.Log("############# colorCell Point Map Person is null");
-                                    continue;
-                                }
-                                indErr = "13";
-                                colorsPersons.Add(colorCell);
-                                //prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
-                                indErr = "";
-                                prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
-                                isPerson = true;
-                            }
-                        }
-                    }
-                    indErr = "14";
+    //    try
+    //    {
+    //        indErr = "1";
 
-                    if (prefabType == SaveLoadData.TypePrefabs.PrefabField)
-                    {
-                        DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
-                        //continue;
-                    }
-                    //==========================
-                    //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
-                    //=======================
+    //        for (int y = 0; y < sizeMap; y++)
+    //        {
+    //            indErr = "2";
+    //            for (int x = 0; x < sizeMap; x++)
+    //            {
+    //                indErr = "3";
+    //                isPerson = false;
+    //                indErr = "4";
+    //                colorsPersons.Clear();
+    //                indErr = "5";
+    //                string nameField = Helper.GetNameField(x, y);
+    //                indErr = "6";
+    //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+    //                indErr = "7";
+    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                    continue;
+    //                }
+    //                indErr = "8";
+    //                Color colorCell = Color.clear;
+    //                indErr = "9";
+    //                foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+    //                {
+    //                    indErr = "10";
+    //                    //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
+    //                    if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+    //                    datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+    //                    {
+    //                        indErr = "11";
+    //                        prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                    }
+    //                    else
+    //                    {
+    //                        indErr = "12";
+    //                        ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
+    //                        if (bossObj != null)
+    //                        {
+    //                            //Storage //bossObj.Level;
+    //                            colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
+    //                            if (colorCell == null)
+    //                            {
+    //                                Debug.Log("############# colorCell Point Map Person is null");
+    //                                continue;
+    //                            }
+    //                            indErr = "13";
+    //                            colorsPersons.Add(colorCell);
+    //                            //prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                            indErr = "";
+    //                            prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
+    //                            isPerson = true;
+    //                        }
+    //                    }
+    //                }
+    //                indErr = "14";
 
-                    indErr = "15";
-                    //if (colorCell == Color.clear)
-                    //{
-                    //    indErr = "16";
-                    //    if (!ManagerPalette.PaletteColors.ContainsKey(prefabType.ToString()))
-                    //    {
-                    //        Debug.Log("#### Not Color in PaletteColors for type : " + prefabType.ToString());
-                    //    }
-                    //    indErr = "17";
-                    //    try
-                    //    {
-                    //        colorCell = ManagerPalette.PaletteColors[prefabType.ToString()];
-                    //    }
-                    //    catch (Exception x1)
-                    //    {
-                    //        Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + "  " + x1.Message);
-                    //        return;
-                    //    }
-                    //}
+    //                if (prefabType == SaveLoadData.TypePrefabs.PrefabField)
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                    //continue;
+    //                }
+    //                //==========================
+    //                //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                //=======================
 
-                    //----- DRAW
-                    if (!isPerson)
-                    {
-                        //+++
-                            //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
-                        //++++
+    //                indErr = "15";
+    //                //if (colorCell == Color.clear)
+    //                //{
+    //                //    indErr = "16";
+    //                //    if (!ManagerPalette.PaletteColors.ContainsKey(prefabType.ToString()))
+    //                //    {
+    //                //        Debug.Log("#### Not Color in PaletteColors for type : " + prefabType.ToString());
+    //                //    }
+    //                //    indErr = "17";
+    //                //    try
+    //                //    {
+    //                //        colorCell = ManagerPalette.PaletteColors[prefabType.ToString()];
+    //                //    }
+    //                //    catch (Exception x1)
+    //                //    {
+    //                //        Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + "  " + x1.Message);
+    //                //        return;
+    //                //    }
+    //                //}
 
-                        indErr = "18";
-                        int startX = x * scaleCell;
-                        int startY = y * scaleCell;
-                        indErr = "19";
+    //                //----- DRAW
+    //                if (!isPerson)
+    //                {
+    //                    //+++
+    //                        //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                    //++++
 
-                        //--------------------------------
-                        Texture2D texturePrefab = GetPrefabTexture(prefabType);//SaveLoadData.TypePrefabs
-                        if (texturePrefab == null)
-                        {
-                            Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + " texturePrefab Is NULL ");
-                            continue;
-                        }
+    //                    indErr = "18";
+    //                    int startX = x * scaleCell;
+    //                    int startY = y * scaleCell;
+    //                    indErr = "19";
 
-                        try
-                        {
-                            if (texture.format.ToString() != texturePrefab.format.ToString())
-                            {
-                                Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startY + "x" + startX + " Size=" + addSize);
-                                Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
-                                Debug.Log(".......... Start CopyTexture " + prefabType + "  Formats texturePrefab:" + texturePrefab.format.ToString());
-                                continue;
-                            }
-                            //Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startY + "x" + startX + " Size=" + addSize);
-                            //.... I was able to find a work around using the Graphics API 
-                            //Graphics.CopyTexture(texture, 0, 0, (int)startX, (int)startY, addSize, addSize, texturePrefab, 0, 0, 0, 0);
+    //                    //--------------------------------
+    //                    Texture2D texturePrefab = GetPrefabTexture(prefabType);//SaveLoadData.TypePrefabs
+    //                    if (texturePrefab == null)
+    //                    {
+    //                        Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + " texturePrefab Is NULL ");
+    //                        continue;
+    //                    }
 
-                            //Graphics.CopyTexture(texturePrefab, 0, 0, (int)startX, (int)startY, addSize, addSize, texture, 0, 0, 0, 0);
-                            Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX, (int)startY);
+    //                    try
+    //                    {
+    //                        if (texture.format.ToString() != texturePrefab.format.ToString())
+    //                        {
+    //                            Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startY + "x" + startX + " Size=" + addSize);
+    //                            Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
+    //                            Debug.Log(".......... Start CopyTexture " + prefabType + "  Formats texturePrefab:" + texturePrefab.format.ToString());
+    //                            continue;
+    //                        }
+    //                        //Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startY + "x" + startX + " Size=" + addSize);
+    //                        //.... I was able to find a work around using the Graphics API 
+    //                        //Graphics.CopyTexture(texture, 0, 0, (int)startX, (int)startY, addSize, addSize, texturePrefab, 0, 0, 0, 0);
 
-                            //Graphics.CopyTexture(tileTexture, 0, 0, 0, 0, tileTexture.width, tileTexture.height, TileMap.textures[level], 0, 0, x, y);
-                            //texture.Apply();
-                            //--------------------------------
-                        }
-                        catch (Exception exT)
-                        {
-                            Debug.Log("###### CreateTextureMap.ManagerPalette: CopyTexture " + indErr + "   prefabType:" + prefabType + " ERROR: " + exT);
-                            continue;
-                        }
+    //                        //Graphics.CopyTexture(texturePrefab, 0, 0, (int)startX, (int)startY, addSize, addSize, texture, 0, 0, 0, 0);
+    //                        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX, (int)startY);
 
-                        //texture.DrawPixeles(startX, startY, addSize, sizeDraw, colorCell);
-                        //_________________
-                        //for (int x2 = startX; x2 < startX + addSize; x2++)
-                        //{
-                        //    indErr = "20";
-                        //    for (int y2 = startY; y2 < startY + addSize; y2++)
-                        //    {
-                        //        indErr = "21";
-                        //        //texture.SetPixel(x2, y2, colorCell);
-                        //        texture.SetPixel(x2, sizeDraw - y2, colorCell);
-                        //    }
-                        //}
-                        //_________________
-                    }
-                    //else
-                    //{
-                    indErr = "22";
-                    //---- Draw Person
-                    //foreach (Color colorPerson in colorsPersons)
-                    for (int indColor = 0; indColor < colorsPersons.Count(); indColor++)
-                    {
-                        Color colorPerson = colorsPersons[indColor];
+    //                        //Graphics.CopyTexture(tileTexture, 0, 0, 0, 0, tileTexture.width, tileTexture.height, TileMap.textures[level], 0, 0, x, y);
+    //                        //texture.Apply();
+    //                        //--------------------------------
+    //                    }
+    //                    catch (Exception exT)
+    //                    {
+    //                        Debug.Log("###### CreateTextureMap.ManagerPalette: CopyTexture " + indErr + "   prefabType:" + prefabType + " ERROR: " + exT);
+    //                        continue;
+    //                    }
 
-                        indErr = "23";
-                        int startX2 = x * scaleCell;
-                        int startY2 = y * scaleCell;
-                        int column = 5;
-                        int row = 3;
-                        indErr = "24";
-                        for (int x2 = startX2 + addSize - column; x2 < startX2 + addSize; x2++)
-                        {
-                            for (int y2 = startY2 + (indColor * row); y2 < startY2 + (indColor * row) + 2; y2++)
-                            {
-                                indErr = "25";
-                                //texture.SetPixel(x2, y2, colorCell);
-                                texture.SetPixel(x2, sizeDraw - y2, colorPerson);
-                            }
-                        }
-                    }
-                    //}
-                }
-            }
-        }catch(Exception x)
-        {
-            Debug.Log("############# CreateTextureMap: " + indErr + "  " + x.Message);
-            return;
-        }
+    //                    //texture.DrawPixeles(startX, startY, addSize, sizeDraw, colorCell);
+    //                    //_________________
+    //                    //for (int x2 = startX; x2 < startX + addSize; x2++)
+    //                    //{
+    //                    //    indErr = "20";
+    //                    //    for (int y2 = startY; y2 < startY + addSize; y2++)
+    //                    //    {
+    //                    //        indErr = "21";
+    //                    //        //texture.SetPixel(x2, y2, colorCell);
+    //                    //        texture.SetPixel(x2, sizeDraw - y2, colorCell);
+    //                    //    }
+    //                    //}
+    //                    //_________________
+    //                }
+    //                //else
+    //                //{
+    //                indErr = "22";
+    //                //---- Draw Person
+    //                //foreach (Color colorPerson in colorsPersons)
+    //                for (int indColor = 0; indColor < colorsPersons.Count(); indColor++)
+    //                {
+    //                    Color colorPerson = colorsPersons[indColor];
 
-        texture.Apply();
+    //                    indErr = "23";
+    //                    int startX2 = x * scaleCell;
+    //                    int startY2 = y * scaleCell;
+    //                    int column = 5;
+    //                    int row = 3;
+    //                    indErr = "24";
+    //                    for (int x2 = startX2 + addSize - column; x2 < startX2 + addSize; x2++)
+    //                    {
+    //                        for (int y2 = startY2 + (indColor * row); y2 < startY2 + (indColor * row) + 2; y2++)
+    //                        {
+    //                            indErr = "25";
+    //                            //texture.SetPixel(x2, y2, colorCell);
+    //                            texture.SetPixel(x2, sizeDraw - y2, colorPerson);
+    //                        }
+    //                    }
+    //                }
+    //                //}
+    //            }
+    //        }
+    //    }catch(Exception x)
+    //    {
+    //        Debug.Log("############# CreateTextureMap: " + indErr + "  " + x.Message);
+    //        return;
+    //    }
 
-        Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+    //    texture.Apply();
 
-        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
-    }
+    //    Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+    //    prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+    //}
+
+    //IEnumerator CreateTextureMap(int scaleCell = 1, bool isRefresh = false)
+    //{
+    //    string indErr = "start";
+    //    int sizeMap = Helper.HeightLevel;
+    //    int sizeDraw = Helper.HeightLevel * scaleCell;
+    //    int addSize = scaleCell - 1;
+
+    //    if (!isRefresh)
+    //        CreateFrameMap();
+
+    //    List<Color> colorsPersons = new List<Color>();
+    //    List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
+    //    List<Texture2D> listPersonsPrefabTexture = new List<Texture2D>();
+    //    List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
+
+    //    bool isPerson = false;
+    //    Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+
+    //    //yield return null;
+
+    //    bool isLoaded = true;
+
+    //    while (isLoaded)
+    //    {
+
+    //        //try
+    //        //{
+    //        indErr = "1";
+
+    //        for (int y = 0; y < sizeMap; y++)
+    //        {
+    //            indErr = "2";
+    //            for (int x = 0; x < sizeMap; x++)
+    //            {
+    //                yield return null;
+
+    //                indErr = "3";
+    //                isPerson = false;
+    //                indErr = "4";
+    //                colorsPersons.Clear();
+    //                indErr = "5";
+    //                string nameField = Helper.GetNameField(x, y);
+    //                indErr = "6";
+    //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+    //                indErr = "7";
+    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                    continue;
+    //                }
+    //                indErr = "8";
+    //                Color colorCell = Color.clear;
+    //                indErr = "9";
+    //                foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+    //                {
+    //                    indErr = "10";
+    //                    //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
+    //                    if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+    //                    datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+    //                    {
+    //                        indErr = "11";
+    //                        prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                    }
+    //                    else
+    //                    {
+    //                        indErr = "12";
+    //                        ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
+    //                        if (bossObj != null)
+    //                        {
+    //                            //Storage //bossObj.Level;
+    //                            colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
+    //                            if (colorCell == null)
+    //                            {
+    //                                Debug.Log("############# colorCell Point Map Person is null");
+    //                                continue;
+    //                            }
+    //                            indErr = "13";
+    //                            colorsPersons.Add(colorCell);
+
+    //                            //prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                            indErr = "";
+    //                            prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
+
+    //                            ////+++DRAW PERSON ---------------------------------
+    //                            //    //Texture2D personTexture = Storage.GridData.GetSpriteBoss(bossObj.Level).texture;
+    //                            //    //listPersonsPrefabTexture.Add(personTexture);
+    //                            ////>>>> Texture2D personMapTexture_True = Storage.GridData.GetTextuteMapBoss(bossObj.Level);
+    //                            //Texture2D personMapTexture = TypeBoss.Instance.GetNameTextureMapForIndexLevel(bossObj.Level);
+    //                            //listPersonsMapTexture.Add(personMapTexture);
+    //                            //-----------------------------------------------------
+
+    //                            isPerson = true;
+    //                        }
+    //                    }
+    //                }
+    //                indErr = "14";
+    //                ////----- DRAW
+    //                if (!isPerson)
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                }
+    //                //-----------------
+    //                //else
+    //                //{
+    //                indErr = "22";
+    //                //---- Draw Person
+
+    //                //+++DRAW PERSON
+    //                //for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count(); indMap2D++)
+    //                //{
+    //                //    Texture2D texturePerson = listPersonsMapTexture[indMap2D];
+    //                //    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
+    //                //}
+
+    //                //foreach (Color colorPerson in colorsPersons)
+    //                //----- Color Person
+    //                for (int indColor = 0; indColor < colorsPersons.Count(); indColor++)
+    //                {
+    //                    Color colorPerson = colorsPersons[indColor];
+
+    //                    indErr = "23";
+    //                    int startX2 = x * scaleCell;
+    //                    int startY2 = y * scaleCell;
+    //                    int column = 5;
+    //                    int row = 3;
+    //                    indErr = "24";
+    //                    for (int x2 = startX2 + addSize - column; x2 < startX2 + addSize; x2++)
+    //                    {
+    //                        for (int y2 = startY2 + (indColor * row); y2 < startY2 + (indColor * row) + 2; y2++)
+    //                        {
+    //                            indErr = "25";
+    //                            //texture.SetPixel(x2, y2, colorCell);
+    //                            texture.SetPixel(x2, sizeDraw - y2, colorPerson);
+    //                        }
+    //                    }
+    //                }
+    //                //------------------------
+    //                //}
+    //            }
+    //        }
+    //        isLoaded = true;
+    //    }
+    //    //}
+    //    //catch (Exception x)
+    //    //{
+    //    //    Debug.Log("############# CreateTextureMap: " + indErr + "  " + x.Message);
+    //    //    yield break;
+    //    //}
+
+    //    //yield return null;
+
+    //    texture = DrawLocationHero(texture);
+
+    //    texture.Apply();
+
+    //    Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+    //    prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+    //    BoxCollider2D colliderMap = prefabFrameMap.GetComponent<BoxCollider2D>();
+    //    if (colliderMap != null)
+    //    {
+    //        prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(texture.width / 100, texture.height / 100, 0);
+    //    }
+
+    //    yield break;
+    //}
 
     public void CreateTextureMap(int scaleCell = 1, bool isRefresh = false)
     {
@@ -379,17 +572,19 @@ public class MapWorld : MonoBehaviour {
         int sizeMap = Helper.HeightLevel;
         int sizeDraw = Helper.HeightLevel * scaleCell;
         int addSize = scaleCell - 1;
+        //List<Color> colorsPersons = new List<Color>();
+        //List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
+        //List<Texture2D> listPersonsPrefabTexture = new List<Texture2D>();
+        //List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
 
-        if(!isRefresh)
+        if (!isRefresh)
             CreateFrameMap();
 
-        List<Color> colorsPersons = new List<Color>();
-        List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
-        List<Texture2D> listPersonsPrefabTexture = new List<Texture2D>();
-        List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
+        Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
 
         bool isPerson = false;
-        Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+        //Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+        textureMap = new Texture2D(sizeDraw, sizeDraw);
 
         try
         {
@@ -402,8 +597,6 @@ public class MapWorld : MonoBehaviour {
                 {
                     indErr = "3";
                     isPerson = false;
-                    indErr = "4";
-                    colorsPersons.Clear();
                     indErr = "5";
                     string nameField = Helper.GetNameField(x, y);
                     indErr = "6";
@@ -411,11 +604,9 @@ public class MapWorld : MonoBehaviour {
                     indErr = "7";
                     if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                     {
-                        DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+                        DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
                         continue;
                     }
-                    indErr = "8";
-                    Color colorCell = Color.clear;
                     indErr = "9";
                     foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                     {
@@ -433,17 +624,6 @@ public class MapWorld : MonoBehaviour {
                             ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
                             if (bossObj != null)
                             {
-                                //Storage //bossObj.Level;
-                                colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
-                                if (colorCell == null)
-                                {
-                                    Debug.Log("############# colorCell Point Map Person is null");
-                                    continue;
-                                }
-                                indErr = "13";
-                                colorsPersons.Add(colorCell);
-                                
-                                //prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
                                 indErr = "";
                                 prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
 
@@ -463,7 +643,7 @@ public class MapWorld : MonoBehaviour {
                     ////----- DRAW
                     if (!isPerson)
                     {
-                        DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+                        DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
                     }
                     //-----------------
                     //else
@@ -477,31 +657,6 @@ public class MapWorld : MonoBehaviour {
                     //    Texture2D texturePerson = listPersonsMapTexture[indMap2D];
                     //    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
                     //}
-
-                    //foreach (Color colorPerson in colorsPersons)
-                    //----- Color Person
-                    for (int indColor = 0; indColor < colorsPersons.Count(); indColor++)
-                    {
-                        Color colorPerson = colorsPersons[indColor];
-
-                        indErr = "23";
-                        int startX2 = x * scaleCell;
-                        int startY2 = y * scaleCell;
-                        int column = 5;
-                        int row = 3;
-                        indErr = "24";
-                        for (int x2 = startX2 + addSize - column; x2 < startX2 + addSize; x2++)
-                        {
-                            for (int y2 = startY2 + (indColor * row); y2 < startY2 + (indColor * row) + 2; y2++)
-                            {
-                                indErr = "25";
-                                //texture.SetPixel(x2, y2, colorCell);
-                                texture.SetPixel(x2, sizeDraw - y2, colorPerson);
-                            }
-                        }
-                    }
-                    //------------------------
-                    //}
                 }
             }
         }
@@ -511,19 +666,176 @@ public class MapWorld : MonoBehaviour {
             return;
         }
 
-        texture.Apply();
+        textureMap = DrawLocationHero(textureMap);
 
-        Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+        textureMap.Apply();
 
-        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+        spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMap;
         BoxCollider2D colliderMap = prefabFrameMap.GetComponent<BoxCollider2D>();
-        if(colliderMap!=null)
+        if (colliderMap != null)
         {
-            //colliderMap.size = new Vector3(texture.width, texture.height, 0);
-            prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(texture.width/100, texture.height / 100, 0);
+            prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(textureMap.width / 100, textureMap.height / 100, 0);
         }
-        //transform
     }
+
+
+    //public void CreateTextureMap(int scaleCell = 1, bool isRefresh = false)
+    //{
+    //    string indErr = "start";
+    //    int sizeMap = Helper.HeightLevel;
+    //    int sizeDraw = Helper.HeightLevel * scaleCell;
+    //    int addSize = scaleCell - 1;
+
+
+
+    //    //List<Color> colorsPersons = new List<Color>();
+    //    //List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
+    //    //List<Texture2D> listPersonsPrefabTexture = new List<Texture2D>();
+    //    //List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
+
+    //    if (!isRefresh)
+    //        CreateFrameMap();
+
+    //    bool isPerson = false;
+    //    Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+
+    //    try
+    //    {
+    //        indErr = "1";
+
+    //        for (int y = 0; y < sizeMap; y++)
+    //        {
+    //            indErr = "2";
+    //            for (int x = 0; x < sizeMap; x++)
+    //            {
+    //                indErr = "3";
+    //                isPerson = false;
+    //                indErr = "4";
+    //                colorsPersons.Clear();
+    //                indErr = "5";
+    //                string nameField = Helper.GetNameField(x, y);
+    //                indErr = "6";
+    //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+    //                indErr = "7";
+    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                    continue;
+    //                }
+    //                indErr = "8";
+    //                Color colorCell = Color.clear;
+    //                indErr = "9";
+    //                foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+    //                {
+    //                    indErr = "10";
+    //                    //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
+    //                    if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+    //                    datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+    //                    {
+    //                        indErr = "11";
+    //                        prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                    }
+    //                    else
+    //                    {
+    //                        indErr = "12";
+    //                        ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
+    //                        if (bossObj != null)
+    //                        {
+    //                            //Storage //bossObj.Level;
+    //                            colorCell = TypeBoss.TypesBoss.Find(p => p.Level == bossObj.Level).ColorTrack;
+    //                            if (colorCell == null)
+    //                            {
+    //                                Debug.Log("############# colorCell Point Map Person is null");
+    //                                continue;
+    //                            }
+    //                            indErr = "13";
+    //                            colorsPersons.Add(colorCell);
+
+    //                            //prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+    //                            indErr = "";
+    //                            prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
+
+    //                            ////+++DRAW PERSON ---------------------------------
+    //                            //    //Texture2D personTexture = Storage.GridData.GetSpriteBoss(bossObj.Level).texture;
+    //                            //    //listPersonsPrefabTexture.Add(personTexture);
+    //                            ////>>>> Texture2D personMapTexture_True = Storage.GridData.GetTextuteMapBoss(bossObj.Level);
+    //                            //Texture2D personMapTexture = TypeBoss.Instance.GetNameTextureMapForIndexLevel(bossObj.Level);
+    //                            //listPersonsMapTexture.Add(personMapTexture);
+    //                            //-----------------------------------------------------
+
+    //                            isPerson = true;
+    //                        }
+    //                    }
+    //                }
+    //                indErr = "14";
+    //                ////----- DRAW
+    //                if (!isPerson)
+    //                {
+    //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
+    //                }
+    //                //-----------------
+    //                //else
+    //                //{
+    //                indErr = "22";
+    //                //---- Draw Person
+
+    //                //+++DRAW PERSON
+    //                //for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count(); indMap2D++)
+    //                //{
+    //                //    Texture2D texturePerson = listPersonsMapTexture[indMap2D];
+    //                //    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
+    //                //}
+
+    //                //foreach (Color colorPerson in colorsPersons)
+    //                //----- Color Person
+    //                for (int indColor = 0; indColor < colorsPersons.Count(); indColor++)
+    //                {
+    //                    Color colorPerson = colorsPersons[indColor];
+
+    //                    indErr = "23";
+    //                    int startX2 = x * scaleCell;
+    //                    int startY2 = y * scaleCell;
+    //                    int column = 5;
+    //                    int row = 3;
+    //                    indErr = "24";
+    //                    for (int x2 = startX2 + addSize - column; x2 < startX2 + addSize; x2++)
+    //                    {
+    //                        for (int y2 = startY2 + (indColor * row); y2 < startY2 + (indColor * row) + 2; y2++)
+    //                        {
+    //                            indErr = "25";
+    //                            //texture.SetPixel(x2, y2, colorCell);
+    //                            texture.SetPixel(x2, sizeDraw - y2, colorPerson);
+    //                        }
+    //                    }
+    //                }
+    //                //------------------------
+    //                //}
+    //            }
+    //        }
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("############# CreateTextureMap: " + indErr + "  " + x.Message);
+    //        return;
+    //    }
+
+    //    texture = DrawLocationHero(texture);
+
+    //    texture.Apply();
+
+    //    Sprite spriteMe = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+    //    prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
+    //    BoxCollider2D colliderMap = prefabFrameMap.GetComponent<BoxCollider2D>();
+    //    if (colliderMap != null)
+    //    {
+    //        //colliderMap.size = new Vector3(texture.width, texture.height, 0);
+    //        prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(texture.width / 100, texture.height / 100, 0);
+    //    }
+    //    //transform
+    //}
 
     private string saveHeroPosField = "";
     public void DrawLocationHero(bool isOpenChange = false)
@@ -576,6 +888,49 @@ public class MapWorld : MonoBehaviour {
             prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
         }
     }
+
+    public Texture2D DrawLocationHero(Texture2D textureResult)
+    {
+        //Texture2D textureResult = new Texture2D(textureMap.width, textureMap.height);
+        //Graphics.CopyTexture(textureMap, 0, 0, 0, 0, textureMap.width, textureMap.height, textureResult, 0, 0, 0, 0);
+
+        //-- Restore ---
+        //if (Storage.Instance.SelectFieldPosHero != saveHeroPosField)
+        //{
+            if (!string.IsNullOrEmpty(saveHeroPosField))
+            {
+                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
+                string nameField = saveHeroPosField;
+                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                {
+                    foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+                    {
+                        if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                        datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                        {
+                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                        }
+                    }
+                }
+                Vector2 posF = Helper.GetPositByField(nameField);
+                int x = (int)posF.x;
+                int y = (int)posF.y;
+                DrawTextureTo(SizeCellMap, "Restore", SizeCellMap - 1, textureResult, y, x, prefabType);
+            }
+            saveHeroPosField = Storage.Instance.SelectFieldPosHero;
+        //}
+        //------
+
+        Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
+        int heroX = (int)posHero.x;
+        int heroY = (int)posHero.y;
+
+        DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
+        
+
+        return textureResult;
+    }
+
 
     public void DrawMapCell(int y, int x, SaveLoadData.TypePrefabs prefabType)
     {

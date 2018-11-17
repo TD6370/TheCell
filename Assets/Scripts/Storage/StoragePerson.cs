@@ -307,6 +307,10 @@ public class StoragePerson : MonoBehaviour {
                 prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorSelectedCursorObject;
             }
 
+
+            if (Storage.Map.IsOpen)
+                return;
+
             foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
             {
                 Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;

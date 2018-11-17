@@ -65,7 +65,7 @@ public class PaletteMapController : MonoBehaviour {
     public Canvas CanvasUI;
 
     public float DelayTimerPaletteUse = 0f;
-    public float ActionRatePaletteUse = 0.5f;
+    public float ActionRatePaletteUse = 0.1f;
 
     public enum TypesBrushGrid
     {
@@ -311,6 +311,9 @@ public class PaletteMapController : MonoBehaviour {
             OnMauseWheel();
             DelayTimerPaletteUse = Time.time + ActionRatePaletteUse;
         }
+        else if(!Storage.Map.IsOpen)
+            OnMauseWheel();
+
         //}
 
     }
@@ -384,6 +387,8 @@ public class PaletteMapController : MonoBehaviour {
 
     public void PaintAction()
     {
+        bool isValidRefreshMap = true;
+
         //ToolBarPaletteMapAction ModePaint
         switch (ModePaint)
         {
@@ -401,8 +406,12 @@ public class PaletteMapController : MonoBehaviour {
             case ToolBarPaletteMapAction.Brush:
                 BrushCells();
                 break;
+            case ToolBarPaletteMapAction.Cursor:
+            case ToolBarPaletteMapAction.None:
+                isValidRefreshMap = false;
+                break;
         }
-        if(Storage.Map.IsOpen)
+        if(Storage.Map.IsOpen && isValidRefreshMap)
             Storage.Map.Refresh();
     }
 
@@ -900,6 +909,11 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
+        //public float ActionRate = 0.5f;
+        //private float DelayTimer = 0F;
+        //if (Time.time < DelayTimer)
+        //    return;
+        //DelayTimer = Time.time + ActionRate;
 
         string fieldStart = Storage.Instance.SelectFieldCursor;
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
@@ -952,8 +966,19 @@ public class PaletteMapController : MonoBehaviour {
             }
         }
         //-------------
-
-        Storage.GenGrid.LoadObjectsNearHero();
+        //int sizeX = (int)posStructFieldNew.x + size;
+        //int sizeY = (int)posStructFieldNew.y + size;
+        bool isZoneStart = Helper.IsValidFieldInZona(posStructFieldNew.x, posStructFieldNew.y);
+        bool isZoneEnd = Helper.IsValidFieldInZona(sizeX, sizeY);
+        if(isZoneStart || isZoneEnd) //#fast
+        {
+            //Storage.Events.ListLogAdd = "Create construct in zona";
+            Storage.GenGrid.LoadObjectsNearHero();
+        }
+        else
+        {
+            //Storage.Events.ListLogAdd = "Create construct NOT in zona";
+        }
     }
 
     private void Paste()
@@ -965,7 +990,7 @@ public class PaletteMapController : MonoBehaviour {
                 Storage.GenGrid.ReloadGridLook();
             else
                 Storage.GenGrid.LoadObjectsNearHero();
-            DefaultModeOn();
+            //DefaultModeOn();
 
             DelayTimer = Time.time + ActionRate;
         }
