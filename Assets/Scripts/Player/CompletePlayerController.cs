@@ -385,11 +385,14 @@ public class CompletePlayerController : MonoBehaviour {
 
         //GEN LOOK
         m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
+
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
         m_isFindFieldCurrent = true;
         //StartCoroutine(StartLoadGridLook());
 
-        LoadGridAllZoneLook();
+        //@TEST@ 
+        Storage.GenGrid.LoadObjectsNearHero();
+        //LoadGridAllZoneLook();
 
         if (!Storage.Instance.Fields.ContainsKey(_fieldHero))
             return null;

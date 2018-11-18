@@ -108,7 +108,6 @@ public class StorageCorrect : MonoBehaviour {
                 }
                 strErr = "4.";
                 //StartCoroutine(StartCreateNewCorrectObject(nameObj, _info));
-                //@TEST@
                 //CreateNewCorrectObject(nameObj, _info); 
                 string corrName = Storage.Instance.CorrectCreateName;
                 if (!String.IsNullOrEmpty(corrName) && Helper.GetID(corrName) == Helper.GetID(nameObj))

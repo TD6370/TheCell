@@ -6,9 +6,12 @@ using System.Linq;
 
 public class GenerateGridFields : MonoBehaviour {
 
+    public GameObject PanelPool;
+    public static GameObject PanelPoolField;
+
     public GameObject prefabField;
     private SaveLoadData _sctiptData;
-
+    
     public float GridX = 5f;
     public float GridY = 5f;
     public float Spacing = 2f;
@@ -24,14 +27,17 @@ public class GenerateGridFields : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+
+        PanelPoolField = PanelPool;
 
         _sctiptData = GetComponent<SaveLoadData>();
         if (_sctiptData == null)
             Debug.Log("GenerateGridFields.Start : sctiptData not load !!!");
 
-        //LoadPoolGameObjects();
-        StartCoroutine(CalculateTealsObjects());
+        LoadPoolGameObjects();
+
+
+        StartCoroutine(CalculateTilesObjects());
     }
 
     void Awake()
@@ -41,10 +47,17 @@ public class GenerateGridFields : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
 
-    IEnumerator CalculateTealsObjects()
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
+        //GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
+        GUI.Label(new Rect(0, 550, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
+    }
+
+    IEnumerator CalculateTilesObjects()
     {
         while(true)
         {
@@ -66,8 +79,6 @@ public class GenerateGridFields : MonoBehaviour {
 
     }
 
-
-    //Add start position
     public void StartGenGrigField(bool isOffsetHero = false)
     {
         int maxWidth = (int)GridY * -1;
@@ -84,7 +95,7 @@ public class GenerateGridFields : MonoBehaviour {
         if (isOffsetHero)
         {
             startX = Storage.Instance.ZonaField.X;
-            startY = Storage.Instance.ZonaField.Y*(-1);
+            startY = Storage.Instance.ZonaField.Y * (-1);
             //Debug.Log("-------- StartGenGrigField ---- " + startX + "x" + startY + "    h:" + maxHeightOffset + " w:" + maxWidthOffset);
             maxHeightOffset += startX + 1;
             maxWidthOffset += startY - 1;
@@ -98,7 +109,18 @@ public class GenerateGridFields : MonoBehaviour {
             {
                 Vector3 pos = new Vector3(x, y, 1) * Spacing;
                 pos.z = 0;
-                GameObject newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+
+                GameObject newField;
+                if (!IsUsePoolField)
+                {
+                    newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+                }
+                else
+                {
+                    
+                    string nameFieldNew = Helper.GetNameField(x, y);
+                    newField = InstantiatePool(prefabField, pos, nameFieldNew);
+                }
                 newField.tag = "Field";
                 string nameField = Helper.GetNameField(x, y);
                 newField.name = nameField;
@@ -112,6 +134,61 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
 
+    //Add start position
+
+
+    //public void StartGenGrigField(bool isOffsetHero = false)
+    //{
+    //    int maxWidth = (int)GridY * -1;
+    //    int maxHeight = (int)GridX;
+    //    Counter = maxWidth * maxHeight;
+    //    Debug.Log("counter=" + Counter.ToString());
+    //    Counter = 0;
+    //    string _nameField = "";
+
+    //    int startX = 0;
+    //    int startY = 0;
+    //    int maxWidthOffset = maxWidth;
+    //    int maxHeightOffset = maxHeight;
+    //    if (isOffsetHero)
+    //    {
+    //        startX = Storage.Instance.ZonaField.X;
+    //        startY = Storage.Instance.ZonaField.Y*(-1);
+    //        //Debug.Log("-------- StartGenGrigField ---- " + startX + "x" + startY + "    h:" + maxHeightOffset + " w:" + maxWidthOffset);
+    //        maxHeightOffset += startX + 1;
+    //        maxWidthOffset += startY - 1;
+    //    }
+
+    //    Storage.Instance.Fields.Clear();
+
+    //    for (int y = startY; y > maxWidthOffset; y--)
+    //    {
+    //        for (int x = startX; x < maxHeightOffset; x++)
+    //        {
+    //            Vector3 pos = new Vector3(x, y, 1) * Spacing;
+    //            pos.z = 0;
+
+    //            GameObject newField;
+    //            if (!IsUsePoolField)
+    //            {
+    //                newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+    //            }else
+    //            {
+    //                newField = InstantiatePool(prefabField, pos);
+    //            }
+    //            newField.tag = "Field";
+    //            string nameField = Helper.GetNameField(x, y);
+    //            newField.name = nameField;
+    //            _nameField = nameField;
+    //            Storage.Instance.Fields.Add(nameField, newField);
+    //            Counter++;
+    //        }
+    //    }
+
+    //    Debug.Log("Pole Field name init : " + _nameField);
+    //}
+
+
     private bool m_onLoadFields = false;
     public void GenGridLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0, bool isOnlyField = false)
     {
@@ -123,7 +200,6 @@ public class GenerateGridFields : MonoBehaviour {
         int countField = (int)GridX * (int)GridY;
 
         Storage.Data.IsUpdatingLocationPersonGlobal = true;
-
 
         if (!m_onLoadFields && (Storage.Instance.Fields.Count < countField || countField == 0))
         {
@@ -199,7 +275,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Vector3 pos = new Vector3(x, y * (-1), 1) * Spacing;
                     pos.z = 0;
                     
-                    GameObject newField = GetPrefabField(pos);
+                    GameObject newField = GetPrefabField(pos, nameField);
                     newField.name = nameField;
                     _fields.Add(nameField, newField);
                     if (!isOnlyField)
@@ -272,7 +348,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Vector3 pos = new Vector3(x, y * (-1), 1) * Spacing;
                     pos.z = 0;
                     
-                    GameObject newField = GetPrefabField(pos);
+                    GameObject newField = GetPrefabField(pos, nameField);
                     newField.name = nameField;
                     _fields.Add(nameField, newField);
                     if (!isOnlyField)
@@ -285,6 +361,8 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         Storage.Data.IsUpdatingLocationPersonGlobal = false;
+
+        
     }
 
     public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)
@@ -397,10 +475,10 @@ public class GenerateGridFields : MonoBehaviour {
                 indErr = "14.";
                 dataObj.IsReality = true;
                 indErr = "15. dataObj = " + dataObj.NameObject + " " + dataObj.ToString();
-                
+
                 GameObject newField = CreatePrefabByName(dataObj);
                 indErr = "16.";
-                
+
                 listGameObjectReal.Add(newField);
                 Counter++;
             }
@@ -966,10 +1044,13 @@ public class GenerateGridFields : MonoBehaviour {
         //GameObject newPrefab = FindPrefab(typePrefab);
         //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
         //----------------2.
-        GameObject newObjGame = new GameObject();
+        //GameObject newObjGame = new GameObject("CreatePrefab");
+        //newObjGame.name = "CreatePrefab00000000000000000000000000000001";
+        GameObject newObjGame = null;// = new GameObject();
         try
         {
             newObjGame = FindPrefab(typePrefab);
+
             newObjGame.transform.position = pos; //@!@.1
 
             SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
@@ -1021,7 +1102,7 @@ public class GenerateGridFields : MonoBehaviour {
                     break;
             }
             //.............
-
+             
             newObjGame.name = namePrefab;
 
         }
@@ -1098,6 +1179,7 @@ public class GenerateGridFields : MonoBehaviour {
 
     public void LoadObjectsNearHero()
     {
+
         //Debug.Log("______________________LoadObjectsNearHero__________________");
         foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
         {
@@ -1117,155 +1199,182 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
     //static Type CompType;
-    private GameObject GetPrefabField(Vector3 pos)
+    private GameObject GetPrefabField(Vector3 pos, string nameFieldNew)
     {
+        GameObject resGO;
         //#PRED 
-        GameObject resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-
-        //---------For Pool ------------------------------------------------------------------
-        /*
-        List<string> componentWork = new List<string> { "SpriteRenderer", "", "" };
-        GameObject prefabGO = prefabField;
-        GameObject resGO = GetPoolGameObject();
-        if (resGO = null)
+        if (!IsUsePoolField)
         {
-            Debug.Log("~~~~~~~~ GetPrefabField  NOT pool !!!");
-            GameObject newGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+            resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
         }
         else
         {
-            //Debug.Log("~~~~~~~~ GetPrefabField yes pool");
-            //resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-
-            //var components = prefabGO.GetComponents<Component>();
-            //for (int i = 0; i < components.Length; ++i) {
-            //    if(components[i]!=null)
-            //    {
-            //        //Component CompType = components[i].GetType();
-            //        //Component comp = components[i];
-            //        //var t = typeof(comp);
-            //        //resGO.AddComponent<comp>();
-
-            //        Type compType = components[i].GetType();
-            //        string compTypeName = compType.Name;
-            //        if (componentWork.Contains(compTypeName))
-            //        {
-            //            if (compTypeName == "SpriteRenderer")
-            //            {
-            //                Debug.Log("~~~~~~~~~ Clone component type:" + compTypeName);
-            //                var compNew = resGO.GetComponent<SpriteRenderer>();
-            //                if (compNew == null)
-            //                    compNew = resGO.AddComponent<SpriteRenderer>();
-            //                compNew = (SpriteRenderer)components[i];
-            //                //print (CompType);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //resGO = prefabGO;
-            var countComp = resGO.GetComponents<Component>().Length;
-            Debug.Log("~~~~~~~~~ countComp :" + countComp);
-            Transform transComp = resGO.GetComponent<Transform>();
-            if (transComp == null)
-                resGO.AddComponent<Transform>();
-            resGO.transform.position = pos;
-            resGO.SetActive(true);
+            resGO = InstantiatePool(prefabField, pos, nameFieldNew);
         }
-        */
-        //---------------------------------------------------------------------------
-
+       
         return resGO;
     }
     private void DestroyField(GameObject findField)
     {
         //#PRED 
-        Destroy(findField);
-        //For Pool
-        //DestroyPoolGameObject(findField);
+        if (!IsUsePoolField)
+            Destroy(findField);
+        else
+        {
+            //For Pool
+            DestroyPoolGameObject(findField);
+        }
     }
-    
 
-#region Pool
 
-    /*
+    #region Pool
+
+    [NonSerialized]
+    //public bool IsUsePoolField = false;
+    public bool IsUsePoolField = true;
+
+    int indexPool = 0;
+    public List<PoolGameObject> PoolGamesObjects;
+
     void LoadPoolGameObjects()
     {
-        return;
-        foreach (var i in Enumerable.Range(0, 1000))
+        PoolGamesObjects = new List<PoolGameObject>();
+        //return;
+        //foreach (var i in Enumerable.Range(0, 1000))
+        foreach (var i in Enumerable.Range(0, 100))
         {
-            GameObject nexGO = new GameObject();
-            nexGO.name = "GameObjectPool " + i;
-
-            //nexGO.AddComponent<Transform>();
-            nexGO.AddComponent<SpriteRenderer>(); 
-
-            nexGO.SetActive(false);
-            //nexGO = Instantiate(nexGO, new Vector3(-20, 20, 2), Quaternion.identity);
-            PoolGamesObjects.Add(nexGO);
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabField.ToString());
         }
     }
 
-    public GameObject GetPoolGameObject()
+    public PoolGameObject AddPoolNewTypeObject(string prefabTag)
+    {
+        GameObject newGO = FindPrefab(prefabTag);
+        PoolGameObject poolObj = new PoolGameObject();
+        poolObj.Name = "GameObjectPool " + indexPool++;
+        poolObj.Tag = prefabTag;
+        //poolObj.GameObjectNext = newGO;
+        poolObj.Init(newGO);
+        poolObj.IsLock = false;
+        PoolGamesObjects.Add(poolObj);
+
+        return poolObj;
+    }
+
+    public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
     {
         GameObject findGO = null;
-        //PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock = false);
-        //findPoolGO.IsLock = true;
-        //findGO = findPoolGO.GameObjectNext;
-        findGO = PoolGamesObjects.Find(p => p.activeSelf == false);
-        if (findGO != null)
+        PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag==tag);
+        if(findPoolGO==null)
         {
-            findGO.SetActive(true);
+            findPoolGO = AddPoolNewTypeObject(tag);
         }
+        findPoolGO.Activate(nameObject, tag, pos);
+        findGO = findPoolGO.GameObjectNext;
+
+        return findGO;
+    }
+
+    public GameObject InstantiatePool(GameObject prefabField, Vector3 pos, string nameFieldNew)
+    {
+        nameFieldNew = string.IsNullOrEmpty(nameFieldNew) ? prefabField.name : nameFieldNew;
+        GameObject findGO = GetPoolGameObject(nameFieldNew, prefabField.tag, pos);
+       
         return findGO;
     }
 
     public void DestroyPoolGameObject(GameObject delGO)
     {
-        //bool isFindPool = false;
-        //int indexLoop = 0;
-        //foreach(var itemObj in PoolGamesObjects)
-        //{
-        //    if(itemObj.Equals(delGO))
-        //    {
-        //        isFindPool = true;
-        //        break;
-        //    }
-        //    indexLoop++;
-        //}
-        //if(isFindPool)
-        //{
-        //    Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
-            delGO.SetActive(false);
-        //}
-        //else
-        //{
-        //    Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name);
-        //    Destroy(delGO);
-        //}
+        if (delGO == null)
+            return;
+        if (string.IsNullOrEmpty(delGO.name))
+            return;
+
+        int indexLoop =  PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
+
+        if (indexLoop!=-1)
+        {
+            var itemPool = PoolGamesObjects[indexLoop];
+            //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
+            itemPool.Deactivate();
+        }
+        else
+        {
+            Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name);
+            Destroy(delGO);
+        }
     }
      
-     //public class PoolGameObject
-    //{
-    //    public GameObject GameObjectNext { get; set; }
-    //    public bool IsLock { get; set; }
-
-    //    public PoolGameObject()
-    //    {
-    //        GameObjectNext = new GameObject();
-    //        IsLock = false;
-    //    }
-    //}
-     
-    */
-#endregion
-
-    void OnGUI()
+    public class PoolGameObject
     {
-        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
-        GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
+        public string Name = "";
+        public string NameObject = "";
+        public string Tag = "";
+        public GameObject GameObjectNext { get; private set; }
+        public bool IsLock { get; set; }
 
-        GUI.Label(new Rect(0, 550, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
+        //public PoolGameObject(bool isCreateDefault = true)
+        public PoolGameObject()
+        {
+            IsLock = true;
+        }
+
+        public void Init(GameObject newGO)
+        {
+            Tag = newGO.tag;
+
+            GameObjectNext = newGO;
+            GameObjectNext.name = Name + "_Empty" + Tag;
+            GameObjectNext.transform.SetParent(PanelPoolField.transform);
+            GameObjectNext.tag = "InPool";
+
+            //GameObjectNext.AddComponent<Transform>();
+            //GameObjectNext.AddComponent<SpriteRenderer>();
+
+            //GameObjectNext.SetActive(false);
+            //GameObjectNext.transform.SetParent(PanelPoolField.transform);
+        }
+
+        public void Activate(string nameObj, string tag, Vector3 pos)
+        {
+            IsLock = true;
+            NameObject = nameObj;
+
+            GameObjectNext.SetActive(true);
+            GameObjectNext.transform.SetParent(null);
+            GameObjectNext.tag = tag;
+            GameObjectNext.transform.position = pos;
+            GameObjectNext.name = nameObj;
+        }
+
+        public void Deactivate()
+        {
+            NameObject = "";
+            
+
+            GameObjectNext.SetActive(false);
+            GameObjectNext.transform.SetParent(PanelPoolField.transform);
+            GameObjectNext.tag = "InPool";
+            //GameObjectNext.transform.position = pos;
+
+            IsLock = false;
+        }
+
     }
+
+
+    #endregion
+
+    private void TestIsNewGameObject(string info = "")
+    {
+        var findEmpty = GameObject.Find("New Game Object");
+        if (findEmpty != null)
+        {
+            Debug.Log("@@@@@@@@@@@@ New Game Object " + DateTime.Now.ToShortTimeString() + "    " + info);
+        }
+    }
+
+   
 
 }

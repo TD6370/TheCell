@@ -29,6 +29,7 @@ TagManager:
   - PanelPaletteMap
   - PrefabField
   - PaletteCell
+  - InPool
   layers:
   - Default
   - TransparentFX

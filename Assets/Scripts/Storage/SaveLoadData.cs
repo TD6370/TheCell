@@ -573,6 +573,9 @@ public class SaveLoadData : MonoBehaviour {
                     break;
 
             }
+
+
+
             //Debug.Log("FindPrefabHieracly: " + prefabType.ToString());
             return resPrefab;
         }
@@ -580,6 +583,8 @@ public class SaveLoadData : MonoBehaviour {
         {
             Debug.Log("Error FindPrefabHieracly: " + x.Message);
         }
+        Debug.Log("Error FindPrefabHieracly: object is null");
+
         return null;
     }
 
