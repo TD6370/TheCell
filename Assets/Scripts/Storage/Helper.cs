@@ -337,6 +337,22 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
+    public static bool IsValidPiontInZonaCorr(float x, float y)
+    {
+        bool result = true;
+        int corr = 2;
+
+        if (x + corr < Storage.Instance.ZonaReal.X)
+            return false;
+        if (y - corr > Storage.Instance.ZonaReal.Y) //*-1
+            return false;
+        if (x - corr > Storage.Instance.ZonaReal.X2)
+            return false;
+        if (y + corr < Storage.Instance.ZonaReal.Y2) //*-1
+            return false;
+        return result;
+    }
+
     public static bool IsValidFieldInZona(float checkX, float checkY)
     {
         bool result = true;

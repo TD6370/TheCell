@@ -14,7 +14,10 @@ public class DataTilesManager : MonoBehaviour {
     public GameObject TilesMapBackLayer;
     public GameObject TilesMapPrefabLayer;
 
-    private Texture2D[] m_listTexturs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+    private List<Texture2D> m_listTextursTerra;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+    private List<Texture2D> m_listTextursPrefabs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+
+    private Texture2D[] m_listTexturs;
     public  Texture2D[] ListTexturs
     {
         get{
@@ -22,9 +25,11 @@ public class DataTilesManager : MonoBehaviour {
             {
                 try
                 {
-                    var listTexturs = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/").ToList();
-                    var listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
-                    listTexturs.AddRange(listTextursPrefabs);
+                    List<Texture2D> listTexturs = new List<Texture2D>() { };
+                    m_listTextursTerra = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/").ToList();
+                    m_listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
+                    listTexturs.AddRange(m_listTextursTerra);
+                    listTexturs.AddRange(m_listTextursPrefabs);
                     m_listTexturs = listTexturs.ToArray();
                 }catch(Exception x)
                 {
@@ -319,20 +324,53 @@ public class DataTilesManager : MonoBehaviour {
     private string[] m_listNameTiles;
 
 
+    //public string GenNameTileTerra()
+    //{
+    //    string nameTile = "TileNone";
+
+    //    if(ListTexturs == null || ListTexturs.Length ==0)
+    //    {
+    //        Debug.Log("###### GenNameTileTerra listTexturs is Empty");
+    //        return nameTile;
+    //    }
+
+    //    //int ind = 0;
+    //    //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
+    //    int selectedInd = UnityEngine.Random.Range(0, ListTexturs.Length - 1);
+
+    //    //foreach(var tileItem in CollectionTiles)
+    //    //{
+    //    //    if (ind == selectedInd)
+    //    //    {
+    //    //        TileBase tile = CollectionTiles[tileItem.Key];
+    //    //        nameTile = tile.name;
+    //    //    }
+    //    //    ind++;
+    //    //}
+    //    if (selectedInd> ListTexturs.Length -1)
+    //    {
+    //        Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
+    //        return nameTile;
+    //    }
+
+    //    nameTile = ListTexturs[selectedInd].name;
+    //    return nameTile;
+    //}
+
     public string GenNameTileTerra()
     {
         string nameTile = "TileNone";
 
-        if(ListTexturs == null || ListTexturs.Length ==0)
+        if (m_listTextursTerra == null || m_listTextursTerra.Count == 0)
         {
-            Debug.Log("###### GenNameTileTerra listTexturs is Empty");
+            Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
             return nameTile;
         }
 
         //int ind = 0;
         //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
-        int selectedInd = UnityEngine.Random.Range(0, ListTexturs.Length - 1);
-        
+        int selectedInd = UnityEngine.Random.Range(0, m_listTextursTerra.Count - 1);
+
         //foreach(var tileItem in CollectionTiles)
         //{
         //    if (ind == selectedInd)
@@ -342,16 +380,16 @@ public class DataTilesManager : MonoBehaviour {
         //    }
         //    ind++;
         //}
-        if (selectedInd> ListTexturs.Length -1)
+        if (selectedInd > ListTexturs.Length - 1)
         {
             Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
             return nameTile;
         }
 
-        nameTile = ListTexturs[selectedInd].name;
+        nameTile = m_listTextursTerra[selectedInd].name;
         return nameTile;
     }
-
+    
 }
 
 public static class TilemapExtensions

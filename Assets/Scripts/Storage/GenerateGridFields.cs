@@ -1233,8 +1233,10 @@ public class GenerateGridFields : MonoBehaviour {
     //public bool IsUsePoolField = false;
     public bool IsUsePoolField = true;
 
+    int limitPoolOnRemoved = 450;
     int indexPool = 0;
     public List<PoolGameObject> PoolGamesObjects;
+
 
     void LoadPoolGameObjects()
     {
@@ -1244,11 +1246,11 @@ public class GenerateGridFields : MonoBehaviour {
         foreach (var i in Enumerable.Range(0, 100))
         {
             indexPool = i;
-            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabField.ToString());
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabField.ToString(), false);
         }
     }
 
-    public PoolGameObject AddPoolNewTypeObject(string prefabTag)
+    public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = true)
     {
         GameObject newGO = FindPrefab(prefabTag);
         PoolGameObject poolObj = new PoolGameObject();
@@ -1258,6 +1260,133 @@ public class GenerateGridFields : MonoBehaviour {
         poolObj.Init(newGO);
         poolObj.IsLock = false;
         PoolGamesObjects.Add(poolObj);
+
+        if (isLog)
+        {
+            //Debug.Log("+ + + Add Pool : : : " + prefabTag + "   " + PoolGamesObjects.Count);
+        }
+
+        //if(false)
+        if (PoolGamesObjects.Count > limitPoolOnRemoved)
+        {
+            Debug.Log("+ + + Add Pool !!!! limitPoolOnRemoved " + limitPoolOnRemoved + "  / " + PoolGamesObjects.Count);
+
+            //var gobjs = GameObject.FindGameObjectsWithTag("Field");
+            //foreach(var gobj in gobjs)
+            //{
+            //    var dist = Vector2.Distance(gobj.transform.position, Storage.Instance.HeroObject.transform.position);
+            //    //if (!inZona)
+            //    if (dist > 40)
+            //    {
+            //        Debug.Log("TEST Pool Dist[" + dist + "]: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
+            //            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+            //            "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+            //        //PoolGamesObjects.Remove(pool);
+            //        //pool.Deactivate();
+            //    }
+            //}
+
+            //var gobjsP = GameObject.FindGameObjectsWithTag("FieldPrefab");
+            //foreach (var gobj in gobjsP)
+            //{
+            //    var dist = Vector2.Distance(gobj.transform.position, Storage.Instance.HeroObject.transform.position);
+            //    //if (!inZona)
+            //    if (dist > 40)
+            //    {
+            //        Debug.Log("TEST Pool Dist[" + dist + "]: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
+            //            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+            //            "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+            //        //PoolGamesObjects.Remove(pool);
+            //        //pool.Deactivate();
+            //    }
+            //}
+        }
+
+        if(false)
+        { 
+            foreach(var pool in PoolGamesObjects.Where(p =>p.IsLock && p.GameObjectNext == null))
+            {
+                Debug.Log("TEST Pool EMPTY and LOCKED !!!!! " + pool.Name);
+            }
+
+            try
+            {
+                PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
+                //foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
+                for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+                {
+                    var pool = poolsTesting[i];
+                    //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
+                    //bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+                    var dist = Vector2.Distance(pool.GameObjectNext.transform.position, Storage.Instance.HeroObject.transform.position);
+                    //if (!inZona)
+                    if(dist>40)
+                    {
+                        Debug.Log("TEST Pool Dist[" + dist + "]: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
+                            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+                            "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+                        //PoolGamesObjects.Remove(pool);
+                        pool.Deactivate();
+                    }
+                }
+
+
+                poolsTesting = PoolGamesObjects.Where(p=> p.GameObjectNext == null).ToArray();
+                for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+                {
+                    var pool = poolsTesting[i];
+                    Debug.Log("TEST Pool  is EMPTY  " + pool.Name + " " + pool.NameObject + "   " + pool.Tag + "    " + pool.TimeCreate);
+                }
+
+                    //PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
+                    ////foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
+                    //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+                    //{
+                    //    var pool = poolsTesting[i];
+                    //    //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
+                    //    bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+                    //    if (!inZona)
+                    //    {
+                    //        Debug.Log("TEST Pool Not in Zona: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
+                    //            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+                    //            "   zona: " + Storage.Instance.ZonaReal.X +"x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+                    //        //PoolGamesObjects.Remove(pool);
+                    //        pool.Deactivate();
+                    //    }
+                    //}
+
+                    //poolsTesting = PoolGamesObjects.OrderBy(p => p.TimeCreate).Take(5).ToArray();
+                    //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+                    //{
+                    //    var pool = poolsTesting[i];
+                    //    Debug.Log("TEST Pool old time " + pool.NameObject + " = " + pool.TimeCreate);
+                    //    if (pool.IsLock && pool.GameObjectNext != null)
+                    //    {
+                    //        //bool inZona = Helper.IsValidPiontInZona(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+                    //        bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+                    //        if (!inZona)
+                    //        {
+                    //            Debug.Log("TEST Pool old time " + pool.NameObject + " > " + pool.GameObjectNext.name + "    " + pool.GameObjectNext.transform.position);
+                    //            //PoolGamesObjects.Remove(pool);
+                    //            pool.Deactivate();
+                    //        }
+                    //    }
+                    //}
+                }
+            catch (Exception x)
+            {
+                Debug.Log("########### AddPoolNewTypeObject REMOVED " + x.Message);
+            }
+
+            //PoolGameObject removedPool = PoolGamesObjects.Where(p=>p.IsLock == false).OrderBy(p => p.TimeCreate).FirstOrDefault();
+            //PoolGameObject removedPoolFirst = PoolGamesObjects.Where(p => p.IsLock == false).OrderByDescending(p => p.TimeCreate).FirstOrDefault();
+            //if (removedPool!=null)
+            //{
+            //    Debug.Log("Removed pool: 0:" + removedPool.TimeCreate + " " + removedPool.Name + "       first: " + removedPoolFirst.TimeCreate + " " + removedPoolFirst.Name );
+            //    Debug.Log("Removed pool: " + removedPool.Name + "   no lock=" + PoolGamesObjects.Where(p => p.IsLock == false).Count());
+            //    PoolGamesObjects.Remove(removedPool);
+            //}
+        }
 
         return poolObj;
     }
@@ -1301,13 +1430,14 @@ public class GenerateGridFields : MonoBehaviour {
         }
         else
         {
-            Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name);
-            Destroy(delGO);
+            Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
+            //Destroy(delGO);
         }
     }
      
     public class PoolGameObject
     {
+        public DateTime TimeCreate;
         public string Name = "";
         public string NameObject = "";
         public string Tag = "";
@@ -1318,6 +1448,7 @@ public class GenerateGridFields : MonoBehaviour {
         public PoolGameObject()
         {
             IsLock = true;
+            TimeCreate = DateTime.Now;
         }
 
         public void Init(GameObject newGO)
@@ -1341,6 +1472,18 @@ public class GenerateGridFields : MonoBehaviour {
             IsLock = true;
             NameObject = nameObj;
 
+            TimeCreate = DateTime.Now;
+            if (GameObjectNext == null)
+            {
+                Debug.Log("#### Activate >> Object is null " + NameObject);
+                GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
+                if(GameObjectNext==null)
+                {
+                    Debug.Log("#### Activate >> Object is null and Not create prefab: " + Tag);
+                    return;
+                }
+            }
+
             GameObjectNext.SetActive(true);
             GameObjectNext.transform.SetParent(null);
             GameObjectNext.tag = tag;
@@ -1350,8 +1493,15 @@ public class GenerateGridFields : MonoBehaviour {
 
         public void Deactivate()
         {
+            if(GameObjectNext==null)
+            {
+                Debug.Log("#### Deactivate >> Object is null " + NameObject);
+                //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
+                //NameObject = "";
+                //IsLock = false;
+                return;
+            }
             NameObject = "";
-            
 
             GameObjectNext.SetActive(false);
             GameObjectNext.transform.SetParent(PanelPoolField.transform);

@@ -1086,7 +1086,7 @@ public class Storage : MonoBehaviour {
             GameObject gObj = DestroyObjectList[i];
             if (gObj != null)
             {
-                Debug.Log("*** POOL DESTROY GAME OBJECt INCORRECT : " + gObj.name);
+                //Debug.Log("*** POOL DESTROY GAME OBJECt INCORRECT : " + gObj.name);
                 DestroyFullObject(gObj);
             }
         }
