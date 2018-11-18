@@ -353,6 +353,41 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
+    public static bool IsValidObjectNameInZona(string fieldNameObj)
+    {
+        string fieldName = GetNameFieldByName(fieldNameObj);
+        return IsValidFieldInZona(fieldName);
+    }
+
+    public static bool IsValidFieldInZona(string fieldName)
+    {
+        bool result = true;
+        Vector2 posFieldObject = GetPositByField(fieldName);
+        int x = (int)posFieldObject.x;
+        int y = (int)posFieldObject.y;
+        //int corrX = Storage.Instance.LimitHorizontalLook /2;
+        //int corrY = Storage.Instance.LimitVerticalLook / 2;
+        int corrX = 20;
+        int corrY = 20;
+        int hx = Storage.Instance.HeroPositionX;
+        int hy = Storage.Instance.HeroPositionY;
+        int limitX1 = hx - corrX;
+        int limitX2 = hx + corrX;
+        int limitY1 = hy - corrY;
+        int limitY2 = hy + corrY;
+
+        if (x < limitX1)
+            return false;
+        if (x > limitX2) 
+            return false;
+        if (y < limitY1)
+            return false;
+        if (y > limitY2)
+            return false;
+
+        return result;
+    }
+
     public static bool IsValidFieldInZona(float checkX, float checkY)
     {
         bool result = true;

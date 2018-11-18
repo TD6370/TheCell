@@ -14,6 +14,80 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //private void CleanerPool(GameObject gobj)
+    //{
+    //    PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.NameObject == gobj.name).ToArray();
+    //    for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    {
+    //        var pool = poolsTesting[i];
+
+    //        //if (pool.IsLock)
+    //        //{
+    //        //    Debug.Log("///// 0.1. CleanerPool: Deactive pool: " + pool.Name + "  " + pool.NameObject);
+    //        //    pool.Deactivate();
+    //        //}
+
+    //        //Debug.Log("///// 0. CleanerPool: Remove pool: " + pool.Name + "  " + pool.NameObject);
+    //        //# 
+    //        //PoolGamesObjects.Remove(pool);
+    //    }
+
+    //    //return;
+
+    //    string nameField = Helper.GetNameFieldObject(gobj);
+    //    if (Storage.Instance.Fields.ContainsKey(nameField))
+    //    {
+    //        Debug.Log("///// 1. CleanerPool: Fields list  --  Removed: " + nameField);
+    //        Storage.Instance.Fields.Remove(nameField);
+    //    }
+
+    //    //if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //    //{
+    //    //    foreach (var item in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+    //    //    {
+    //    //        Storage.Instance.AddDestroyGameObject(item);
+    //    //    }
+    //    //}
+    //    if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
+    //    {
+    //        foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
+    //        {
+    //            Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
+    //            Storage.Instance.AddDestroyGameObject(item);
+    //        }
+    //    }
+
+    //    //poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
+    //    //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    //{
+    //    //    var pool = poolsTesting[i];
+    //    //    Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
+    //    //    PoolGamesObjects.Remove(pool);
+    //    //}
+
+
+    //    Debug.Log("///// 2. CleanerPool: Destroy (not pool): " + gobj.name);
+    //    Destroy(gobj);
+
+    //    //PoolGamesObjects.Where(p => p.IsLock && p.NameObject == gobj.name).ToArray();
+
+    //    poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
+    //    for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    {
+    //        var pool = poolsTesting[i];
+    //        Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
+    //        PoolGamesObjects.Remove(pool);
+    //    }
+
+    //    //poolsTesting = PoolGamesObjects.Where(p => p.NameObject == null).ToArray();
+    //    //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    //{
+    //    //    var pool = poolsTesting[i];
+    //    //    Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
+    //    //    PoolGamesObjects.Remove(pool);
+    //    //}
+
+    //}
 
     //private void CalculatePointOnMap()
     //{

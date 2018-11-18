@@ -62,6 +62,15 @@ public class Storage : MonoBehaviour {
 
 
     
+    private PoolGameObjects _PoolObgects;
+    public static PoolGameObjects Pool
+    {
+        get
+        {
+            return Instance._PoolObgects;
+        }
+    }
+
     private DrawGeometry _DrawGeom;
     public static DrawGeometry DrawGeom
     {
@@ -464,8 +473,10 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DrawGeom is Empty");
             return;
         }
-        //DrawGeometry 
 
+        _PoolObgects = new PoolGameObjects();
+        //_PoolObgects
+        //DrawGeometry 
     }
 
     private void InitObjectsGrid()
