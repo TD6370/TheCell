@@ -4,19 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PoolGameObjects{ // : MonoBehaviour {
-
-    // Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
-
-    public GameObject PanelPoolField;
+public class PoolGameObjects
+{
 
     public PoolGameObjects()
     {
@@ -28,6 +17,8 @@ public class PoolGameObjects{ // : MonoBehaviour {
     [NonSerialized]
     //public bool IsUsePoolField = false;
     public static bool IsUsePoolField = true;
+    public static bool IsUsePoolObjects = true;
+    //public static bool IsUsePoolObjects = false;
 
     int limitPoolOnRemoved = 450;
     int indexPool = 0;
@@ -48,7 +39,7 @@ public class PoolGameObjects{ // : MonoBehaviour {
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
-        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag);
+        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag,"");
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
@@ -71,6 +62,7 @@ public class PoolGameObjects{ // : MonoBehaviour {
     public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
     {
         GameObject findGO = null;
+
         PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
         if (findPoolGO == null)
         {
@@ -79,8 +71,30 @@ public class PoolGameObjects{ // : MonoBehaviour {
         findPoolGO.Activate(nameObject, tag, pos);
         findGO = findPoolGO.GameObjectNext;
 
+        //---------------
+        EventsObject evenObj = findGO.GetComponent<EventsObject>();
+        if(evenObj!=null)
+        {
+            evenObj.PoolCase = findPoolGO;
+        }
+        //---------------
+
         return findGO;
     }
+
+    //public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
+    //{
+    //    GameObject findGO = null;
+    //    PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+    //    if (findPoolGO == null)
+    //    {
+    //        findPoolGO = AddPoolNewTypeObject(tag);
+    //    }
+    //    findPoolGO.Activate(nameObject, tag, pos);
+    //    findGO = findPoolGO.GameObjectNext;
+
+    //    return findGO;
+    //}
 
     public GameObject InstantiatePool(GameObject prefabField, Vector3 pos, string nameFieldNew)
     {
@@ -97,104 +111,64 @@ public class PoolGameObjects{ // : MonoBehaviour {
         if (string.IsNullOrEmpty(delGO.name))
             return false;
 
-        int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
-
-        if (indexLoop != -1)
+        //....
+        EventsObject evenObj = delGO.GetComponent<EventsObject>();
+        PoolGameObject itemPool = evenObj.PoolCase;
+        if (itemPool != null)
         {
-            var itemPool = PoolGamesObjects[indexLoop];
-            //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
             itemPool.Deactivate();
         }
         else
         {
-            Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
-            //Destroy(delGO);
-            return false;
+            //....
+            int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
+            if (indexLoop != -1)
+            {
+                itemPool = PoolGamesObjects[indexLoop];
+                //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
+                itemPool.Deactivate();
+            }
+            else
+            {
+                Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
+                //Destroy(delGO);
+                return false;
+            }
+            //....
         }
+
         return true;
     }
 
-    public class PoolGameObject
-    {
-        public DateTime TimeCreate;
-        public string Name = "";
-        public string NameObject = "";
-        public string Tag = "";
-        public GameObject GameObjectNext { get; private set; }
-        public bool IsLock { get; set; }
+    //public bool DestroyPoolGameObject(GameObject delGO)
+    //{
+    //    if (delGO == null)
+    //        return false;
+    //    if (string.IsNullOrEmpty(delGO.name))
+    //        return false;
 
-        //public PoolGameObject(bool isCreateDefault = true)
-        public PoolGameObject()
-        {
-            IsLock = true;
-            TimeCreate = DateTime.Now;
-        }
+    //    //....
+    //    //EventsObject
 
-        public void Init(GameObject newGO)
-        {
-            Tag = newGO.tag;
 
-            GameObjectNext = newGO;
-            GameObjectNext.name = Name + "_Empty" + Tag;
-            GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-            GameObjectNext.tag = "InPool";
+    //    int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
 
-            //GameObjectNext.AddComponent<Transform>();
-            //GameObjectNext.AddComponent<SpriteRenderer>();
+    //    if (indexLoop != -1)
+    //    {
+    //        var itemPool = PoolGamesObjects[indexLoop];
+    //        //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
+    //        itemPool.Deactivate();
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
+    //        //Destroy(delGO);
+    //        return false;
+    //    }
+    //    return true;
+    //}
 
-            //GameObjectNext.SetActive(false);
-            //GameObjectNext.transform.SetParent(PanelPoolField.transform);
-        }
 
-        public void Activate(string nameObj, string tag, Vector3 pos)
-        {
-            IsLock = true;
-            NameObject = nameObj;
-
-            TimeCreate = DateTime.Now;
-            if (GameObjectNext == null)
-            {
-                Debug.Log("#### Activate >> Object is null " + NameObject);
-                return;
-
-                //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
-                //if(GameObjectNext==null)
-                //{
-                //    Debug.Log("#### Activate >> Object is null and Not create prefab: " + Tag);
-                //    return;
-                //}
-            }
-
-            GameObjectNext.SetActive(true);
-            GameObjectNext.transform.SetParent(null);
-            GameObjectNext.tag = tag;
-            GameObjectNext.transform.position = pos;
-            GameObjectNext.name = nameObj;
-
-            GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
-        }
-
-        public void Deactivate()
-        {
-            if (GameObjectNext == null)
-            {
-                Debug.Log("#### Deactivate >> Object is null " + NameObject);
-                //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
-                //NameObject = "";
-                //IsLock = false;
-                return;
-            }
-            NameObject = "";
-
-            GameObjectNext.SetActive(false);
-            GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-            GameObjectNext.tag = "InPool";
-            //GameObjectNext.transform.position = pos;
-
-            IsLock = false;
-        }
-
-    }
 
     private void CleanerPool(GameObject gobj, bool isLog = false)
     {
@@ -207,19 +181,22 @@ public class PoolGameObjects{ // : MonoBehaviour {
                 Debug.Log("///// 1. CleanerPool: Fields list  --  Removed: " + nameField);
             Storage.Instance.Fields.Remove(nameField);
         }
-        if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
-        {
-            foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
-            {
-                if (isLog)
-                    Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
-                Storage.Instance.AddDestroyGameObject(item);
-            }
-        }
+        //if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
+        //{
+        //    foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
+        //    {
+        //        if (isLog)
+        //            Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
+        //        Storage.Instance.AddDestroyGameObject(item);
+        //        //Storage.Instance.DestroyObject(item);
+        //    }
+        //}
+        Storage.GenGrid.RemoveRealObjects(nameField);
 
         if (isLog)
             Debug.Log("///// 2. CleanerPool: Destroy (not pool): " + gobj.name);
-        Storage.Instance.DestroyObject(gobj);
+        if(gobj!=null)
+            Storage.Instance.DestroyObject(gobj);
 
         poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
         for (int i = poolsTesting.Count() - 1; i >= 0; i--)
@@ -394,5 +371,87 @@ public class PoolGameObjects{ // : MonoBehaviour {
         //}
     }
     #endregion
+
+}
+
+public class PoolGameObject
+{
+    public DateTime TimeCreate;
+    public string Name = "";
+    public string NameObject = "";
+    public string Tag = "";
+    public GameObject GameObjectNext { get; private set; }
+    public bool IsLock { get; set; }
+
+    //public PoolGameObject(bool isCreateDefault = true)
+    public PoolGameObject()
+    {
+        IsLock = true;
+        TimeCreate = DateTime.Now;
+    }
+
+    public void Init(GameObject newGO)
+    {
+        Tag = newGO.tag;
+
+        GameObjectNext = newGO;
+        GameObjectNext.name = Name + "_Empty" + Tag;
+        GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
+        GameObjectNext.tag = "InPool";
+
+        //GameObjectNext.AddComponent<Transform>();
+        //GameObjectNext.AddComponent<SpriteRenderer>();
+
+        //GameObjectNext.SetActive(false);
+        //GameObjectNext.transform.SetParent(PanelPoolField.transform);
+    }
+
+    public void Activate(string nameObj, string tag, Vector3 pos)
+    {
+        IsLock = true;
+        NameObject = nameObj;
+
+        TimeCreate = DateTime.Now;
+        if (GameObjectNext == null)
+        {
+            Debug.Log("#### Activate >> Object is null " + NameObject);
+            return;
+
+            //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
+            //if(GameObjectNext==null)
+            //{
+            //    Debug.Log("#### Activate >> Object is null and Not create prefab: " + Tag);
+            //    return;
+            //}
+        }
+
+        GameObjectNext.SetActive(true);
+        GameObjectNext.transform.SetParent(null);
+        GameObjectNext.tag = tag;
+        GameObjectNext.transform.position = pos;
+        GameObjectNext.name = nameObj;
+
+        GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    public void Deactivate()
+    {
+        if (GameObjectNext == null)
+        {
+            Debug.Log("#### Deactivate >> Object is null " + NameObject);
+            //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
+            //NameObject = "";
+            //IsLock = false;
+            return;
+        }
+        NameObject = "";
+
+        GameObjectNext.SetActive(false);
+        GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
+        GameObjectNext.tag = "InPool";
+        //GameObjectNext.transform.position = pos;
+
+        IsLock = false;
+    }
 
 }

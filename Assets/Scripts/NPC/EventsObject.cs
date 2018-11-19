@@ -10,6 +10,8 @@ public class EventsObject : MonoBehaviour {
     private float m_LevelAlpha = 0;
     private string m_OldFieldHero = "";
 
+    public PoolGameObject PoolCase { get; set; }
+
     private void Awake()
     {
         string typePrefub = this.gameObject.tag.ToString();

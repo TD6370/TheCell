@@ -503,6 +503,11 @@ public class ModelNPC
                 objGame.GetComponent<SpriteRenderer>().color = ColorRender;
             }
             //}
+
+            //#pool#
+            //var movement =  objGame.GetComponent<MovementBoss>();
+            //if(PoolGameObjects.IsUsePoolObjects)
+            //    movement.UpdateData("UpdateGameObject");
         }
 
         public override List<string> GetParams
@@ -530,9 +535,13 @@ public class ModelNPC
         public bool IsGen { get; set; }
         public int BlockResources { get; set; }
 
+        private string idTerra = "?";
+
         //public TerraData(bool isGen) {
         public TerraData()
         {
+            idTerra = Guid.NewGuid().ToString().Substring(0,4);
+
             bool isGen = true;
 
             if (Storage.TilesManager==null)
@@ -556,6 +565,11 @@ public class ModelNPC
         {
             {
                 //return;
+
+                if(objGame.name.IndexOf("Field1x0")!=-1 )
+                {
+                    Debug.Log("TEST Filed " + TileName + "  IsGen=" + IsGen + " id=" + idTerra);
+                }
 
                 if (Storage.TilesManager == null)
                 {

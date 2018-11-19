@@ -521,12 +521,64 @@ public class SaveLoadData : MonoBehaviour {
         return newObject;
     }
 
-    public GameObject FindPrefab(string namePrefab)
+    //public GameObject FindPrefab(string namePrefab)
+    public GameObject FindPrefab(string namePrefab, string nameObject)
     {
-        //#TEST #PREFABF.1
-        //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
-        //#TEST #PREFABF.2
-        return FindPrefabHieracly(namePrefab);
+        if (PoolGameObjects.IsUsePoolObjects && !string.IsNullOrEmpty(nameObject))
+        {
+            //GameObject gobj = Storage.Pool.InstantiatePool(prefabField, new Vector3(0, 0, 0), "namePrefab");
+            //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, namePrefab, new Vector3(0, 0, 0));
+            string typePrefab = GetTypeByName(namePrefab);
+            GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
+            return gobj;
+        }
+        else
+        {
+
+            //#TEST #PREFABF.1
+            //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+            //#TEST #PREFABF.2
+            return FindPrefabHieracly(namePrefab);
+        }
+    }
+
+    private string GetTypeByName(string namePrefab)
+    {
+        string resType="";
+
+        TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+
+        switch (prefabType)
+        {
+            case TypePrefabs.PrefabRock:
+                resType = PrefabRock.tag;
+                break;
+            case TypePrefabs.PrefabVood:
+                resType = PrefabVood.tag;
+                break;
+            case TypePrefabs.PrefabUfo:
+                resType = PrefabUfo.tag;
+                break;
+            case TypePrefabs.PrefabBoss:
+                resType = PrefabBoss.tag;
+                break;
+            case TypePrefabs.PrefabWallRock:
+                resType = PrefabWallRock.tag;
+                break;
+            case TypePrefabs.PrefabWallWood:
+                resType = PrefabWallWood.tag;
+                break;
+            case TypePrefabs.PrefabElka:
+                resType = PrefabElka.tag;
+                break;
+            case TypePrefabs.PrefabField:
+                resType = PrefabField.tag;
+                break;
+            default:
+                Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
+                break;
+        }
+        return resType;
     }
 
     private GameObject FindPrefabHieracly(string namePrefab)

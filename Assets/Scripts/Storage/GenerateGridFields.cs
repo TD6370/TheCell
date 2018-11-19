@@ -512,7 +512,8 @@ public class GenerateGridFields : MonoBehaviour {
                 //if (obj != null && obj.name !=null)
                 //{
                 //    Storage.Log.SaveHistory(obj.name, "DESTROY GOBJ", "RemoveRealObjects");
-                Destroy(obj);
+                //Destroy(obj);
+                DestroyObject(obj);
                 //}
             }
             //@<<@ Storage.Instance.GamesObjectsReal.Remove(p_nameField);
@@ -1021,13 +1022,13 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
 
-    public GameObject FindPrefab(string namePrefab)
+    public GameObject FindPrefab(string namePrefab, string nameObject)
     {
         //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
         if (_sctiptData == null)
             return null;
 
-        return _sctiptData.FindPrefab(namePrefab);
+        return _sctiptData.FindPrefab(namePrefab, nameObject);
     }
 
     //--------------- LINK: public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
@@ -1048,7 +1049,7 @@ public class GenerateGridFields : MonoBehaviour {
         GameObject newObjGame = null;// = new GameObject();
         try
         {
-            newObjGame = FindPrefab(typePrefab);
+            newObjGame = FindPrefab(typePrefab, objData.NameObject);
 
             newObjGame.transform.position = pos; //@!@.1
 
@@ -1209,6 +1210,14 @@ public class GenerateGridFields : MonoBehaviour {
         else
         {
             resGO = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
+            if (PoolGameObjects.IsUsePoolObjects)
+            {
+                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+                {
+                    TileName = "Tundra"
+                };
+                terrD.UpdateGameObject(resGO);
+            }
         }
 
         return resGO;
@@ -1216,6 +1225,7 @@ public class GenerateGridFields : MonoBehaviour {
     private bool DestroyField(GameObject findGobjField)
     {
         //#PRED 
+        //if (!PoolGameObjects.IsUsePoolObjects)
         if (!PoolGameObjects.IsUsePoolField)
         {
             Destroy(findGobjField);
@@ -1229,7 +1239,20 @@ public class GenerateGridFields : MonoBehaviour {
         return true;
     }
 
-   
+    private bool DestroyObject(GameObject findGobj)
+    {
+        if (!PoolGameObjects.IsUsePoolObjects)
+        {
+            Destroy(findGobj);
+        }
+        else
+        {
+            //For Pool
+            Storage.Pool.DestroyPoolGameObject(findGobj);
+        }
+        return true;
+    }
+
 
     private void TestIsNewGameObject(string info = "")
     {

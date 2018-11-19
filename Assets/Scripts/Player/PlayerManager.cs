@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
 
+    private bool m_HeroExtremal = false;
+    public bool HeroExtremal
+    {
+        get
+        {
+            return m_HeroExtremal;
+        }
+        set
+        {
+            m_HeroExtremal = value;
+            HeroExtremalChangeOn();
+        }
+    }
+
     public Color ColorCurrentField = Color.yellow;
     PlayerData m_playerDataGame;
 
@@ -28,6 +42,19 @@ public class PlayerManager : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void HeroExtremalChangeOn()
+    {
+        // m_HeroExtremal
+        var collider = Storage.Instance.HeroObject.GetComponent<CapsuleCollider2D>();
+        if(collider==null)
+        {
+            Debug.Log("###### HeroExtremalChangeOn CapsuleCollider2D is empty");
+            return;
+        }
+
+        collider.enabled = m_HeroExtremal;
+    }
 
     public void SavePlayerXML()
     {

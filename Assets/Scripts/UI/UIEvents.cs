@@ -409,6 +409,9 @@ public class UIEvents : MonoBehaviour {
             case "LoadPrefabsOnPalette":
                 Storage.PaletteMap.PrefabsOnPalette();
                 break;
+            case "HeroExtremal":
+                Storage.Player.HeroExtremal = !Storage.Player.HeroExtremal;
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
