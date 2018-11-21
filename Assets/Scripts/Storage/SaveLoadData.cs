@@ -134,11 +134,6 @@ public class SaveLoadData : MonoBehaviour {
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
 
-                    if(objDataSave.TagObject=="8")
-                    {
-                        Debug.Log("@@@@@@@@");
-                    }
-
                     coutCreateObjects++;
 
                     Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
@@ -157,11 +152,21 @@ public class SaveLoadData : MonoBehaviour {
     //GEN -----
     private TypePrefabs GenObjectWorld()
     {
+        int intGen = UnityEngine.Random.Range(1, 4);
+        int intTypePrefab = 0;
+        TypePrefabs prefabName = TypePrefabs.PrefabField;
+
+        if (intGen == 1)
+            prefabName = TypePrefabs.PrefabBoss;
+        else
+        {
+            intTypePrefab = UnityEngine.Random.Range(1, 8);
+            prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+        }
+
         //Type prefab
         //++ Elka, WallRock, WallWood
-        int intTypePrefab = UnityEngine.Random.Range(1, 8);
-
-
+        //int intTypePrefab = UnityEngine.Random.Range(1, 8);
         //#TT YES BOSS
         //int intTypePrefab = UnityEngine.Random.Range(1, 5);
         //#TT YES UFO
@@ -169,9 +174,10 @@ public class SaveLoadData : MonoBehaviour {
         //#TT NOT UFO
         //int intTypePrefab = UnityEngine.Random.Range(1, 3);
 
-        TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
+        //int rnd1 = UnityEngine.Random.Range(1, 3);
+        //int rnd1 = UnityEngine.Random.Range(1, 2);
         int rnd1 = UnityEngine.Random.Range(1, 3);
-        if(rnd1!=1)
+        if (rnd1!=1)
         {
             prefabName = TypePrefabs.PrefabField;
         }
@@ -212,7 +218,7 @@ public class SaveLoadData : MonoBehaviour {
                 index++;
 
                 
-                Storage.Events.SetTittle = String.Format("Loading {0} %     [{1}]", (countAll / index).ToString(), index.ToString());
+                Storage.Events.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
@@ -247,7 +253,86 @@ public class SaveLoadData : MonoBehaviour {
             yield return null;
         }
 
-        Storage.Events.SetTittle = String.Format("World is Loaded");
+        Storage.Events.SetTittle = String.Format("World Loaded");
+
+        Storage.Data.SaveGridGameObjectsXml(true);
+
+        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
+
+        yield break;
+    }
+
+    IEnumerator CreateDataGamesObjectsExtremalTerraWorldProgress()
+    {
+        int coutCreateObjects = 0;
+        TypePrefabs prefabName = TypePrefabs.PrefabField;
+        Debug.Log("# CreateDataGamesObjectsWorld...");
+        Storage.Instance.ClearGridData();
+
+        int countAll = Helper.HeightLevel * 2;
+        int index = 1;
+
+        for (int y = 0; y < Helper.HeightLevel; y++)
+        {
+            for (int x = 0; x < Helper.WidthLevel; x++)
+            {
+                int intRndCount = UnityEngine.Random.Range(0, 5);
+
+                int maxObjectInField = 1;
+
+                if (intRndCount == 0)
+                    maxObjectInField = 2;
+                else
+                    maxObjectInField = 1;
+
+                intRndCount = UnityEngine.Random.Range(0, 3);
+
+                string nameField = Helper.GetNameField(x, y);
+
+                index++;
+
+
+                Storage.Events.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
+
+                List<GameObject> ListNewObjects = new List<GameObject>();
+                for (int i = 0; i < maxObjectInField; i++)
+                {
+                    //GEN -----
+                    //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
+                    //if (prefabName == TypePrefabs.PrefabField)
+                    //continue;
+                    //-----------
+                    if (i == 0)
+                        prefabName = TypePrefabs.PrefabField;
+                    else if (i == 1)
+                    {
+                        if(intRndCount==1)
+                            prefabName = TypePrefabs.PrefabVood;
+                        else
+                            prefabName = TypePrefabs.PrefabWallWood;
+                    }
+
+                    int _y = y * (-1);
+                    Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+                    pos.z = -1;
+                    if (prefabName == TypePrefabs.PrefabUfo)
+                        pos.z = -2;
+
+                    string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
+                    objDataSave.NameObject = nameObject;
+                    objDataSave.TagObject = prefabName.ToString();
+                    objDataSave.Position = pos;
+
+                    coutCreateObjects++;
+
+                    Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+                }
+            }
+            yield return null;
+        }
+
+        Storage.Events.SetTittle = String.Format("World Loaded");
 
         Storage.Data.SaveGridGameObjectsXml(true);
 
@@ -262,7 +347,9 @@ public class SaveLoadData : MonoBehaviour {
         //Storage.Instance.StopGame();
         //Storage.Instance.DestroyAllGamesObjects();
 
-        StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
+        //StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
+        StartCoroutine(CreateDataGamesObjectsExtremalTerraWorldProgress());
+
         //Storage.GamePause = false;
     }
 
@@ -529,6 +616,13 @@ public class SaveLoadData : MonoBehaviour {
             //GameObject gobj = Storage.Pool.InstantiatePool(prefabField, new Vector3(0, 0, 0), "namePrefab");
             //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, namePrefab, new Vector3(0, 0, 0));
             string typePrefab = GetTypeByName(namePrefab);
+
+            //#TEST
+            //Storage.Events.ListLogAdd = "+ pool:";
+            //Storage.Events.ListLogAdd = "--- namePrefab: " + namePrefab;
+            //Storage.Events.ListLogAdd = "--- typePrefab: " + typePrefab;
+            //Storage.Events.ListLogAdd = "--- nameObject: " + nameObject;
+
             GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
             return gobj;
         }
@@ -684,12 +778,14 @@ public class SaveLoadData : MonoBehaviour {
         return null;
     }
 
-    public Sprite GetSpriteBoss(int index)
+    //public Sprite GetSpriteBoss(int index)
+    public Sprite GetSpriteBoss(int index, out string spriteName)
     {
         
         try
         {
-            string spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            //string spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
             Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
             
             return spriteBoss;
@@ -698,6 +794,7 @@ public class SaveLoadData : MonoBehaviour {
         {
             Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
         }
+        spriteName = "error";
 
         return null;
     }

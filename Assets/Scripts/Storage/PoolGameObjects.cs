@@ -15,12 +15,14 @@ public class PoolGameObjects
     #region Pool
 
     [NonSerialized]
-    //public bool IsUsePoolField = false;
     public static bool IsUsePoolField = true;
     public static bool IsUsePoolObjects = true;
+    //public static bool IsUsePoolField = false;
     //public static bool IsUsePoolObjects = false;
 
     int limitPoolOnRemoved = 450;
+    //int limitPoolOnRemoved = 600;
+    //int limitPoolOnRemoved = 1450;
     int indexPool = 0;
     public List<PoolGameObject> PoolGamesObjects;
 
@@ -430,6 +432,89 @@ public class PoolGameObject
         GameObjectNext.tag = tag;
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
+
+        //var movement = GameObjectNext.GetComponent<MovementNPC>();
+
+        //var movement = GameObjectNext.GetComponent<MovementBoss>();
+        //if (movement != null)
+        //{
+        //    //movement.InitNPC();
+        //    //movement.Refresh();
+        //    movement.UpdateData("Activate");
+        //    movement.Refresh();
+        //    //var data = movement.GetData();
+        //    //data.Update(GameObjectNext);
+        //}
+        //else
+        //{
+        //var movementNPC = GameObjectNext.GetComponent<MovementNPC>();
+        //if (movementNPC != null)
+        var movement = GameObjectNext.GetComponent<MovementBoss>();
+        if (movement != null)
+        {
+            //var data = movement.GetUpdateData("Activate");
+
+            //------------------------
+            //movementNPC.Refresh();
+            //movementNPC.UpdateData("Activate");
+
+            //Debug.Log("movement: " + data.NameObject + "    nameObj=" + nameObj + " real: " + Helper.GetNameFieldPosit(pos.x, pos.y));
+            //Debug.Log("movement: " + data.NameObject + "    nameObj=" + nameObj + " real: " + pos.x + "x" + pos.y);
+            //if (data.NameObject == nameObj)
+            //{
+            //    movement.Refresh();
+            //}
+            //else
+            //{
+            //    Debug.Log("---------- NOT Refresh");
+            //}
+
+            //----------------------
+            //movement.InitNPC();
+            //movementNPC.Refresh();
+            //movementNPC.UpdateData("Activate");
+
+            //-----------------------------
+            //var data = movement.GetUpdateData("Activate");
+
+            //Debug.Log("######### data " + (data == null));
+
+            //FindPersonData dataP = Storage.Person.GetFindPersonsDataForName(GameObjectNext.name);
+
+            //if(data == null && dataP!=null)
+            //{
+            //    data = movement.GetUpdateData("Activate");
+            //}
+
+            //if (dataP != null)
+            //{
+            //    Debug.Log("FindPersonData: :" + dataP.DataObj.NameObject + " [" + dataP.Field + "]");
+
+            //    ModelNPC.ObjectData res = Storage.Instance.GridDataG.FieldsD[dataP.Field].Objects.Find(p => p.NameObject == GameObjectNext.name);
+
+            //    Debug.Log("ObjectData TRUE: :" + res.NameObject);
+            //}
+            //else
+            //{
+            //    Debug.Log("FindPersonData null");
+            //}
+            //------------------------
+
+            //var data = movementNPC.GetData();
+
+
+
+            //if (data!=null &&  nameObj != data.NameObject)
+            //{
+            //    string info = "pool: " + nameObj + " <> DO:" + data.NameObject + " real: " + Helper.GetNameFieldPosit(pos.x, pos.y);
+            //    Debug.Log("#########  " + info);
+            //    Storage.Events.ListLogAdd = info;
+            //}
+            //data.Update(GameObjectNext);
+
+            //-------------------------
+        }
+        //}
 
         GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
     }

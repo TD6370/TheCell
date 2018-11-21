@@ -313,7 +313,7 @@ public class StoragePerson : MonoBehaviour {
 
             foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
             {
-                Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
+                //Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
 
                 gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
 

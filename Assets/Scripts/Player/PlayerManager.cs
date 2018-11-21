@@ -24,6 +24,8 @@ public class PlayerManager : MonoBehaviour {
     private void Awake()
     {
         m_playerDataGame = new PlayerData();
+
+        var collider = Storage.Instance.HeroObject.GetComponent<CapsuleCollider2D>();
     }
 
 
@@ -46,14 +48,31 @@ public class PlayerManager : MonoBehaviour {
     private void HeroExtremalChangeOn()
     {
         // m_HeroExtremal
-        var collider = Storage.Instance.HeroObject.GetComponent<CapsuleCollider2D>();
+        var hero = Storage.Instance.HeroObject;
+        var collider = hero.GetComponent<CapsuleCollider2D>();
         if(collider==null)
         {
             Debug.Log("###### HeroExtremalChangeOn CapsuleCollider2D is empty");
             return;
         }
 
-        collider.enabled = m_HeroExtremal;
+        collider.enabled = !m_HeroExtremal;
+
+        float _alpha = m_HeroExtremal ? 0.5f : 1f;
+        //hero.SetAlpha(_alpha);
+        if (m_HeroExtremal)
+            //hero.GetComponent<SpriteRenderer>().color = new Color(179f, 236f, 255f, _alpha);
+            hero.GetComponent<SpriteRenderer>().color = new Color(0f, 0.6f, 0.95f, _alpha);
+        //hero.GetComponent<Texture2D>().color = new Color(179, 236, 255, _alpha);
+        else
+            hero.GetComponent<SpriteRenderer>().color = Color.white;
+        //hero.GetComponent<SpriteRenderer>().color = m_HeroExtremal ? "#80D3F6".ToColor() : Color.white;
+        //hero.GetComponent<RenderTexture>()
+        if (collider.enabled)
+        {
+            
+
+        }
     }
 
     public void SavePlayerXML()

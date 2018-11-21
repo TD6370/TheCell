@@ -148,7 +148,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerClick(PointerEventData data)
     {
-        Storage.Events.ListLogAdd = "Event 2. OnPointerClick";
+        //Storage.Events.ListLogAdd = "Event 2. OnPointerClick";
         // This will only execute if the objects collider was the first hit by the click's raycast
         //Debug.Log("---------------------------OnPointerClick   WP:" + data.worldPosition + "  POS:" + data.position + "  PP:" + data.pointerPress.name);
         //MouseDownOnChange();
@@ -156,10 +156,10 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     void OnMouseDown()
     {
-        Storage.Events.ListLogAdd = "Event 2. OnMouseDown";
+        //Storage.Events.ListLogAdd = "Event 2. OnMouseDown";
         //Print
         //Debug.Log("---------------------------OnMouseDown  ");
-        Storage.Events.ListLogAdd = "MAP OnMouseDown";
+        //Storage.Events.ListLogAdd = "MAP OnMouseDown";
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -173,7 +173,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     //public void OnMouseOver(PointerEventData eventData)
     public void OnMouseOver()
     {
-        Storage.Events.ListLogAdd = "Event 3. OnMouseOver";
+        //Storage.Events.ListLogAdd = "Event 3. OnMouseOver";
         //string info = eventData.selectedObject == null ? "" : eventData.selectedObject.name;
         Debug.Log("cursor over UI element.");
         CalculatePointOnMap(true);
@@ -215,7 +215,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
         foreach (RaycastResult result in results)
         {
-            Storage.Events.ListLogAdd = "Event 4. MAP Raycaster event";
+            //Storage.Events.ListLogAdd = "Event 4. MAP Raycaster event";
             Debug.Log(">>>>>>>>>> Hit MAP Raycaster event ### " + result.gameObject.name);
         }
 
@@ -771,7 +771,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
-            Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
+            //Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
 
             if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
             datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())

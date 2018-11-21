@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Profiling;
 
 public class GenerateGridFields : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class GenerateGridFields : MonoBehaviour {
     public float GridX = 5f;
     public float GridY = 5f;
     public float Spacing = 2f;
+
+    //Profiler Profiller;
 
     private int _CounterRealObj;
 
@@ -33,7 +36,7 @@ public class GenerateGridFields : MonoBehaviour {
         //LoadPoolGameObjects();
 
 
-        StartCoroutine(CalculateTilesObjects());
+        //StartCoroutine(CalculateTilesObjects());
     }
 
     void Awake()
@@ -46,34 +49,9 @@ public class GenerateGridFields : MonoBehaviour {
 
     }
 
-    void OnGUI()
-    {
-        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
-        //GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
-        GUI.Label(new Rect(0, 550, 100, 100), "REAL GOBJ: " + _CounterRealObj.ToString());
-    }
+    
 
-    IEnumerator CalculateTilesObjects()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.3f);
-
-            if (Storage.Instance.GamesObjectsReal == null)
-                yield return null;
-
-            //string prUfo = SaveLoadData.TypePrefabs.PrefabUfo.ToString();
-            //string prBoss = SaveLoadData.TypePrefabs.PrefabBoss.ToString();
-
-            //List<GameObject> gobjsList = Storage.Instance.GamesObjectsReal.
-            //    SelectMany(x => x.Value).
-            //    Where( p=> p.tag == prUfo || p.tag == prBoss).ToList();
-            //List<GameObject> gobjsList = Storage.Person.GetAllRealPersons().ToList();
-
-            _CounterRealObj = Storage.Person.GetAllRealPersons().ToList().Count(); //gobjsList.Count();
-        }
-
-    }
+   
 
     public void StartGenGrigField(bool isOffsetHero = false)
     {
@@ -83,6 +61,9 @@ public class GenerateGridFields : MonoBehaviour {
         Debug.Log("counter=" + Counter.ToString());
         Counter = 0;
         string _nameField = "";
+
+        
+        
 
         int startX = 0;
         int startY = 0;
@@ -96,6 +77,8 @@ public class GenerateGridFields : MonoBehaviour {
             maxHeightOffset += startX + 1;
             maxWidthOffset += startY - 1;
         }
+
+        
 
         Storage.Instance.Fields.Clear();
 
@@ -125,6 +108,8 @@ public class GenerateGridFields : MonoBehaviour {
                 Counter++;
             }
         }
+
+       
 
         Debug.Log("Pole Field name init : " + _nameField);
     }
@@ -189,6 +174,8 @@ public class GenerateGridFields : MonoBehaviour {
     public void GenGridLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0, bool isOnlyField = false)
     {
         //var _fields = Storage.Instance.Fields;
+
+        //Profiler.BeginSample("GenGridLook");
 
         int gridWidth = 100;
         int gridHeight = 100;
@@ -361,7 +348,7 @@ public class GenerateGridFields : MonoBehaviour {
 
         Storage.Data.IsUpdatingLocationPersonGlobal = false;
 
-
+        //Profiler.EndSample();
     }
 
     public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)
@@ -771,14 +758,22 @@ public class GenerateGridFields : MonoBehaviour {
                         gobj.SetActive(false);
                     }
 
-                    indErr = "10.";
+                    indErr = "10. posFieldReal=" + posFieldReal + " <> posFieldOld=" + posFieldOld + "  " + gobj.name;
 
-                    int indValid = Storage.Instance.GridDataG.FieldsD[posFieldReal].Objects.FindIndex(p => p.NameObject == gobj.name);
-                    if (indValid != -1)
+
+                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldReal))
                     {
-                        Debug.Log("################# SaveListObjectsToData ))))))))))))))   Find " + gobj.name + "  in " + posFieldReal);
-                        Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR); //@<<@ 
-                        continue;
+                        Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
+                        Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData");
+                    } else
+                    {
+                        int indValid = Storage.Instance.GridDataG.FieldsD[posFieldReal].Objects.FindIndex(p => p.NameObject == gobj.name);
+                        if (indValid != -1)
+                        {
+                            Debug.Log("################# SaveListObjectsToData ))))))))))))))   Find " + gobj.name + "  in " + posFieldReal);
+                            Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR); //@<<@ 
+                            continue;
+                        }
                     }
 
                     //Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
@@ -1050,6 +1045,9 @@ public class GenerateGridFields : MonoBehaviour {
         try
         {
             newObjGame = FindPrefab(typePrefab, objData.NameObject);
+
+            //#TEST
+            //newObjGame.name = namePrefab;
 
             newObjGame.transform.position = pos; //@!@.1
 

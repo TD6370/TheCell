@@ -1148,6 +1148,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PrefabStarTrackPoint: {fileID: 1078158496}
+  MarkerDebug: 
+  isRunning: 0
 --- !u!1 &135686417
 GameObject:
   m_ObjectHideFlags: 0
@@ -4162,7 +4164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.00000044761393}
+  m_AnchoredPosition: {x: 8.5, y: 0.000015258789}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -15995,6 +15997,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PrefabStarTrackPoint: {fileID: 1078158496}
+  MarkerDebug: 
+  isRunning: 0
 --- !u!50 &1390742132
 Rigidbody2D:
   serializedVersion: 4
@@ -19749,7 +19753,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: LoadPrefabsOnPalette
+  m_Text: GetInfo
 --- !u!222 &1697010830
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20910,11 +20914,13 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: GetInfo
+      m_Image: {fileID: 0}
+    - m_Text: MapCreate
+      m_Image: {fileID: 0}
     - m_Text: LoadPrefabsOnPalette
       m_Image: {fileID: 0}
     - m_Text: UpdateGridTiles
-      m_Image: {fileID: 0}
-    - m_Text: MapCreate
       m_Image: {fileID: 0}
     - m_Text: Teleport
       m_Image: {fileID: 0}
@@ -20924,9 +20930,13 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: LoadGridLook
       m_Image: {fileID: 0}
+    - m_Text: HeroExtremal
+      m_Image: {fileID: 0}
     - m_Text: ReloadGridLook
       m_Image: {fileID: 0}
     - m_Text: Pause
+      m_Image: {fileID: 0}
+    - m_Text: GenWorldExtremal
       m_Image: {fileID: 0}
     - m_Text: CursorSelection
       m_Image: {fileID: 0}
@@ -20953,10 +20963,6 @@ MonoBehaviour:
     - m_Text: LogPerson
       m_Image: {fileID: 0}
     - m_Text: LoadCommandTool
-      m_Image: {fileID: 0}
-    - m_Text: GenWorldExtremal
-      m_Image: {fileID: 0}
-    - m_Text: HeroExtremal
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -21315,7 +21321,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2093528016}
   m_HandleRect: {fileID: 2093528015}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -21395,7 +21401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000015258789}
+  m_AnchoredPosition: {x: 8.5, y: 0}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -21629,7 +21635,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 92.90329}
+  m_AnchoredPosition: {x: 0.3, y: 88.27402}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -22140,8 +22146,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1804064629}
   m_HandleRect: {fileID: 1804064628}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

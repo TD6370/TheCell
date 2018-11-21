@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -292,26 +293,33 @@ public class UpdateData { //: MonoBehaviour {
 
     public bool AddRealObject(GameObject p_saveObject, string nameField, string callFunc)
     {
-        if(p_saveObject==null || p_saveObject.name == null)
+        try
         {
-            Debug.Log("######## AddRealObject is DESTROYED: in " + nameField + "    " + callFunc);
-            return false;
-        }
-
-        if (isTestSlow)
-        {
-            int ind = _GamesObjectsReal[nameField].FindIndex(p => p!=null && p.name == p_saveObject.name);
-            if(ind!=-1)
+            if (p_saveObject == null || p_saveObject.name == null)
             {
-                Debug.Log("######## AddRealObject is DUBLICATE: " + p_saveObject.name + "   in " + nameField + "    " + callFunc);
-                Storage.Log.GetHistory(p_saveObject.name);
+                Debug.Log("######## AddRealObject is DESTROYED: in " + nameField + "    " + callFunc);
                 return false;
             }
-        }
-        _GamesObjectsReal[nameField].Add(p_saveObject);
 
-        Storage.Log.SaveHistory(p_saveObject.name, "AddRealObject", callFunc, nameField);
-        return true;
+            if (isTestSlow)
+            {
+                int ind = _GamesObjectsReal[nameField].FindIndex(p => p != null && p.name == p_saveObject.name);
+                if (ind != -1)
+                {
+                    Debug.Log("######## AddRealObject is DUBLICATE: " + p_saveObject.name + "   in " + nameField + "    " + callFunc);
+                    Storage.Log.GetHistory(p_saveObject.name);
+                    return false;
+                }
+            }
+            _GamesObjectsReal[nameField].Add(p_saveObject);
+
+            Storage.Log.SaveHistory(p_saveObject.name, "AddRealObject", callFunc, nameField);
+            return true;
+        }catch(Exception x)
+        {
+            Debug.Log("########### AddRealObject " + nameField + " " + p_saveObject.name + "    "  + x.Message);
+        }
+        return false;
     }
 
     public void RemoveRealObject(int indexDel, string nameField, string callFunc)

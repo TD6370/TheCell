@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 public class UIEvents : MonoBehaviour {
@@ -37,6 +38,8 @@ public class UIEvents : MonoBehaviour {
     public static string ColorGreen = "#468C44";
     public static string ColorAlert = "#EC4D56";
 
+    private bool IsProfilerUI = false;// false;
+
     [Header("Menu Command")]
     public Dropdown dpnMenuCommandTest;
 
@@ -48,7 +51,7 @@ public class UIEvents : MonoBehaviour {
 
     public float ActionRate = 0.5f;
     private float DelayTimer = 0F;
-
+    private int _CounterRealObj = 0;
 
     void Awake()
     {
@@ -138,6 +141,28 @@ public class UIEvents : MonoBehaviour {
         {
             Storage.PaletteMap.Show();
             DelayTimer = Time.time + ActionRate / 2;
+        }
+
+        if (Input.GetKey("e") && Time.time > DelayTimer)
+        {
+            HeroExtremalOn();
+            DelayTimer = Time.time + ActionRate / 2;
+        }
+        
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
+
+        //GUI.Label(new Rect(0, 30, 100, 100), Counter.ToString());
+        if (IsProfilerUI)
+        {
+
+            GUI.Label(new Rect(0, 550, 150, 200), "REAL GOBJ: " + _CounterRealObj.ToString());
+            GUI.Label(new Rect(150, 550, 150, 200), "FPS: " + itogFPS.ToString());
+            GUI.Label(new Rect(300, 550, 150, 200), "POOL: " + itogPoolObject.ToString() + " / " + itogPool.ToString());
+
         }
     }
 
@@ -397,6 +422,7 @@ public class UIEvents : MonoBehaviour {
                 Storage.GamePause = true;
                 Storage.Instance.StopGame();
                 Storage.GridData.CreateDataGamesObjectsExtremalWorld();
+                //Storage.GridData.CreateDataGamesObjectsExtremalTerraWorldProgress();
                 //Storage.GamePause = false;
                 //Storage.Instance.IsLoadingWorld = true;
                 //Storage.Instance.LoadGameObjects(true);
@@ -410,7 +436,20 @@ public class UIEvents : MonoBehaviour {
                 Storage.PaletteMap.PrefabsOnPalette();
                 break;
             case "HeroExtremal":
-                Storage.Player.HeroExtremal = !Storage.Player.HeroExtremal;
+                HeroExtremalOn();
+                //Storage.Player.HeroExtremal = !Storage.Player.HeroExtremal;
+                break;
+            case "GetInfo":
+                IsProfilerUI = !IsProfilerUI;
+                //Storage.Events.ListLogAdd = "Profiler.usedHeapSize: " + Profiler.usedHeapSize.ToString();
+                string str = IsProfilerUI ? "On" : "Off";
+                Storage.Events.ListLogAdd = "ProfilerUI is " + str;
+                if (IsProfilerUI)
+                {
+                    
+                    StartCoroutine(CalculateObjectsAll());
+                    StartCoroutine(CalculateProfiler());
+                }
                 break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
@@ -422,6 +461,7 @@ public class UIEvents : MonoBehaviour {
         //m_CommandLogList.Add(selectCommand);
 
     }
+
 
 
     public void CommandExecutePerson(string selectCommand, GameObject gobjObservable)
@@ -601,6 +641,56 @@ public class UIEvents : MonoBehaviour {
             //Debug.Log("Already exist CreateCommandLogButton " + nameBtn);
             
         }
+    }
+
+    private void HeroExtremalOn()
+    {
+        Storage.Player.HeroExtremal = !Storage.Player.HeroExtremal;
+    }
+    
+
+    IEnumerator CalculateObjectsAll()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.3f);
+
+            if (Storage.Instance.GamesObjectsReal == null)
+                yield return null;
+
+            //_CounterRealObj = Storage.Person.GetAllRealPersons().ToList().Count(); //gobjsList.Count();
+            _CounterRealObj = Storage.Instance.GamesObjectsReal.SelectMany(x => x.Value).Count();
+        }
+
+    }
+
+    int allFPS = 0;
+    int countFPS = 0;
+    int itogFPS = 0;
+    int itogPool = 0;
+    int itogPoolObject = 0;
+    IEnumerator CalculateProfiler()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            int fps = (int)(1.0f / Time.smoothDeltaTime);
+            allFPS += fps;
+            countFPS++;
+            itogFPS = allFPS / countFPS;
+
+            if(allFPS>30000)
+            {
+                allFPS = 0;
+                countFPS = 0;
+            }
+
+            itogPoolObject = Storage.Pool.PoolGamesObjects.Where(p=>p.IsLock).Count();
+
+            itogPool = Storage.Pool.PoolGamesObjects.Count();
+        }
+
     }
 
 

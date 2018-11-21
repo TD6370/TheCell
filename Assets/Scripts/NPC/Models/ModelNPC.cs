@@ -289,6 +289,7 @@ public class ModelNPC
                     "Type : " + TagObject,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
+                    "IsReality: " + IsReality
                     //"Life: " + Life,
                     //"Speed: " + Speed,
                     //"Color : " + ColorLevel
@@ -401,6 +402,9 @@ public class ModelNPC
         Dictionary<int, Color> _colorsPresent = null;
 
         [XmlIgnore]
+        public string NameSprite { get; private set; }
+
+        [XmlIgnore]
         private Color m_ColorRender = Color.clear;
         [XmlIgnore]
         public Color ColorRender
@@ -489,7 +493,11 @@ public class ModelNPC
 
             //if (isUpdateStyle)
             //{
-            Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level);
+            //Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level);
+            string _nameSprite = "";
+            Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
+            //NameSprite = spriteMe.name;
+            NameSprite = _nameSprite;
             if (spriteMe != null)
             {
                 //string _nameSprite = Storage.GridData.GetNameSpriteForIndexLevel(Level);
@@ -521,7 +529,8 @@ public class ModelNPC
                     "Target : " + TargetPosition,
                     "Life: " + Life,
                     "Speed: " + Speed,
-                    "Color : " + ColorLevel
+                    "Color : " + ColorLevel,
+                    "Individ: " + NameSprite
                   };
             }
         }

@@ -6,6 +6,8 @@ public class MovementNPC : MonoBehaviour {
 
     public GameObject PrefabStarTrackPoint;
 
+    public string MarkerDebug = "";
+
     protected Coroutine moveObject;
     protected ModelNPC.GameDataNPC _dataNPC;
 
@@ -23,12 +25,22 @@ public class MovementNPC : MonoBehaviour {
     string testId;
     string _resName = "";
 
+    
+    public bool isRunning = false;
+
     void Awake()
     {
     }
 
     // Use this for initialization
     public virtual void Start()
+    {
+        InitNPC();
+
+        realtimeMoving =  Time.time + 3f;
+    }
+
+    public void InitNPC()
     {
         objID = Helper.GetID(this.name);
         if (string.IsNullOrEmpty(objID))
@@ -47,12 +59,12 @@ public class MovementNPC : MonoBehaviour {
         //_scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
         //if (_scriptUIEvents == null)
         //    Debug.Log("########### MovementUfo scriptUIEvents is Empty");
-        if(Storage.Events == null)
+        if (Storage.Events == null)
         {
             Debug.Log("############ Storage.Events == null");
             return;
         }
-    
+
 
         m_isTrack = Storage.Events.IsTrackPointsVisible;
     }
@@ -62,9 +74,18 @@ public class MovementNPC : MonoBehaviour {
         moveObject = StartCoroutine(MoveObjectToPosition<ModelNPC.GameDataNPC>());
     }
 
+    bool isInfoStop = false;
+
     // Update is called once per frame
     public virtual void Update()
     {
+        if(PoolGameObjects.IsUsePoolObjects)
+            Refresh();
+    }
+
+    private void LateUpdate()
+    {
+        //Refresh();
     }
 
     private void OnMouseDown()
@@ -72,6 +93,52 @@ public class MovementNPC : MonoBehaviour {
         SelectedGameObject();
     }
 
+    public void Refresh()
+    {
+        //if (!isInfoStop)
+        //{
+        //------------------------
+        if (Time.time > realtimeMoving)
+        {
+            //bool isStartPrefab = this.gameObject.name.IndexOf("Field") == -1;
+            bool IsDataInit = Helper.IsDataInit(this.gameObject);
+            
+
+            //isInfoStop = true;
+            //Debug.Log("######## ME STOP : " + this.gameObject.name + @" isStartPrefab \\\");
+            if (IsDataInit)
+            {
+                //UpdateData("Update");
+                Debug.Log("######## ME STOP : " + this.gameObject.name + "  isRunning=" + isRunning);
+                //if (!isRunning)
+                //{
+                UpdateData("Update");
+
+                isRunning = false;
+                if (moveObject != null)
+                {
+                    isRunning = false;
+                    StopCoroutine(moveObject);
+                }
+
+                //UpdateData("Update");
+                //SaveData();
+
+                StartMoving();
+                //}
+                //UpdateData("Update");
+            }
+        }
+        //}
+        //-----------------
+        //if (!isRunning)
+        //{
+        //    if (moveObject!=null)
+        //        StopCoroutine(moveObject);
+
+        //    StartMoving();
+        //}
+    }
 
     private void InitData()
     {
@@ -95,31 +162,46 @@ public class MovementNPC : MonoBehaviour {
         m_spriteRenderer.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
     }
 
-    IEnumerator MoveObject()
-    {
-        int distantion = 0;
-        float x = transform.position.x;
-        int compas = 1;
+    //IEnumerator MoveObject()
+    //{
+    //    int distantion = 0;
+    //    float x = transform.position.x;
+    //    int compas = 1;
 
-        while (true)
-        {
-            distantion++;
-            if (distantion > 200)
-            {
-                distantion = 0;
-                compas *= -1;
-            }
+    //    while (true)
+    //    {
+    //        distantion++;
+    //        if (distantion > 200)
+    //        {
+    //            distantion = 0;
+    //            compas *= -1;
+    //        }
 
-            transform.Translate(compas * Time.deltaTime, 0, 0);
-            yield return null;
-        }
-    }
+    //        transform.Translate(compas * Time.deltaTime, 0, 0);
+    //        yield return null;
+    //    }
+    //}
 
 
+    private float realtimeMoving = 0f;
 
+    //if (Input.GetKey("m") && Time.time > DelayTimer)
+    //    {
+    //        Storage.Map.Create();
+
+    //        DelayTimer = Time.time + ActionRate;
+    //    }
 
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
+        //if(isRunning)
+        //{
+        //    Debug.Log("######### MoveObjectToPosition IS PROGRESS......");
+        //    yield break;
+        //}
+
+        //isRunning = true;
+
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
 
@@ -133,6 +215,8 @@ public class MovementNPC : MonoBehaviour {
 
         if (!Helper.IsDataInit(this.gameObject))
         {
+            isRunning = false;
+            Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
             yield break;
         }
 
@@ -149,6 +233,22 @@ public class MovementNPC : MonoBehaviour {
 
         while (true)
         {
+            realtimeMoving = Time.time + 0.5f;
+            //#TEST
+            if (!isRunning && PoolGameObjects.IsUsePoolObjects)
+            {
+                UpdateData("Update");
+            }
+            isRunning = true;
+
+            //realtimeMoving = Time.time + 2f;
+            //realtimeMoving = Time.time + 0.2f;
+
+            if (this.name == MarkerDebug)
+            {
+                Debug.Log("OK");
+            }
+
             if (m_isPause)
             {
                 Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
@@ -158,6 +258,7 @@ public class MovementNPC : MonoBehaviour {
                 //yield break;
                 while (m_isPause)
                 {
+                    Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
                     yield return null;
                 }
                 Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
@@ -179,6 +280,7 @@ public class MovementNPC : MonoBehaviour {
             {
                 Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
                 //Storage.Fix.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+                isRunning = false;
                 yield break;
             }
 
@@ -214,6 +316,7 @@ public class MovementNPC : MonoBehaviour {
             {
                 Debug.Log("########### STOP MOVE ON ERROR MOVE");
                 Destroy(this.gameObject);
+                isRunning = false;
                 yield break;
             }
 
@@ -223,8 +326,14 @@ public class MovementNPC : MonoBehaviour {
                 _dataNPC.SetTargetPosition();
             }
 
+            realtimeMoving = Time.time + 1f;
+
             yield return null;
+            isRunning = false;
         }
+
+        Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
+        isRunning = false;
     }
 
     private bool ResavePositionData<T>() where T : ModelNPC.GameDataNPC
@@ -441,6 +550,12 @@ public class MovementNPC : MonoBehaviour {
         _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
+    public virtual ModelNPC.GameDataNPC GetUpdateData(string callFunc)
+    {
+        _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
+        return _dataNPC;
+    }
+
     public void SetTarget()
     {
         Debug.Log("^^^^^^^^ TARGET --- SetTarget NPC " + this.tag + "       " + this.name);
@@ -487,6 +602,27 @@ public class MovementNPC : MonoBehaviour {
 
         //_scriptUIEvents.SetTestText(objID);
         Storage.Events.SetTestText(objID);
+
+        FindPersonData person = Storage.Person.GetFindPersonsDataForName(this.gameObject.name);
+        if(person == null)
+        {
+            Debug.Log("#### SelectedGameObject Not in Data go name: " + this.gameObject.name);
+        }
+        var res = GetUpdateData("SelectedGameObject");
+        if (res == null)
+        {
+            Debug.Log("#### GetUpdateData: " + res.NameObject);
+        }
+
+        if (Storage.Player.HeroExtremal == true)
+        {
+            Debug.Log("*********** INIT NPC **************");
+            InitNPC();
+        }
+
+        //Storage.Log.GetHistory(_dataNPC.NameObject);
+        Debug.Log("Select: Game " + this.gameObject.name + "  OLD D: " + _dataNPC.NameObject);
+        Debug.Log("FindPersonData:  D: " + person.DataObj.NameObject);
 
         //#EXPAND
         Storage.Events.AddExpandPerson(_dataNPC.NameObject,
@@ -545,6 +681,28 @@ public class MovementNPC : MonoBehaviour {
     public void TrackOn()
     {
         m_isTrack = !m_isTrack;
+    }
+
+    void OnEnable()
+    {
+        //InitNPC();
+
+        //if (PoolGameObjects.IsUsePoolObjects)
+        //{
+        //    if (Helper.IsDataInit(this.gameObject))
+        //        UpdateData("Update");
+        //}
+
+        //StartMoving();
+        //Debug.Log("*********************** MovementNPC  is OnEnable " + this.gameObject.name);
+    }
+
+    void OnDisable()
+    {
+        //isRunning = false;
+        //StopCoroutine(moveObject);
+
+        //Debug.Log("*********************** MovementNPC  is OnDisable " + this.gameObject.name);
     }
 
     //public void DrawTrack(Vector2 posTrack)
