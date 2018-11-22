@@ -151,6 +151,8 @@ public class UIEvents : MonoBehaviour {
         
     }
 
+    bool m_isFindedBug = false;
+
     void OnGUI()
     {
         GUI.Label(new Rect(0, 0, 100, 100), ((int)(1.0f / Time.smoothDeltaTime)).ToString());
@@ -164,6 +166,24 @@ public class UIEvents : MonoBehaviour {
             GUI.Label(new Rect(300, 550, 150, 200), "POOL: " + itogPoolObject.ToString() + " / " + itogPool.ToString());
 
         }
+
+        if (PoolGameObjects.IsTestingDestroy)
+        {
+            var destroyedPrefabsTest = Storage.Pool.PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
+            if (destroyedPrefabsTest.Count > 0)
+            {
+                if (m_isFindedBug == false)
+                {
+                    m_isFindedBug = true;
+                    PoolGameObject _pool = destroyedPrefabsTest[0];
+                    Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + _pool.ToString());
+                    GUI.Label(new Rect(400, 550, 150, 200), "Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + _pool.ToString());
+
+                    Storage.Log.GetHistory(_pool.NameObject);
+                }
+            }
+        }
+        
     }
 
 

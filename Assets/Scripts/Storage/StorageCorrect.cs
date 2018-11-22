@@ -48,6 +48,8 @@ public class StorageCorrect : MonoBehaviour {
     //@CD@
     public void CorrectData(string nameObj, string callFunc)
     {
+        return;
+
         bool isCorrect = false;
 
         if (Storage.Instance.IsCorrectData)

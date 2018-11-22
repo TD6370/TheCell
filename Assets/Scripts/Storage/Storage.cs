@@ -333,16 +333,7 @@ public class Storage : MonoBehaviour {
         ZonaField = null;
         ZonaReal = null;
 
-        //Fields = new Dictionary<string, GameObject>();
-        //_GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        //_GridDataG = new SaveLoadData.GridData();
-        //_personsData = new SaveLoadData.LevelData();
-        //_listHistoryGameObject = new List<HistoryGameObject>();
-        //DestroyObjectList = new List<GameObject>();
-        //_GamesObjectsPersonalData = new Dictionary<string, List<SaveLoadData.ObjectData>>();
         InitObjectsGrid();
-
-        //LoadData();
 
         InitComponents();
 
@@ -353,8 +344,6 @@ public class Storage : MonoBehaviour {
         LoadGameObjects();
 
         LoadDefaultUI();
-        
-        //LoadData();
     }
 
     void Update()
@@ -939,8 +928,17 @@ public class Storage : MonoBehaviour {
                 {
                     if(!findGobj.Equals(thisGameObject))
                     {
-                        //Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
-                        Destroy(findGobj);
+                        Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
+                        //if (findGobj != null)
+                        //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  UpdateGamePosition " + findGobj.name);
+                        if (PoolGameObjects.IsUsePoolObjects)
+                        {
+                            Storage.Pool.DestroyPoolGameObject(findGobj);
+                        }
+                        else
+                        {
+                            Destroy(findGobj);
+                        }
                     }
                     else
                     {
@@ -1052,7 +1050,14 @@ public class Storage : MonoBehaviour {
 
     public void DestroyObject(GameObject gobj)
     {
-        Destroy(gobj);
+        //if(gobj!=null)
+        //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyObject " + gobj.name);
+        if (PoolGameObjects.IsUsePoolObjects) {
+            Storage.Pool.DestroyPoolGameObject(gobj);
+        }
+        else {
+            Destroy(gobj);
+        }
     }
 
     public void DestroyAllGamesObjects()
@@ -1066,6 +1071,8 @@ public class Storage : MonoBehaviour {
                 for (int i = 0; i < resListData.Count(); i++)
                 {
                     GameObject objDel = resListData[i];
+                    if(objDel!=null)
+                        Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + objDel.name);
                     Destroy(objDel);
                 }
             }
@@ -1077,6 +1084,7 @@ public class Storage : MonoBehaviour {
             GameObject resField = Fields[nameField2];
             if (resField != null)
             {
+                Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + resField.name);
                 Destroy(resField);
             }
         }
@@ -1145,7 +1153,16 @@ public class Storage : MonoBehaviour {
 
         if (gObj != null)
         {
-            Destroy(gObj);
+            //if (gObj != null)
+            //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyFullObject " + gObj.name);
+            if (PoolGameObjects.IsUsePoolObjects)
+            {
+                Pool.DestroyPoolGameObject(gObj);
+            }
+            else
+            {
+                Destroy(gObj);
+            }
         }
         else
         {

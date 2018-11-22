@@ -347,8 +347,8 @@ public class SaveLoadData : MonoBehaviour {
         //Storage.Instance.StopGame();
         //Storage.Instance.DestroyAllGamesObjects();
 
-        //StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
-        StartCoroutine(CreateDataGamesObjectsExtremalTerraWorldProgress());
+        StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
+        //StartCoroutine(CreateDataGamesObjectsExtremalTerraWorldProgress());
 
         //Storage.GamePause = false;
     }

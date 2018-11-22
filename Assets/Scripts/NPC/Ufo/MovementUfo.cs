@@ -172,6 +172,8 @@ public class MovementUfo : MonoBehaviour {
             if (!res)
             {
                 Debug.Log("########### STOP MOVE ON ERROR MOVE");
+                if (this.gameObject != null)
+                    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  MoveObjectToPosition " + this.gameObject.name);
                 Destroy(this.gameObject);
                 yield break;
             }

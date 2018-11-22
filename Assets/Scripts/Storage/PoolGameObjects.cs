@@ -17,13 +17,15 @@ public class PoolGameObjects
 
     [NonSerialized]
     public static bool IsUsePoolField = true;
-    public static bool IsUsePoolObjects = true;
-    //public static bool IsUsePoolField = false;
-    //public static bool IsUsePoolObjects = false;
+    public static bool IsUsePoolObjects = true; //34e-39e
+
+    public static bool IsTestingDestroy = false;//true; // 
 
     //int limitPoolOnRemoved = 450;
-    int limitPoolOnRemovedBoss = 50;
-    int limitPoolOnRemoved = 600;
+    int limitPoolOnRemovedBoss = 250;
+    int limitPoolOnRemoved = 500;
+    //int limitPoolOnRemoved = 800;
+    //int limitPoolOnRemoved = 1000;
     //int limitPoolOnRemoved = 1450;
     int indexPool = 0;
     public List<PoolGameObject> PoolGamesObjects;
@@ -41,11 +43,11 @@ public class PoolGameObjects
         }
 
         //-------------
-        foreach (var i in Enumerable.Range(0, 100))
-        {
-            indexPool = i;
-            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabBoss.ToString(), false);
-        }
+        //foreach (var i in Enumerable.Range(0, 200))
+        //{
+        //    indexPool = i;
+        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabBoss.ToString(), false);
+        //}
         //foreach (var i in Enumerable.Range(0, 100))
         //{
         //    indexPool = i;
@@ -92,6 +94,8 @@ public class PoolGameObjects
         //poolObj.IsLock = false;
         PoolGamesObjects.Add(poolObj);
 
+        //Debug.Log("pool +++++ " + newGO.name);
+
         //if (PoolGamesObjects.Count > limitPoolOnRemoved)
         //{
         //    if (isLog)
@@ -107,90 +111,54 @@ public class PoolGameObjects
     {
         GameObject findGO = null;
 
+        if (IsTestingDestroy)
+        {
+            var destroyedPrefabsTest = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
+            if (destroyedPrefabsTest.Count > 0)
+                Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + destroyedPrefabsTest[0].ToString());
+        }
+
         PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
         if (findPoolGO == null)
         {
-            //var test_findPoolGO = PoolGamesObjects.Find(p => p.NameObject == nameObject);
-            //if(test_findPoolGO!=null)
-            //{
-            //    Debug.Log("########## Pool Exist Lock test_findPoolGO : " + test_findPoolGO);
-            //}
-
-            //Debug.Log("Get Add Poll Tag = " + tag);
             //---------------------------- TEST UNLOCk
             if (PoolGamesObjects.Count > limitPoolOnRemoved)
             {
-                if (tag == "PrefabBoss")
-                {
-                    //Debug.Log("~~~~~~~~~~~");
+                if (IsTestingDestroy)
+                    Debug.Log("?????? NOT POOL ME:" + nameObject);
 
-                    //int countTag = PoolGamesObjects.Where(p => p.Tag == tag).Count();
-                    //Debug.Log("Count Tag ALL [" + tag + "] = " + countTag);
-                    //int countUnlock = PoolGamesObjects.Where(p => p.IsLock == false).Count();
-                    //Debug.Log("Count Unlock ALL = " + countUnlock);
+                //Debug.Log("%%%%%%%%%%%%%% LIMIT " + PoolGamesObjects.Count + " > " + limitPoolOnRemoved + " " + nameObject);
 
-                    int countBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").Count();
-                    //Debug.Log("COUNT POOL BOSS: " + countBoss);
-                    if (countBoss > limitPoolOnRemovedBoss)
-                    {
-                        //var destroyedBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss" && p.IsLock && p.GameObjectNext == null).ToList();
-                        //if (destroyedBoss.Count != 0)
-                        //    Debug.Log("COUNT POOL BOSS DESTROYED >>>> : " + destroyedBoss.Count());
-                        var destroyedPrefabs = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
-                        //if (destroyedPrefabs.Count != 0 && destroyedBoss.Count != destroyedPrefabs.Count)
-                        //if (destroyedPrefabs.Count != 0)
-                        //    Debug.Log("COUNT POOL DESTROYED >>>> : " + destroyedPrefabs.Count());
+                //if (tag == "PrefabBoss")
+                //{
+                //-----------------
+                //%%% CREANER %%%%
 
-                        //foreach (var item in destroyedPrefabs)
-                        for (int ind=0; ind < destroyedPrefabs.Count; ind++)
-                        {
-                            PoolGamesObjects.RemoveAt(ind);
-                        }
+                //if (IsTestingDestroy)
+                //{
+                //    int countBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").Count();
+                //    Debug.Log("COUNT POOL BOSS: " + countBoss + @" \ " + limitPoolOnRemovedBoss + "     ME:" + nameObject);
+                //    if (countBoss > limitPoolOnRemovedBoss)
+                //    {
+                //        //var destroyedBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss" && p.IsLock && p.GameObjectNext == null).ToList();
+                //        //if (destroyedBoss.Count != 0)
+                //        //    Debug.Log("COUNT POOL BOSS DESTROYED >>>> : " + destroyedBoss.Count());
+                //        var destroyedPrefabs = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
+                //        //if (destroyedPrefabs.Count != 0 && destroyedBoss.Count != destroyedPrefabs.Count)
+                //        if (destroyedPrefabs.Count != 0)
+                //            Debug.Log("COUNT POOL DESTROYED >>>> : " + destroyedPrefabs.Count());
 
-
-                        //------------------------------
-                        //var oldBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").OrderBy(item => item.TimeCreate).Skip(5).ToList();
-                        //foreach (var item in oldBoss)
-                        //{
-                        //    var ind = PoolGamesObjects.FindIndex(p => p.NameObject == item.NameObject);
-                        //    if(ind == -1)
-                        //    {
-                        //        Debug.Log("CLEAR POOL: not find " + item.NameObject);
-                        //    }
-                        //    else
-                        //    {
-                        //        Debug.Log("CLEAR POOL: " + PoolGamesObjects[ind].NameObject);
-                        //        PoolGamesObjects[ind].Deactivate();
-                        //        PoolGamesObjects[ind].IsLock = false;
-                        //    }
-                        //    //PoolGamesObjects.Remove(item);
-
-                        //}
-                        //countBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").Count();
-                        //Debug.Log("COUNT POOL BOSS AFTER DEL : " + countBoss);
-                    }
-
-                    //foreach (var itemGroup in PoolGamesObjects.Where(p => p.IsLock == false).GroupBy(p => p.Tag))
-                    //{
-                    //    Debug.Log("Unlock Tag group : " + itemGroup.Key + " == " + itemGroup.Count());
-                    //}
-
-                    //var _testPoolObj = PoolGamesObjects.Find(p => p.Name == TestNamePool);
-                    //if (_testPoolObj != null)
-                    //{
-                    //    string nameGO = _testPoolObj.GameObjectNext == null ? "destroy" : _testPoolObj.GameObjectNext.name;
-                    //    //Debug.Log(">>>> POOL TEST " + TestNamePool + "   IsLock= " + _testPoolObj.IsLock + "     " + _testPoolObj.NameObject + "  >> " + nameGO);
-                    //}
-                    //else
-                    //{
-                    //    Debug.Log("NOT FIND POOL TEST " + TestNamePool);
-                    //}
-                }
-
-
+                //        //foreach (var item in destroyedPrefabs)
+                //        for (int ind = 0; ind < destroyedPrefabs.Count; ind++)
+                //        {
+                //            PoolGamesObjects.RemoveAt(ind);
+                //        }
+                //    }
+                //}
+                //-----------------
+                //}
             }
             //----------------------------
-
             //Debug.Log("Add pool not Tag  == " + tag);
             findPoolGO = AddPoolNewTypeObject(tag);
         }
@@ -213,22 +181,14 @@ public class PoolGameObjects
         }
         //---------------
 
+        if (IsTestingDestroy)
+        {
+            if (findGO == null)
+                Debug.Log("###########///////////// Pool contrains null object");
+        }
+
         return findGO;
     }
-
-    //public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
-    //{
-    //    GameObject findGO = null;
-    //    PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
-    //    if (findPoolGO == null)
-    //    {
-    //        findPoolGO = AddPoolNewTypeObject(tag);
-    //    }
-    //    findPoolGO.Activate(nameObject, tag, pos);
-    //    findGO = findPoolGO.GameObjectNext;
-
-    //    return findGO;
-    //}
 
     public GameObject InstantiatePool(GameObject prefabField, Vector3 pos, string nameFieldNew)
     {
@@ -253,58 +213,41 @@ public class PoolGameObjects
             itemPool.Deactivate(delGO.name);
             return true;
         }
-        else
-        {
-            //....
-            int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
-            if (indexLoop != -1)
-            {
-                itemPool = PoolGamesObjects[indexLoop];
-                //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
-                itemPool.Deactivate(delGO.name);
-            }
-            else
-            {
-                Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
-                //Destroy(delGO);
-                return false;
-            }
-            //....
-        }
+
+        //if (IsTestingDestroy)
+        //{ 
+        //    Debug.Log("??????????????? Pool Case null");
+
+        //    //....
+        //    int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
+        //    if (indexLoop != -1)
+        //    {
+        //        itemPool = PoolGamesObjects[indexLoop];
+        //        //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
+
+        //        //#fix
+        //        if (IsTestingDestroy)
+        //        {
+        //            if (itemPool.GameObjectNext == null)
+        //            {
+        //                Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
+        //            }
+        //        }
+        //        //itemPool.GameObjectNext = delGO;
+        //        itemPool.Deactivate(delGO.name, false, delGO);
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
+        //        //Destroy(delGO);
+        //        return false;
+        //    }
+        //    //....
+        //}
         Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
 
         return false;
     }
-
-    //public bool DestroyPoolGameObject(GameObject delGO)
-    //{
-    //    if (delGO == null)
-    //        return false;
-    //    if (string.IsNullOrEmpty(delGO.name))
-    //        return false;
-
-    //    //....
-    //    //EventsObject
-
-
-    //    int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
-
-    //    if (indexLoop != -1)
-    //    {
-    //        var itemPool = PoolGamesObjects[indexLoop];
-    //        //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
-    //        itemPool.Deactivate();
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
-    //        //Destroy(delGO);
-    //        return false;
-    //    }
-    //    return true;
-    //}
-
-
 
     private void CleanerPool(GameObject gobj, bool isLog = false)
     {
@@ -533,20 +476,30 @@ public class PoolGameObject
         GameObjectNext = newGO;
         GameObjectNext.name = Name + "_Empty" + Tag;
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-        
-        //#FIX
-        //GameObjectNext.tag = "InPool";
-
-        //GameObjectNext.AddComponent<Transform>();
-        //GameObjectNext.AddComponent<SpriteRenderer>();
-
-        //GameObjectNext.SetActive(false);
-        //GameObjectNext.transform.SetParent(PanelPoolField.transform);
     }
 
+    public override string ToString()
+    {
+        string infoObj = GameObjectNext == null ? "NOT" : GameObjectNext.name + 
+            " pool:" + GameObjectNext.GetComponent<EventsObject>().PoolCase.Name + " " + 
+            GameObjectNext.GetComponent<EventsObject>().PoolCase.NameObject;
+        string info = "[" + TimeCreate.TimeOfDay + "] " + Name + " " + NameObject + " -- " + Tag + " " + infoObj;
+
+        //return base.ToString();
+        return info;
+    }
 
     public void Activate(string nameObj, string tag, Vector3 pos)
     {
+        //#TEST
+        if (PoolGameObjects.IsTestingDestroy)
+        {
+            if (GameObjectNext == null)
+            {
+                Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
+            }
+        }
+
         IsLock = true;
         NameObject = nameObj;
 
@@ -570,130 +523,74 @@ public class PoolGameObject
             //Debug.Log("SetActive NO NPC " + nameObj);
             GameObjectNext.SetActive(true);
         }
-        else
+
+        //#TEST
+        if (PoolGameObjects.IsTestingDestroy)
         {
-            //var movementNPC = GameObjectNext.GetComponent<MovementNPC>();
-            //if (movementNPC == null)
-            //{
-            //    //Debug.Log("SetActive NO NPC " + nameObj);
-            //    GameObjectNext.SetActive(true);
-            //}
-
-            //Debug.Log("+++++++++++ SetActive NPC " + nameObj);
-
+            if (GameObjectNext == null)
+            {
+                Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
+            }
         }
-
-        //var movement = GameObjectNext.GetComponent<MovementBoss>();
-        //if (movement != null)
-        //{
-        //    Debug.Log("~~~~~~~~~~~~~~~ Activate UpdateData " + nameObj);
-        //    movement.UpdateData("Activate");
-        //}
-        ////}
-
-        //GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
-
-        //GameObjectNext.SetActive(true);
-
-        //if (movement != null)
-        //{
-        //    Debug.Log("~~~~~~~~~~~~~~~ Activate InitNPC " + nameObj);
-        //    movement.InitNPC();
-        //}
     }
 
+    //public void Activate_(string nameObj, string tag, Vector3 pos)
+    //{
+    //    IsLock = true;
+    //    NameObject = nameObj;
 
-    
+    //    TimeCreate = DateTime.Now;
+    //    if (GameObjectNext == null)
+    //    {
+    //        Debug.Log("#### Activate >> Object is null " + NameObject);
+    //        return;
+    //    }
 
-    public void Activate_(string nameObj, string tag, Vector3 pos)
-    {
-        IsLock = true;
-        NameObject = nameObj;
+    //    //GameObjectNext.SetActive(true);
+    //    GameObjectNext.transform.SetParent(null);
+    //    GameObjectNext.tag = tag;
+    //    GameObjectNext.transform.position = pos;
+    //    GameObjectNext.name = nameObj;
+    //    GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
 
-        TimeCreate = DateTime.Now;
-        if (GameObjectNext == null)
-        {
-            Debug.Log("#### Activate >> Object is null " + NameObject);
-            return;
+    //}
 
-            //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
-            //if(GameObjectNext==null)
-            //{
-            //    Debug.Log("#### Activate >> Object is null and Not create prefab: " + Tag);
-            //    return;
-            //}
-        }
-
-        //GameObjectNext.SetActive(true);
-        GameObjectNext.transform.SetParent(null);
-        GameObjectNext.tag = tag;
-        GameObjectNext.transform.position = pos;
-        GameObjectNext.name = nameObj;
-        GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
-
-    }
-
-    public void Deactivate(string gobjName="", bool isCreatedNew = false)
+    public void Deactivate(string gobjName="", bool isCreatedNew = false, GameObject gobj =null)
     {
         if (GameObjectNext == null)
         {
             Debug.Log("#### Deactivate >> Object is null " + NameObject);
-            //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
-            //NameObject = "";
-            //IsLock = false;
             return;
         }
 
         //Debug.Log("ME POOL " + Name + " unlock " + NameObject);
 
-        if (Tag == "PrefabBoss" && !isCreatedNew)
-        {
-            IsLock = false;
-            //var poolF1 = Storage.Pool.PoolGamesObjects.Find(p => p.Name == this.Name);
-            //if (poolF1 != null)
-            //{
-            //    Debug.Log("Deactivate BOSS " + NameObject + " YES Find pool 1. " + this.Name);
-            //    poolF1.IsLock = false;
-            //}
-            //else
-            //{
-            //    Debug.Log("Deactivate BOSS " + NameObject + " not Find pool 1. " + this.Name);
-            //}
-            //-----fIX???
-            if (Storage.Pool != null && Storage.Pool.PoolGamesObjects != null)
-            {
-                var poolF2 = Storage.Pool.PoolGamesObjects.Find(p => p.NameObject == this.NameObject);
-                if (poolF2 != null)
-                {
-                    //Debug.Log("-------------- Deactivate BOSS " + NameObject + " YES Find pool 2. " + this.NameObject);
-                    poolF2.IsLock = false;
-                }
-                else
-                {
-                    Debug.Log("Deactivate BOSS " + NameObject + " not Find pool 2. " + this.Name);
-                }
-            }
-            else
-            {
-                Debug.Log("Deactivate BOSS Pool is empty");
-            }
-            ///----------------
-            //Debug.Log("Deactivate BOSS " + NameObject + "   gobjName: " + gobjName);
-            PoolGameObjects.TestNamePool = this.Name;
-            //Debug.Log("--------- SAVE POOL UNLOCK ME " + PoolGameObjects.TestNamePool + "   " + NameObject + "   gobjName: " + gobjName);
-        }
-        //Debug.Log("Deactivate ......" + NameObject);
+        //if (PoolGameObjects.IsTestingDestroy)
+        //{
+        //    if (Tag == "PrefabBoss" && !isCreatedNew)
+        //    {
+        //        IsLock = false;
+        //        PoolGameObjects.TestNamePool = this.Name;
+        //    }
+        //}
+
 
         NameObject = "";
 
         GameObjectNext.SetActive(false);
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-        //GameObjectNext.tag = "InPool";
-        //GameObjectNext.transform.position = pos;
-
-        
+       
 
         IsLock = false;
+
+        //#TEST
+        if (PoolGameObjects.IsTestingDestroy)
+        {
+            if (GameObjectNext == null)
+            {
+                Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
+            }
+        }
     }
 
 }
