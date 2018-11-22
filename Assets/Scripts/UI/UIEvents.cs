@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 
+[AddComponentMenu("Storage/Events")]
 public class UIEvents : MonoBehaviour {
 
     //public static bool IsCursorVisible = true;
@@ -124,6 +125,11 @@ public class UIEvents : MonoBehaviour {
         {
             Debug.Log("########## DataPathUserData not exist: " + Storage.Instance.DataPathUserData);
         }
+
+        if (PoolGameObjects.IsStack)
+        {
+            StartCoroutine(CalculateTagsInPool());
+        }
     }
 
     // Update is called once per frame
@@ -183,9 +189,38 @@ public class UIEvents : MonoBehaviour {
                 }
             }
         }
-        
+
+       
     }
 
+    int m_savecountInPool = 0;
+
+
+    IEnumerator CalculateTagsInPool()
+    {
+        //yield break;
+
+        while(true)
+        {
+            yield return new WaitForSeconds(2f);
+            if (PoolGameObjects.IsStack)
+            {
+
+                int countInPool = Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value).Count();
+                if (m_savecountInPool != countInPool)
+                {
+                    Debug.Log("-------------------- all pools Key:------------------------");
+                    m_savecountInPool = countInPool;
+
+                    var respools = Storage.Pool.PoolGamesObjectsStack;
+                    foreach (var itemP in respools)
+                    {
+                        Debug.Log("-------------------- Key: " + itemP.Key + "   = " + itemP.Value.Count);
+                    }
+                }
+            }
+        }
+    }
 
     //public bool IsMeTerra = false;
 
@@ -706,9 +741,16 @@ public class UIEvents : MonoBehaviour {
                 countFPS = 0;
             }
 
-            itogPoolObject = Storage.Pool.PoolGamesObjects.Where(p=>p.IsLock).Count();
-
-            itogPool = Storage.Pool.PoolGamesObjects.Count();
+            if (PoolGameObjects.IsStack)
+            {
+                itogPoolObject = Storage.Pool.PoolGamesObjectsStack.SelectMany(p=>p.Value).Count();
+                itogPool = itogPoolObject;
+            }
+            else
+            {
+                itogPoolObject = Storage.Pool.PoolGamesObjects.Where(p => p.IsLock).Count();
+                itogPool = Storage.Pool.PoolGamesObjects.Count();
+            }
         }
 
     }

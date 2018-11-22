@@ -20,6 +20,7 @@ public class PoolGameObjects
     public static bool IsUsePoolObjects = true; //34e-39e
 
     public static bool IsTestingDestroy = false;//true; // 
+    public static bool IsStack = true; //false;// 
 
     //int limitPoolOnRemoved = 450;
     int limitPoolOnRemovedBoss = 250;
@@ -30,54 +31,69 @@ public class PoolGameObjects
     int indexPool = 0;
     public List<PoolGameObject> PoolGamesObjects;
 
+        
+    public Dictionary<string, Stack<PoolGameObject>> PoolGamesObjectsStack;
+
+
+    class PoolConfig
+    {
+        List<string> Limits { get; set; }
+    }
 
     void LoadPoolGameObjects()
     {
-        PoolGamesObjects = new List<PoolGameObject>();
+        if (IsStack)
+        {
+            PoolGamesObjectsStack = new Dictionary<string, Stack<PoolGameObject>>();
+        }
+        else
+        {
+            PoolGamesObjects = new List<PoolGameObject>();
+        }
         //return;
         //foreach (var i in Enumerable.Range(0, 1000))
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, 1000))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabField.ToString(), false);
         }
 
         //-------------
-        //foreach (var i in Enumerable.Range(0, 200))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabBoss.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabUfo.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabVood.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallWood.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallRock.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabRock.ToString(), false);
-        //}
-        //foreach (var i in Enumerable.Range(0, 100))
-        //{
-        //    indexPool = i;
-        //    AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabElka.ToString(), false);
-        //}
+        foreach (var i in Enumerable.Range(0, 300))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabBoss.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 100))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabUfo.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 200))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabVood.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 100))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallWood.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 100))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallRock.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 100))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabRock.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, 100))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabElka.ToString(), false);
+        }
     }
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
@@ -92,7 +108,22 @@ public class PoolGameObjects
         poolObj.Deactivate("Add " + poolObj.Name, true);
 
         //poolObj.IsLock = false;
-        PoolGamesObjects.Add(poolObj);
+        if(IsStack)
+        {
+            var stackPool = new Stack<PoolGameObject>();
+            if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
+                PoolGamesObjectsStack.Add(prefabTag, stackPool);
+            else
+                stackPool = PoolGamesObjectsStack[prefabTag];
+            stackPool.Push(poolObj);
+            //PoolGamesObjectsStack.Add(prefabTag, stackPool);
+        }
+        else
+        {
+            PoolGamesObjects.Add(poolObj);
+        }
+
+        
 
         //Debug.Log("pool +++++ " + newGO.name);
 
@@ -111,18 +142,64 @@ public class PoolGameObjects
     {
         GameObject findGO = null;
 
-        if (IsTestingDestroy)
+        //if (IsTestingDestroy)
+        //{
+        //    var destroyedPrefabsTest = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
+        //    if (destroyedPrefabsTest.Count > 0)
+        //        Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + destroyedPrefabsTest[0].ToString());
+        //}
+
+        PoolGameObject findPoolGO = null;
+        int contUnlockPools = 0;
+        if (!IsStack)
         {
-            var destroyedPrefabsTest = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
-            if (destroyedPrefabsTest.Count > 0)
-                Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + destroyedPrefabsTest[0].ToString());
+            findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+            contUnlockPools = PoolGamesObjects.Count;
+        }
+        else
+        {
+            //var stackPool = new Stack<PoolGameObject>();
+            if (PoolGamesObjectsStack.ContainsKey(tag))
+            {
+                contUnlockPools = PoolGamesObjectsStack[tag].Count;
+                if (contUnlockPools > 0)
+                {
+                    PoolGameObject returnPool =  PoolGamesObjectsStack[tag].Peek();
+                    if(returnPool==null)
+                    {
+                        Debug.Log("######## returnPool==null");
+                    }
+                    if (returnPool.GameObjectNext == null)
+                    {
+                        Debug.Log("######## returnPool.GameObjectNext==null");
+                    }
+
+                    findPoolGO = PoolGamesObjectsStack[tag].Pop();
+
+                    if(findPoolGO == null)
+                    {
+                        Debug.Log("######## findPoolGO==null");
+                    }
+                    if (findPoolGO.GameObjectNext == null)
+                    {
+                        Debug.Log("######## findPoolGO.GameObjectNext==null");
+                    }
+                    
+                }
+            }
+            
+            //    PoolGamesObjectsStack.Add(prefabTag, stackPool);
+            //else
+            //    stackPool = PoolGamesObjectsStack[prefabTag];
+            //stackPool.Push(poolObj);
         }
 
-        PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+
+
         if (findPoolGO == null)
         {
             //---------------------------- TEST UNLOCk
-            if (PoolGamesObjects.Count > limitPoolOnRemoved)
+            if (contUnlockPools > limitPoolOnRemoved)
             {
                 if (IsTestingDestroy)
                     Debug.Log("?????? NOT POOL ME:" + nameObject);
@@ -206,13 +283,31 @@ public class PoolGameObjects
             return false;
 
         //....
+        
         EventsObject evenObj = delGO.GetComponent<EventsObject>();
         PoolGameObject itemPool = evenObj.PoolCase;
         if (itemPool != null)
         {
             itemPool.Deactivate(delGO.name);
-            return true;
+            //return true;
         }
+        else
+        {
+            Debug.Log("########### PoolCase IS NULL");
+            return false;
+        }
+
+
+        if (IsStack)
+        {
+            if (itemPool != null)
+            {
+                //itemPool.Deactivate(delGO.name);
+                PoolGamesObjectsStack[itemPool.Tag].Push(itemPool);
+            }
+        }
+
+        return true;
 
         //if (IsTestingDestroy)
         //{ 
@@ -244,75 +339,78 @@ public class PoolGameObjects
         //    }
         //    //....
         //}
-        Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
+        //Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
 
-        return false;
+        //return false;
     }
 
-    private void CleanerPool(GameObject gobj, bool isLog = false)
-    {
-        PoolGameObject[] poolsTesting;
+    //private void CleanerPool(GameObject gobj, bool isLog = false)
+    //{
+    //    PoolGameObject[] poolsTesting;
 
-        string nameField = Helper.GetNameFieldObject(gobj);
-        if (Storage.Instance.Fields.ContainsKey(nameField))
-        {
-            if (isLog)
-                Debug.Log("///// 1. CleanerPool: Fields list  --  Removed: " + nameField);
-            Storage.Instance.Fields.Remove(nameField);
-        }
-        //if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
-        //{
-        //    foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
-        //    {
-        //        if (isLog)
-        //            Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
-        //        Storage.Instance.AddDestroyGameObject(item);
-        //        //Storage.Instance.DestroyObject(item);
-        //    }
-        //}
-        Storage.GenGrid.RemoveRealObjects(nameField);
+    //    string nameField = Helper.GetNameFieldObject(gobj);
+    //    if (Storage.Instance.Fields.ContainsKey(nameField))
+    //    {
+    //        if (isLog)
+    //            Debug.Log("///// 1. CleanerPool: Fields list  --  Removed: " + nameField);
+    //        Storage.Instance.Fields.Remove(nameField);
+    //    }
+    //    //if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
+    //    //{
+    //    //    foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
+    //    //    {
+    //    //        if (isLog)
+    //    //            Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
+    //    //        Storage.Instance.AddDestroyGameObject(item);
+    //    //        //Storage.Instance.DestroyObject(item);
+    //    //    }
+    //    //}
+    //    Storage.GenGrid.RemoveRealObjects(nameField);
 
-        if (isLog)
-            Debug.Log("///// 2. CleanerPool: Destroy (not pool): " + gobj.name);
-        if(gobj!=null)
-            Storage.Instance.DestroyObject(gobj);
+    //    if (isLog)
+    //        Debug.Log("///// 2. CleanerPool: Destroy (not pool): " + gobj.name);
+    //    if(gobj!=null)
+    //        Storage.Instance.DestroyObject(gobj);
 
-        poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
-        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-        {
-            var pool = poolsTesting[i];
-            if (isLog)
-                Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
-            PoolGamesObjects.Remove(pool);
-        }
-    }
+    //    if (!IsStack)
+    //    {
+    //        poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
+    //        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //        {
+    //            var pool = poolsTesting[i];
+    //            if (isLog)
+    //                Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
+    //            PoolGamesObjects.Remove(pool);
+    //        }
+    //    }
+    //}
 
-    private void TestFields(bool isLog = false)
-    {
-        //.......
-        //Single dist = 0;
-        List<GameObject> poolsTesting = Storage.Instance.Fields.Select(x => x.Value).Where(p => p.tag == "Field" || p.tag == "PrefabField").ToList();
-        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-        {
-            GameObject gobj = poolsTesting[i];
-            //bool inZona = Helper.IsValidPiontInZonaCorr(gobj.transform.position.x, gobj.transform.position.y);
-            bool inZona = Helper.IsValidFieldInZona(gobj.name);
+    //private void TestFields(bool isLog = false)
+    //{
+    //    //.......
+    //    //Single dist = 0;
+    //    List<GameObject> poolsTesting = Storage.Instance.Fields.Select(x => x.Value).Where(p => p.tag == "Field" || p.tag == "PrefabField").ToList();
+    //    for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    {
+    //        GameObject gobj = poolsTesting[i];
+    //        //bool inZona = Helper.IsValidPiontInZonaCorr(gobj.transform.position.x, gobj.transform.position.y);
+    //        bool inZona = Helper.IsValidFieldInZona(gobj.name);
 
-            if (!inZona)
-            {
-                if (isLog)
-                {
-                    Debug.Log("TEST Pool Not in Zona: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
-                        "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
-                        "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
-                }
+    //        if (!inZona)
+    //        {
+    //            if (isLog)
+    //            {
+    //                Debug.Log("TEST Pool Not in Zona: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
+    //                    "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+    //                    "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+    //            }
 
-                gobj.GetComponent<SpriteRenderer>().color = Color.red;
-                //StartCoroutine(StartCleanerPool(gobj));
-                CleanerPool(gobj, isLog);
-            }
-        }
-    }
+    //            gobj.GetComponent<SpriteRenderer>().color = Color.red;
+    //            //StartCoroutine(StartCleanerPool(gobj));
+    //            CleanerPool(gobj, isLog);
+    //        }
+    //    }
+    //}
 
     private void TestRealGO()
     {
@@ -364,91 +462,91 @@ public class PoolGameObjects
         //}
     }
 
-    private void TestPooling()
-    {
-        foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null))
-        {
-            Debug.Log("TEST Pool EMPTY and LOCKED !!!!! " + pool.Name);
-        }
+    //private void TestPooling()
+    //{
+    //    foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null))
+    //    {
+    //        Debug.Log("TEST Pool EMPTY and LOCKED !!!!! " + pool.Name);
+    //    }
 
-        try
-        {
-            PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
-            //foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
-            for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-            {
-                var pool = poolsTesting[i];
-                //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
-                //bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
-                var dist = Vector2.Distance(pool.GameObjectNext.transform.position, Storage.Instance.HeroObject.transform.position);
-                //if (!inZona)
-                if (dist > 40)
-                {
-                    Debug.Log("TEST Pool Dist[" + dist + "]: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
-                        "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
-                        "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
-                    //PoolGamesObjects.Remove(pool);
-                    pool.Deactivate();
-                }
-            }
+    //    try
+    //    {
+    //        PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
+    //        //foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
+    //        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //        {
+    //            var pool = poolsTesting[i];
+    //            //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
+    //            //bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+    //            var dist = Vector2.Distance(pool.GameObjectNext.transform.position, Storage.Instance.HeroObject.transform.position);
+    //            //if (!inZona)
+    //            if (dist > 40)
+    //            {
+    //                Debug.Log("TEST Pool Dist[" + dist + "]: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
+    //                    "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+    //                    "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+    //                //PoolGamesObjects.Remove(pool);
+    //                pool.Deactivate();
+    //            }
+    //        }
 
 
-            poolsTesting = PoolGamesObjects.Where(p => p.GameObjectNext == null).ToArray();
-            for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-            {
-                var pool = poolsTesting[i];
-                Debug.Log("TEST Pool  is EMPTY  " + pool.Name + " " + pool.NameObject + "   " + pool.Tag + "    " + pool.TimeCreate);
-            }
+    //        poolsTesting = PoolGamesObjects.Where(p => p.GameObjectNext == null).ToArray();
+    //        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //        {
+    //            var pool = poolsTesting[i];
+    //            Debug.Log("TEST Pool  is EMPTY  " + pool.Name + " " + pool.NameObject + "   " + pool.Tag + "    " + pool.TimeCreate);
+    //        }
 
-            //PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
-            ////foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
-            //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-            //{
-            //    var pool = poolsTesting[i];
-            //    //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
-            //    bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
-            //    if (!inZona)
-            //    {
-            //        Debug.Log("TEST Pool Not in Zona: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
-            //            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
-            //            "   zona: " + Storage.Instance.ZonaReal.X +"x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
-            //        //PoolGamesObjects.Remove(pool);
-            //        pool.Deactivate();
-            //    }
-            //}
+    //        //PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null).ToArray();
+    //        ////foreach (var pool in PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext != null))
+    //        //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //        //{
+    //        //    var pool = poolsTesting[i];
+    //        //    //Storage.Instance.HeroObject.transform.position, pool.GameObjectNext.transform.position
+    //        //    bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+    //        //    if (!inZona)
+    //        //    {
+    //        //        Debug.Log("TEST Pool Not in Zona: " + pool.NameObject + " " + pool.GameObjectNext.transform.position.x + "x" + pool.GameObjectNext.transform.position.y +
+    //        //            "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+    //        //            "   zona: " + Storage.Instance.ZonaReal.X +"x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+    //        //        //PoolGamesObjects.Remove(pool);
+    //        //        pool.Deactivate();
+    //        //    }
+    //        //}
 
-            //poolsTesting = PoolGamesObjects.OrderBy(p => p.TimeCreate).Take(5).ToArray();
-            //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-            //{
-            //    var pool = poolsTesting[i];
-            //    Debug.Log("TEST Pool old time " + pool.NameObject + " = " + pool.TimeCreate);
-            //    if (pool.IsLock && pool.GameObjectNext != null)
-            //    {
-            //        //bool inZona = Helper.IsValidPiontInZona(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
-            //        bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
-            //        if (!inZona)
-            //        {
-            //            Debug.Log("TEST Pool old time " + pool.NameObject + " > " + pool.GameObjectNext.name + "    " + pool.GameObjectNext.transform.position);
-            //            //PoolGamesObjects.Remove(pool);
-            //            pool.Deactivate();
-            //        }
-            //    }
-            //}
-        }
-        catch (Exception x)
-        {
-            Debug.Log("########### AddPoolNewTypeObject REMOVED " + x.Message);
-        }
+    //        //poolsTesting = PoolGamesObjects.OrderBy(p => p.TimeCreate).Take(5).ToArray();
+    //        //for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //        //{
+    //        //    var pool = poolsTesting[i];
+    //        //    Debug.Log("TEST Pool old time " + pool.NameObject + " = " + pool.TimeCreate);
+    //        //    if (pool.IsLock && pool.GameObjectNext != null)
+    //        //    {
+    //        //        //bool inZona = Helper.IsValidPiontInZona(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+    //        //        bool inZona = Helper.IsValidPiontInZonaCorr(pool.GameObjectNext.transform.position.x, pool.GameObjectNext.transform.position.y);
+    //        //        if (!inZona)
+    //        //        {
+    //        //            Debug.Log("TEST Pool old time " + pool.NameObject + " > " + pool.GameObjectNext.name + "    " + pool.GameObjectNext.transform.position);
+    //        //            //PoolGamesObjects.Remove(pool);
+    //        //            pool.Deactivate();
+    //        //        }
+    //        //    }
+    //        //}
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("########### AddPoolNewTypeObject REMOVED " + x.Message);
+    //    }
 
-        //PoolGameObject removedPool = PoolGamesObjects.Where(p=>p.IsLock == false).OrderBy(p => p.TimeCreate).FirstOrDefault();
-        //PoolGameObject removedPoolFirst = PoolGamesObjects.Where(p => p.IsLock == false).OrderByDescending(p => p.TimeCreate).FirstOrDefault();
-        //if (removedPool!=null)
-        //{
-        //    Debug.Log("Removed pool: 0:" + removedPool.TimeCreate + " " + removedPool.Name + "       first: " + removedPoolFirst.TimeCreate + " " + removedPoolFirst.Name );
-        //    Debug.Log("Removed pool: " + removedPool.Name + "   no lock=" + PoolGamesObjects.Where(p => p.IsLock == false).Count());
-        //    PoolGamesObjects.Remove(removedPool);
-        //}
-    }
+    //    //PoolGameObject removedPool = PoolGamesObjects.Where(p=>p.IsLock == false).OrderBy(p => p.TimeCreate).FirstOrDefault();
+    //    //PoolGameObject removedPoolFirst = PoolGamesObjects.Where(p => p.IsLock == false).OrderByDescending(p => p.TimeCreate).FirstOrDefault();
+    //    //if (removedPool!=null)
+    //    //{
+    //    //    Debug.Log("Removed pool: 0:" + removedPool.TimeCreate + " " + removedPool.Name + "       first: " + removedPoolFirst.TimeCreate + " " + removedPoolFirst.Name );
+    //    //    Debug.Log("Removed pool: " + removedPool.Name + "   no lock=" + PoolGamesObjects.Where(p => p.IsLock == false).Count());
+    //    //    PoolGamesObjects.Remove(removedPool);
+    //    //}
+    //}
     #endregion
 
 }
