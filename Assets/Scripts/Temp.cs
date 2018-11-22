@@ -14,6 +14,255 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
+    //{
+    //    GameObject findGO = null;
+
+    //    PoolGameObject findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+    //    if (findPoolGO == null)
+    //    {
+    //        //var test_findPoolGO = PoolGamesObjects.Find(p => p.NameObject == nameObject);
+    //        //if(test_findPoolGO!=null)
+    //        //{
+    //        //    Debug.Log("########## Pool Exist Lock test_findPoolGO : " + test_findPoolGO);
+    //        //}
+
+    //        //Debug.Log("Get Add Poll Tag = " + tag);
+    //        //---------------------------- TEST UNLOCk
+    //        if (PoolGamesObjects.Count > limitPoolOnRemoved)
+    //        {
+    //            if (tag == "PrefabBoss")
+    //            {
+    //                //Debug.Log("~~~~~~~~~~~");
+
+    //                //int countTag = PoolGamesObjects.Where(p => p.Tag == tag).Count();
+    //                //Debug.Log("Count Tag ALL [" + tag + "] = " + countTag);
+    //                //int countUnlock = PoolGamesObjects.Where(p => p.IsLock == false).Count();
+    //                //Debug.Log("Count Unlock ALL = " + countUnlock);
+
+    //                int countBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").Count();
+    //                //Debug.Log("COUNT POOL BOSS: " + countBoss);
+    //                if (countBoss > limitPoolOnRemovedBoss)
+    //                {
+    //                    //var destroyedBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss" && p.IsLock && p.GameObjectNext == null).ToList();
+    //                    //if (destroyedBoss.Count != 0)
+    //                    //    Debug.Log("COUNT POOL BOSS DESTROYED >>>> : " + destroyedBoss.Count());
+    //                    var destroyedPrefabs = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
+    //                    //if (destroyedPrefabs.Count != 0 && destroyedBoss.Count != destroyedPrefabs.Count)
+    //                    //if (destroyedPrefabs.Count != 0)
+    //                    //    Debug.Log("COUNT POOL DESTROYED >>>> : " + destroyedPrefabs.Count());
+
+    //                    //foreach (var item in destroyedPrefabs)
+    //                    //{
+    //                    //    //var ind = PoolGamesObjects.FindIndex(p => p.NameObject == item.NameObject);
+    //                    //    //if (ind == -1)
+    //                    //    //{
+    //                    //    //    Debug.Log("CLEAR POOL: not find " + item.NameObject);
+    //                    //    //}
+    //                    //    //else
+    //                    //    //{
+    //                    //    //    //Debug.Log("REMOVE DESTROY POOL: " + PoolGamesObjects[ind].NameObject + " " + PoolGamesObjects[ind].Name + " ");
+    //                    //    //    //PoolGamesObjects[ind].Deactivate();
+    //                    //    //    //oolGamesObjects[ind].IsLock = false;
+    //                    //    //    PoolGamesObjects.RemoveAt(ind);
+    //                    //    //}
+    //                    //    PoolGamesObjects.Remove(item);
+    //                    //}
+
+    //                    //foreach (var item in destroyedPrefabs)
+    //                    for (int ind = 0; ind < destroyedPrefabs.Count; ind++)
+    //                    {
+    //                        PoolGamesObjects.RemoveAt(ind);
+    //                    }
+
+
+    //                    //------------------------------
+    //                    //var oldBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").OrderBy(item => item.TimeCreate).Skip(5).ToList();
+    //                    //foreach (var item in oldBoss)
+    //                    //{
+    //                    //    var ind = PoolGamesObjects.FindIndex(p => p.NameObject == item.NameObject);
+    //                    //    if(ind == -1)
+    //                    //    {
+    //                    //        Debug.Log("CLEAR POOL: not find " + item.NameObject);
+    //                    //    }
+    //                    //    else
+    //                    //    {
+    //                    //        Debug.Log("CLEAR POOL: " + PoolGamesObjects[ind].NameObject);
+    //                    //        PoolGamesObjects[ind].Deactivate();
+    //                    //        PoolGamesObjects[ind].IsLock = false;
+    //                    //    }
+    //                    //    //PoolGamesObjects.Remove(item);
+
+    //                    //}
+    //                    //countBoss = PoolGamesObjects.Where(p => p.Tag == "PrefabBoss").Count();
+    //                    //Debug.Log("COUNT POOL BOSS AFTER DEL : " + countBoss);
+    //                }
+
+    //                //foreach (var itemGroup in PoolGamesObjects.Where(p => p.IsLock == false).GroupBy(p => p.Tag))
+    //                //{
+    //                //    Debug.Log("Unlock Tag group : " + itemGroup.Key + " == " + itemGroup.Count());
+    //                //}
+
+    //                //var _testPoolObj = PoolGamesObjects.Find(p => p.Name == TestNamePool);
+    //                //if (_testPoolObj != null)
+    //                //{
+    //                //    string nameGO = _testPoolObj.GameObjectNext == null ? "destroy" : _testPoolObj.GameObjectNext.name;
+    //                //    //Debug.Log(">>>> POOL TEST " + TestNamePool + "   IsLock= " + _testPoolObj.IsLock + "     " + _testPoolObj.NameObject + "  >> " + nameGO);
+    //                //}
+    //                //else
+    //                //{
+    //                //    Debug.Log("NOT FIND POOL TEST " + TestNamePool);
+    //                //}
+    //            }
+
+
+    //        }
+    //        //----------------------------
+
+    //        //Debug.Log("Add pool not Tag  == " + tag);
+    //        findPoolGO = AddPoolNewTypeObject(tag);
+    //    }
+    //    findPoolGO.Activate(nameObject, tag, pos);
+    //    findGO = findPoolGO.GameObjectNext;
+
+    //    //---------------
+    //    EventsObject evenObj = findGO.GetComponent<EventsObject>();
+    //    if (evenObj != null)
+    //    {
+    //        if (findPoolGO == null)
+    //        {
+    //            Debug.Log("#######  GetPoolGameObject   findPoolGO is null " + findGO.name);
+    //        }
+    //        evenObj.PoolCase = findPoolGO;
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("#######  GetPoolGameObject   NOT EventsObject " + findGO.name);
+    //    }
+    //    //---------------
+
+    //    return findGO;
+    //}
+
+    //public void Activate_(string nameObj, string tag, Vector3 pos)
+    //{
+    //    IsLock = true;
+    //    NameObject = nameObj;
+
+    //    TimeCreate = DateTime.Now;
+    //    if (GameObjectNext == null)
+    //    {
+    //        Debug.Log("#### Activate >> Object is null " + NameObject);
+    //        return;
+
+    //        //GameObjectNext = Storage.GenGrid.FindPrefab(Tag);
+    //        //if(GameObjectNext==null)
+    //        //{
+    //        //    Debug.Log("#### Activate >> Object is null and Not create prefab: " + Tag);
+    //        //    return;
+    //        //}
+    //    }
+
+    //    //GameObjectNext.SetActive(true);
+    //    GameObjectNext.transform.SetParent(null);
+    //    GameObjectNext.tag = tag;
+    //    GameObjectNext.transform.position = pos;
+    //    GameObjectNext.name = nameObj;
+    //    GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
+
+    //    //var movement = GameObjectNext.GetComponent<MovementNPC>();
+
+    //    //var movement = GameObjectNext.GetComponent<MovementBoss>();
+    //    //if (movement != null)
+    //    //{
+    //    //    //movement.InitNPC();
+    //    //    //movement.Refresh();
+    //    //    movement.UpdateData("Activate");
+    //    //    movement.Refresh();
+    //    //    //var data = movement.GetData();
+    //    //    //data.Update(GameObjectNext);
+    //    //}
+    //    //else
+    //    //{
+    //    //var movementNPC = GameObjectNext.GetComponent<MovementNPC>();
+    //    //if (movementNPC != null)
+    //    //var movement = GameObjectNext.GetComponent<MovementBoss>();
+    //    //if (movement == null)
+    //    //{
+    //    //    Debug.Log("SetActive NO NPC " + nameObj);
+    //    //    GameObjectNext.SetActive(true);
+    //    //}else
+    //    //{
+    //    //    Debug.Log("NO SetActive NPC " + nameObj);
+
+    //    //}
+    //    //var data = movement.GetUpdateData("Activate");
+
+    //    //------------------------
+    //    //movementNPC.Refresh();
+    //    //movementNPC.UpdateData("Activate");
+
+    //    //Debug.Log("movement: " + data.NameObject + "    nameObj=" + nameObj + " real: " + Helper.GetNameFieldPosit(pos.x, pos.y));
+    //    //Debug.Log("movement: " + data.NameObject + "    nameObj=" + nameObj + " real: " + pos.x + "x" + pos.y);
+    //    //if (data.NameObject == nameObj)
+    //    //{
+    //    //    movement.Refresh();
+    //    //}
+    //    //else
+    //    //{
+    //    //    Debug.Log("---------- NOT Refresh");
+    //    //}
+
+    //    //----------------------
+    //    //movement.InitNPC();
+    //    //movementNPC.Refresh();
+    //    //movementNPC.UpdateData("Activate");
+
+    //    //-----------------------------
+    //    //var data = movement.GetUpdateData("Activate");
+
+    //    //Debug.Log("######### data " + (data == null));
+
+    //    //FindPersonData dataP = Storage.Person.GetFindPersonsDataForName(GameObjectNext.name);
+
+    //    //if(data == null && dataP!=null)
+    //    //{
+    //    //    data = movement.GetUpdateData("Activate");
+    //    //}
+
+    //    //if (dataP != null)
+    //    //{
+    //    //    Debug.Log("FindPersonData: :" + dataP.DataObj.NameObject + " [" + dataP.Field + "]");
+
+    //    //    ModelNPC.ObjectData res = Storage.Instance.GridDataG.FieldsD[dataP.Field].Objects.Find(p => p.NameObject == GameObjectNext.name);
+
+    //    //    Debug.Log("ObjectData TRUE: :" + res.NameObject);
+    //    //}
+    //    //else
+    //    //{
+    //    //    Debug.Log("FindPersonData null");
+    //    //}
+    //    //------------------------
+
+    //    //var data = movementNPC.GetData();
+
+
+
+    //    //if (data!=null &&  nameObj != data.NameObject)
+    //    //{
+    //    //    string info = "pool: " + nameObj + " <> DO:" + data.NameObject + " real: " + Helper.GetNameFieldPosit(pos.x, pos.y);
+    //    //    Debug.Log("#########  " + info);
+    //    //    Storage.Events.ListLogAdd = info;
+    //    //}
+    //    //data.Update(GameObjectNext);
+
+    //    //-------------------------
+    //    //}
+    //    //}
+
+    //    //GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
+    //}
+
     //private void CleanerPool(GameObject gobj)
     //{
     //    PoolGameObject[] poolsTesting = PoolGamesObjects.Where(p => p.IsLock && p.NameObject == gobj.name).ToArray();

@@ -935,7 +935,7 @@ public class Storage : MonoBehaviour {
                 //Storage.Log.GetHistory(objDataSave.NameObject);
 
                 //<< fix: >>
-                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p.name == nameObjectTest).ToList())
+                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p != null && p.name == nameObjectTest).ToList())
                 {
                     if(!findGobj.Equals(thisGameObject))
                     {

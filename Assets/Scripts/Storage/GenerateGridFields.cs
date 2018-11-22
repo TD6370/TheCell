@@ -466,6 +466,38 @@ public class GenerateGridFields : MonoBehaviour {
                 indErr = "16.";
 
                 listGameObjectReal.Add(newField);
+
+                //---------- ACTIVATE
+                if (PoolGameObjects.IsUsePoolObjects)
+                {
+                    var movement = newField.GetComponent<MovementBoss>();
+                    //var movement = newField.GetComponent<MovementNPC>();
+                    if (movement != null)
+                    {
+                        //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate UpdateData " + newField.name);
+                        movement.UpdateData("Activate");
+                    }
+                    else
+                    {
+                        var movementNPC = newField.GetComponent<MovementNPC>();
+                        if (movementNPC != null)
+                        {
+                            movementNPC.UpdateData("Activate");
+                            newField.SetActive(true);
+                            movementNPC.InitNPC();
+                        }
+                    }
+                    newField.GetComponent<SpriteRenderer>().color = Color.white;
+                    //newField.SetActive(true);
+                    if (movement != null)
+                    {
+                        //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate InitNPC " + newField.name);
+                        newField.SetActive(true);
+                        movement.InitNPC();
+                    }
+                }
+                //------------
+
                 Counter++;
             }
             indErr = "17.end.";
@@ -708,7 +740,7 @@ public class GenerateGridFields : MonoBehaviour {
                         if (newIndex == -1)
                         {
                             Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
-                            Storage.Log.GetHistory(gobj.name);
+                            //Storage.Log.GetHistory(gobj.name);
                             continue;
                         }
                         else
@@ -1177,12 +1209,20 @@ public class GenerateGridFields : MonoBehaviour {
 
     public void LoadObjectsNearHero()
     {
-
-        //Debug.Log("______________________LoadObjectsNearHero__________________");
-        foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
+        try
         {
-            //string nameField = field.Key;
-            LoadObjectToReal(nameField);
+            var keys = Storage.Instance.Fields.Select(p => p.Key).ToArray();
+            //Debug.Log("______________________LoadObjectsNearHero__________________");
+            //foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
+            foreach (var nameField in keys)
+            {
+                //string nameField = field.Key;
+                LoadObjectToReal(nameField);
+            }
+
+        }catch(Exception x)
+        {
+            Debug.Log("########### LoadObjectsNearHero !!!!!!!!!!! " + x.Message);
         }
     }
 

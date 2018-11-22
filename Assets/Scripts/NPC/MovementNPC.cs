@@ -42,6 +42,8 @@ public class MovementNPC : MonoBehaviour {
 
     public void InitNPC()
     {
+        _resName = "";
+
         objID = Helper.GetID(this.name);
         if (string.IsNullOrEmpty(objID))
         {
@@ -51,6 +53,14 @@ public class MovementNPC : MonoBehaviour {
         }
 
         InitData();
+
+        isRunning = false;
+        if (moveObject != null)
+        {
+            isRunning = false;
+            StopCoroutine(moveObject);
+        }
+
         StartMoving();
 
         //GameObject UIcontroller = GameObject.FindWithTag("UI");
@@ -93,8 +103,65 @@ public class MovementNPC : MonoBehaviour {
         SelectedGameObject();
     }
 
+    void OnGUI()
+    {
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 13;
+        style.normal.textColor = Color.black;
+
+        IsSelectedMe();
+        if (objID == Storage.Instance.SelectGameObjectID)
+        {
+            style.fontSize = 15;
+            style.fontStyle = FontStyle.Bold;
+            style.normal.textColor = Color.yellow;
+        }
+        else
+        {
+            style.fontSize = 13;
+            style.fontStyle = FontStyle.Normal;
+            if(style.normal.textColor== Color.black)
+                style.normal.textColor = "#b3fff0".ToColor();//  Color.black;
+            else
+                style.normal.textColor = Color.black;
+        }
+
+        if (Camera.main == null)
+            return;
+
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
+        GUI.Label(position1, objID, style);
+    }
+
+    void OnEnable()
+    {
+        //InitNPC();
+
+        //if (PoolGameObjects.IsUsePoolObjects)
+        //{
+        //    if (Helper.IsDataInit(this.gameObject))
+        //        UpdateData("Update");
+        //}
+
+        //StartMoving();
+        //Debug.Log("*********************** MovementNPC  is OnEnable " + this.gameObject.name);
+    }
+
+    void OnDisable()
+    {
+        //isRunning = false;
+        //StopCoroutine(moveObject);
+
+        //Debug.Log("*********************** MovementNPC  is OnDisable " + this.gameObject.name);
+    }
+
+    private int countUpdate = 0;
+
     public void Refresh()
     {
+        return;
+
         //if (!isInfoStop)
         //{
         //------------------------
@@ -112,21 +179,20 @@ public class MovementNPC : MonoBehaviour {
                 Debug.Log("######## ME STOP : " + this.gameObject.name + "  isRunning=" + isRunning);
                 //if (!isRunning)
                 //{
-                UpdateData("Update");
+                //UpdateData("Update");
 
                 isRunning = false;
                 if (moveObject != null)
                 {
                     isRunning = false;
-                    StopCoroutine(moveObject);
+                    //StopCoroutine(moveObject);
                 }
 
                 //UpdateData("Update");
-                //SaveData();
 
-                StartMoving();
-                //}
-                //UpdateData("Update");
+                countUpdate = 10;
+
+                //StartMoving();
             }
         }
         //}
@@ -235,10 +301,29 @@ public class MovementNPC : MonoBehaviour {
         {
             realtimeMoving = Time.time + 0.5f;
             //#TEST
-            if (!isRunning && PoolGameObjects.IsUsePoolObjects)
-            {
-                UpdateData("Update");
-            }
+            //if (!isRunning && PoolGameObjects.IsUsePoolObjects)
+            //{
+            //    Debug.Log("-------------- Update isRunning : : : " + this.gameObject.name + ", " + _dataNPC.NameObject);
+            //    UpdateData("Update");
+            //}
+
+            //if (PoolGameObjects.IsUsePoolObjects)
+            //{
+            //    if(this.gameObject.name != _dataNPC.NameObject)
+            //    {
+            //        Debug.Log("-------------- Update >>>>> " + this.gameObject.name + " <> " + _dataNPC.NameObject);
+            //        UpdateData("Update");
+            //    }
+            //if (PoolGameObjects.IsUsePoolObjects)
+            //{
+            //    if (countUpdate > 0)
+            //    {
+            //        countUpdate--;
+            //        objID = Helper.GetID(this.name);
+            //        UpdateData("MoveObjectToPosition");
+            //    }
+            //}
+            //}
             isRunning = true;
 
             //realtimeMoving = Time.time + 2f;
@@ -352,8 +437,10 @@ public class MovementNPC : MonoBehaviour {
 
         if(Storage.Data.IsUpdatingLocationPersonGlobal)
         {
-            Debug.Log("_______________ResavePositionData  RETURN IsUpdatingLocationPerson_______________");
-            return true;
+            //#test
+            if(!PoolGameObjects.IsUsePoolObjects)
+                Debug.Log("_______________ResavePositionData  RETURN IsUpdatingLocationPerson________ ASYNC _______" + this.gameObject.name);
+            //return true;
         }
 
         string oldName = this.gameObject.name;
@@ -548,6 +635,7 @@ public class MovementNPC : MonoBehaviour {
     public virtual void UpdateData(string callFunc)
     {
         _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
+        objID = Helper.GetID(this.name);
     }
 
     public virtual ModelNPC.GameDataNPC GetUpdateData(string callFunc)
@@ -567,35 +655,8 @@ public class MovementNPC : MonoBehaviour {
         }
     }
 
-    void OnGUI()
-    {
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 13;
-        style.normal.textColor = Color.black;
+  
 
-        IsSelectedMe();
-        if (objID == Storage.Instance.SelectGameObjectID)
-        {
-            style.fontSize = 15;
-            style.fontStyle = FontStyle.Bold;
-            style.normal.textColor = Color.yellow;
-        }
-        else
-        {
-            style.fontSize = 13;
-            style.fontStyle = FontStyle.Normal;
-            style.normal.textColor = Color.black;
-        }
-
-        if (Camera.main == null)
-            return;
-
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
-        GUI.Label(position1, objID, style);
-    }
-
-   
     private void SelectedGameObject()
     {
 
@@ -616,13 +677,35 @@ public class MovementNPC : MonoBehaviour {
 
         if (Storage.Player.HeroExtremal == true)
         {
-            Debug.Log("*********** INIT NPC **************");
-            InitNPC();
+            //Debug.Log("*********** INIT NPC **************");
+            //InitNPC();
         }
 
         //Storage.Log.GetHistory(_dataNPC.NameObject);
         Debug.Log("Select: Game " + this.gameObject.name + "  OLD D: " + _dataNPC.NameObject);
         Debug.Log("FindPersonData:  D: " + person.DataObj.NameObject);
+        Storage.Events.ListLogAdd = "------------------------";
+        Storage.Events.ListLogAdd = "Select: Game " + this.gameObject.name;
+        Storage.Events.ListLogAdd = "  OLD D: " + _dataNPC.NameObject;
+        Storage.Events.ListLogAdd = "  FindPersonData: " + person.DataObj.NameObject;
+
+        //UpdateData("SelectedGameObject");
+        //ModelNPC.GameDataNPC dataNPC = GetData();
+        //if (person.DataObj.NameObject != _dataNPC.NameObject)
+        //{
+        //    ModelNPC.GameDataNPC persNPC = person.DataObj as ModelNPC.GameDataNPC;
+
+        //    if (persNPC != null)
+        //    {
+        //        var paramsInfo = persNPC.GetParams;
+        //        paramsInfo.Add("FindPersonData!!!!");
+
+        //        Storage.Events.AddExpandPerson(persNPC.NameObject,
+        //        paramsInfo,
+        //        new List<string> { "Pause", "Kill", "StartTrack" },
+        //        gobjObservable: this.gameObject);
+        //    }
+        //}
 
         //#EXPAND
         Storage.Events.AddExpandPerson(_dataNPC.NameObject,
@@ -683,27 +766,7 @@ public class MovementNPC : MonoBehaviour {
         m_isTrack = !m_isTrack;
     }
 
-    void OnEnable()
-    {
-        //InitNPC();
-
-        //if (PoolGameObjects.IsUsePoolObjects)
-        //{
-        //    if (Helper.IsDataInit(this.gameObject))
-        //        UpdateData("Update");
-        //}
-
-        //StartMoving();
-        //Debug.Log("*********************** MovementNPC  is OnEnable " + this.gameObject.name);
-    }
-
-    void OnDisable()
-    {
-        //isRunning = false;
-        //StopCoroutine(moveObject);
-
-        //Debug.Log("*********************** MovementNPC  is OnDisable " + this.gameObject.name);
-    }
+   
 
     //public void DrawTrack(Vector2 posTrack)
     //{
