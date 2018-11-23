@@ -2,8 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
+//#if UNITY_EDITOR
+//[MenuItem("Assets/CreateLocalizationData")]
+//#endif
 public class PoolGameObjects
 {
     public static string TestNamePool = "";
@@ -17,14 +21,15 @@ public class PoolGameObjects
 
     [NonSerialized]
     public static bool IsUsePoolField = true;
-    public static bool IsUsePoolObjects = true; //34e-39e
+    public static bool IsUsePoolObjects = true; //34e-39e   46e
+    //public static bool IsUsePoolObjects = false; //
 
     public static bool IsTestingDestroy = false;//true; // 
     public static bool IsStack = true; //false;// 
 
     //int limitPoolOnRemoved = 450;
-    int limitPoolOnRemovedBoss = 250;
-    int limitPoolOnRemoved = 500;
+    int limitPoolOnRemovedBoss = 550;
+    int limitPoolOnRemoved = 1500;
     //int limitPoolOnRemoved = 800;
     //int limitPoolOnRemoved = 1000;
     //int limitPoolOnRemoved = 1450;
@@ -35,13 +40,31 @@ public class PoolGameObjects
     public Dictionary<string, Stack<PoolGameObject>> PoolGamesObjectsStack;
 
 
-    class PoolConfig
+    //[CreateAssetMenu(fileName = "PoolConfig", menuName = "Pool Config", order = 51)]
+    class PoolConfig : ScriptableObject
     {
-        List<string> Limits { get; set; }
+        //List<string> Limits { get; set; }
+        //private List<string> Limits;
+        //private int LimitField = 550;
+        //private int LimitBoss = 550;
+        //private int LimitVood = 200;
+        //private int LimitOthers = 100;
+        public List<string> Limits;
+        //public int LimitField = 550;
+        public int LimitField = 1000;
+        public int LimitBoss = 550;
+        public int LimitVood = 200;
+        public int LimitOthers = 100;
+        //public int LimitField = 1550;
+        //public int LimitBoss = 1550;
+        //public int LimitVood = 1200;
+        //public int LimitOthers = 1100;
     }
 
     void LoadPoolGameObjects()
     {
+        PoolConfig poolConfig = new PoolConfig();
+
         if (IsStack)
         {
             PoolGamesObjectsStack = new Dictionary<string, Stack<PoolGameObject>>();
@@ -52,44 +75,44 @@ public class PoolGameObjects
         }
         //return;
         //foreach (var i in Enumerable.Range(0, 1000))
-        foreach (var i in Enumerable.Range(0, 1000))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitField))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabField.ToString(), false);
         }
 
         //-------------
-        foreach (var i in Enumerable.Range(0, 300))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitBoss))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabBoss.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabUfo.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 200))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitVood))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabVood.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallWood.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabWallRock.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabRock.ToString(), false);
         }
-        foreach (var i in Enumerable.Range(0, 100))
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabElka.ToString(), false);
@@ -273,6 +296,15 @@ public class PoolGameObjects
         GameObject findGO = GetPoolGameObject(nameFieldNew, prefabField.tag, pos);
 
         return findGO;
+    }
+
+    public void Restart()
+    {
+        if (IsStack)
+        {
+            PoolGamesObjectsStack.Clear();
+            LoadPoolGameObjects();
+        }
     }
 
     public bool DestroyPoolGameObject(GameObject delGO)

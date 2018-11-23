@@ -3,11 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 
-[AddComponentMenu("Storage/Events")]
+
+//[RequireComponent(System.Type type)]
+
+//Attributes:
+//Header("_text")]
+//    public Vector2 range = new Vector2(0.1f, 1);
+//[Tooltip(_text")]
+//[ContextMenuItem("Reset", "resetTheValue")]
+//    public float speed = 1f;
+//[Tooltip("_text")]
+//public float maxY = 0.5f;
+//[Range(0.1f, 1f)]
+//public float offXMax = 0.1f;
+
+
 public class UIEvents : MonoBehaviour {
 
     //public static bool IsCursorVisible = true;
@@ -198,11 +213,11 @@ public class UIEvents : MonoBehaviour {
 
     IEnumerator CalculateTagsInPool()
     {
-        //yield break;
+        yield break;
 
         while(true)
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
             if (PoolGameObjects.IsStack)
             {
 
@@ -997,6 +1012,9 @@ public class UIEvents : MonoBehaviour {
         }
     }
 
+#if UNITY_EDITOR
+    //[MenuItem("Assets/Create/SaveCommandTool")]
+    [MenuItem("Assets/Create/SaveCommandTool")]
     public void SaveCommandTool()
     {
         CommandStore storeComm = new CommandStore();
@@ -1014,10 +1032,10 @@ public class UIEvents : MonoBehaviour {
         }
         Debug.Log("Save Commands Tool count : " + storeComm.CommadsTemplate.Count);
         //ListLogAdd = "Save Commands Tool count : " + storeComm.CommadsTemplate.Count;
-
     }
+#endif
 
-   private Vector2 GetPositTeleport()
+    private Vector2 GetPositTeleport()
     {
         Vector2 posTeleport = new Vector2(10, -10);
         string[] positInput = tbxTest.text.ToString().Split(',');

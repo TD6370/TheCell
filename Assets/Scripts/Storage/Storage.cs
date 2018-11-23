@@ -508,6 +508,9 @@ public class Storage : MonoBehaviour {
         //---
         DestroyAllGamesObjects();
 
+        //@#FIX 
+        Storage.Pool.Restart();
+
         InitObjectsGrid();
     }
 
@@ -1071,9 +1074,16 @@ public class Storage : MonoBehaviour {
                 for (int i = 0; i < resListData.Count(); i++)
                 {
                     GameObject objDel = resListData[i];
-                    if(objDel!=null)
-                        Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + objDel.name);
-                    Destroy(objDel);
+                    //if (objDel != null)
+                    //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + objDel.name);
+                    if (PoolGameObjects.IsUsePoolObjects)
+                    {
+                        Storage.Pool.DestroyPoolGameObject(objDel);
+                    }
+                    else
+                    {
+                        Destroy(objDel);
+                    }
                 }
             }
         }
@@ -1084,8 +1094,15 @@ public class Storage : MonoBehaviour {
             GameObject resField = Fields[nameField2];
             if (resField != null)
             {
-                Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + resField.name);
-                Destroy(resField);
+                //Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + resField.name);
+                if (PoolGameObjects.IsUsePoolObjects)
+                {
+                    Storage.Pool.DestroyPoolGameObject(resField);
+                }
+                else
+                {
+                    Destroy(resField);
+                }
             }
         }
     }
@@ -1128,6 +1145,13 @@ public class Storage : MonoBehaviour {
         string nameField = Helper.GetNameFieldByName(setName);
         if (nameField == null)
             return false;
+
+        //#FIX
+        if(!_GamesObjectsReal.ContainsKey(nameField))
+        {
+            Debug.Log("####### DestroyFullObject not field : " + nameField);
+            return false;
+        }
 
         List<GameObject> listObjInField = _GamesObjectsReal[nameField];
 
