@@ -521,6 +521,9 @@ public class UIEvents : MonoBehaviour {
                     StartCoroutine(CalculateProfiler());
                 }
                 break;
+            case "OnParallax":
+                Storage.DrawGeom.ParallaxOn();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;

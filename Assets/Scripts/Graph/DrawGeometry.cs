@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DrawGeometry : MonoBehaviour
 {
+    public bool IsParallaxOn = false;
+
     private LineRenderer m_lineRenderer;
 
     private void Awake()
@@ -219,6 +222,92 @@ public class DrawGeometry : MonoBehaviour
     #endregion
 
 
+    public void ParallaxOn()
+    {
+        Camera cam = Storage.Instance.MainCamera;
+
+        IsParallaxOn = !IsParallaxOn;
+        //float angleParallax = 35f;
+        //float angleParallax = 15f;
+        float angleParallax = 20f;
+        if (IsParallaxOn)
+        {
+            cam.orthographic = false;
+
+            cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y -5f, cam.transform.position.z - 20f);
+            cam.transform.rotation = Quaternion.Euler(-10f, 0f, 0f);
+
+           // Storage.PlayerController.transform.rotation = Quaternion.Euler(-6f, 0f, 0f);
+
+            float anglePrlx = angleParallax * (-1f);
+            Storage.GridData.PrefabVood.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabElka.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabRock.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabBoss.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabWallRock.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabWallWood.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            foreach(GameObject itemObj in Storage.Instance.GamesObjectsReal.SelectMany(p=>p.Value))
+            {
+                if (itemObj.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                {
+                    itemObj.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                }
+            }
+            foreach (PoolGameObject itemObj in Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value))
+            {
+                if (itemObj.GameObjectNext != null)
+                {
+                    if (itemObj.GameObjectNext.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                    {
+                        itemObj.GameObjectNext.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                    }
+                }
+            }
+        }
+        else
+        {
+            cam.orthographic = true;
+            cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y + 5f, cam.transform.position.z + 20f);
+            cam.transform.rotation = Quaternion.Euler(10f, 0f, 0f);
+
+            //cam.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            //Storage.PlayerController.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+
+            float anglePrlx = angleParallax;
+            Storage.GridData.PrefabVood.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabElka.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabRock.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabBoss.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabWallRock.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+            Storage.GridData.PrefabWallWood.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+
+            foreach (GameObject itemObj in Storage.Instance.GamesObjectsReal.SelectMany(p => p.Value))
+            {
+                if (itemObj.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                {
+                    itemObj.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                }
+            }
+            foreach (PoolGameObject itemObj in Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value))
+            {
+                if (itemObj.GameObjectNext != null)
+                {
+
+                    if (itemObj.GameObjectNext.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                    {
+                        itemObj.GameObjectNext.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                    }
+
+                    //var tagPrefab = Storage.GridData.GetTypePool(itemObj.Tag);
+                    //if (tagPrefab != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                    //{
+
+                    //    itemObj.GameObjectNext.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                    //}
+                }
+            }
+        }
+    }
 
 }
 
