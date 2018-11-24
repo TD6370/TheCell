@@ -7,6 +7,9 @@ using UnityEngine.Profiling;
 
 public class GenerateGridFields : MonoBehaviour {
 
+    [NonSerialized]
+    public bool IsLoadOnlyField = false;// true;// 
+
     public GameObject PanelPool;
     public GameObject prefabField;
     private SaveLoadData _sctiptData;
@@ -14,7 +17,6 @@ public class GenerateGridFields : MonoBehaviour {
     public float GridX = 5f;
     public float GridY = 5f;
     public float Spacing = 2f;
-
     //Profiler Profiller;
 
     private int _CounterRealObj;
@@ -169,22 +171,14 @@ public class GenerateGridFields : MonoBehaviour {
     //    Debug.Log("Pole Field name init : " + _nameField);
     //}
 
-
     private bool m_onLoadFields = false;
+
     public void GenGridLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0, bool isOnlyField = false)
     {
-        //var _fields = Storage.Instance.Fields;
-
-        //Profiler.BeginSample("GenGridLook");
-
         int gridWidth = 100;
         int gridHeight = 100;
 
         int countField = (int)GridX * (int)GridY;
-
-        //#TTT ~~~~~~~~~~~~~~~
-        //TestFields();
-
         Storage.Data.IsUpdatingLocationPersonGlobal = true;
 
         if (!m_onLoadFields && (Storage.Instance.Fields.Count < countField || countField == 0))
@@ -209,6 +203,7 @@ public class GenerateGridFields : MonoBehaviour {
             int x = 0;
             int LeftRemoveX = LeftX - 1;
             int RightRemoveX = RightX + 1;
+
             //Validate ValidateRemoveX
             bool isRemove = Helper.ValidateRemoveX(_movement, gridWidth, LeftRemoveX, RightRemoveX);
             bool isAdded = Helper.ValidateAddedX(_movement, gridWidth, LeftX, RightX);
@@ -221,7 +216,9 @@ public class GenerateGridFields : MonoBehaviour {
                 RightRemoveX;
 
                 string _nameField = "";
-                for (int y = p_startPosY; y < limitVertical; y++)
+                //for (int y = p_startPosY; y < limitVertical; y++)
+                //#TEST FIX : NOT REMOVED NOT IN ZONA FIELDS
+                for (int y = p_startPosY - 1; y < limitVertical + 1; y++)
                 {
 
                     string nameField = Helper.GetNameField(x, y);
@@ -296,7 +293,9 @@ public class GenerateGridFields : MonoBehaviour {
                     TopRemoveY :
                     DownRemoveY; //#
 
-                for (int x = p_startPosX; x < limitHorizontal; x++) //#
+                //for (int x = p_startPosX; x < limitHorizontal; x++) //#
+                //#TEST FIX : NOT REMOVED NOT IN ZONA FIELDS
+                for (int x = p_startPosX-1; x < limitHorizontal +1 ; x++) //#
                 {
 
                     string nameField = Helper.GetNameField(x, y);
@@ -1220,6 +1219,9 @@ public class GenerateGridFields : MonoBehaviour {
     {
         try
         {
+            if (Storage.GenGrid.IsLoadOnlyField)
+                return;
+
             var keys = Storage.Instance.Fields.Select(p => p.Key).ToArray();
             //Debug.Log("______________________LoadObjectsNearHero__________________");
             //foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))

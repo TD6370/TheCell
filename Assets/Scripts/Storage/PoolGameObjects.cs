@@ -37,7 +37,7 @@ public class PoolGameObjects
     int indexPool = 0;
     public List<PoolGameObject> PoolGamesObjects;
 
-        
+
     public Dictionary<string, Stack<PoolGameObject>> PoolGamesObjectsStack;
 
 
@@ -129,17 +129,32 @@ public class PoolGameObjects
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
-        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag,""); // "" - new object instaint
+        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag, ""); // "" - new object instaint
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
+        //poolObj.Tag = Storage.GridData.GetTypePool(newGO.tag);
         //poolObj.GameObjectNext = newGO;
         poolObj.Init(newGO);
 
         poolObj.Deactivate("Add " + poolObj.Name, true);
 
+        //Fix Tile field 
+        if (PoolGameObjects.IsUsePoolObjects)
+        {
+            var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
+            if (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString())
+            {
+                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+                {
+                    TileName = "Tundra"
+                };
+                terrD.UpdateGameObject(newGO);
+            }
+        }
+
         //poolObj.IsLock = false;
-        if(IsStack)
+        if (IsStack)
         {
             var stackPool = new Stack<PoolGameObject>();
             if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
@@ -158,7 +173,7 @@ public class PoolGameObjects
             PoolGamesObjects.Add(poolObj);
         }
 
-        
+
 
         //Debug.Log("pool +++++ " + newGO.name);
 
@@ -172,8 +187,9 @@ public class PoolGameObjects
         return poolObj;
     }
 
+    
 
-    public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
+    public GameObject GetPoolGameObject(string nameObject, string tagPool, Vector3 pos)
     {
         GameObject findGO = null;
 
@@ -184,23 +200,29 @@ public class PoolGameObjects
         //        Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + destroyedPrefabsTest[0].ToString());
         //}
 
+        //string tagPool = Storage.GridData.GetTypePool(tag);
+
         PoolGameObject findPoolGO = null;
         int contUnlockPools = 0;
         if (!IsStack)
         {
-            findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+            //findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
+            findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tagPool);
             contUnlockPools = PoolGamesObjects.Count;
         }
         else
         {
             //var stackPool = new Stack<PoolGameObject>();
-            if (PoolGamesObjectsStack.ContainsKey(tag))
+            if (PoolGamesObjectsStack.ContainsKey(tagPool))
             {
-                contUnlockPools = PoolGamesObjectsStack[tag].Count;
+                contUnlockPools = PoolGamesObjectsStack[tagPool].Count;
                 if (contUnlockPools > 0)
                 {
-                    PoolGameObject returnPool =  PoolGamesObjectsStack[tag].Peek();
-                    if(returnPool==null)
+                    PoolGameObject returnPool =  PoolGamesObjectsStack[tagPool].Peek();
+                    //#FIX ELKA
+                    returnPool.Tag = tagPool;
+
+                    if (returnPool==null)
                     {
                         Debug.Log("######## returnPool==null");
                     }
@@ -210,13 +232,13 @@ public class PoolGameObjects
                     }
 
                     //#TEST
-                    int countInPool = PoolGamesObjectsStack[tag].Count;
+                    int countInPool = PoolGamesObjectsStack[tagPool].Count;
                     if(countInPool==1)
                     {
-                        AddPoolNewTypeObject(tag,false);
+                        AddPoolNewTypeObject(tagPool, false);
                     }
 
-                    findPoolGO = PoolGamesObjectsStack[tag].Pop();
+                    findPoolGO = PoolGamesObjectsStack[tagPool].Pop();
 
                     if(findPoolGO == null)
                     {
@@ -229,11 +251,7 @@ public class PoolGameObjects
                     
                 }
             }
-            
-            //    PoolGamesObjectsStack.Add(prefabTag, stackPool);
-            //else
-            //    stackPool = PoolGamesObjectsStack[prefabTag];
-            //stackPool.Push(poolObj);
+
         }
 
 
@@ -278,24 +296,14 @@ public class PoolGameObjects
                 //}
             }
             //----------------------------
-            //Debug.Log("Add pool not Tag  == " + tag);
-
-
-            //var findPoolGO_2 = AddPoolNewTypeObject(tag);
-            //EventsObject evenObj_2 = findPoolGO_2.GameObjectNext.GetComponent<EventsObject>();
-            //if (evenObj_2 != null)
-            //{
-            //    if (findPoolGO_2 == null)
-            //    {
-            //        Debug.Log("#######  GetPoolGameObject   findPoolGO is null " + findGO.name);
-            //    }
-            //    evenObj_2.PoolCase = findPoolGO_2;
-            //}
-
-
-            findPoolGO = AddPoolNewTypeObject(tag);
+      
+            findPoolGO = AddPoolNewTypeObject(tagPool);
         }
-        findPoolGO.Activate(nameObject, tag, pos);
+
+        //#FIX ELKA
+        //findPoolGO.Tag = tagPool;
+
+        findPoolGO.Activate(nameObject, tagPool, pos);
         findGO = findPoolGO.GameObjectNext;
 
         //---------------
@@ -312,6 +320,30 @@ public class PoolGameObjects
         {
             Debug.Log("#######  GetPoolGameObject   NOT EventsObject " + findGO.name);
         }
+        //--------------- Update Tile Prefab // Elka, Vood .. Terra
+        //if (PoolGameObjects.IsUsePoolObjects)
+        //{
+        //    
+        //    var prefType = Helper.ParsePrefab(findPoolGO.GameObjectNext.tag);
+        //    if (Helper.IsUpdateTexture(prefType))
+        //    {
+        //        ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+        //        {
+        //            TileName = findPoolGO.GameObjectNext.tag
+        //        };
+        //        terrD.UpdateGameObject(findPoolGO.GameObjectNext);
+        //    }
+        //}
+        //---------------
+
+        //ModelNPC.GameDataNPC dataNPC = findGO.GetDataNPC();
+        //if(dataNPC!=null)
+        //{
+        //    ModelNPC.TerraData terraData = (ModelNPC.TerraData)dataNPC;
+
+        //    //dataNPC.Update()
+        //}
+
         //---------------
 
         if (IsTestingDestroy)
@@ -348,7 +380,7 @@ public class PoolGameObjects
             return false;
 
         //....
-        
+
         EventsObject evenObj = delGO.GetComponent<EventsObject>();
         PoolGameObject itemPool = evenObj.PoolCase;
         if (itemPool != null)
@@ -373,40 +405,6 @@ public class PoolGameObjects
         }
 
         return true;
-
-        //if (IsTestingDestroy)
-        //{ 
-        //    Debug.Log("??????????????? Pool Case null");
-
-        //    //....
-        //    int indexLoop = PoolGamesObjects.FindIndex(p => p.NameObject == delGO.name);
-        //    if (indexLoop != -1)
-        //    {
-        //        itemPool = PoolGamesObjects[indexLoop];
-        //        //Debug.Log("~~~~~~~~ DestroyPoolGameObject yes pool (" + indexLoop + ") :" + delGO.name);
-
-        //        //#fix
-        //        if (IsTestingDestroy)
-        //        {
-        //            if (itemPool.GameObjectNext == null)
-        //            {
-        //                Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
-        //            }
-        //        }
-        //        //itemPool.GameObjectNext = delGO;
-        //        itemPool.Deactivate(delGO.name, false, delGO);
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
-        //        //Destroy(delGO);
-        //        return false;
-        //    }
-        //    //....
-        //}
-        //Debug.Log("~~~~~~~~ DestroyPoolGameObject NOT pool !!! :" + delGO.name + "  PosHero=" + Storage.Instance.SelectFieldPosHero);
-
-        //return false;
     }
 
     //private void CleanerPool(GameObject gobj, bool isLog = false)
@@ -450,32 +448,6 @@ public class PoolGameObjects
     //    }
     //}
 
-    //private void TestFields(bool isLog = false)
-    //{
-    //    //.......
-    //    //Single dist = 0;
-    //    List<GameObject> poolsTesting = Storage.Instance.Fields.Select(x => x.Value).Where(p => p.tag == "Field" || p.tag == "PrefabField").ToList();
-    //    for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-    //    {
-    //        GameObject gobj = poolsTesting[i];
-    //        //bool inZona = Helper.IsValidPiontInZonaCorr(gobj.transform.position.x, gobj.transform.position.y);
-    //        bool inZona = Helper.IsValidFieldInZona(gobj.name);
-
-    //        if (!inZona)
-    //        {
-    //            if (isLog)
-    //            {
-    //                Debug.Log("TEST Pool Not in Zona: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
-    //                    "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
-    //                    "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
-    //            }
-
-    //            gobj.GetComponent<SpriteRenderer>().color = Color.red;
-    //            //StartCoroutine(StartCleanerPool(gobj));
-    //            CleanerPool(gobj, isLog);
-    //        }
-    //    }
-    //}
 
     private void TestRealGO()
     {
@@ -636,11 +608,23 @@ public class PoolGameObject
 
     public void Init(GameObject newGO)
     {
-        Tag = newGO.tag;
+        //#FIX POOL
+        Tag = Storage.GridData.GetTypePool(newGO.tag);
+        //Tag = newGO.tag;
 
         GameObjectNext = newGO;
         GameObjectNext.name = Name + "_Empty" + Tag;
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
+
+        //#TEST
+        //if (NameObject.IndexOf("Elka") != -1 && Tag == "PrefabVood")
+        //{
+        //    Debug.Log("######## Elka !");
+        //}
+        //if (NameObject.IndexOf("Elka") != -1 && Tag != "PrefabVood")
+        //{
+        //    Debug.Log("######## Elka");
+        //}
     }
 
     public override string ToString()
@@ -656,6 +640,7 @@ public class PoolGameObject
 
     public void Activate(string nameObj, string tag, Vector3 pos)
     {
+
         //#TEST
         if (PoolGameObjects.IsTestingDestroy)
         {
@@ -677,7 +662,12 @@ public class PoolGameObject
 
         //GameObjectNext.SetActive(true);
         GameObjectNext.transform.SetParent(null);
-        GameObjectNext.tag = tag;
+        
+        //#FIX TAG
+        //GameObjectNext.tag = tag;
+        if(GameObjectNext.tag == "Field")
+            GameObjectNext.tag = tag;
+
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
         GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
@@ -697,28 +687,10 @@ public class PoolGameObject
                 Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
             }
         }
+
+
     }
 
-    //public void Activate_(string nameObj, string tag, Vector3 pos)
-    //{
-    //    IsLock = true;
-    //    NameObject = nameObj;
-
-    //    TimeCreate = DateTime.Now;
-    //    if (GameObjectNext == null)
-    //    {
-    //        Debug.Log("#### Activate >> Object is null " + NameObject);
-    //        return;
-    //    }
-
-    //    //GameObjectNext.SetActive(true);
-    //    GameObjectNext.transform.SetParent(null);
-    //    GameObjectNext.tag = tag;
-    //    GameObjectNext.transform.position = pos;
-    //    GameObjectNext.name = nameObj;
-    //    GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
-
-    //}
 
     public void Deactivate(string gobjName="", bool isCreatedNew = false, GameObject gobj =null)
     {
@@ -728,23 +700,12 @@ public class PoolGameObject
             return;
         }
 
-        //Debug.Log("ME POOL " + Name + " unlock " + NameObject);
-
-        //if (PoolGameObjects.IsTestingDestroy)
-        //{
-        //    if (Tag == "PrefabBoss" && !isCreatedNew)
-        //    {
-        //        IsLock = false;
-        //        PoolGameObjects.TestNamePool = this.Name;
-        //    }
-        //}
-
 
         NameObject = "";
 
         GameObjectNext.SetActive(false);
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-       
+
 
         IsLock = false;
 

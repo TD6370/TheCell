@@ -97,15 +97,15 @@ public class RoadTile : Tile
         }
         return Quaternion.Euler(0f, 0f, 0f);
     }
-#if UNITY_EDITOR
-    // The following is a helper that adds a menu item to create a RoadTile Asset
-    [MenuItem("Assets/Create/RoadTile")]
-    public static void CreateRoadTile()
-    {
-        string path = EditorUtility.SaveFilePanelInProject("Save Road Tile", "New Road Tile", "Asset", "Save Road Tile", "Assets");
-        if (path == "")
-            return;
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<RoadTile>(), path);
-    }
-#endif
+//#if UNITY_EDITOR
+//    // The following is a helper that adds a menu item to create a RoadTile Asset
+//    [MenuItem("Assets/Create/RoadTile")]
+//    public static void CreateRoadTile()
+//    {
+//        string path = EditorUtility.SaveFilePanelInProject("Save Road Tile", "New Road Tile", "Asset", "Save Road Tile", "Assets");
+//        if (path == "")
+//            return;
+//        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<RoadTile>(), path);
+//    }
+//#endif
 }

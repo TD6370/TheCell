@@ -63,6 +63,7 @@ public class CompletePlayerController : MonoBehaviour {
     private bool m_isFindFieldCurrent = false;
 
     private bool m_isAfterUpdatePosHero = false;
+    //private bool m_isLoadOnlyField = true;// false;
 
     #region Events
 
@@ -404,13 +405,14 @@ public class CompletePlayerController : MonoBehaviour {
     public void LoadObjects(int posX = 0, int posY = 0)
     {
         //GEN LOOK
-        m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
+        m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
 
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
 
         //StartCoroutine(StartLoadGridLook());
 
         //@TEST@ 
+        //if(!Storage.GenGrid.IsLoadOnlyField)
         Storage.GenGrid.LoadObjectsNearHero();
         //LoadGridAllZoneLook();
     }

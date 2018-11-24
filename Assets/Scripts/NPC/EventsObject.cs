@@ -50,6 +50,8 @@ public class EventsObject : MonoBehaviour {
                 return;
             m_OldFieldHero = Storage.Instance.SelectFieldPosHero;
 
+            var t = this.gameObject.name;
+
             float posHeroY = Storage.PlayerController.transform.position.y + offsetTopHero;
             float gobjY = this.transform.position.y;
             float posHeroX = Storage.PlayerController.transform.position.x;

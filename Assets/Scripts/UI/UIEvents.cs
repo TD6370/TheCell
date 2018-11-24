@@ -1012,9 +1012,9 @@ public class UIEvents : MonoBehaviour {
         }
     }
 
-#if UNITY_EDITOR
-    //[MenuItem("Assets/Create/SaveCommandTool")]
-    [MenuItem("Assets/Create/SaveCommandTool")]
+//#if UNITY_EDITOR
+//    //[MenuItem("Assets/Create/SaveCommandTool")]
+//    [MenuItem("Assets/Create/SaveCommandTool")]
     public void SaveCommandTool()
     {
         CommandStore storeComm = new CommandStore();
@@ -1033,7 +1033,7 @@ public class UIEvents : MonoBehaviour {
         Debug.Log("Save Commands Tool count : " + storeComm.CommadsTemplate.Count);
         //ListLogAdd = "Save Commands Tool count : " + storeComm.CommadsTemplate.Count;
     }
-#endif
+//#endif
 
     private Vector2 GetPositTeleport()
     {
