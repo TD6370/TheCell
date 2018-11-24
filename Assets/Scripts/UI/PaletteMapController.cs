@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -644,8 +645,25 @@ public class PaletteMapController : MonoBehaviour {
             cellMap.transform.SetParent(this.gameObject.transform);
             Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
 
+            TypesStructure typeTilePrefab = TypesStructure.Prefab;
+            try
+            {
+                //TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+                if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), item.name))
+                {
+                    typeTilePrefab = TypesStructure.Terra;
+                    Debug.Log("Not Prefab"); 
+                }
+            }
+            catch (System.ArgumentException)
+            {
+                Debug.Log("############ PrefabsOnPalette ERROR PARSE typeTilePrefab");
+            }
+            
+
             cellMap.GetComponent<Image>().sprite = spriteTile;
-            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+            //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
             cellMap.SetActive(true);
             
             m_listCallsOnPalette.Add(cellMap);

@@ -435,6 +435,23 @@ public static class PersonsExtensions
         return null;
     }
 
+    public static EventsObject GetEvent(this GameObject gobj)
+    {
+        var evObj = gobj.GetComponent<EventsObject>();
+        if (evObj != null)
+            return evObj;
+        return null;
+    }
+
+    //public ModelNPC.GameDataNPC GetData()
+    public static ModelNPC.GameDataNPC GetDataNPC(this GameObject gobj)
+    {
+        var movNPC = gobj.GetMoveNPC();
+        if (movNPC != null)
+            return movNPC.GetData();
+        return null;
+    }
+
     public static bool IsUFO(this GameObject gobj)
     {
         return gobj.tag.Equals(StoragePerson._Ufo); 

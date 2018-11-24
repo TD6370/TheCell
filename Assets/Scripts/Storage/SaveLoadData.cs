@@ -615,7 +615,17 @@ public class SaveLoadData : MonoBehaviour {
         {
             //GameObject gobj = Storage.Pool.InstantiatePool(prefabField, new Vector3(0, 0, 0), "namePrefab");
             //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, namePrefab, new Vector3(0, 0, 0));
-            string typePrefab = GetTypeByName(namePrefab);
+            //string typePrefab = GetTypeByName(namePrefab);
+
+            if(namePrefab=="PrefabVood")
+            {
+                var t = "OK";
+            }
+
+            //#FIX POOL
+            string tagPool = GetTypePool(namePrefab);
+
+            //string tagPool = GetTypeByName(namePrefab);
 
             //#TEST
             //Storage.Events.ListLogAdd = "+ pool:";
@@ -623,7 +633,8 @@ public class SaveLoadData : MonoBehaviour {
             //Storage.Events.ListLogAdd = "--- typePrefab: " + typePrefab;
             //Storage.Events.ListLogAdd = "--- nameObject: " + nameObject;
 
-            GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
+            //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
+            GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, tagPool, new Vector3(0, 0, 0));
             return gobj;
         }
         else
@@ -664,6 +675,7 @@ public class SaveLoadData : MonoBehaviour {
                 break;
             case TypePrefabs.PrefabElka:
                 resType = PrefabElka.tag;
+                //TypePrefabs.PrefabElka.ToString();
                 break;
             case TypePrefabs.PrefabField:
                 resType = PrefabField.tag;
@@ -671,6 +683,24 @@ public class SaveLoadData : MonoBehaviour {
             default:
                 Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
                 break;
+        }
+        return resType;
+    }
+
+    public string GetTypePool(string namePrefab)
+    {
+        string resType = "";
+        if (namePrefab == TypePrefabs.PrefabElka.ToString())
+        {
+            return namePrefab;
+        }
+        else if (namePrefab == "Field")
+        {
+            return TypePrefabs.PrefabField.ToString();
+        }
+        else
+        {
+            return GetTypeByName(namePrefab);
         }
         return resType;
     }

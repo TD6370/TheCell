@@ -14,6 +14,34 @@ public class TEmp : MonoBehaviour {
 
     }
 
+
+    //private void TestFields(bool isLog = false)
+    //{
+    //    //.......
+    //    //Single dist = 0;
+    //    List<GameObject> poolsTesting = Storage.Instance.Fields.Select(x => x.Value).Where(p => p.tag == "Field" || p.tag == "PrefabField").ToList();
+    //    for (int i = poolsTesting.Count() - 1; i >= 0; i--)
+    //    {
+    //        GameObject gobj = poolsTesting[i];
+    //        //bool inZona = Helper.IsValidPiontInZonaCorr(gobj.transform.position.x, gobj.transform.position.y);
+    //        bool inZona = Helper.IsValidFieldInZona(gobj.name);
+
+    //        if (!inZona)
+    //        {
+    //            if (isLog)
+    //            {
+    //                Debug.Log("TEST Pool Not in Zona: " + gobj.name + " " + gobj.transform.position.x + "x" + gobj.transform.position.y +
+    //                    "   hero=" + Storage.Instance.HeroPositionX + "x" + Storage.Instance.HeroPositionY +
+    //                    "   zona: " + Storage.Instance.ZonaReal.X + "x" + Storage.Instance.ZonaReal.Y + " - " + Storage.Instance.ZonaReal.X2 + "x" + Storage.Instance.ZonaReal.Y2);
+    //            }
+
+    //            gobj.GetComponent<SpriteRenderer>().color = Color.red;
+    //            //StartCoroutine(StartCleanerPool(gobj));
+    //            CleanerPool(gobj, isLog);
+    //        }
+    //    }
+    //}
+
     //public GameObject GetPoolGameObject(string nameObject, string tag, Vector3 pos)
     //{
     //    GameObject findGO = null;

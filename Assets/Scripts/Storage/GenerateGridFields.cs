@@ -1078,6 +1078,15 @@ public class GenerateGridFields : MonoBehaviour {
         {
             newObjGame = FindPrefab(typePrefab, objData.NameObject);
 
+            //if (PoolGameObjects.IsUsePoolObjects)
+            //{
+            //    ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+            //    {
+            //        TileName = "Tundra"
+            //    };
+            //    terrD.UpdateGameObject(resGO);
+            //}
+
             //#TEST
             //newObjGame.name = namePrefab;
 

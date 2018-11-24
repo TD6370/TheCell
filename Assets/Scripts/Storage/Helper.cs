@@ -178,6 +178,39 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
+    public static bool IsUpdateTexture(SaveLoadData.TypePrefabs typePrefab)
+    {
+        switch (typePrefab)
+        {
+            case SaveLoadData.TypePrefabs.PrefabElka:
+            case SaveLoadData.TypePrefabs.PrefabVood:
+            //case SaveLoadData.TypePrefabs.PrefabField:
+                return true;
+        }
+        return false;
+    }
+
+    //TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+    //if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), item.name))
+    //{
+    //    typeTilePrefab = TypesStructure.Terra;
+    //    Debug.Log("Not Prefab"); 
+    //}
+    public static SaveLoadData.TypePrefabs ParsePrefab(string strType)
+    {
+        if (System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), strType))
+        {
+            var prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), strType);
+            return prefabType;
+        }
+        else
+        {
+            Debug.Log("########## GetTypePrefab [" + strType + "] Not TypePrefabs");
+            return SaveLoadData.TypePrefabs.PrefabField;
+        }
+    }
+
+
     public static bool IsTerraAlpha(SaveLoadData.TypePrefabs typePrefab)
     {
         switch (typePrefab)
