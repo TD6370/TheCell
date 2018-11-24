@@ -218,15 +218,19 @@ public class CompletePlayerController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        //Debug.Log("OnTriggerEnter2D.............................................");
 
-        //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-        //if (other.gameObject.CompareTag("PrefabUfo"))
-        //if (other.gameObject.CompareTag(StoragePerson._Ufo))
-        if (other.gameObject.IsUFO())
+        if (!CameraMap.enabled)
         {
-            //DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
-            StartCoroutine(DestroyObjectC(other.gameObject));
+            //Debug.Log("OnTriggerEnter2D.............................................");
+
+            //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
+            //if (other.gameObject.CompareTag("PrefabUfo"))
+            //if (other.gameObject.CompareTag(StoragePerson._Ufo))
+            if (other.gameObject.IsUFO())
+            {
+                //DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
+                StartCoroutine(DestroyObjectC(other.gameObject));
+            }
         }
     }
 
@@ -342,7 +346,7 @@ public class CompletePlayerController : MonoBehaviour {
         rb2d.MovePosition(posMove * Speed);
     }
 
-    public GameObject FindFieldCurrent()
+    public GameObject FindFieldCurrent(bool isNotLoadLook = false)
     {
         int scale = 2;
         int posX = 0;
@@ -383,16 +387,11 @@ public class CompletePlayerController : MonoBehaviour {
             m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         }
 
-        //GEN LOOK
-        m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
-
-        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
+        if (!isNotLoadLook)
+        {
+            LoadObjects(posX, posY);
+        }
         m_isFindFieldCurrent = true;
-        //StartCoroutine(StartLoadGridLook());
-
-        //@TEST@ 
-        Storage.GenGrid.LoadObjectsNearHero();
-        //LoadGridAllZoneLook();
 
         if (!Storage.Instance.Fields.ContainsKey(_fieldHero))
             return null;
@@ -400,6 +399,20 @@ public class CompletePlayerController : MonoBehaviour {
         GameObject prefabFind = Storage.Instance.Fields[_fieldHero];
 
         return prefabFind;
+    }
+
+    public void LoadObjects(int posX = 0, int posY = 0)
+    {
+        //GEN LOOK
+        m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook);
+
+        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
+
+        //StartCoroutine(StartLoadGridLook());
+
+        //@TEST@ 
+        Storage.GenGrid.LoadObjectsNearHero();
+        //LoadGridAllZoneLook();
     }
 
     IEnumerator StartLoadGridLook()

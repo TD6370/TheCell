@@ -986,10 +986,20 @@ public class PaletteMapController : MonoBehaviour {
         if (Time.time > DelayTimer)
         {
             SaveConstructTileInGridData();
-            if(Storage.Map.IsOpen)
+            if (Storage.Map.IsOpen)
                 Storage.GenGrid.ReloadGridLook();
             else
-                Storage.GenGrid.LoadObjectsNearHero();
+            {
+                if (PoolGameObjects.IsUsePoolObjects)
+                {
+                    //Storage.GenGrid.ReloadGridLook();
+                    Storage.GenGrid.LoadObjectsNearHero();
+                }
+                else
+                {
+                    Storage.GenGrid.LoadObjectsNearHero();
+                }
+            }
             //DefaultModeOn();
 
             DelayTimer = Time.time + ActionRate;
@@ -1119,31 +1129,26 @@ private void ClearLayerForStructure(string field, bool isClearData = false)
             var listObjs = Storage.Instance.GamesObjectsReal[field];
             foreach (var obj in listObjs.ToArray())
             {
-                Storage.Instance.AddDestroyGameObject(obj);
+                if (PoolGameObjects.IsUsePoolObjects)
+                {
+                    obj.DisableComponents();
+                    Storage.Instance.DestroyFullObject(obj);
+                }
+                else
+                {
+                    Storage.Instance.AddDestroyGameObject(obj);
+                }
             }
         }
 
-
-        //Faste
-        //if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
+        //if (isClearData)
         //{
-        //    var listObjs = Storage.Instance.GamesObjectsReal[field];
-        //    foreach (var obj in listObjs.ToArray())
+        //    //Destroy All DATA Objects
+        //    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
         //    {
-        //        //Storage.Instance.AddDestroyGameObject(obj);
-        //        Destroy(obj);
+        //        Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
         //    }
-        //    Storage.Instance.GamesObjectsReal[field].Clear();
         //}
-
-        if (isClearData)
-        {
-            //Destroy All DATA Objects
-            if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
-            {
-                Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
-            }
-        }
     }
 
     //--- fixed Bug ---

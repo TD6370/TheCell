@@ -439,6 +439,21 @@ public static class PersonsExtensions
     {
         return gobj.tag.Equals(StoragePerson._Ufo); 
     }
+
+    public static void DisableComponents(this GameObject gobj)
+    {
+        var evObj = gobj.GetComponent<EventsObject>();
+        if (evObj != null)
+            evObj.PoolCase.IsDesrtoy = true;
+
+        var movObj = gobj.GetComponent<MovementNPC>();
+        if (movObj != null)
+        {
+            movObj.Pause();
+            if(movObj.GetData()!=null)
+                movObj.GetData().IsReality = false;
+        }
+    }
 }
 
 public class FindPersonData

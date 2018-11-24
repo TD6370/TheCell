@@ -23,6 +23,7 @@ public class PoolGameObjects
     public static bool IsUsePoolField = true;
     public static bool IsUsePoolObjects = true; //34e-39e   46e
     //public static bool IsUsePoolObjects = false; //
+    //public static bool IsUsePoolField = false;
 
     public static bool IsTestingDestroy = false;//true; // 
     public static bool IsStack = true; //false;// 
@@ -49,16 +50,23 @@ public class PoolGameObjects
         //private int LimitBoss = 550;
         //private int LimitVood = 200;
         //private int LimitOthers = 100;
-        public List<string> Limits;
-        //public int LimitField = 550;
-        public int LimitField = 1000;
-        public int LimitBoss = 550;
-        public int LimitVood = 200;
-        public int LimitOthers = 100;
+        //================
+        //public List<string> Limits;
+        ////public int LimitField = 550;
+        //public int LimitField = 1000;
+        //public int LimitBoss = 550;
+        //public int LimitVood = 200;
+        //public int LimitOthers = 100;
+        //================
         //public int LimitField = 1550;
         //public int LimitBoss = 1550;
         //public int LimitVood = 1200;
         //public int LimitOthers = 1100;
+        //================
+        public int LimitField = 400;
+        public int LimitBoss = 230;
+        public int LimitVood = 100;
+        public int LimitOthers = 100;
     }
 
     void LoadPoolGameObjects()
@@ -121,7 +129,7 @@ public class PoolGameObjects
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
-        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag,"");
+        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag,""); // "" - new object instaint
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
@@ -138,6 +146,10 @@ public class PoolGameObjects
                 PoolGamesObjectsStack.Add(prefabTag, stackPool);
             else
                 stackPool = PoolGamesObjectsStack[prefabTag];
+
+            //#test
+            int countInPool = PoolGamesObjectsStack[prefabTag].Count;
+
             stackPool.Push(poolObj);
             //PoolGamesObjectsStack.Add(prefabTag, stackPool);
         }
@@ -195,6 +207,13 @@ public class PoolGameObjects
                     if (returnPool.GameObjectNext == null)
                     {
                         Debug.Log("######## returnPool.GameObjectNext==null");
+                    }
+
+                    //#TEST
+                    int countInPool = PoolGamesObjectsStack[tag].Count;
+                    if(countInPool==1)
+                    {
+                        AddPoolNewTypeObject(tag,false);
                     }
 
                     findPoolGO = PoolGamesObjectsStack[tag].Pop();
@@ -260,6 +279,20 @@ public class PoolGameObjects
             }
             //----------------------------
             //Debug.Log("Add pool not Tag  == " + tag);
+
+
+            //var findPoolGO_2 = AddPoolNewTypeObject(tag);
+            //EventsObject evenObj_2 = findPoolGO_2.GameObjectNext.GetComponent<EventsObject>();
+            //if (evenObj_2 != null)
+            //{
+            //    if (findPoolGO_2 == null)
+            //    {
+            //        Debug.Log("#######  GetPoolGameObject   findPoolGO is null " + findGO.name);
+            //    }
+            //    evenObj_2.PoolCase = findPoolGO_2;
+            //}
+
+
             findPoolGO = AddPoolNewTypeObject(tag);
         }
         findPoolGO.Activate(nameObject, tag, pos);
@@ -591,12 +624,14 @@ public class PoolGameObject
     public string Tag = "";
     public GameObject GameObjectNext { get; private set; }
     public bool IsLock { get; set; }
+    public bool IsDesrtoy { get; set; } 
 
     //public PoolGameObject(bool isCreateDefault = true)
     public PoolGameObject()
     {
         IsLock = true;
         TimeCreate = DateTime.Now;
+        IsDesrtoy = false;
     }
 
     public void Init(GameObject newGO)

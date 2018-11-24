@@ -336,14 +336,11 @@ public class MovementNPC : MonoBehaviour {
 
             if (m_isPause)
             {
-                Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
-                //_rb2d.Sleep();
+                //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
                 _rb2d.velocity = Vector3.zero;
-                //yield return null;
-                //yield break;
                 while (m_isPause)
                 {
-                    Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
+                    //Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
                     yield return null;
                 }
                 Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
@@ -758,7 +755,7 @@ public class MovementNPC : MonoBehaviour {
     public void Pause()
     {
         m_isPause = !m_isPause;
-        Debug.Log("Pause = " + m_isPause + "   " + this.name);
+        //Debug.Log("Pause = " + m_isPause + "   " + this.name);
     }
 
     public void TrackOn()

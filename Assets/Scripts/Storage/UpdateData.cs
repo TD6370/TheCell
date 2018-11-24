@@ -171,7 +171,25 @@ public class UpdateData { //: MonoBehaviour {
         }
 
         if (isClaerField)
-            fieldData.Objects.Clear();
+        {
+            if (PoolGameObjects.IsUsePoolObjects)
+            {
+                //RemoveDataObjectInGrid(nameField,)
+                //RemoveDataObjectInGrid(nameField);
+                //RemoveFieldRealObject(nameField, "AddDataObjectInGrid");
+                //Storage.Pool.Restart();
+                //Storage.GenGrid.RemoveRealObjects(nameField);
+                //if (fieldData!=null && fieldData.Objects!=null)
+                //{
+                //    fieldData.Objects.Clear();
+                //}
+                fieldData.Objects.Clear();
+            }
+            else
+            {
+                fieldData.Objects.Clear();
+            }
+        }
 
         if (isTestSlow)
         {

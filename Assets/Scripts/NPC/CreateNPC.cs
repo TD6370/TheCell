@@ -32,9 +32,11 @@ public class CreateNPC : MonoBehaviour {
 
     public void SartCrateNPC()
     {
-        
+
         //Debug.Log(".............SartCrateNPC -- CreateObjectUfo()");
-        coroutineCreateObjectUfo = StartCoroutine(CreateObjectUfo());
+
+        //#TEST STOP
+        //coroutineCreateObjectUfo = StartCoroutine(CreateObjectUfo());
     }
 
     public void StopCrateNPC()

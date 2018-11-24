@@ -525,11 +525,22 @@ public class Storage : MonoBehaviour {
         Debug.Log("III LoadGameObjects ::::_______________");
 
         //TTTT
-        _screiptHero.FindFieldCurrent();
+        //_screiptHero.FindFieldCurrent();
         //Storage.Player.RestructGrid();
 
         //_scriptGrid.StartGenGrigField(isLoadRealtime);
+
+        //--------------------- OLD -------------------
+        //_screiptHero.FindFieldCurrent();
+        //_scriptGrid.StartGenGrigField(true);
+        //------------------------------
+
+        //--------------------- NEW -------------------
+        _screiptHero.FindFieldCurrent(true);
         _scriptGrid.StartGenGrigField(true);
+        _screiptHero.FindFieldCurrent();
+        //------------------------------
+
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         _scriptData.CreateDataGamesObjectsWorld(isCreate);
@@ -1109,6 +1120,13 @@ public class Storage : MonoBehaviour {
 
     public void AddDestroyGameObject(GameObject gObj)
     {
+        //if(PoolGameObjects.IsUsePoolObjects)
+        //{
+        //    var evObj = gObj.GetComponent<EventsObject>();
+        //    if (evObj != null)
+        //        evObj.PoolCase.IsDesrtoy = true;
+        //}
+
         DestroyObjectList.Add(gObj);
     }
 
@@ -1175,25 +1193,27 @@ public class Storage : MonoBehaviour {
             }
         }
 
+        bool isDestroyOnBild = false;
         if (gObj != null)
         {
             //if (gObj != null)
             //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyFullObject " + gObj.name);
             if (PoolGameObjects.IsUsePoolObjects)
             {
-                Pool.DestroyPoolGameObject(gObj);
+                var evObj = gObj.GetComponent<EventsObject>();
+                if (evObj != null && evObj.PoolCase.IsDesrtoy) //Replace Data on Construct when Paint Prafab
+                {
+                    isDestroyOnBild = true;
+                }
             }
-            else
-            {
-                Destroy(gObj);
-            }
+            Destroy(gObj);
         }
         else
         {
             Debug.Log("+++ DestroyFullObject ++++ Destroy ---- object is null");
         }
 
-        KillObject.Add(setName);
+        KillObject.Add(setName); //++ history
         //-----------------------------------------------
         bool isRemovedCorrect = false;
         bool isRemReal = false;
@@ -1215,9 +1235,12 @@ public class Storage : MonoBehaviour {
         {
             if (indObj == -1)
             {
-                Debug.Log("!!!! DestroyRealObject GridData not object=" + gObj.name);
-                //RemoveAllFindRealObject(gObj.name);
-                _UpdateData.RemoveAllFindDataObject(gObj.name);
+                if(!isDestroyOnBild)
+                { 
+                    Debug.Log("!!!! ObjectData GridData not object=" + gObj.name);
+                    //RemoveAllFindRealObject(gObj.name);
+                    _UpdateData.RemoveAllFindDataObject(gObj.name);
+                }
             }
             else
             {

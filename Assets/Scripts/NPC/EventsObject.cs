@@ -85,7 +85,7 @@ public class EventsObject : MonoBehaviour {
                     //---------------
                     if (field == Storage.Instance.SelectFieldCursor) // Storage.Instance.SelectFieldPosHero)
                     {
-                        Debug.Log("----------" + this.gameObject.name + "--- Dist: " + dist + "    Alpha: " + _alpha + " " + this.transform.position + " H> " + Storage.PlayerController.transform.position);
+                       // Debug.Log("----------" + this.gameObject.name + "--- Dist: " + dist + "    Alpha: " + _alpha + " " + this.transform.position + " H> " + Storage.PlayerController.transform.position);
                     }
                     //-----------------
 
