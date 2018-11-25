@@ -486,8 +486,11 @@ public class GenerateGridFields : MonoBehaviour {
                             movementNPC.InitNPC();
                         }
                     }
-                    newField.GetComponent<SpriteRenderer>().color = Color.white;
+                    
+                    //#fix color
+                    //  newField.GetComponent<SpriteRenderer>().color = Color.white;
                     //newField.SetActive(true);
+
                     if (movement != null)
                     {
                         //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate InitNPC " + newField.name);

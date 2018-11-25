@@ -92,8 +92,6 @@ public class ModelNPC
     //#################################################################################################
 
     [XmlType("NPC")]
-    //[XmlInclude(typeof(GameDataUfo))] 
-    //[XmlInclude(typeof(GameDataUfo))] //$$
     public class GameDataNPC : ObjectData
     {
         [XmlIgnore]
@@ -321,20 +319,23 @@ public class ModelNPC
         }
     }
 
-
-
     //-----------------
     [XmlType("Ufo")] //?
     public class GameDataUfo : GameDataNPC //?
     {
         [XmlIgnore]
         public Color ColorRender = Color.black;
+        //public Color ColorRender = Color.red;
 
         public GameDataUfo()
             : base()
         {
-            ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+            Init();
+        }
 
+        private void Init()
+        {
+            ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
             Speed = 3;
         }
 
@@ -347,7 +348,8 @@ public class ModelNPC
                 objGame.name = nameObjData;
             }
 
-
+            //#fix  Color
+            //Init();
 
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
         }

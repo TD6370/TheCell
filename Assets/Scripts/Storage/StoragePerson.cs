@@ -454,6 +454,14 @@ public static class PersonsExtensions
         return null;
     }
 
+    //public static T GetDataModel(this GameObject gobj)
+    //{
+    //    var movNPC = gobj.GetMoveNPC();
+    //    if (movNPC != null)
+    //        return movNPC.GetData();
+    //    return null;
+    //}
+
     public static bool IsNPC(this GameObject gobj)
     {
         if (gobj = null)

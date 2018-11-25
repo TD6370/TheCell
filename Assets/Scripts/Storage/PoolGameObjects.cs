@@ -588,7 +588,14 @@ public class PoolGameObject
 
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
+
         GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
+
+        //if (GameObjectNext.IsUFO()){
+        //    ModelNPC.GameDataUfo ufoData = (ModelNPC.GameDataUfo)GameObjectNext.GetDataNPC();
+        //    if(ufoData!=null)
+        //        ufoData.UpdateGameObject(GameObjectNext);
+        //}
 
         var movement = GameObjectNext.GetComponent<MovementBoss>();
         if (movement == null)
@@ -605,8 +612,6 @@ public class PoolGameObject
                 Debug.Log("##########\\\\\\\\\\\\\\\\ Pool contains null object ");
             }
         }
-
-
     }
 
 
