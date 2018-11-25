@@ -115,6 +115,10 @@ public class DataTilesManager : MonoBehaviour {
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildBoloto", Row = 0, Size = 5 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildZal", Row = 0, Size = 10 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPrefab", Row = 0, Size = 5, TypeTile = TypesStructure.TerraPrefab });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildSad", Row = 0, Size = 10, TypeTile = TypesStructure.TerraPrefab });
+        ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPolyanka", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
+        //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom1", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
+        //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom2", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
 
         //m_CollectionDataMapTiles = new Dictionary<string, List<DataTile>>();
         m_CollectionDataMapTiles = new Dictionary<string, DataConstructionTiles>();

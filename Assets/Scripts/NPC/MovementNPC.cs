@@ -656,7 +656,7 @@ public class MovementNPC : MonoBehaviour {
 
     private void SelectedGameObject()
     {
-
+        
 
         //_scriptUIEvents.SetTestText(objID);
         Storage.Events.SetTestText(objID);
@@ -678,13 +678,16 @@ public class MovementNPC : MonoBehaviour {
             //InitNPC();
         }
 
+        //#EXPAND
+        Storage.Events.AddMenuPerson(_dataNPC, this.gameObject);
+
         //Storage.Log.GetHistory(_dataNPC.NameObject);
-        Debug.Log("Select: Game " + this.gameObject.name + "  OLD D: " + _dataNPC.NameObject);
-        Debug.Log("FindPersonData:  D: " + person.DataObj.NameObject);
-        Storage.Events.ListLogAdd = "------------------------";
-        Storage.Events.ListLogAdd = "Select: Game " + this.gameObject.name;
-        Storage.Events.ListLogAdd = "  OLD D: " + _dataNPC.NameObject;
-        Storage.Events.ListLogAdd = "  FindPersonData: " + person.DataObj.NameObject;
+        //Debug.Log("Select: Game " + this.gameObject.name + "  OLD D: " + _dataNPC.NameObject);
+        //Debug.Log("FindPersonData:  D: " + person.DataObj.NameObject);
+        //Storage.Events.ListLogAdd = "------------------------";
+        //Storage.Events.ListLogAdd = "Select: Game " + this.gameObject.name;
+        //Storage.Events.ListLogAdd = "  OLD D: " + _dataNPC.NameObject;
+        //Storage.Events.ListLogAdd = "  FindPersonData: " + person.DataObj.NameObject;
 
         //UpdateData("SelectedGameObject");
         //ModelNPC.GameDataNPC dataNPC = GetData();
@@ -704,12 +707,13 @@ public class MovementNPC : MonoBehaviour {
         //    }
         //}
 
-        //#EXPAND
-        Storage.Events.AddExpandPerson(_dataNPC.NameObject,
-            _dataNPC.GetParams,
-            new List<string> { "Pause", "Kill", "StartTrack" },
-            gobjObservable: this.gameObject);
+        //Storage.Events.AddExpandPerson(_dataNPC.NameObject,
+        //    _dataNPC.GetParams,
+        //    new List<string> { "Pause", "Kill", "StartTrack", "GoTo" },
+        //    gobjObservable: this.gameObject);
     }
+
+
 
     private bool _isSelected = false;
     private bool IsSelectedMe()

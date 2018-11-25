@@ -12,13 +12,54 @@ public class ExpandControl : MonoBehaviour {
     public GameObject PanelContentExpandObj;
     public GameObject ScrollListBoxPerson;
 
-    public string TittleExpand { get; set; }
+    private GameObject gobjExpandLast;
+    private bool m_isColorAlert = false;
+
+    //textExpanderButton.text = tittle;
+    //private string m_TittleExpand;
+    Text _textExpanderButton;
+
+    public string TittleExpand
+    {
+        get {
+            if(_textExpanderButton==null)
+                return "Error";
+            return _textExpanderButton.text;
+        }
+        set {
+            _textExpanderButton = ButtonExpand.GetComponentInChildren<Text>();
+            if (_textExpanderButton == null)
+            {
+                Debug.Log("########### textBlock ButtonExpand GetComponent<Text> is Empty");
+                return;
+            }
+            _textExpanderButton.text = value;
+        }
+    }
+
+    public ModelNPC.ObjectData DataObject;
 
     public bool IsAlert
     {
         get
         {
-            return m_gobjObservable == null;
+            if (!string.IsNullOrEmpty(ID))
+            {
+                var findData = Storage.Person.GetFindPersonsDataForName(ID);
+                if (findData == null)
+                {
+                    //SetColorText(UIEvents.ColorAlert);
+                    return true;
+                }
+                else
+                {
+                    //SetColorText(UIEvents.ColorExpClose);
+                    DataObject = findData.DataObj;
+                }
+            }
+            return false;    
+
+            //return m_gobjObservable == null;
         }
     }
 
@@ -32,29 +73,50 @@ public class ExpandControl : MonoBehaviour {
     }
 
 
-    private GameObject m_gobjObservable;
+    //private GameObject m_gobjObservable;
+    public string ID = "";
     private string m_storeNameObservable = "";
 
     public string GetName
     {
         get
         {
-            if (m_gobjObservable == null)
+            GameObject m_gobjObservable = null;
+            if (!string.IsNullOrEmpty(ID))
             {
-                if (!string.IsNullOrEmpty(m_storeNameObservable))
+                var findData = Storage.Person.GetFindPersonsDataForName(ID);
+                if(findData==null)
                 {
-                    Debug.Log("############# GetName Find Observable on name: " + m_storeNameObservable);
-                    m_gobjObservable = GameObject.Find(m_storeNameObservable);
-                }
-                if (m_gobjObservable == null)
-                {
-                    Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + this.gameObject.name);
-                    if (!string.IsNullOrEmpty(m_storeNameObservable))
-                        Storage.Log.GetHistory(m_storeNameObservable);
+                    Debug.Log("############# Not find person id=" + ID);
                     return "ERROR_ME_DESTROY";
                 }
+                else
+                {
+                    DataObject = findData.DataObj;
+                }
+                
+                m_gobjObservable = GameObject.Find(findData.DataObj.NameObject);
+                if (m_gobjObservable == null)
+                {
+                    SetColorText(UIEvents.ColorAlert);
+
+                    //Debug.Log("############# gobjObservable == null     OLD NAME: " + m_storeNameObservable + "     -- " + this.gameObject.name);
+                    //if (!string.IsNullOrEmpty(m_storeNameObservable))
+                    //    Storage.Log.GetHistory(m_storeNameObservable);
+                    return findData.DataObj.NameObject;
+                    
+                }
+            }
+            else
+            {
+                return "ERROR_ME_DESTROY";
             }
             StoreNameObservable = m_gobjObservable.gameObject.name;
+            TittleExpand = StoreNameObservable;
+
+            if(m_isColorAlert)
+                SetColorText(UIEvents.ColorExpClose);
+            
             return m_gobjObservable.name;
         }
     }
@@ -99,25 +161,6 @@ public class ExpandControl : MonoBehaviour {
         }
     }
 
-    //public Image PanelContentExpand
-    //{
-    //    get
-    //    {
-    //        return ContentExpandList.GetComponent<Image>();
-    //    }
-    //}
-
-    // Use this for initialization
-
-    //public bool IsOpen
-    //{
-    //    get
-    //    {
-    //        return PanelContentExpandObj.activeSelf;
-    //    }
-    //}
-
-
     void Start ()
     {
         //ButtonExpand.onClick.AddListener(ExpandPanelOn);
@@ -134,9 +177,7 @@ public class ExpandControl : MonoBehaviour {
 		
 	}
 
-    ExpandControl scriptExpand;
-    GameObject gobjExpandLast;
-    float addHeight;
+
 
     private void ButtonExpandOnClick()
     {
@@ -158,8 +199,8 @@ public class ExpandControl : MonoBehaviour {
             ExpandControl scriptExp = exp.GetExpandControl();
             scriptExp.SetColorText(UIEvents.ColorExpClose);
 
-            //string nameExp = scriptExp.GetName;
-            //scriptExp.ExpandPanelOn(true, p_isOpen: false);
+            string nameExp = scriptExp.GetName;
+            scriptExp.ExpandPanelOn(true, p_isOpen: false);
         }
 
         SetColorText(UIEvents.ColorExpOpen);
@@ -226,30 +267,23 @@ public class ExpandControl : MonoBehaviour {
         string nameObservable = gobjObservable.name;
         //Debug.Log("ExpandControl: SetGameObject : " + nameObservable);
 
-        m_gobjObservable = gobjObservable;
+        //m_gobjObservable = gobjObservable;
+
+        ID = Helper.GetID(gobjObservable.name);
     }
 
 
 
     // ADD DATA NPC
-    public void AddList(string tittle, List<string> listText, List<string> listCommand)
+    public void AddList(string tittle, List<string> listText, List<string> listCommand,  GameObject m_gobjObservable)
     {
         TittleExpand = tittle;
 
-        //var transContentExpandGO =  ContentExpandList;
-;
         if (ContentExpandList == null)
         {
             Debug.Log("########### ContentExpandList is Empty ");
             return;
         }
-
-        //GameObject contentExpandGO = transContentExpandGO.gameObject;
-        //if (contentExpandGO == null)
-        //{
-        //    Debug.Log("########### Content Expand is Empty");
-        //    return;
-        //}
 
         Transform transExpandButton = ButtonExpand.transform;
 ;
@@ -259,25 +293,11 @@ public class ExpandControl : MonoBehaviour {
             Debug.Log("########### textBlock Expand is Empty");
             return;
         }
-
-        //Text textExpanderButton = ButtonExpand.GetComponent<Text>();
-        //textExpanderButton
-        Text textExpanderButton = ButtonExpand.GetComponentInChildren<Text>();
-        if (textExpanderButton == null)
-        {
-            Debug.Log("########### textBlock ButtonExpand GetComponent<Text> is Empty");
-            return;
-        }
-
-
-        //SET TITTLE
-        textExpanderButton.text = tittle;
-
-       
+      
         foreach (string selectCommand in listCommand)
         {
             //Debug.Log("AddList CreateCommandLogButton : " + selectCommand);
-            Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, false);
+            Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, false, this);
             //Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, true);
         }
         foreach (string text in listText)
@@ -287,40 +307,51 @@ public class ExpandControl : MonoBehaviour {
         }
     }
 
+    
     public void SetColorText(string strColor)
     {
         if (IsAlert)
         {
+            m_isColorAlert = true;
             ButtonExpand.SetColor("", strColorText: UIEvents.ColorAlert);
             return;
         }
-
-        //Debug.Log("SetColorText Me : " + this.name + " color: " + strColor);
+        if (strColor == UIEvents.ColorAlert)
+            m_isColorAlert = true;
+        else
+            m_isColorAlert = false;
 
         ButtonExpand.SetColor("", strColorText: strColor);
         //ButtonExpand.SetColor(strColor, strColor);
     }
 
-    public void SelectedObserver()
+    public GameObject SelectedObserver()
     {
+        GameObject m_gobjObservable = null;
+        if (!string.IsNullOrEmpty(ID))
+        {
+            var findData = Storage.Person.GetFindPersonsDataForName(ID);
+            if (findData == null)
+            {
+                Debug.Log("############# Not find person id=" + ID);
+            }
+            DataObject = findData.DataObj;
+            m_gobjObservable = GameObject.Find(findData.DataObj.NameObject);
+        }
+
         if (m_gobjObservable == null)
         {
-            if (!string.IsNullOrEmpty(m_storeNameObservable))
-            {
-                Debug.Log("############# GetName Find Observable on name: " + m_storeNameObservable);
-                m_gobjObservable = GameObject.Find(m_storeNameObservable);
-            }
-
-            if (m_gobjObservable == null)
-            {
-                //Storage.Events.ListLogAdd = "SelectedObserver EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
-                Storage.Events.ListLogAdd = "EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
-                SetColorText(UIEvents.ColorAlert);
-                return;
-            }
+            //Storage.Events.ListLogAdd = "SelectedObserver EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
+            Storage.Events.ListLogAdd = "EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
+            SetColorText(UIEvents.ColorAlert);
+            return null;
         }
+
+        //if (m_isColorAlert)
+        SetColorText(UIEvents.ColorExpOpen);
 
         //Storage.Events.ListLogAdd = "SELECTED --- " + GetName.Replace("_", " ");
         Storage.Instance.SelectGameObjectID = Helper.GetID(GetName);
+        return m_gobjObservable;
     }
 }

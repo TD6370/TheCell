@@ -972,7 +972,7 @@ public class MapWorld : MonoBehaviour {
 
         try
         {
-            textureResult.alphaIsTransparency = true;
+            //textureResult.alphaIsTransparency = true;
             Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
         }
         catch (Exception ex)

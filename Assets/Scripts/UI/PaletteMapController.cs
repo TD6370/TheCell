@@ -1192,14 +1192,14 @@ private void ClearLayerForStructure(string field, bool isClearData = false)
             }
         }
 
-        //if (isClearData)
-        //{
-        //    //Destroy All DATA Objects
-        //    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
-        //    {
-        //        Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
-        //    }
-        //}
+        if (isClearData)
+        {
+            //Destroy All DATA Objects
+            if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
+            {
+                Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
+            }
+        }
     }
 
     //--- fixed Bug ---

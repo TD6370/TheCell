@@ -537,14 +537,16 @@ public class UIEvents : MonoBehaviour {
 
 
 
-    public void CommandExecutePerson(string selectCommand, GameObject gobjObservable)
+    public void CommandExecutePerson(string selectCommand, GameObject gobjObservable, ModelNPC.GameDataNPC dataNPC, string _gobjID = "")
     {
-        if(gobjObservable == null)
-        {
-            Debug.Log("############ CommandExecuteParson(" + selectCommand  + ") : gobjObservable is Empty");
-            return;
-        }
-        MovementNPC movem = gobjObservable.GetComponent<MovementNPC>();
+        //if(gobjObservable == null)
+        //{
+        //    Debug.Log("############ CommandExecuteParson(" + selectCommand  + ") : gobjObservable is Empty");
+        //    return;
+        //}
+        MovementNPC movem = null;
+        if (gobjObservable != null)
+            movem = gobjObservable.GetComponent<MovementNPC>();
 
         switch (selectCommand)
         {
@@ -552,6 +554,8 @@ public class UIEvents : MonoBehaviour {
                 SetTittle = "...";
                 break;
             case "Pause":
+                if (gobjObservable == null)
+                    return;
                 SetTittle = "Level saving...";
                 if(movem==null)
                 {
@@ -569,15 +573,38 @@ public class UIEvents : MonoBehaviour {
                 //    return;
                 //}
                 //scriptEvents.Kill();
-                Storage.Instance.AddDestroyGameObject(gobjObservable);
+                if (gobjObservable != null)
+                    Storage.Instance.AddDestroyGameObject(gobjObservable);
                 break;
             case "StartTrack":
+                if (gobjObservable == null)
+                    return;
                 if (movem == null)
                 {
                     Debug.Log("############ CommandExecuteParson(" + selectCommand + ") : " + gobjObservable.name + " MovementNPC is Empty");
                     return;
                 }
                 movem.TrackOn();
+                break;
+            case "GoTo":
+                //Storage.Instance.HeroObject
+                Vector2 posTeleport = new Vector2();
+                if (gobjObservable != null)
+                {
+                    posTeleport = gobjObservable.transform.position;
+                }
+                else
+                {
+                    if(dataNPC == null)
+                    {
+                        ListLogAdd = "######### GoTo: Observable DATA NPC is Empty";
+                        return;
+                    }
+                    posTeleport = dataNPC.Position;
+                }
+                //Storage.PlayerController.transform.position  =
+                Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
+                //Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
                 break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
@@ -626,7 +653,7 @@ public class UIEvents : MonoBehaviour {
         //Debug.Log("CreateCommandLogText : " + p_text);
     }
 
-    public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null, bool isValidExistCommand = false)
+    public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null, bool isValidExistCommand = false, ExpandControl expControl = null)
     {
         bool isPersonComm = false;
         if (gobjObservable != null)
@@ -688,18 +715,57 @@ public class UIEvents : MonoBehaviour {
 
             //Debug.Log("ADD: CreateCommandLogText : " + nameBtn + "  parent: " + p_parent.name);
 
+
+            string gobjID = "";
+            ModelNPC.GameDataNPC dataObs = null;
+            if (gobjObservable.IsNPC())
+            {
+                dataObs = gobjObservable.GetDataNPC();
+            }
+
+            if(gobjObservable!=null)
+                gobjID = Helper.GetID(gobjObservable.name);
+            //ExpandControl expControl = null
+
             //ADD EVENT COMMAND
             buttonCommand.onClick.AddListener(delegate
             {
+                var _gobjID = gobjID;
+
                 if (isPersonComm)
                 {
-                    if(gobjObservable ==null)
+                    //def color set
+                    //buttonCommand.SetColor(ColorExpClose);
+
+                    //if (gobjObservable == null)
+                    if (expControl == null)
                     {
                         buttonCommand.SetColor(ColorAlert);// "#EC4D56");
-                        Debug.Log("buttonCommand.onClick isPersonComm gobjObservable == null");
+                        Debug.Log("buttonCommand.onClick isPersonComm expControl == null");
+                    }
+
+                    if (expControl.IsAlert)
+                    {
+                        ListLogAdd = "PersonComm [" + textBtn + "] objObservable is Destroy & data empty";
+                        buttonCommand.SetColor(ColorAlert);// "#EC4D56");
                         return;
                     }
-                    CommandExecutePerson(textBtn, gobjObservable);
+
+                    //if (gobjObservable == null)
+                    //{
+                    gobjObservable = expControl.SelectedObserver();
+                    //}
+                    dataObs = (ModelNPC.GameDataNPC)expControl.DataObject;
+
+                    if (dataObs == null)
+                    {
+                        ListLogAdd = "PersonComm [" + textBtn + "] objObservable is Destroy & data empty";
+                    }
+                    if (gobjObservable != null)
+                        dataObs = gobjObservable.GetDataNPC();
+                    
+
+                    CommandExecutePerson(textBtn, gobjObservable, dataObs, _gobjID);
                 }
                 else
                 {
@@ -904,9 +970,6 @@ public class UIEvents : MonoBehaviour {
         Vector3 pos = new Vector3(0, 0, 0);
         GameObject expandGO = (GameObject)Instantiate(PrefabExpandPanel, pos, Quaternion.identity);
 
-        //string index = UnityEngine.Random.Range(0, 10).ToString();
-        //var gobjName = (gobjObservable == null)? index : gobjObservable.name;
-        //expandGO.name = "ExpandPanel" + tittle.Replace(" ","_") + "" + gobjName + listText.Count;
         expandGO.name = newNameExpand;
         expandGO.transform.SetParent(contentListExpandPerson.transform);
 
@@ -929,7 +992,7 @@ public class UIEvents : MonoBehaviour {
 
         ExpandControl scriptEvents =  expandGO.GetComponent<ExpandControl>();
         scriptEvents.SetGameObject(gobjObservable, tittle);
-        scriptEvents.AddList(tittle, listText, listCommand);
+        scriptEvents.AddList(tittle, listText, listCommand, gobjObservable);
 
         //scriptEvents = resultFind.GetExpandControl();
         scriptEvents.SetColorText(ColorExpOpen);
@@ -1079,6 +1142,14 @@ public class UIEvents : MonoBehaviour {
             Debug.Log("######## GetPositTeleport NOT teleporting !!!");
         }
         return posTeleport;
+    }
+
+    public void AddMenuPerson(ModelNPC.GameDataNPC _dataNPC, GameObject gobj)
+    {
+        Storage.Events.AddExpandPerson(_dataNPC.NameObject,
+            _dataNPC.GetParams,
+            new List<string> { "GoTo", "Kill", "Pause", "StartTrack" },
+            gobjObservable: gobj);
     }
 
     public string SetTittle

@@ -429,6 +429,8 @@ public static class PersonsExtensions
 
     public static MovementNPC GetMoveNPC(this GameObject gobj)
     {
+        if (gobj == null)
+            return null;
         var moveNPC = gobj.GetComponent<MovementNPC>();
         if (moveNPC != null)
             return moveNPC;
@@ -450,6 +452,21 @@ public static class PersonsExtensions
         if (movNPC != null)
             return movNPC.GetData();
         return null;
+    }
+
+    public static bool IsNPC(this GameObject gobj)
+    {
+        if (gobj = null)
+            return false;
+        var movNPC = gobj.GetMoveNPC();
+        if (movNPC == null)
+            return false;
+
+        var dataNPC = movNPC.GetData();
+        if (dataNPC == null)
+            return false;
+
+        return true;
     }
 
     public static bool IsUFO(this GameObject gobj)
