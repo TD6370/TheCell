@@ -590,30 +590,63 @@ public class PaletteMapController : MonoBehaviour {
 
         
 
+
         btxSizeBrush.text = SizeBrush.ToString();
         btxSizeBrush.onValueChange.AddListener(delegate
         {
-            SizeBrush = int.Parse(btxSizeBrush.text);
+            int _sizeBrush = SizeBrush;
+            if(!int.TryParse(btxSizeBrush.text, out _sizeBrush))
+            {
+                btxSizeBrush.text = SizeBrush.ToString();
+            }
+            else
+            {
+                SizeBrush = _sizeBrush;
+            }
+            //SizeBrush = int.Parse(btxSizeBrush.text);
         });
 
         btxIntGenOption1.onValueChange.AddListener(delegate
         {
-            OptionGenCount = int.Parse(btxIntGenOption1.text);
+            OptionGenCount = IntPrseDef(btxIntGenOption1.text, OptionGenCount);
+            if (btxIntGenOption1.text != OptionGenCount.ToString())
+                btxIntGenOption1.text = OptionGenCount.ToString();
+            //OptionGenCount = int.Parse(btxIntGenOption1.text);
         });
         btxIntGenOption2.onValueChange.AddListener(delegate
         {
-            OptionGenPercent = int.Parse(btxIntGenOption2.text);
+            //OptionGenPercent = int.Parse(btxIntGenOption2.text);
+            OptionGenPercent = IntPrseDef(btxIntGenOption2.text, OptionGenPercent);
+            if (btxIntGenOption2.text != OptionGenPercent.ToString())
+                btxIntGenOption2.text = OptionGenPercent.ToString();
         });
         btxIntGenOption3.onValueChange.AddListener(delegate
         {
-            OptionGen3 = int.Parse(btxIntGenOption3.text);
+            //OptionGen3 = int.Parse(btxIntGenOption3.text);
+            OptionGen3 = IntPrseDef(btxIntGenOption3.text, OptionGen3);
+            if (btxIntGenOption3.text != OptionGen3.ToString())
+                btxIntGenOption3.text = OptionGen3.ToString();
         });
         btxIntGenOption4.onValueChange.AddListener(delegate
         {
-            OptionGen4 = int.Parse(btxIntGenOption4.text);
+            //OptionGen4 = int.Parse(btxIntGenOption4.text);
+            OptionGen4 = IntPrseDef(btxIntGenOption4.text, OptionGen4);
+            if (btxIntGenOption4.text != OptionGen4.ToString())
+                btxIntGenOption4.text = OptionGen4.ToString();
+
         });
     }
 
+    public int IntPrseDef(string value, int defValue)
+    {
+        int resValue = defValue;
+        if (!int.TryParse(value, out resValue))
+        {
+            //btxSizeBrush.text = SizeBrush.ToString();
+        }
+
+        return resValue;
+    }
     
     public void PrefabsOnPalette()
     {

@@ -77,6 +77,9 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     Camera cameraMap;// = Storage.PlayerController.CameraMap;
     BoxCollider2D colliderMap;
 
+    public bool IsMapDragOn = false;
+    float m_distanceDrag = 0;
+
     // Use this for initialization
     void Start()
     {
@@ -134,6 +137,13 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             //After CalculatePointOnMap
             MouseDownSpecOnChange();
         }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            //After CalculatePointOnMap
+            MouseUpSpecOnChange();
+        }
+
         //return;//#FIX
         if (IsActive && IsRuntimeViewMarker)
         {
@@ -144,6 +154,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
         //EventsUI();
 
+
+        OnDragMapLocation();
     }
 
     public void OnPointerClick(PointerEventData data)
@@ -178,7 +190,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         Debug.Log("cursor over UI element.");
         CalculatePointOnMap(true);
     }
-    
+
 
     private void EventsUI()
     {
@@ -257,6 +269,110 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     private void MouseDownSpecOnChange()
     {
         RunTeleportHero();
+        MapDragOn(true);
+    }
+    private void MouseUpSpecOnChange()
+    {
+        MapDragOn(false);
+    }
+
+    
+
+    //private Vector3 PosStartMap = new Vector3();
+    //private Vector3 PosStartCursor = new Vector3();
+    //private Vector3 PosStartCursorW = new Vector3();
+    private float diffDragX = 0;
+    private float diffDragY = 0;
+    private float corrZoom = 2f;
+
+    private void MapDragOn(bool IsDrag = true)
+    {
+        IsMapDragOn = IsDrag;
+        if (IsMapDragOn)
+        {
+            //PosStartCursorW = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+            //PosStartCursor = Input.mousePosition;
+            m_distanceDrag = Vector3.Distance(transform.position, cameraMap.transform.position);
+
+
+            var center = Helper.HeightLevel / 2;
+            float pathX = SelectPointField.x - center;
+            float pathY = SelectPointField.y - center;
+            //float factorX = center / Math.Abs(pathX);
+            //float factorY = center / Math.Abs(pathY);
+
+            diffDragX = pathX / (4f);
+            diffDragY = pathY / (4f);
+
+            //---- ZOOM
+            float _zoom = SizeZoom > 1 ? SizeZoom * corrZoom : SizeZoom;
+            diffDragX *= _zoom;
+            diffDragY *= _zoom;
+            //rayPoint.x -= diffX;
+            //rayPoint.y -= diffY;
+        }
+    }
+    
+
+    private void OnDragMapLocation()
+    {
+        if (IsMapDragOn)
+        {
+            
+
+            //Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
+            //Vector3 rayPoint = ray.GetPoint(m_distanceDrag);
+            //transform.position = rayPoint / SizeZoom;
+
+            
+            Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
+            Vector3 rayPoint = ray.GetPoint(m_distanceDrag);
+
+            //var newPosW = PosStartCursorW - cameraMap.ScreenToWorldPoint(Input.mousePosition);
+            //var newPos = PosStartCursor - Input.mousePosition;
+
+            //rayPoint.x -= 5;
+            //rayPoint.y -= 5;
+
+            //------------
+            rayPoint.x -= diffDragX;
+            rayPoint.y += diffDragY;
+            Storage.Events.ListLogAdd = "Diff: " + diffDragX + " x " + diffDragY;
+            //------------
+
+            if(Storage.Map.IsValid)
+            {
+                //transform.position = rayPoint / SizeZoom;
+                Vector3 resPoint = rayPoint;
+
+                //---- ZOOM
+                //float _zoom = SizeZoom > 1 ? SizeZoom * corrZoom : SizeZoom;
+                //float _zoom = SizeZoom > 1 ? SizeZoom / corrZoom : SizeZoom;
+                //resPoint /= _zoom;
+                resPoint /= SizeZoom;
+
+                transform.position = resPoint;
+            }
+            else
+            {
+                IsMapDragOn = false;
+                //Restart();
+
+                BackFrameMoving();
+            }
+            
+        }
+    }
+
+    private void BackFrameMoving()
+    {
+        Storage.Map.StartPositFrameMap = new Vector3();
+        Vector3 posHero = Storage.PlayerController.transform.position;
+        //transform.position = new Vector3(posHero.x, posHero.y, 0);
+
+        Vector3 newPos = posHero - transform.position;
+        newPos /= 20;
+        transform.position += newPos;
     }
 
     private void RunTeleportHero()
@@ -1020,6 +1136,13 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     private void ValidateStartPosition()
     {
+
+        if (!Storage.Map.IsValid)
+            BackFrameMoving();
+        
+            //#TEST
+        //return;
+
         double startMapX = System.Math.Round(Storage.Map.StartPositFrameMap.x, 1);
         double startMapY = System.Math.Round(Storage.Map.StartPositFrameMap.y, 1);
         if (startMapX != 21.8 &&

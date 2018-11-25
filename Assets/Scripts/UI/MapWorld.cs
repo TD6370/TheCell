@@ -159,6 +159,19 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    public bool IsValid
+    {
+        get
+        {
+            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+            if (distMap > 35f) //30f
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
     public void Show()
     {
         bool isShow = !prefabFrameMap.activeSelf;
@@ -959,11 +972,12 @@ public class MapWorld : MonoBehaviour {
 
         try
         {
+            textureResult.alphaIsTransparency = true;
             Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
         }
         catch (Exception ex)
         {
-            Debug.Log("######### DrawMapCell :" + ex.Message);
+            Debug.Log("######### DrawMapCell [" + texturePrefab.name + "] :" + ex.Message );
             return;
         }
 
