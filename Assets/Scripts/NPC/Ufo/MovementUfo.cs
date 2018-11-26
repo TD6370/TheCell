@@ -284,7 +284,7 @@ public class MovementUfo : MonoBehaviour {
         if (_dataUfo!=null)
         {
             //_dataUfo.SetTargetPosition(Storage.Person.PersonsTargetPosition);
-            _dataUfo.SetTargetPosition(Storage.Instance.PersonsTargetPosition);
+            _dataUfo.SetTargetPosition(Storage.Person.PersonsTargetPosition);
             
         }
     }

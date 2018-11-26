@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class StoragePerson : MonoBehaviour {
 
+    public Vector3 PersonsTargetPosition { get; set; }
+
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
 
@@ -374,19 +376,49 @@ public class StoragePerson : MonoBehaviour {
         }
     }
 
+    //public void TartgetPositionAll()
+    //{
     public void SetTartgetPositionAll(Vector2 posCursorToField)
     {
         Debug.Log("SetTartgetPositionAll : to " + posCursorToField.x + "" + posCursorToField.y);
 
-        foreach (var gobj in Storage.Person.GetAllRealPersons())
-        {
-            Debug.Log("SetTartgetPositionAll : " + gobj.name + " to : " + posCursorToField.x + "" + posCursorToField.y);
-            MovementNPC movem = gobj.GetComponent<MovementNPC>();
-            ModelNPC.GameDataNPC dataNPC = movem.GetData();
-            dataNPC.SetTargetPosition(posCursorToField);
-        }
+        //foreach (var gobj in Storage.Person.GetAllRealPersons())
+        //{
+        //    Debug.Log("SetTartgetPositionAll : " + gobj.name + " to : " + posCursorToField.x + "" + posCursorToField.y);
+        //    MovementNPC movem = gobj.GetComponent<MovementNPC>();
+        //    ModelNPC.GameDataNPC dataNPC = movem.GetData();
+        //    dataNPC.SetTargetPosition(posCursorToField);
+        //}
+        PersonsTargetPosition = posCursorToField;// new Vector3(posCursorToField.x,posCursorToField.y,0);
+        TartgetPositionAll(); //<< dataNPC.SetTargetPosition(Storage.Instance.PersonsTargetPosition);
     }
 
+    //#TARGET
+    public void TartgetPositionAll()
+    {
+        Debug.Log("^^^^^^^^ TARGET --- TartgetPositionAll");//#TARGET
+
+        //PersonsTargetPosition
+        foreach (GameObject gobj in Storage.Person.GetAllRealPersons().ToList())
+        {
+            //if (Storage.Person.NamesPersons.Contains(gobj.tag.ToString()))
+            //if (typeP.IsPerson())
+            if (gobj.tag.ToString().IsPerson())
+            {
+                var movementUfo = gobj.GetMoveUfo();
+                if (movementUfo != null)
+                    movementUfo.SetTarget();
+
+                var movementNPC = gobj.GetMoveNPC();
+                if (movementNPC != null)
+                    movementNPC.SetTarget();
+
+                //var movementNPC = gobj.GetMoveBoss();
+                //if (movementNPC != null)
+                //    movementNPC.SetTarget();
+            }
+        }
+    }
 
     public void ModifObject(GameObject gobj)
     {

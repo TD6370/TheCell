@@ -58,10 +58,6 @@ public class Storage : MonoBehaviour {
         IsTartgetPositionAll = !IsTartgetPositionAll;
     }
 
-    public Vector3 PersonsTargetPosition { get; set; }
-
-
-    
     private PoolGameObjects _PoolObgects;
     public static PoolGameObjects Pool
     {
@@ -1029,34 +1025,7 @@ public class Storage : MonoBehaviour {
         _GridDataG = new ModelNPC.GridData();
     }
 
-    //#TARGET
-    public void TartgetPositionAll()
-    {
-        Debug.Log("^^^^^^^^ TARGET --- TartgetPositionAll");//#TARGET
-
-        //PersonsTargetPosition
-        foreach (GameObject gobj in Storage.Person.GetAllRealPersons().ToList())
-        {
-            //if (Storage.Person.NamesPersons.Contains(gobj.tag.ToString()))
-            //if (typeP.IsPerson())
-            if (gobj.tag.ToString().IsPerson())
-            {
-                var movementUfo = gobj.GetMoveUfo();
-                if (movementUfo != null)
-                    movementUfo.SetTarget();
-
-                var movementNPC = gobj.GetMoveNPC();
-                if (movementNPC != null)
-                    movementNPC.SetTarget();
-
-                //var movementNPC = gobj.GetMoveBoss();
-                //if (movementNPC != null)
-                //    movementNPC.SetTarget();
-            }
-        }
-
-
-    }
+    
 
 
 

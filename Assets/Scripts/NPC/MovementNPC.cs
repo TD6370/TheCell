@@ -270,10 +270,15 @@ public class MovementNPC : MonoBehaviour {
 
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
+        string lastFieldForLock = Storage.Instance.SelectFieldPosHero;
 
         int stepTest = 0;
         int stepLimitTest = 10;
+        float limitLockInField = 3f;
+        float TimeInField = Time.time + limitLockInField;
+
         float minDist = 0.005f;
+        
 
         int speed = 1;
         float step = 0;
@@ -376,6 +381,13 @@ public class MovementNPC : MonoBehaviour {
                 }
                 lastPositionForLock = transform.position;
                 stepTest = 0;
+            }
+            if (Time.time > TimeInField && lastFieldForLock != Storage.Instance.SelectFieldPosHero)
+            {
+                //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
+                lastFieldForLock = Storage.Instance.SelectFieldPosHero;
+                _dataNPC.SetTargetPosition();
+                TimeInField = Time.time + limitLockInField;
             }
 
             Vector3 targetPosition = _dataNPC.TargetPosition;
@@ -648,7 +660,7 @@ public class MovementNPC : MonoBehaviour {
         {
             //Vector3 setV = Storage.Person.PersonsTargetPosition;
             //_dataNPC.SetTargetPosition(setV);
-            _dataNPC.SetTargetPosition(Storage.Instance.PersonsTargetPosition);
+            _dataNPC.SetTargetPosition(Storage.Person.PersonsTargetPosition);
         }
     }
 

@@ -99,17 +99,17 @@ public class CompletePlayerController : MonoBehaviour {
             return;
         }
 
-        if(this.gameObject.transform.position != m_lastPos)
-        {
-            m_lastPos = this.gameObject.transform.position;
-            Storage.Events.ListLogAdd = "----------------------";
-            Storage.Events.ListLogAdd = "hero new position = " + m_lastPos;
-            Storage.Events.ListLogAdd = "enabled = " + this.enabled;
-            Storage.Events.ListLogAdd = "CapsuleCollider2D = " + GetComponent<CapsuleCollider2D>().enabled;
-            Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + this.Rb2D.IsSleeping();
-            Storage.Events.ListLogAdd = "MainCamera.enabled = " + this.MainCamera.enabled;
+        //if(this.gameObject.transform.position != m_lastPos)
+        //{
+        //    m_lastPos = this.gameObject.transform.position;
+        //    Storage.Events.ListLogAdd = "----------------------";
+        //    Storage.Events.ListLogAdd = "hero new position = " + m_lastPos;
+        //    Storage.Events.ListLogAdd = "enabled = " + this.enabled;
+        //    Storage.Events.ListLogAdd = "CapsuleCollider2D = " + GetComponent<CapsuleCollider2D>().enabled;
+        //    Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + this.Rb2D.IsSleeping();
+        //    Storage.Events.ListLogAdd = "MainCamera.enabled = " + this.MainCamera.enabled;
 
-        }
+        //}
 
 
         float moveHorizontal = Input.GetAxis("Horizontal");

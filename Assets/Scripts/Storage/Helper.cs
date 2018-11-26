@@ -528,8 +528,10 @@ public static class Helper { //: MonoBehaviour {
 
         if (x < 1)
             x = 1 + Math.Abs(offset);
-        if (y > -1) //*-1
-            y = offset - Math.Abs(offset);
+        //if (y > -1) //*-1
+            //y = offset - Math.Abs(offset);
+        if (y > -1) // #fix validate
+            y = (1 + Math.Abs(offset)) *(-1);
         if (x > Helper.WidthLevel * Storage.ScaleWorld)
             x = (Helper.WidthLevel * Storage.ScaleWorld) - Math.Abs(offset);
         if (y < (Helper.HeightLevel * Storage.ScaleWorld) * (-1)) //*-1

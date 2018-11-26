@@ -230,12 +230,12 @@ public class MapWorld : MonoBehaviour {
             Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
         }
 
-        Debug.Log("---------- Change ----E:" + hero.enabled + " S:" + hero.Rb2D.IsSleeping() + " / C:"  + hero.MainCamera.enabled + "   [" + DateTime.Now);
-        Storage.Events.ListLogAdd = "---------------------- Change ---- ";
-        Storage.Events.ListLogAdd = "enabled = " + hero.enabled;
-        Storage.Events.ListLogAdd = "Collider= " + hero.GetComponent<CapsuleCollider2D>().enabled;
-        Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + hero.Rb2D.IsSleeping();
-        Storage.Events.ListLogAdd = "MainCamera.enabled = " + hero.MainCamera.enabled;
+        //Debug.Log("---------- Change ----E:" + hero.enabled + " S:" + hero.Rb2D.IsSleeping() + " / C:"  + hero.MainCamera.enabled + "   [" + DateTime.Now);
+        //Storage.Events.ListLogAdd = "---------------------- Change ---- ";
+        //Storage.Events.ListLogAdd = "enabled = " + hero.enabled;
+        //Storage.Events.ListLogAdd = "Collider= " + hero.GetComponent<CapsuleCollider2D>().enabled;
+        //Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + hero.Rb2D.IsSleeping();
+        //Storage.Events.ListLogAdd = "MainCamera.enabled = " + hero.MainCamera.enabled;
     }
 
     //public void CreateTextureMap1(int scaleCell = 1)
