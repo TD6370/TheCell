@@ -88,6 +88,8 @@ public class CompletePlayerController : MonoBehaviour {
     {
     }
 
+    Vector3 m_lastPos = new Vector3();
+
     //FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
     void FixedUpdate()
     {
@@ -96,6 +98,19 @@ public class CompletePlayerController : MonoBehaviour {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return;
         }
+
+        if(this.gameObject.transform.position != m_lastPos)
+        {
+            m_lastPos = this.gameObject.transform.position;
+            Storage.Events.ListLogAdd = "----------------------";
+            Storage.Events.ListLogAdd = "hero new position = " + m_lastPos;
+            Storage.Events.ListLogAdd = "enabled = " + this.enabled;
+            Storage.Events.ListLogAdd = "CapsuleCollider2D = " + GetComponent<CapsuleCollider2D>().enabled;
+            Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + this.Rb2D.IsSleeping();
+            Storage.Events.ListLogAdd = "MainCamera.enabled = " + this.MainCamera.enabled;
+
+        }
+
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
@@ -178,7 +193,13 @@ public class CompletePlayerController : MonoBehaviour {
         //}
     }
 
-
+    public Rigidbody2D Rb2D
+    {
+        get
+        {
+            return rb2d;
+        }
+    }
 
     void Update()
     {
@@ -305,37 +326,36 @@ public class CompletePlayerController : MonoBehaviour {
         Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
     }
 
-    public void CameraMapOn(bool isOpenMap)
-    {
-        if (isOpenMap)
-        {
-            rb2d.Sleep();
-            CameraMap.transform.position = MainCamera.transform.position;
-            CameraMap.enabled = true;
-            MainCamera.enabled = false;
+    //public void CameraMapOn(bool isOpenMap)
+    //{
+    //    if (isOpenMap)
+    //    {
+    //        rb2d.Sleep();
+    //        enabled = true;
+    //        CameraMap.transform.position = MainCamera.transform.position;
+    //        CameraMap.enabled = true;
+    //        MainCamera.enabled = false;
 
-            
+    //        int LayerUI = LayerMask.NameToLayer("LayerUI");
+    //        int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+    //        Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
+    //        Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
 
-            int LayerUI = LayerMask.NameToLayer("LayerUI");
-            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-            Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
-            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
-
-            //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
-
-            //CameraMap.cullingMask = LayerObjects;
-        }
-        else
-        {
-            rb2d.WakeUp();
-            MainCamera.enabled = true;
-            CameraMap.enabled = false;
-            int LayerUI = LayerMask.NameToLayer("LayerUI");
-            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-            Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
-            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
-        }
-    }
+    //        //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
+    //        //CameraMap.cullingMask = LayerObjects;
+    //    }
+    //    else
+    //    {
+    //        rb2d.WakeUp();
+    //        enabled = false;
+    //        MainCamera.enabled = true;
+    //        CameraMap.enabled = false;
+    //        int LayerUI = LayerMask.NameToLayer("LayerUI");
+    //        int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+    //        Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
+    //        Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
+    //    }
+    //}
 
     public void Move(Vector2 posMove)
     {

@@ -80,6 +80,13 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public bool IsMapDragOn = false;
     float m_distanceDrag = 0;
 
+    //private Vector3 PosStartMap = new Vector3();
+    //private Vector3 PosStartCursor = new Vector3();
+    //private Vector3 PosStartCursorW = new Vector3();
+    private float diffDragX = 0;
+    private float diffDragY = 0;
+    private float corrZoom = 1.7f;
+
     // Use this for initialization
     void Start()
     {
@@ -268,6 +275,10 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     private void MouseDownSpecOnChange()
     {
+
+        if (IsMapDragOn)
+            return;
+
         RunTeleportHero();
         MapDragOn(true);
     }
@@ -278,12 +289,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     
 
-    //private Vector3 PosStartMap = new Vector3();
-    //private Vector3 PosStartCursor = new Vector3();
-    //private Vector3 PosStartCursorW = new Vector3();
-    private float diffDragX = 0;
-    private float diffDragY = 0;
-    private float corrZoom = 2f;
+    
 
     private void MapDragOn(bool IsDrag = true)
     {

@@ -139,7 +139,8 @@ public class MapWorld : MonoBehaviour {
             //StartCoroutine(CreateTextureMap(SizeCellMap));
 
             m_IsCreatedMap = true;
-            Storage.PlayerController.CameraMapOn(true);
+            //Storage.PlayerController.CameraMapOn(true);
+            CameraMapOn(true);
             //DrawLocationHero(true);
         }
         else
@@ -176,7 +177,9 @@ public class MapWorld : MonoBehaviour {
     {
         bool isShow = !prefabFrameMap.activeSelf;
 
-        Storage.PlayerController.CameraMapOn(isShow);
+        //Storage.PlayerController.CameraMapOn(isShow);
+        CameraMapOn(isShow);
+
         //prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
         Frame.Show(isShow);
 
@@ -192,6 +195,47 @@ public class MapWorld : MonoBehaviour {
         //        Frame.Restart();
         //    }
         //}
+    }
+
+    public void CameraMapOn(bool isOpenMap)
+    {
+        var hero = Storage.PlayerController;
+
+        if (isOpenMap)
+        {
+            //hero.GetComponent<Rigidbody2D>().mass = 10000;
+            hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
+            hero.Rb2D.Sleep();
+            hero.CameraMap.transform.position = hero.MainCamera.transform.position;
+            hero.CameraMap.enabled = true;
+            hero.MainCamera.enabled = false;
+            int LayerUI = LayerMask.NameToLayer("LayerUI");
+            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
+            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
+
+            //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
+            //CameraMap.cullingMask = LayerObjects;
+        }
+        else
+        {
+            //hero.GetComponent<Rigidbody2D>().mass = 0;
+            hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
+            hero.Rb2D.WakeUp();
+            hero.MainCamera.enabled = true;
+            hero.CameraMap.enabled = false;
+            int LayerUI = LayerMask.NameToLayer("LayerUI");
+            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
+            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
+        }
+
+        Debug.Log("---------- Change ----E:" + hero.enabled + " S:" + hero.Rb2D.IsSleeping() + " / C:"  + hero.MainCamera.enabled + "   [" + DateTime.Now);
+        Storage.Events.ListLogAdd = "---------------------- Change ---- ";
+        Storage.Events.ListLogAdd = "enabled = " + hero.enabled;
+        Storage.Events.ListLogAdd = "Collider= " + hero.GetComponent<CapsuleCollider2D>().enabled;
+        Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + hero.Rb2D.IsSleeping();
+        Storage.Events.ListLogAdd = "MainCamera.enabled = " + hero.MainCamera.enabled;
     }
 
     //public void CreateTextureMap1(int scaleCell = 1)
