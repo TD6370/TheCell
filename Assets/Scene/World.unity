@@ -4233,7 +4233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.000009842488}
+  m_AnchoredPosition: {x: 8.5, y: -0.00000946979}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -5876,7 +5876,7 @@ Prefab:
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 143.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
@@ -7309,7 +7309,7 @@ Prefab:
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 143.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
@@ -13049,20 +13049,27 @@ MonoBehaviour:
   IsRuntimeViewMarker: 1
   OffSetZomm1: 0
   OffSetZomm11: 4
+  WidthZomm11: 330
   OffSetZomm12: 8
+  WidthZomm12: 360
   OffSetZomm13: 11
+  WidthZomm13: 390
   OffSetZomm14: 13.8
+  WidthZomm14: 420
   OffSetZomm15: 16
+  WidthZomm15: 450
   OffSetZomm16: 18.2
   OffSetZomm17: 20
   OffSetZomm18: 22
   OffSetZomm19: 23
   OffSetZomm2: 24.6
+  WidthZomm2: 600
   OffSetZomm21: 26.6
   OffSetZomm22: 26.8
   OffSetZomm23: 27.8
   OffSetZomm24: 28.8
   OffSetZomm25: 30
+  WidthZomm25: 750
   OffSetZomm08: -12
   OffSetZomm09: -5
   OffsetCell11: 2
@@ -22948,7 +22955,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1804064628}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999976
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

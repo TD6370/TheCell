@@ -21,22 +21,50 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public bool IsRuntimeViewMarker = true;
 
+    //public float OffSetZomm1 = 0f;
+    //public float OffSetZomm11 = 4f;
+    //public float OffSetZomm12 = 8f;
+    //public float OffSetZomm13 = 11f;
+    //public float OffSetZomm14 = 13.8f;
+    //public float OffSetZomm15 = 16f;
+    //public float OffSetZomm16 = 18.2f;
+    //public float OffSetZomm17 = 20f;
+    //public float OffSetZomm18 = 22f;
+    //public float OffSetZomm19 = 23f;
+    //public float OffSetZomm2 = 24.6f;
+    //public float OffSetZomm21 = 26.6f;
+    //public float OffSetZomm22 = 26.8f;
+    //public float OffSetZomm23 = 27.8f;
+    //public float OffSetZomm24 = 28.8f;
+    //public float OffSetZomm25 = 30f;
+
+    //public float OffSetZomm08 = -12f;
+    //public float OffSetZomm09 = -5f;
+
     public float OffSetZomm1 = 0f;
-    public float OffSetZomm11 = 4f;
-    public float OffSetZomm12 = 8f;
-    public float OffSetZomm13 = 11f;
-    public float OffSetZomm14 = 13.8f;
-    public float OffSetZomm15 = 16f;
+    public float OffSetZomm11 = 115f;
+    public float WidthZomm11 = 330f;
+    public float OffSetZomm12 = 130f;
+    public float WidthZomm12 = 360f;
+    public float OffSetZomm13 = 145f;
+    public float WidthZomm13 = 390f;
+    public float OffSetZomm14 = 160f;
+    public float WidthZomm14 = 420f;
+
+    public float OffSetZomm15 = 175f;
+        public float WidthZomm15 = 450f;
     public float OffSetZomm16 = 18.2f;
     public float OffSetZomm17 = 20f;
     public float OffSetZomm18 = 22f;
     public float OffSetZomm19 = 23f;
-    public float OffSetZomm2 = 24.6f;
+        public float OffSetZomm2 = 250f;
+        public float WidthZomm2 = 600f;
     public float OffSetZomm21 = 26.6f;
     public float OffSetZomm22 = 26.8f;
     public float OffSetZomm23 = 27.8f;
     public float OffSetZomm24 = 28.8f;
-    public float OffSetZomm25 = 30f;
+        public float OffSetZomm25 = 325f;
+        public float WidthZomm25 = 750f;
 
     public float OffSetZomm08 = -12f;
     public float OffSetZomm09 = -5f;
@@ -286,10 +314,6 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     {
         MapDragOn(false);
     }
-
-    
-
-    
 
     private void MapDragOn(bool IsDrag = true)
     {
@@ -791,34 +815,51 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     float offSetOnCenterX = centerPos.x - x;
                     float offSetOnCenterY = centerPos.y - y;
 
-                    float koofOnCenterX = centerPos.x / x;
-                    float koofOnCenterY = centerPos.y / y;
-                    if (koofOnCenterX < 0)
-                        koofOnCenterX += 1;
-                    if (koofOnCenterY < 0)
-                        koofOnCenterY += 1;
+                    //float koofOnCenterX = centerPos.x / x;
+                    //float koofOnCenterY = centerPos.y / y;
+                    //if (koofOnCenterX < 0)
+                    //    koofOnCenterX += 1;
+                    //if (koofOnCenterY < 0)
+                    //    koofOnCenterY += 1;
 
-                    float korrCellX = offSetOnCenterX / Helper.WidthLevel;
-                    float korrCellY = offSetOnCenterY / Helper.HeightLevel;
+                    //float korrCellX = offSetOnCenterX / Helper.WidthLevel;
+                    //float korrCellY = offSetOnCenterY / Helper.HeightLevel;
 
-                    float OffsetCell = 1f;
+                    //float OffsetCell = 1f;
 
-                    //OffsetCell = GetOffsetCell(SizeZoom);
-                    OffsetCell = SizeZoom * SizeZoom;
+                    ////OffsetCell = GetOffsetCell(SizeZoom);
+                    //OffsetCell = SizeZoom * SizeZoom;
 
-                    korrCellX *= OffsetCell;
-                    korrCellY *= OffsetCell;
+                    //korrCellX *= OffsetCell;
+                    //korrCellY *= OffsetCell;
 
-                    Debug.Log("---------------------------");
-                    string infoX = "mapX = " + mapX;
-                    string infoY = "mapY = " + mapY;
+                    Debug.Log("---------------------------ZOOM:" + SizeZoom);
+                    //string infoX = "mapX = " + mapX;
+                    //string infoY = "mapY = " + mapY;
+
+                    //float diffDragX = 0;
+                    //if (SizeZoom==2.5f)
+                    //{
+                    //    //diffDragX = 150;
+                    //    diffDragX = 50;
+                    //}
+                    //mapX += diffDragX;
+                    //mapY += diffDragY;
 
                     //mapX -= korrCellX;
                     //mapY += korrCellY;
+                    //----------------------
+                    Storage.Events.ListLogAdd = "ZOOM:" + SizeZoom;
+                    Debug.Log("mapX = " + mapX  + "    offSetOnCenterX=" + offSetOnCenterX);
+                    Debug.Log("mapY = " + mapY  + "    offSetOnCenterY" + offSetOnCenterY);
 
-                    //Debug.Log("corr mapX = " + mapX  + "    " + infoX);
-                    //Debug.Log("corr mapY = " + mapY  + "    " + infoY);
+                    string str = System.Convert.ToString(SizeZoom);
+                    string[] parts = str.Split('.');
+                    int ostZoom = int.Parse(parts[1]);
 
+                    float offset = ostZoom * 15 + 100;
+                    mapX += offset;
+                    mapY += offset;
                     //----------------------
                 }
 
