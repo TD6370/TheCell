@@ -175,8 +175,8 @@ public class GenerateGridFields : MonoBehaviour {
 
     public void GenGridLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0, bool isOnlyField = false)
     {
-        int gridWidth = 100;
-        int gridHeight = 100;
+        int gridWidth = Helper.WidthLevel; //100 Big
+        int gridHeight = Helper.HeightLevel;//100; Big
 
         int countField = (int)GridX * (int)GridY;
         Storage.Data.IsUpdatingLocationPersonGlobal = true;

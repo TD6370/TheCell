@@ -592,6 +592,19 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     }
     */
 
+    private void ResizeCollider(string callFunc)
+    {
+        if (Helper.IsBigWorld)
+        {
+            float sizeCldr = Helper.SizeBigCollider;
+            if (colliderMap.size.x != sizeCldr)
+            {
+                Debug.Log("Resize Collider MAP...   callFunc : " + callFunc);
+                colliderMap.size = new Vector2(sizeCldr, sizeCldr);
+            }
+        }
+    }
+
     private void CalculatePointOnMap(bool isMousePos = false)
     {
         bool isLog = false;
@@ -604,17 +617,22 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (!cameraMap.enabled)
             return;
 
+        ResizeCollider("CalculatePointOnMap");
 
         //----------------
         //Collider2D clickedCollider = null;
         Vector2 posClick = new Vector2();
 
+
+        //----------------- fix big
         if (!isMousePos)
         {
             isMousePos = HitTextMousePointOnEbject();
             if (!isMousePos)
                 return;
         }
+       //isMousePos = true;
+        //----------------- fix big
 
         float mapX = 0;
         float mapY = 0;
@@ -638,133 +656,279 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             posClick = cameraMap.ScreenToWorldPoint(Input.mousePosition);
             BoxCollider2D colliderMap = GetComponent<BoxCollider2D>();
+
+            //Debug.Log("posClick=" + posClick);
+
             //if (colliderMap != null)
             ////if(clickedCollider.Equals(colliderMap))
             ////if (clickedCollider.gameObject.name.Equals(colliderMap.gameObject.name))
             //{
                 //Debug.Log("-------------Point On GOBJ: " + clickedCollider.gameObject.name);
 
-                NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
+            NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
 
-                if (isLog)
-                    Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+            if (isLog)
+                Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
 
-                if (SizeZoom == 1)
+            if (SizeZoom == 1)
+            {
+
+            }
+            else if (SizeZoom > 1f)
+            {
+
+                float _zoom = SizeZoom;
+
+                if (!Helper.IsBigWorld)
                 {
-
-                }
-                else if (SizeZoom > 1f)
-                {
-
-                    float _zoom = SizeZoom;
-
-                    #region Test
-                    //TEST --------------------
-                    //float mapY_T1 = (int)mapY;
-                    //float mapX_T1 = (int)mapX;
-                    //mapY_T1 = (int)(mapY_T1 / _zoom);
-                    //mapX_T1 = (int)(mapX_T1 / _zoom);
-
-                    //Storage.Events.ListLogAdd = "Corrr zoom T1= " + (int)mapX_T1 + "x" + (int)mapY_T1;
-
-                    //float mapY_T2 = (int)(mapY / _zoom);
-                    //float mapX_T2 = (int)(mapX / _zoom);
-
-                    //Storage.Events.ListLogAdd = "Corrr zoom T2= " + (int)mapX_T2 + "x" + (int)mapY_T2;
-                    //---------------------------
-                    #endregion
-
                     mapY = (mapY / _zoom);
                     mapX = (mapX / _zoom);
-
-                    _zoom = (float)System.Math.Round(_zoom, 1);
-
-                    float offsetCenter = 0f;
-
-                    //Debug.Log("_zoom===" + _zoom);
-                    offsetCenter = OffsetZoomUp(_zoom);
-
-                    if (isLog)
-                        Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
-
-                    //mapX = (int)mapX;
-                    //mapY = (int)mapY;
-
-                    //!!! CORR DISTANCE
-                    int centrW = Helper.HeightLevel / 2;
-                    Vector3 centerPos = new Vector3(centrW, centrW, 0);
-                    float koofOnCenterX = centerPos.x / mapX;
-                    float koofOnCenterY = centerPos.y / mapY;
-                    if (isLog)
-                        Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
-                    //------------------
-
-                    mapX += offsetCenter;
-                    mapY += offsetCenter;
                 }
-                else
-                {
-                    float _zoom = SizeZoom;
 
-                    //mapX = (int)mapX;
-                    //mapY = (int)mapY;
+                _zoom = (float)System.Math.Round(_zoom, 1);
 
-                    mapY = (int)(mapY / _zoom);
-                    mapX = (int)(mapX / _zoom);
+                float offsetCenter = 0f;
 
-                    float offsetCenter = OffsetZoomDown(_zoom);
+                //if (Helper.IsBigWorld)
+                //{
+                //    _zoom *= Helper.SpeedWorld;
+                //}
 
-                    if (isLog)
-                        Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+                //Debug.Log("_zoom===" + _zoom);
+                offsetCenter = OffsetZoomUp(_zoom);
 
-                    mapX += offsetCenter;
-                    mapY += offsetCenter;
-                }
+                //if (Helper.IsBigWorld)
+                //{
+                    //offsetCenter *= Helper.SpeedWorld;
+                //}
 
                 if (isLog)
-                    Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
+                    Storage.Events.ListLogAdd = "Corrr zoom: " + (int)mapX + "x" + (int)mapY + "  offset= " + offsetCenter + " zoom: " + _zoom;
 
-                SelectPointField = new Vector2(mapX, mapY);
-                SelectFieldPos = new Vector2((int)mapX, (int)mapY);
-                Storage.Map.SelectPointField = SelectPointField;
-            //}
+                //mapX = (int)mapX;
+                //mapY = (int)mapY;
+
+                //!!! CORR DISTANCE
+                //int centrW = Helper.HeightLevel / 2;
+                //Vector3 centerPos = new Vector3(centrW, centrW, 0);
+                //float koofOnCenterX = centerPos.x / mapX;
+                //float koofOnCenterY = centerPos.y / mapY;
+                //if (isLog)
+                //    Storage.Events.ListLogAdd = "Map koofOnCenter: " + koofOnCenterX + " x " + koofOnCenterY;
+                //------------------
+
+                //if (Helper.IsBigWorld)
+                //{
+                //    //float offsetCenterX = centerPos.x + mapX;
+                //    //float offsetCenterY = centerPos.y - mapY;
+
+                //    //koofOnCenterX += offsetCenterX;
+                //    //koofOnCenterY += offsetCenterY;
+                //    koofOnCenterX += 1;
+                //    koofOnCenterY += 1;
+                //    koofOnCenterX *= offsetCenter;
+                //    koofOnCenterY *= offsetCenter;
+
+                //    mapX += (offsetCenter * koofOnCenterX);
+                //    mapY += koofOnCenterY;
+                //}
+                //else
+                ////{
+                //    mapX += offsetCenter;
+                //    mapY += offsetCenter;
+                //}
+                if (Helper.IsBigWorld)
+                {
+                    //koofOnCenterX += 1;
+                    //koofOnCenterY += 1;
+
+                    //Debug.Log("---------------------------");
+                    //Debug.Log("koofOnCenterX = " + koofOnCenterX);
+                    //Debug.Log("koofOnCenterY = " + koofOnCenterY);
+
+
+                    //float factor1 = 1;
+                    //float offsetX = 0;
+                    //float offsetY = 0;
+
+                    //if (centerPos.x < mapX)
+                    //{
+                    //    offsetX = (factor1 * koofOnCenterX) * (-1);
+                    //    mapX -= factor1 * koofOnCenterX;
+                    //}
+                    //else
+                    //{
+                    //    offsetX = (factor1 * koofOnCenterX);
+                    //    mapX += factor1 * koofOnCenterX;
+                    //}
+                    //if (centerPos.y < mapY)
+                    //{
+                    //    offsetY = factor1 * koofOnCenterY;
+                    //    mapY += factor1 * koofOnCenterY;
+                    //}
+                    //else
+                    //{
+                    //    offsetY = (factor1 * koofOnCenterY) * (-1);
+                    //    mapY -= factor1 * koofOnCenterY;
+                    //}
+
+                    //mapX -= koofOnCenterX;
+                    //mapY += koofOnCenterY;
+
+                    //Debug.Log("offsetX = " + offsetX);
+                    //Debug.Log("offsetY = " + offsetY);
+
+
+                    ////----------------------
+                    //int x = (int)SelectPointField.x;
+                    //int y = (int)SelectPointField.y;
+                    int x = (int)mapX;
+                    int y = (int)mapY;
+
+                    int centrW = Helper.HeightLevel / 2;
+                    Vector3 centerPos = new Vector3(centrW, centrW, 0);
+
+                    float offSetOnCenterX = centerPos.x - x;
+                    float offSetOnCenterY = centerPos.y - y;
+
+                    float koofOnCenterX = centerPos.x / x;
+                    float koofOnCenterY = centerPos.y / y;
+                    if (koofOnCenterX < 0)
+                        koofOnCenterX += 1;
+                    if (koofOnCenterY < 0)
+                        koofOnCenterY += 1;
+
+                    float korrCellX = offSetOnCenterX / Helper.WidthLevel;
+                    float korrCellY = offSetOnCenterY / Helper.HeightLevel;
+
+                    float OffsetCell = 1f;
+
+                    //OffsetCell = GetOffsetCell(SizeZoom);
+                    OffsetCell = SizeZoom * SizeZoom;
+
+                    korrCellX *= OffsetCell;
+                    korrCellY *= OffsetCell;
+
+                    Debug.Log("---------------------------");
+                    string infoX = "mapX = " + mapX;
+                    string infoY = "mapY = " + mapY;
+
+                    //mapX -= korrCellX;
+                    //mapY += korrCellY;
+
+                    //Debug.Log("corr mapX = " + mapX  + "    " + infoX);
+                    //Debug.Log("corr mapY = " + mapY  + "    " + infoY);
+
+                    //----------------------
+                }
+
+
+                if (!Helper.IsBigWorld)
+                {
+                    mapX += offsetCenter;
+                    mapY += offsetCenter;
+                }
+            }
+            else
+            {
+                float _zoom = SizeZoom;
+
+                //mapX = (int)mapX;
+                //mapY = (int)mapY;
+
+                mapY = (int)(mapY / _zoom);
+                mapX = (int)(mapX / _zoom);
+
+                float offsetCenter = OffsetZoomDown(_zoom);
+
+                if (isLog)
+                    Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+
+                mapX += offsetCenter;
+                mapY += offsetCenter;
+            }
+
+            //# TEST
+            isLog = true;
+
+            
+
+            if (isLog)
+                Storage.Events.ListLogAdd = "MAP pos = " + mapX + "x" + mapY;
+
+            
+
+            SelectPointField = new Vector2(mapX, mapY);
+            SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+
+            Vector2 posMap = SelectPointField;
+            if (Helper.IsBigWorld)
+            {
+                //mapY += 100;// Helper.SizeWorldOffSet;
+                //mapX += 100;//Helper.SizeWorldOffSet;
+                posMap = new Vector2(posMap.x + 100, posMap.y + 100);
+            }
+
+            if (isLog)
+                Storage.Events.ListLogAdd = "SelectPointField pos = " + mapX + "x" + mapY;
+
+            Storage.Map.SelectPointField = posMap;
         }
     }
 
 
 
-    private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
-    {
-        float widthCellPexel = 25;
-        float widthMap = colliderMap.size.x;
-        float offSerX = (hit1.point.x - transform.position.x);
-        float radiusX = widthMap / 2;
-        mapX = offSerX + radiusX;
-        float heightMap = colliderMap.size.y;
-        float offSerY = (hit1.point.y - transform.position.y);
-        float radiusY = heightMap / 2;
-        mapY = offSerY + radiusY;
-        mapY = widthCellPexel - mapY;
+    //private void NormalizedMapPoint(RaycastHit2D hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
+    //{
+    //    float widthCellPexel = 25;
+    //    float widthMap = colliderMap.size.x;
+    //    float offSerX = (hit1.point.x - transform.position.x);
+    //    float radiusX = widthMap / 2;
+    //    mapX = offSerX + radiusX;
+    //    float heightMap = colliderMap.size.y;
+    //    float offSerY = (hit1.point.y - transform.position.y);
+    //    float radiusY = heightMap / 2;
+    //    mapY = offSerY + radiusY;
+    //    mapY = widthCellPexel - mapY;
 
-        mapX = mapX / widthCellPexel * Helper.WidthLevel;
-        mapY = mapY / widthCellPexel * Helper.HeightLevel;
-    }
+    //    mapX = mapX / widthCellPexel * Helper.WidthLevel;
+    //    mapY = mapY / widthCellPexel * Helper.HeightLevel;
+    //}
 
     private void NormalizedMapPoint(Vector2 hit1, BoxCollider2D colliderMap, out float mapX, out float mapY)
     {
+        //Debug.Log("colliderMap.size.x=" + colliderMap.size.x);
         float widthCellPexel = 25;
         float widthMap = colliderMap.size.x;
+
+        if (Helper.IsBigWorld)
+        {
+            widthMap /= 4;
+            widthMap = 25;
+        }
+
+        //widthMap *= Helper.SpeedWorld;
         float offSerX = (hit1.x - transform.position.x);
         float radiusX = widthMap / 2;
         mapX = offSerX + radiusX;
         float heightMap = colliderMap.size.y;
+
+        if (Helper.IsBigWorld)
+        {
+            heightMap /= 4;
+            heightMap = 25;
+        }
+
+        //heightMap *= Helper.SpeedWorld;
         float offSerY = (hit1.y - transform.position.y);
         float radiusY = heightMap / 2;
         mapY = offSerY + radiusY;
         mapY = widthCellPexel - mapY;
 
-        mapX = mapX / widthCellPexel * Helper.WidthLevel;
-        mapY = mapY / widthCellPexel * Helper.HeightLevel;
+        //mapX = mapX / widthCellPexel * Helper.WidthLevel;
+        //mapY = mapY / widthCellPexel * Helper.HeightLevel;
+        mapX = mapX / widthCellPexel * 100;
+        mapY = mapY / widthCellPexel * 100;
     }
 
 
@@ -980,6 +1144,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             //float factor = 0.12f;
             float factor = 1f / (Storage.ScaleWorld*2);
+
             float ratio = factor * SizeZoom;
             int sizeBrush = Storage.PaletteMap.SizeBrush;
             //float size = sizeBrush * Storage.ScaleWorld * ratio;
@@ -1070,8 +1235,10 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             if (isLog)
                 Storage.Events.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
 
-            float korrCellX = offSetOnCenterX / 100;
-            float korrCellY = offSetOnCenterY / 100;
+            //float korrCellX = offSetOnCenterX / 100;
+            //float korrCellY = offSetOnCenterY / 100;
+            float korrCellX = offSetOnCenterX / Helper.WidthLevel;
+            float korrCellY = offSetOnCenterY / Helper.HeightLevel;
 
             float OffsetCell = 1f;
 
@@ -1143,8 +1310,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     private void ValidateStartPosition()
     {
 
-        if (!Storage.Map.IsValid)
-            BackFrameMoving();
+        //if (!Storage.Map.IsValid)
+        //    BackFrameMoving();
         
             //#TEST
         //return;
@@ -1184,7 +1351,6 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (!cameraMap.enabled)
             return false;
 
-
         Collider2D clickedCollider = null;
         //----------------
         //var eventSys = EventSystem.current;
@@ -1196,10 +1362,15 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         eventSys.RaycastAll(pointerData, results);
         if (results.Count > 0)
         {
-
+            
             int resFind = results.FindIndex(p => p.gameObject.name == gameObject.name);
             if (resFind != -1)
+            {
+                //Debug.Log("HitTextMousePointOnEbject is true " + gameObject.name);
                 return true;
+            }
+            //Debug.Log("HitTextMousePointOnEbject is No  " + results[0].gameObject.name + "  colliderMap.size: " + colliderMap.size);
+
 
             //foreach (var item in results)
             //{

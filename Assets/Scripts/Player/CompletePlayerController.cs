@@ -313,10 +313,15 @@ public class CompletePlayerController : MonoBehaviour {
 
         float slow = 0.1f;
 
-        float speed = 1f;
+        float speed =  1f;
+        
         if (Storage.Map.ZoomMap > 1.4)
             speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
 
+        if(Helper.IsBigWorld)
+        {
+            speed *= Helper.SpeedWorld;
+        }
 
         Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0f);
         //CameraMap.transform.position += movementCam;

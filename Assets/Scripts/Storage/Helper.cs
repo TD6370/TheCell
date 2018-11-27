@@ -18,7 +18,73 @@ public static class Helper { //: MonoBehaviour {
 
     //}
 
+    public static bool IsBigWorld = true;// false; //
+
+    //private float  = 100f;
+    
+
+    public static int WidthZona
+    {
+        get { return 100; }
+    }
+    public static int HeightZona
+    {
+        get { return 100; }
+    }
+
+    public static int WidthLevel
+    {
+        get {
+            if (IsBigWorld)
+                return WidthWorld;
+            else
+                return WidthZona;
+        }
+    }
+    public static int HeightLevel
+    {
+        get {
+            if (IsBigWorld)
+                return HeightWorld;
+            else
+                return HeightZona;
+        }
+    }
+    public static int WidthWorld
+    {
+        get { return 300; }
+    }
+    public static int HeightWorld
+    {
+        get { return 300; }
+    }
+
+    public static int SpeedWorld
+    {
+        get
+        {
+            return WidthLevel / 100;
+        }
+    }
+
+    public static int SizeWorldOffSet
+    {
+        get
+        {
+            return WidthLevel-100;
+        }
+    }
+
+    public static int SizeBigCollider
+    {
+        get { return 25 * SpeedWorld; }
+    }
+
     #region Helper
+
+
+
+
 
     private static string FieldKey{
         get{
@@ -337,23 +403,6 @@ public static class Helper { //: MonoBehaviour {
     }
 
 
-
-    public static int WidthLevel
-    {
-        get { return 100; }
-    }
-    public static int HeightLevel
-    {
-        get { return 100; }
-    }
-    public static int WidthWorld
-    {
-        get { return 1000; }
-    }
-    public static int HeightWorld
-    {
-        get { return 1000; }
-    }
 
     public static bool IsValidPiontInZona(float x, float y)
     {
