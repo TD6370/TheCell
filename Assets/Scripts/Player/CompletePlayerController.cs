@@ -65,6 +65,10 @@ public class CompletePlayerController : MonoBehaviour {
     private bool m_isAfterUpdatePosHero = false;
     //private bool m_isLoadOnlyField = true;// false;
 
+    //-- Map
+    private int stepsRefresfMap =0;
+    private int limitStepsRefreshMap = 10;
+
     #region Events
 
     void Start()
@@ -423,6 +427,14 @@ public class CompletePlayerController : MonoBehaviour {
             return null;
 
         GameObject prefabFind = Storage.Instance.Fields[_fieldHero];
+
+        //--- Check refresh map
+        if (stepsRefresfMap > limitStepsRefreshMap)
+        {
+            stepsRefresfMap = 0;
+            Storage.Map.CheckPosHero();
+        }
+        stepsRefresfMap++;
 
         return prefabFind;
     }

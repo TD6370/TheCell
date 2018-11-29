@@ -155,6 +155,9 @@ public class UpdateData { //: MonoBehaviour {
 
         //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
 
+        if(Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(newField);
+
         return fieldData;
     }
 
@@ -209,6 +212,9 @@ public class UpdateData { //: MonoBehaviour {
 
         fieldData.Objects.Add(objDataSave);
 
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
+
         Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
 
         return true;
@@ -250,6 +256,9 @@ public class UpdateData { //: MonoBehaviour {
             }
             Storage.Log.SaveHistory(histData.NameObject, "RemoveDataObjectInGrid", callFunc, nameField, "", histData, dataObjDel);
         }
+
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
     }
 
     public void UpdateDataObect(string nameField, int index, ModelNPC.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
@@ -269,6 +278,9 @@ public class UpdateData { //: MonoBehaviour {
         }
         //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
         _GridDataG.FieldsD[nameField].Objects[index] = setObject;
+
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
     }
 
     //public void UpdateDataObect(string nameField, string nameObj, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())

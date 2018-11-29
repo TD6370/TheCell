@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapWorld : MonoBehaviour {
+
+    public static bool IsReloadGridMap = false;
+    public bool IsAutoAction = false;
 
     public bool IsGridMap = true;
     private  bool m_isGridMapLoaded = false;
@@ -144,7 +148,7 @@ public class MapWorld : MonoBehaviour {
         if (Storage.Instance.SelectFieldPosHero != saveHeroPosField)
         {
             saveHeroPosField = Storage.Instance.SelectFieldPosHero;
-            isNewCreate = true;
+            //isNewCreate = true;
         }
 
         if (!m_IsCreatedMap || isNewCreate)
@@ -192,26 +196,19 @@ public class MapWorld : MonoBehaviour {
         bool isShow = !prefabFrameMap.activeSelf;
 
         //Storage.PlayerController.CameraMapOn(isShow);
-        CameraMapOn(isShow);
+        CameraMapOn(isShow, false);
 
         //prefabFrameMap.SetActive(!prefabFrameMap.activeSelf);
         Frame.Show(isShow);
 
         Storage.Map.MarkerMapWorldCell.SetActive(isShow);
-        //DrawLocationHero(true);
-        //if (isShow)
-        //{
-        //    Storage.DrawGeom.DrawClear();
-        //    DrawLocationHero(true);
-        //    float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
-        //    if (distMap > 30f)
-        //    {
-        //        Frame.Restart();
-        //    }
-        //}
+
+        AddRefreshCurrentSector();
+
+        RefreshGrid(); 
     }
 
-    public void CameraMapOn(bool isOpenMap)
+    public void CameraMapOn(bool isOpenMap, bool isRestartingLocation = true)
     {
         var hero = Storage.PlayerController;
 
@@ -220,7 +217,8 @@ public class MapWorld : MonoBehaviour {
             //hero.GetComponent<Rigidbody2D>().mass = 10000;
             hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
             hero.Rb2D.Sleep();
-            hero.CameraMap.transform.position = hero.MainCamera.transform.position;
+            if(isRestartingLocation) //#fix
+                hero.CameraMap.transform.position = hero.MainCamera.transform.position;
             hero.CameraMap.enabled = true;
             hero.MainCamera.enabled = false;
             int LayerUI = LayerMask.NameToLayer("LayerUI");
@@ -671,7 +669,6 @@ public class MapWorld : MonoBehaviour {
                     prefabFrameMap.GetComponent<BoxCollider2D>().size = new Vector3(sizeDraw / Helper.WidthLevel, sizeDraw / Helper.HeightLevel, 0);
                 }
             }
-
             LoadGrid();
             return;
         }
@@ -1127,8 +1124,12 @@ public class MapWorld : MonoBehaviour {
     public void LoadGrid()
     {
         if (m_isGridMapLoaded)
+        {
+            RefreshGrid();
             return;
+        }
         m_isGridMapLoaded = true;
+        m_lastSectorHeroVisit = FieldToSector(saveHeroPosField);
 
         //List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
 
@@ -1181,9 +1182,52 @@ public class MapWorld : MonoBehaviour {
                 index++;
             }
         }
+
+        if(!IsAutoAction)
+        {
+            //foreach(var cell in m_listCellsGridMap)
+            //{
+            //    CellGridMapController sector = cell.GetSector();
+            //    RefreshGrid(sector.X, sector.Y);
+            //}
+            StartCoroutine(StartLoadGrid());
+        }
      }
 
-    private void ResizeScaleGrid(int column, float ratio = 0.9f)
+    IEnumerator StartLoadGrid()
+    {
+        yield return null;
+
+        //while (StackSectorsUpdating.Count > 0)
+        //{
+        //    yield return null;
+
+        //    if (IsReloadGridMap)
+        //        yield return null;
+
+        //    string sector = StackSectorsUpdating.Pop();
+        //    Debug.Log("************ RefreshGrid " + sector);
+
+        //    IsReloadGridMap = true;
+        //    RefreshGrid(sector);
+
+        //    yield return null;
+        //}
+        foreach (var cell in m_listCellsGridMap)
+        {
+            if (IsReloadGridMap)
+                yield return null;
+
+            CellGridMapController sector = cell.GetSector();
+
+            IsReloadGridMap = true;
+            RefreshGrid(sector.X, sector.Y);
+            yield return null;
+        }
+
+    }
+
+        private void ResizeScaleGrid(int column, float ratio = 0.9f)
     {
         //float size = prefabFrameMap.GetComponent<RectTransform>().rect.width;
         float size = Helper.HeightLevel;
@@ -1195,39 +1239,86 @@ public class MapWorld : MonoBehaviour {
 
     #region Refresh Sectors
 
-    public void AddUpdatingField(string field)
+    public void AddUpdatingField(string fieldSectror)
     {
-        string fieldSectror = field;
-
         if (!StackSectorsUpdating.Contains(fieldSectror))
+        {
+            //Debug.Log("+++++++++++ AddUpdatingField  " + fieldSectror);
             StackSectorsUpdating.Push(fieldSectror);
+        }
     }
 
     public void RefreshGrid()
     {
-        while(StackSectorsUpdating.Count>0)
+        StartCoroutine(StartRefresh());
+
+        return;
+
+        CheckPosHero();
+
+        while (StackSectorsUpdating.Count>0)
         {
-            string field = StackSectorsUpdating.Pop();
-            RefreshGrid(field);
+            string sector = StackSectorsUpdating.Pop();
+            Debug.Log("************ RefreshGrid " + sector);
+            RefreshGrid(sector);
         }
     }
 
-    public void RefreshGrid(string field)
+    //UpdateSprite()
+
+    public void RefreshGrid(string sector)
     {
-        GameObject cellMap = m_listCellsGridMap.Find(p => p.name == "MapGridCell" + field);
+        GameObject cellMap = m_listCellsGridMap.Find(p => p.name == "MapGridCell" + sector);
         if (cellMap == null)
         {
             Debug.Log("###### RefreafGrid cellMap==null");
+            IsReloadGridMap = false;
             return;
         }
         CellGridMapController cellMapController = cellMap.GetComponent<CellGridMapController>();
         if (cellMapController == null)
         {
             Debug.Log("###### RefreafGrid cellMapController == null");
+            IsReloadGridMap = false;
             return;
         }
         cellMapController.Refresh();
     }
+
+    
+
+    IEnumerator StartRefresh()
+    {
+        CheckPosHero();
+
+        yield return null;
+
+        while (StackSectorsUpdating.Count > 0)
+        {
+            yield return null;
+
+            if(IsReloadGridMap)
+                yield return null;
+
+            string sector = StackSectorsUpdating.Pop();
+            //Debug.Log("************ RefreshGrid " + sector);
+
+            IsReloadGridMap = true;
+            RefreshGrid(sector);
+
+            yield return null;
+        }
+
+        //-- add start sector
+        AddRefreshCurrentSector();
+    }
+
+    private void AddRefreshCurrentSector()
+    {
+        string newSector = FieldToSector(saveHeroPosField);
+        AddUpdatingField(newSector);
+    }
+
 
     public void RefreshGrid(int cellX, int cellY)
     {
@@ -1241,14 +1332,46 @@ public class MapWorld : MonoBehaviour {
         if (saveHeroPosField != Storage.Instance.SelectFieldPosHero)
         {
             saveHeroPosField = Storage.Instance.SelectFieldPosHero;
-
+            string newSector = FieldToSector(saveHeroPosField);
+            if (m_lastSectorHeroVisit != newSector)
+            {
+                m_lastSectorHeroVisit = newSector;
+                AddUpdatingField(m_lastSectorHeroVisit);
+            }
         }
 
+    }
+
+    public void CheckSector(string checkField)
+    {
+        string newSector = FieldToSector(checkField);
+        AddUpdatingField(newSector);
+    }
+
+    public string FieldToSector(string p_field)
+    {
+        string sector = "";
+        Vector2 posF = Helper.GetPositByField(p_field);
+        float posSectorX = posF.x / SizeCellMap;
+        float posSectorY = posF.y / SizeCellMap;
+        sector = Helper.GetNameField(posSectorX + 1, posSectorY + 1);
+        Storage.Events.ListLogAdd = "   }}}}  Sector: " + sector;
+        return sector;
     }
 
     #endregion
 
 }
 
+public static class MapExtension
+{
+
+    public static CellGridMapController GetSector(this GameObject cellMap)
+    {
+        CellGridMapController cellMapController = cellMap.GetComponent<CellGridMapController>();
+        return cellMapController;
+    }
+
+}
 
 

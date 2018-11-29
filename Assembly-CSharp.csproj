@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\Graph\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
@@ -89,6 +88,7 @@
     <Compile Include="Assets\Scripts\TileGen.cs" />
     <Compile Include="Assets\Scripts\TilesType\DataTilesManager.cs" />
     <Compile Include="Assets\Scripts\TilesType\TileRoad.cs" />
+    <Compile Include="Assets\Scripts\UI\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\UI\CellMapControl.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />

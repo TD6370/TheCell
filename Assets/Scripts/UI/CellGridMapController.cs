@@ -14,6 +14,8 @@ public class CellGridMapController : MonoBehaviour {
 
     private bool IsFirstLoading = false;
 
+    //private bool IsAutoAction = false;
+
     private Sprite Sprite
     {
         set
@@ -52,7 +54,7 @@ public class CellGridMapController : MonoBehaviour {
 
     private void LateUpdate()
     {
-        if (!IsFirstLoading)
+        if (!IsFirstLoading && Storage.Map.IsAutoAction)
         {
             IsFirstLoading = true;
             StartCoroutine(LoadSpriteMap());
@@ -66,21 +68,38 @@ public class CellGridMapController : MonoBehaviour {
 
     public void Refresh()
     {
-        StartCoroutine(LoadSpriteMap());
+
+        UpdateSprite();
+        //StartCoroutine(LoadSpriteMap());
     }
 
     IEnumerator LoadSpriteMap()
     {
+        //yield return null;
+
+        MapWorld.IsReloadGridMap = true;
+
         //yield return new WaitForSeconds(1f);
 
-        int offsetX = (X-1);
-        int offsetY = (Y-1);
+        //int offsetX = (X-1);
+        //int offsetY = (Y-1);
 
         yield return null;
 
-        Sprite = Storage.Map.GetSpriteMap(Storage.Map.SizeCellMap, false, offsetX, offsetY);
+        //Sprite = Storage.Map.GetSpriteMap(Storage.Map.SizeCellMap, false, offsetX, offsetY);
 
         //yield return new WaitForSeconds(0.5f);
+
+        UpdateSprite();
+    }
+
+    private void UpdateSprite()
+    {
+        int offsetX = (X - 1);
+        int offsetY = (Y - 1);
+        Sprite = Storage.Map.GetSpriteMap(Storage.Map.SizeCellMap, false, offsetX, offsetY);
+
+        MapWorld.IsReloadGridMap = false;
     }
 
     //void OnGUI()
