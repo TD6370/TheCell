@@ -691,12 +691,13 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             else if (SizeZoom > 1f)
             {
                 Debug.Log("---------------------------ZOOM:" + SizeZoom);
-                //----------------------
-                Storage.Events.ListLogAdd = "ZOOM:" + SizeZoom;
-                //Debug.Log("mapX = " + mapX  + "    offSetOnCenterX=" + offSetOnCenterX);
-                //Debug.Log("mapY = " + mapY  + "    offSetOnCenterY" + offSetOnCenterY);
-                Debug.Log("mapX = " + mapX);
-                Debug.Log("mapY = " + mapY);
+                if (isLog)
+                {
+                    //----------------------
+                    Storage.Events.ListLogAdd = "ZOOM:" + SizeZoom;
+                    Debug.Log("mapX = " + mapX);
+                    Debug.Log("mapY = " + mapY);
+                }
 
                 int ostZoom = (int)((SizeZoom - (int)SizeZoom) * 10);
                 if (SizeZoom >= 2f)
@@ -720,9 +721,12 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 //Debug.Log("offset = " + mapY);
                 mapX += offset;
                 mapY += offset;
-                Debug.Log("mapX 2. = " + mapX + " offset = " + offset + " Koof=" + _koof);
-                Debug.Log("mapY 2. = " + mapY + " offset = " + offset + " Koof=" + _koof);
 
+                if (isLog)
+                {
+                    Debug.Log("mapX 2. = " + mapX + " offset = " + offset + " Koof=" + _koof);
+                    Debug.Log("mapY 2. = " + mapY + " offset = " + offset + " Koof=" + _koof);
+                }
                 //----------------- // ------ Step 2.
                 var posField = new Vector2(mapX, mapY);
                 posField = new Vector2(posField.x + 100 + offsetField, posField.y + 100 + offsetField);
@@ -774,7 +778,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 if (KoofTEST != _koofBorder && KoofTEST_True)
                     _koofBorder = KoofTEST;
 
-                Debug.Log("KoofTEST ::: " + KoofTEST + "    _koofBorder==" + _koofBorder);
+                if (isLog)
+                    Debug.Log("KoofTEST ::: " + KoofTEST + "    _koofBorder==" + _koofBorder);
                 ///mapX -= (KoofTEST / 100 * factorXBorder);
                 //mapY -= (KoofTEST / 100 * factorYBorder);
                 mapX -= (_koofBorder / 100 * factorXBorder);

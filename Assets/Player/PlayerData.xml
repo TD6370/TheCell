@@ -2,8 +2,8 @@
 <PlayerData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <IsLoadPosition>false</IsLoadPosition>
   <SavePosition>
-    <x>208.903137</x>
-    <y>-230.114288</y>
-    <z>-6.71631241</z>
+    <x>393</x>
+    <y>-250</y>
+    <z>-227</z>
   </SavePosition>
 </PlayerData>

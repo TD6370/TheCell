@@ -30,6 +30,7 @@ TagManager:
   - PrefabField
   - PaletteCell
   - InPool
+  - MapGridCell
   layers:
   - Default
   - TransparentFX

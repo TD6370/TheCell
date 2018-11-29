@@ -524,6 +524,9 @@ public class UIEvents : MonoBehaviour {
             case "OnParallax":
                 Storage.DrawGeom.ParallaxOn();
                 break;
+            case "LoadMapGrid":
+                Storage.Map.LoadGrid();
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;

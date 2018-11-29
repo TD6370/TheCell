@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\Graph\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
