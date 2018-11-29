@@ -635,7 +635,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             float sizeCldr = Helper.SizeBigCollider;
             if (colliderMap.size.x != sizeCldr)
             {
-                Debug.Log("Resize Collider MAP...   callFunc : " + callFunc);
+                //Debug.Log("Resize Collider MAP...   callFunc : " + callFunc);
                 colliderMap.size = new Vector2(sizeCldr, sizeCldr);
             }
         }

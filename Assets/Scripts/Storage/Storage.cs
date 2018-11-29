@@ -1049,6 +1049,8 @@ public class Storage : MonoBehaviour {
         {
             string nameField = item.Key;
             List<GameObject> resListData = _GamesObjectsReal[nameField];
+
+          
             if (resListData != null)
             {
                 for (int i = 0; i < resListData.Count(); i++)
@@ -1072,6 +1074,10 @@ public class Storage : MonoBehaviour {
         {
             string nameField2 = item.Key;
             GameObject resField = Fields[nameField2];
+
+            if (Storage.Map.IsGridMap)
+                Storage.Map.CheckSector(nameField2);
+
             if (resField != null)
             {
                 //Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyAllGamesObjects " + resField.name);

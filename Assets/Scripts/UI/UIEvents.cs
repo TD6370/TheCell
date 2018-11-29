@@ -157,6 +157,12 @@ public class UIEvents : MonoBehaviour {
 
             DelayTimer = Time.time + ActionRate;
         }
+        if (Input.GetKey("/") && Time.time > DelayTimer)
+        {
+            Storage.Map.Create(true);
+
+            DelayTimer = Time.time + ActionRate;
+        }
 
         if (Input.GetKey("p") && Time.time > DelayTimer)
         {

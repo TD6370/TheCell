@@ -1178,6 +1178,7 @@ private void ClearLayerForStructure(string field, bool isClearData = false)
         if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
         {
             var listObjs = Storage.Instance.GamesObjectsReal[field];
+
             foreach (var obj in listObjs.ToArray())
             {
                 if (PoolGameObjects.IsUsePoolObjects)
@@ -1194,6 +1195,9 @@ private void ClearLayerForStructure(string field, bool isClearData = false)
 
         if (isClearData)
         {
+            if (Storage.Map.IsGridMap)
+                Storage.Map.CheckSector(field);
+
             //Destroy All DATA Objects
             if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
             {
