@@ -885,6 +885,19 @@ public class SaveLoadData : MonoBehaviour {
         Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
+    public void SaveLevelParts()
+    {
+        _scriptGrid.SaveAllRealGameObjects();
+        if (Storage.Instance.GridDataG == null)
+        {
+            Debug.Log("Error SaveLevel gridData is null !!!");
+            return;
+        }
+
+        Serializator.SaveGridPartsXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
+    }
+    
+
     public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;

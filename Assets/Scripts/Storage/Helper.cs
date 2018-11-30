@@ -80,11 +80,11 @@ public static class Helper { //: MonoBehaviour {
         get { return 25 * SpeedWorld; }
     }
 
+    public static int SizePart
+    {
+        get { return 3; }
+    }
     #region Helper
-
-
-
-
 
     private static string FieldKey{
         get{
@@ -627,7 +627,7 @@ public static class HelperExtension
 
 public class Serializator
 {
-    static Type[] extraTypes = {
+    public static Type[] extraTypes = {
             typeof(ModelNPC.FieldData),
             typeof(ModelNPC.ObjectData),
 
@@ -648,6 +648,14 @@ public class Serializator
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
         string indErr = "start";
+
+        //------- Save parts
+        //SaveGridPartsXml(state, datapath,isNewWorld);
+        //------- Save cash and big
+        SaveGridCashXml(state, datapath, isNewWorld);
+        return;
+        //----------------
+
 
         if (isNewWorld)
         {
@@ -696,8 +704,304 @@ public class Serializator
         }
     }
 
+    
+    static public void SaveGridPartsXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
+    {
+
+        string indErr = "start";
+
+        if (isNewWorld)
+        {
+            for (int partX = 0; partX < Helper.SizePart; partX++)
+            {
+                for (int partY = 0; partY < Helper.SizePart; partY++)
+                {
+                    indErr = "c.1";
+                    string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+                    string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+                    datapath = datapathPart;
+                    if (File.Exists(datapathPart))
+                    {
+                        try
+                        {
+                            indErr = "delete";
+                            File.Delete(datapathPart);
+                        }
+                        catch (Exception x)
+                        {
+                            Debug.Log("############# Error SaveGridXml NOT File Delete: " + datapathPart + " : " + x.Message);
+                        }
+                    }
+
+                }
+            }
+
+            
+        }
+
+        try
+        {
+            Dictionary<string, ModelNPC.FieldData> FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
+            int SizePart = Helper.WidthLevel / Helper.SizePart;
+
+            Dictionary<string, Dictionary<string, ModelNPC.FieldData>> PartsGrids = new Dictionary<string, Dictionary<string, ModelNPC.FieldData>>();
+            for (int partX = 0; partX < Helper.SizePart; partX++)
+            {
+                for (int partY = 0; partY < Helper.SizePart; partY++)
+                {
+                    FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
+                    string nameFileXML =  + (partX + 1) + "x" + (partY + 1);
+                    int startX = partX * SizePart;
+                    int startY = partY * SizePart;
+                    int widthX = startX + SizePart;
+                    int widthY = startY + SizePart;
+                    for (int x = startX; x < widthX; x++)
+                    {
+                        for (int y = startY; y < widthY; y++)
+                        {
+                            indErr = "d.1";
+                            string fieldName = Helper.GetNameField(x, y);
+                            indErr = "d.2";
+                            if (state.FieldsD.ContainsKey(fieldName))
+                            {
+                                ModelNPC.FieldData copyFields = state.FieldsD[fieldName];
+
+                                FieldsPart.Add(fieldName, copyFields);
+                            }
+                        }
+                    }
+                    indErr = "d.3";
+                    PartsGrids.Add(nameFileXML, FieldsPart);
+                }
+            }
+
+            foreach (var partGrid in PartsGrids)
+            {
+                indErr = "1";
+                //Type[] extraTypes = { typeof(FieldData), typeof(ObjectData), typeof(ObjectDataUfo) };
+                //## 
+                Dictionary<string, ModelNPC.FieldData> partGridFields = partGrid.Value;
+                indErr = "1.1.";
+                string nameFileXML = partGrid.Key;
+                indErr = "1.2.";
+                string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+                datapath = datapathPart;
+
+                indErr = "1.3.";
+
+                state.FieldsXML = partGridFields.ToList();
+                indErr = "2";
+                //## 
+                Debug.Log("SaveXml GridData D:" + partGridFields.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapathPart);
+
+                indErr = "3";
+                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+
+                indErr = "5";
+                //FileStream fs = new FileStream(datapathPart, FileMode.CreateNew);
+
+                //indErr = "6";
+                //serializer.Serialize(fs, state);
+
+                //indErr = "7";
+                //fs.Close();
+                using (FileStream fs = new FileStream(datapathPart, FileMode.CreateNew))
+                {
+                    indErr = "6";
+                    serializer.Serialize(fs, state);
+
+                    indErr = "7";
+                    fs.Close();
+                }
+            }
+            indErr = "8";
+            state.FieldsXML = null;
+            //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+        }
+        catch (Exception x)
+        {
+            Debug.Log("######### SaveGridXml: " + x.Message + "     to :" + datapath + "    #" + indErr) ;
+        }
+    }
+
+    static public void SaveGridCashXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
+    {
+
+        string indErr = "start";
+
+       
+
+        try
+        {
+            Dictionary<string, ModelNPC.FieldData> FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
+            int SizePart = Helper.WidthLevel / Helper.SizePart;
+
+            Dictionary<string, Dictionary<string, ModelNPC.FieldData>> PartsGrids = new Dictionary<string, Dictionary<string, ModelNPC.FieldData>>();
+            //for (int partX = 0; partX < Helper.SizePart; partX++)
+            //{
+            //    for (int partY = 0; partY < Helper.SizePart; partY++)
+            //    {
+                    int partX = 0;
+                    int partY = 0;
+                    FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
+                    string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+                    int startX = partX * SizePart;
+                    int startY = partY * SizePart;
+                    int widthX = startX + SizePart;
+                    int widthY = startY + SizePart;
+                    for (int x = startX; x < widthX; x++)
+                    {
+                        for (int y = startY; y < widthY; y++)
+                        {
+                            indErr = "d.1";
+                            string fieldName = Helper.GetNameField(x, y);
+                            indErr = "d.2";
+                            if (state.FieldsD.ContainsKey(fieldName))
+                            {
+                                ModelNPC.FieldData copyFields = state.FieldsD[fieldName];
+
+                                FieldsPart.Add(fieldName, copyFields);
+                                state.FieldsD.Remove(fieldName);
+                            }
+                        }
+                    }
+                    indErr = "d.3";
+            //PartsGrids.Add(nameFileXML, FieldsPart);
+            //    }
+            //}
+
+
+            //Dictionary<string, ModelNPC.FieldData> cashPart = PartsGrids["1x1"];
+            Dictionary<string, ModelNPC.FieldData> cashPart = FieldsPart;
+            Dictionary<string, ModelNPC.FieldData> bigPart = new Dictionary<string, ModelNPC.FieldData>();
+            bigPart = state.FieldsD;
+
+            //foreach (var partGrid in PartsGrids)
+            //{
+            //    if (partGrid.Key != "1x1")
+            //    {
+            //        bigPart = bigPart.Concat(partGrid.Value)
+            //        .ToDictionary(x => x.Key, x => x.Value);
+            //    }
+            //}
+
+            ModelNPC.GridData stateCash = new ModelNPC.GridData() { FieldsD = cashPart };
+            SavePartXML(stateCash, "1x1");
+            ModelNPC.GridData stateBig = new ModelNPC.GridData() { FieldsD = bigPart };
+            SavePartXML(stateBig, "1x2");
+
+
+            indErr = "8";
+            state.FieldsXML = null;
+            //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+        }
+        catch (Exception x)
+        {
+            Debug.Log("######### SaveGridXml: " + x.Message + "     to :" + datapath + "    #" + indErr);
+        }
+    }
+
+    //public static SavePartXML(ModelNPC.GridData state, string nameFileXML = "")
+    public static void SavePartXML(ModelNPC.GridData state, string nameFileXML = "")
+    {
+        string indErr = "1";
+        //Dictionary<string, ModelNPC.FieldData> partGridFields = partGrid;
+        indErr = "1.1.";
+        string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+
+        indErr = "1.3.";
+
+        state.FieldsXML = state.FieldsD.ToList();
+        indErr = "2";
+        //## 
+        Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapathPart);
+
+        indErr = "3";
+        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+
+        indErr = "5";
+        using (FileStream fs = new FileStream(datapathPart, FileMode.CreateNew))
+        {
+            indErr = "6";
+            serializer.Serialize(fs, state);
+
+            indErr = "7";
+            fs.Close();
+        }
+    }
+
+    static public ModelNPC.GridData LoadGridPartsXml()
+    {
+        string datapath;
+
+        string stepErr = "start";
+
+        ModelNPC.GridData result = new ModelNPC.GridData();
+        try
+        {
+            Debug.Log("Loaded Xml GridData start...");
+            for (int partX = 0; partX < 3; partX++)
+            {
+                for (int partY = 0; partY < 3; partY++)
+                {
+                    stepErr = "c.1";
+                    string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+                    string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+                    datapath = datapathPart;
+                    if (File.Exists(datapathPart))
+                    {
+                        try
+                        {
+                            ModelNPC.GridData itemGridData = null;
+                            stepErr = ".1";
+                            stepErr = ".2";
+                            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+                            stepErr = ".3";
+                            using (FileStream fs = new FileStream(datapathPart, FileMode.Open))
+                            {
+                                stepErr = ".4";
+                                itemGridData = (ModelNPC.GridData)serializer.Deserialize(fs);
+                                stepErr = ".5";
+                                fs.Close();
+                            }
+                            stepErr = ".6";
+                            itemGridData.FieldsD = itemGridData.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+                            stepErr = ".7";
+                            Debug.Log("Loaded Xml GridData D:" + itemGridData.FieldsD.Count() + "   XML:" + result.FieldsXML.Count() + "     datapath=" + datapathPart);
+                            //## 
+                            itemGridData.FieldsXML = null;
+                            stepErr = ".8";
+                            result.FieldsD = result.FieldsD.Concat(itemGridData.FieldsD)
+                                .ToDictionary(x => x.Key, x => x.Value);
+
+                        }
+                        catch (Exception x)
+                        {
+                            Debug.Log("############ #" + stepErr + " LoadGridPartsXml : " + datapathPart + " : " + x.Message);
+                        }
+                    }
+
+                }
+            }
+
+            
+        }
+        catch (Exception x)
+        {
+            result = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        return result;
+    }
+
     static public ModelNPC.GridData LoadGridXml(string datapath)
     {
+        //--Load parts
+        //return LoadGridPartsXml();
+        //return null;
+        //-------------------
+
         string stepErr = "start";
         ModelNPC.GridData state = null;
         try

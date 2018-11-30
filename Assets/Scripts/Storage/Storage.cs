@@ -6,7 +6,9 @@ using System;
 using System.IO;
 
 using UnityEditor;
-
+using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Linq;
 
 public class Storage : MonoBehaviour {
 
@@ -605,31 +607,41 @@ public class Storage : MonoBehaviour {
     //    _GamesObjectsReal = p_GamesObjectsReal;
     //}
 
+    //public void LoadData()
+    //{
+    //    if (File.Exists(_datapathLevel))
+    //    {
+    //        _GridDataG = Serializator.LoadGridXml(_datapathLevel);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("# LoadPathData not exist: " + _datapathLevel);
+    //    }
+
+    //    _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
+    //    if (File.Exists(_datapathPerson))
+    //    {
+    //        var _personsData = Serializator.LoadPersonXml(_datapathPerson);
+    //        _StoragePerson.PersonsDataInit(_personsData);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("# LoadPathData not exist: " + _datapathPerson);
+    //    }
+    //}
+
     public void LoadData()
     {
-        //_datapath = Application.dataPath + "/Saves/SavedData" + Application.loadedLevel + ".xml";
-        //_datapath = Application.dataPath + "/SavedData" + Application.loadedLevel + ".xml";
-        //_datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
-
-        //Debug.Log("# LoadPathData... " + _datapathLevel);
-
+        //string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+        _datapathLevel = Application.dataPath + "/Levels/LevelDataPart1x1.xml";
         if (File.Exists(_datapathLevel))
         {
-            //@ST@ _gridData = Serializator.LoadGridXml(_datapathLevel);
             _GridDataG = Serializator.LoadGridXml(_datapathLevel);
 
-            //--------------
-            //var nameField = "Field20x50";
-            //if (!_GridDataG.FieldsD.ContainsKey(nameField))
-            //{
-            //    Debug.Log("");
-            //}
-            //if (TestExistField(nameField))
-            //{
-            //    Debug.Log("");
-            //}
-            //Debug.Log("");
-            //--------------
+            //--load parts 
+            //StartCoroutine(StartLoadDataPartsXML());
+            //--load cash
+            StartCoroutine(StartLoadDataBigXML());
         }
         else
         {
@@ -646,11 +658,160 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
+    }
 
+    IEnumerator StartLoadDataBigXML()
+    {
+        string stepErr = "start";
+        Debug.Log("Loaded Xml GridData start...");
+
+        yield return null;
         
+        stepErr = "c.1";
+        string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
+        if (File.Exists(datapathPart))
+        {
+            //yield return new WaitForSeconds(0.3f);
+            //yield return null;
+            //yield return StartCoroutine(StartLoadPartXML(datapathPart));
 
+            //-------------------
+            //using (XmlReader reader = XmlReader.Create(datapathPart))
+            //{
+            //    reader.MoveToContent();
+            //    while (reader.Read())
+            //    {
+            //        //reader.NodeType;
+
+            //        //switch (reader.NodeType)
+            //        //{
+            //        //    case XmlNodeType.Element:
+            //        //        if (reader.Name == matchName)
+            //        //        {
+            //        //            XElement el = XElement.ReadFrom(reader)
+            //        //                                  as XElement;
+            //        //            if (el != null)
+            //        //                yield return el;
+            //        //        }
+            //        //        break;
+            //        //}
+            //    }
+            //    reader.Close();
+            //}
+            //--------------------------------
+            using (XmlReader xml = XmlReader.Create(datapathPart))
+            {
+                 while (xml.Read())
+                 {
+                     switch (xml.NodeType)
+                     {
+                        case XmlNodeType.Element:
+                            if (xml.Name == "Fields")
+                            {
+                                break;
+                            }
+
+                            // нашли элемент member
+                            if (xml.Name == "Field")
+                            {
+
+                                //[XmlArray("Fields")]
+                                //[XmlArrayItem("Field")]
+                                //public List<KeyValuePair<string, FieldData>> FieldsXML = new List<KeyValuePair<string, FieldData>>();
+
+                                //ModelNPC.GridData m = xml.ReadOuterXml() as ModelNPC.GridData;
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                string inputString = el.Value;
+                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
+                                //XmlSerializer serializer = new XmlSerializer(typeof(List<KeyValuePair<string, ModelNPC.FieldData>>), Serializator.extraTypes);
+                                StringReader rdr = new StringReader(inputString);
+                                ModelNPC.GridData dataResult = (ModelNPC.GridData)serializer.Deserialize(rdr);
+                                //List<KeyValuePair<string, ModelNPC.FieldData>> FieldsXML = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
+
+                                Dictionary<string, ModelNPC.FieldData> FieldsD = dataResult.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+                                //string fieldName = FieldsD;
+                                //if(_GridDataG.FieldsD.ContainsKey(fieldName))
+                                //    _GridDataG.FieldsD.Add("",)
+
+                                //var t = el.Value;
+                                //ModelNPC.GridData m = (ModelNPC.GridData)el.Value;
+                                //ModelNPC.GridData m = (ModelNPC.GridData)el;
+                                //_GridDataG.FieldsD = _GridDataG.FieldsD.Concat(itemGridData.FieldsD)
+                                //    .ToDictionary(x => x.Key, x => x.Value);
+
+                            }
+                            break;
+                     }
+                 }
+            }
+        }
+    }
+
+    IEnumerator StartLoadDataPartsXML()
+    {
+        string datapath;
+        string stepErr = "start";
+        Debug.Log("Loaded Xml GridData start...");
+
+        yield return null;
+
+        for (int partX = 0; partX < Helper.SizePart; partX++)
+        {
+            for (int partY = 0; partY < Helper.SizePart; partY++)
+            {
+                //--- skip first part
+                if (partX == 0 && partY == 0)
+                    continue;
+
+                //yield return null;
+
+                stepErr = "c.1";
+                string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+                string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+                datapath = datapathPart;
+                if (File.Exists(datapathPart))
+                {
+                    //yield return new WaitForSeconds(0.3f);
+                    yield return null;
+                    yield return StartCoroutine(StartLoadPartXML(datapathPart));
+                }
+
+            }
+        }
+    }
+
+    IEnumerator StartLoadPartXML(string datapathPart)
+    {
+        string stepErr = "start";
+
+        //yield return null;
+        ModelNPC.GridData itemGridData = null;
+        stepErr = ".1";
+        stepErr = ".2";
+        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
+        stepErr = ".3";
+        using (FileStream fs = new FileStream(datapathPart, FileMode.Open))
+        {
+            stepErr = ".4";
+            itemGridData = (ModelNPC.GridData)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+        }
+        yield return null;
+        stepErr = ".6";
+        itemGridData.FieldsD = itemGridData.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+        stepErr = ".7";
+        Debug.Log("Loaded Xml GridData D:" + itemGridData.FieldsD.Count() + "     datapath=" + datapathPart);
+        //## 
+        itemGridData.FieldsXML = null;
+        stepErr = ".8";
+        //yield return null;
+        _GridDataG.FieldsD = _GridDataG.FieldsD.Concat(itemGridData.FieldsD)
+            .ToDictionary(x => x.Key, x => x.Value);
 
     }
+
+    //return LoadGridPartsXml();
 
     public void SetHeroPosition(int x, int y, float xH, float yH)
     {
