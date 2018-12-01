@@ -15,6 +15,7 @@ public class DataTilesManager : MonoBehaviour {
     public GameObject TilesMapPrefabLayer;
 
     private List<Texture2D> m_listTextursTerra;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+    private List<string> m_listTextursNames;
     private List<Texture2D> m_listTextursPrefabs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
 
     private Texture2D[] m_listTexturs;
@@ -27,6 +28,12 @@ public class DataTilesManager : MonoBehaviour {
                 {
                     List<Texture2D> listTexturs = new List<Texture2D>() { };
                     m_listTextursTerra = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/").ToList();
+                    m_listTextursNames = new List<string>();
+                    foreach (var itemTerra in m_listTextursTerra)
+                    {
+                        m_listTextursNames.Add(itemTerra.name);
+                    }
+
                     m_listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
                     listTexturs.AddRange(m_listTextursTerra);
                     listTexturs.AddRange(m_listTextursPrefabs);
@@ -365,15 +372,19 @@ public class DataTilesManager : MonoBehaviour {
     {
         string nameTile = "TileNone";
 
-        if (m_listTextursTerra == null || m_listTextursTerra.Count == 0)
+        //if (m_listTextursTerra == null || m_listTextursTerra.Count == 0)
+        if(m_listTextursNames == null || m_listTextursNames.Count == 0)
         {
-            Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
+            //Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
             return nameTile;
         }
 
         //int ind = 0;
         //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
-        int selectedInd = UnityEngine.Random.Range(0, m_listTextursTerra.Count - 1);
+        //int selectedInd = UnityEngine.Random.Range(0, m_listTextursTerra.Count - 1);
+        System.Random rng = new System.Random();
+        int selectedInd = rng.Next(0, m_listTextursNames.Count - 1);
+
 
         //foreach(var tileItem in CollectionTiles)
         //{
@@ -384,13 +395,18 @@ public class DataTilesManager : MonoBehaviour {
         //    }
         //    ind++;
         //}
-        if (selectedInd > ListTexturs.Length - 1)
+
+        //if (selectedInd > ListTexturs.Length - 1)
+        if (selectedInd > m_listTextursNames.Count - 1)
+            
         {
-            Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
+            //Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
             return nameTile;
         }
 
-        nameTile = m_listTextursTerra[selectedInd].name;
+        //nameTile = m_listTextursTerra[selectedInd].name;
+        nameTile = m_listTextursNames[selectedInd];
+
         return nameTile;
     }
     

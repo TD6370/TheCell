@@ -642,7 +642,10 @@ public class Storage : MonoBehaviour {
             //StartCoroutine(StartLoadDataPartsXML());
             //--load cash
 
-            StartCoroutine(StartLoadDataBigXML());
+            //StartCoroutine(StartLoadDataBigXML());
+
+            //-- Load Async
+            StartCoroutine(StartBackgroundLoadDataBigXML());
         }
         else
         {
@@ -661,10 +664,33 @@ public class Storage : MonoBehaviour {
         }
     }
 
+
+
+    IEnumerator StartBackgroundLoadDataBigXML()
+    {
+        yield return null;
+
+        Storage.Data.LoadBigWorldThread();
+
+        yield return new WaitForSeconds(1f);
+
+        while (!Storage.Data.IsThreadLoadWorldCompleted)
+        {
+
+            yield return new WaitForSeconds(2f);
+        }
+
+        Storage.Data.CompletedLoadWorld();
+
+        yield break;
+    }
+
     IEnumerator StartLoadDataBigXML()
     {
         string stepErr = "start";
         Debug.Log("Loaded Xml GridData start...");
+
+        Dictionary<string, ModelNPC.FieldData> fieldsD_Test = new Dictionary<string, ModelNPC.FieldData>();
 
         yield return null;
         
@@ -674,7 +700,7 @@ public class Storage : MonoBehaviour {
         {
             string nameField = "";
             int indProgress = 0;
-            int limitUpdate = 10;
+            int limitUpdate = 20;
 
             //using (XmlReader xml = XmlReader.Create(stReader))
             using (XmlReader xml = XmlReader.Create(datapathPart))
@@ -687,8 +713,9 @@ public class Storage : MonoBehaviour {
                         case XmlNodeType.Element:
                             if (xml.Name == "Key")
                             {
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                nameField = el.Value;
+                                //XElement el = XElement.ReadFrom(xml) as XElement;
+                                //nameField = el.Value;
+                                nameField = xml.Value;
                                 break;
                             }
                             //if (xml.Name == "Objects")
@@ -727,14 +754,19 @@ public class Storage : MonoBehaviour {
                                     yield break;
                                 }
                                 //-------------------------
-                                ModelNPC.FieldData fieldData = new ModelNPC.FieldData();
                                 if (_GridDataG.FieldsD.ContainsKey(nameField))
                                 {
-                                    _GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+                                    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+                                    fieldsD_Test[nameField].Objects.Add(dataResult);
                                 }
                                 else
                                 {
-                                    _GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+                                    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+                                    //{
+                                    //    NameField = nameField,
+                                    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                    //});
+                                    fieldsD_Test.Add(nameField, new ModelNPC.FieldData()
                                     {
                                         NameField = nameField,
                                         Objects = new List<ModelNPC.ObjectData>() { dataResult }
@@ -752,6 +784,8 @@ public class Storage : MonoBehaviour {
 
         
     }
+
+    
 
     byte[] StringToUTF8ByteArray(string pXmlString)
     {

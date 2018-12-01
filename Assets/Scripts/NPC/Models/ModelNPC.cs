@@ -145,8 +145,12 @@ public class ModelNPC
         public void SetTargetPosition()
         {
             var _position = Position;
-            int distX = UnityEngine.Random.Range(-15, 15);
-            int distY = UnityEngine.Random.Range(-15, 15);
+
+            //int distX = UnityEngine.Random.Range(-15, 15);
+            //int distY = UnityEngine.Random.Range(-15, 15);
+            System.Random rng = new System.Random();
+            int distX = rng.Next(-15, 15); 
+            int distY = rng.Next(-15, 15);
 
             float xT = _position.x + distX;
             float yT = _position.y + distY;
@@ -339,7 +343,13 @@ public class ModelNPC
 
         private void Init()
         {
-            ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+            System.Random rnd = new System.Random();
+
+            float r = rnd.Next(1, 100) / 100;
+            float g = rnd.Next(1, 100) / 100;
+            float b = rnd.Next(1, 100) / 100;
+            //ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+            ColorRender = new Color(r, g, b, 1);
             Speed = 3;
         }
 
@@ -389,8 +399,13 @@ public class ModelNPC
         public PersonDataBoss()
             : base()
         {
+            System.Random rng = new System.Random();
+
             if (Level == 0)
-                Level = UnityEngine.Random.Range(1, 7);
+            {
+                //Level = UnityEngine.Random.Range(1, 7);
+                Level = rng.Next(1,7);
+            }
 
             if (Life == 0)
                 Life = Level * 10;
@@ -422,8 +437,9 @@ public class ModelNPC
             set
             {
                 m_ColorRender = value;
-                if (m_ColorRender != null && m_ColorRender != Color.clear)
+                if (IsReality &&  m_ColorRender != null && m_ColorRender != Color.clear)
                 {
+
                     string colorStr = "#" + ColorUtility.ToHtmlStringRGB(m_ColorRender); //!!!!!!!!!!!!!!!!!!!!
                     if (ColorLevel != colorStr)
                     {
@@ -446,7 +462,7 @@ public class ModelNPC
             {
                 _ColorLevel = value;
 
-                if (!string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
+                if (IsReality && !string.IsNullOrEmpty(_ColorLevel) && _ColorLevel != "#000000")
                 {
                     Color testColor = _ColorLevel.ToColor(ColorRender);
                     if (ColorRender != testColor)

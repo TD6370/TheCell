@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using UnityEngine;
+using System.Threading;
 
 public class UpdateData { //: MonoBehaviour {
 
@@ -373,6 +378,193 @@ public class UpdateData { //: MonoBehaviour {
         _GamesObjectsReal[nameField].RemoveAt(indexDel);
     }
 
-    #endregion
+    //async Task TestReader(System.IO.Stream stream)
+    //{
+    //    XmlReaderSettings settings = new XmlReaderSettings();
+    //    settings.Async = true;
 
-}
+    //    using (XmlReader reader = XmlReader.Create(stream, settings))
+    //    {
+    //        while (await reader.ReadAsync())
+    //        {
+    //            switch (reader.NodeType)
+    //            {
+    //                case XmlNodeType.Element:
+    //                    Console.WriteLine("Start Element {0}", reader.Name);
+    //                    break;
+    //                case XmlNodeType.Text:
+    //                    Console.WriteLine("Text Node: {0}",
+    //                             await reader.GetValueAsync());
+    //                    break;
+    //                case XmlNodeType.EndElement:
+    //                    Console.WriteLine("End Element {0}", reader.Name);
+    //                    break;
+    //                default:
+    //                    Console.WriteLine("Other node {0} with value {1}",
+    //                                    reader.NodeType, reader.Value);
+    //                    break;
+    //            }
+    //        }
+    //    }
+    //}
+
+    Thread threadLoadWorld = null;
+    string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
+
+    public void LoadBigWorldThread()
+    {
+        fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
+
+        threadLoadWorld = new Thread(()=>
+        {
+            BackgroundLoadDataBigXML();
+        });
+
+        threadLoadWorld.Start();
+
+        var isRun = threadLoadWorld.IsAlive;
+    }
+
+    public bool IsThreadLoadWorldCompleted
+    {
+        get
+        {
+            if (threadLoadWorld == null)
+                return true;
+            if (threadLoadWorld.IsAlive)
+                return false;
+
+            return true;
+        }
+    }
+
+    public void CompletedLoadWorld()
+    {
+        //Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
+        //                        .ToDictionary(x => x.Key, x => x.Value);
+        //fieldsD_Temp
+
+        foreach (var itemObj in fieldsD_Temp)
+        {
+            if(Storage.Instance.GridDataG.FieldsD.ContainsKey(itemObj.Key))
+            {
+                Storage.Instance.GridDataG.FieldsD[itemObj.Key].Objects.AddRange(itemObj.Value.Objects);
+            }
+            else
+            {
+                Storage.Instance.GridDataG.FieldsD.Add(itemObj.Key, new ModelNPC.FieldData()
+                {
+                    NameField = itemObj.Key,
+                    Objects = itemObj.Value.Objects
+                });
+            }
+        }
+        //Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
+        //                            .ToDictionary(x => x.Key, x => x.Value);
+    }
+
+    Dictionary<string, ModelNPC.FieldData> fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
+
+    public void BackgroundLoadDataBigXML()
+    {
+        string stepErr = "start";
+        //Debug.Log("Loaded Xml GridData start...");
+
+        //fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
+
+        string saveField = "";
+
+        if (File.Exists(datapathPart))
+        {
+            string nameField = "";
+
+            using (XmlReader xml = XmlReader.Create(datapathPart))
+            {
+                while (xml.Read())
+                {
+                    switch (xml.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            if (xml.Name == "Key")
+                            {
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                nameField = el.Value;
+                                
+                                //nameField = xml.Value;
+                                break;
+                            }
+                            //if (xml.Name == "Objects")
+                            if (xml.Name == "ObjectData") //WWW
+                            {
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                string inputString = el.ToString();
+
+                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
+                                StringReader stringReader = new StringReader(inputString);
+                                //--------------
+
+                                ModelNPC.ObjectData dataResult;
+                                try
+                                {
+                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
+                                }
+                                catch (Exception x)
+                                {
+                                    Debug.Log("############# " + x.Message);
+                                    return;
+                                }
+                                //-------------------------
+                                if(saveField==nameField)
+                                {
+                                    if(_GridDataG.FieldsD.ContainsKey(nameField))
+                                    {
+                                        fieldsD_Temp[nameField].Objects.Add(dataResult);
+                                    }
+                                    else
+                                    {
+                                        fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
+                                        {
+                                            NameField = nameField,
+                                            Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    saveField = nameField;
+                                    fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
+                                    {
+                                        NameField = nameField,
+                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                    });
+                                }
+                                //-------------------------
+                                //if (_GridDataG.FieldsD.ContainsKey(nameField))
+                                //{
+                                //    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+                                //    fieldsD_Temp[nameField].Objects.Add(dataResult);
+                                //}
+                                //else
+                                //{
+                                //    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+                                //    //{
+                                //    //    NameField = nameField,
+                                //    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                //    //});
+                                //    fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
+                                //    {
+                                //        NameField = nameField,
+                                //        Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                //    });
+                                //}
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+    }
