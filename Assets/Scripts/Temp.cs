@@ -14,6 +14,244 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //IEnumerator StartLoadDataBigXML()
+    //{
+    //    string stepErr = "start";
+    //    Debug.Log("Loaded Xml GridData start...");
+
+    //    yield return null;
+
+    //    stepErr = "c.1";
+    //    string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
+    //    if (File.Exists(datapathPart))
+    //    {
+    //        //yield return new WaitForSeconds(0.3f);
+    //        //yield return null;
+    //        //yield return StartCoroutine(StartLoadPartXML(datapathPart));
+
+    //        //-------------------
+    //        //using (XmlReader reader = XmlReader.Create(datapathPart))
+    //        //{
+    //        //    reader.MoveToContent();
+    //        //    while (reader.Read())
+    //        //    {
+    //        //        //reader.NodeType;
+
+    //        //        //switch (reader.NodeType)
+    //        //        //{
+    //        //        //    case XmlNodeType.Element:
+    //        //        //        if (reader.Name == matchName)
+    //        //        //        {
+    //        //        //            XElement el = XElement.ReadFrom(reader)
+    //        //        //                                  as XElement;
+    //        //        //            if (el != null)
+    //        //        //                yield return el;
+    //        //        //        }
+    //        //        //        break;
+    //        //        //}
+    //        //    }
+    //        //    reader.Close();
+    //        //}
+
+    //        // public class GridData
+    //        //{
+    //        //    [XmlArray("Fields")]
+    //        //    [XmlArrayItem("Field")]
+    //        //    public List<KeyValuePair<string, FieldData>> FieldsXML = new List<KeyValuePair<string, FieldData>>();
+    //        //    [XmlIgnore]
+    //        //    public Dictionary<string, FieldData> FieldsD = new Dictionary<string, FieldData>();
+    //        //    public GridData() { }
+    //        //}
+
+    //        //[XmlType("Field")] //++
+    //        //[XmlInclude(typeof(ObjectData))]
+    //        //public class FieldData
+    //        //{
+    //        //    public string NameField { get; set; }
+    //        //    [XmlArray("Objects")]
+    //        //    [XmlArrayItem("ObjectData")]
+    //        //    public List<ObjectData> Objects = new List<ObjectData>();
+    //        //    public FieldData() { }
+    //        //}   
+
+    //        //<Fields>
+    //        //    <Field>
+    //        //      <Key>Field0x17</Key>
+    //        //      <Value>
+    //        //        <Objects>
+    //        //          <ObjectData xsi:type="Boss">
+    //        //            <NameObject>PrefabBoss_Field0x17_ea6b836</NameObject>
+    //        //            <TagObject>PrefabBoss</TagObject>
+    //        //            <Position>
+    //        //              <x>0</x>
+    //        //              <y>-34</y>
+    //        //              <z>-1</z>
+    //        //            </Position>
+    //        //            <TargetPosition>
+    //        //              <x>11</x>
+    //        //              <y>-27</y>
+    //        //              <z>-1</z>
+    //        //            </TargetPosition>
+    //        //            <Id>cf6f1d91-e1e1-45c6-8602-4736a7a5f0bd</Id>
+    //        //            <Level>2</Level>
+    //        //            <Life>20</Life>
+    //        //            <ColorLevel>#85FF72</ColorLevel>
+    //        //            <GetParams>
+    //        //              <string>Name: PrefabBoss_Field0x17_ea6b836</string>
+    //        //              <string>Type : PrefabBoss</string>
+    //        //              <string>Pos : (0.0, -34.0, -1.0)</string>
+    //        //              <string>Target : (11.0, -27.0, -1.0)</string>
+    //        //              <string>Life: 20</string>
+    //        //              <string>Speed: 5</string>
+    //        //              <string>Color : #85FF72</string>
+    //        //              <string>Individ: </string>
+    //        //            </GetParams>
+    //        //          </ObjectData>
+    //        //        </Objects>
+    //        //        <NameField>Field0x17</NameField>
+    //        //      </Value>
+    //        //    </Field>
+    //        //    <Field>
+    //        //      <Key>Field1x12</Key>
+    //        //      <Value>
+    //        //        <Objects>
+    //        //          <ObjectData xsi:type="Terra">
+    //        //            <NameObject>PrefabField_Field1x12_f76f37d</NameObject>
+    //        //            <TagObject>PrefabField</TagObject>
+    //        //            <Position>
+    //        //              <x>2</x>
+    //        //              <y>-24</y>
+    //        //              <z>-1</z>
+    //        //            </Position>
+    //        //            <TileName>Block</TileName>
+    //        //            <Index>0</Index>
+    //        //            <IsGen>false</IsGen>
+    //        //            <BlockResources>0</BlockResources>
+    //        //          </ObjectData>
+    //        //        </Objects>
+    //        //        <NameField>Field1x12</NameField>
+    //        //      </Value>
+    //        //    </Field>
+
+    //        //return serializer.Deserialize(new StringReader(text)) as MonsterContainer;
+
+
+    //        //using (System.IO.StreamReader stReader = new System.IO.StreamReader(@"C:\Example\file1.xml", System.Text.Encoding.UTF8))
+    //        //{
+    //        //    System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stReader);
+    //        //    while (reader.Read())
+    //        //    {
+    //        //        Console.WriteLine("{0}:{1}", reader.Name, reader.Value);
+    //        //    }
+    //        //    reader.Close();
+    //        //}
+
+    //        string nameField = "";
+
+    //        //System.IO.StreamReader stReader = new System.IO.StreamReader(datapathPart, System.Text.Encoding.UTF8);
+    //        //using(XmlReader r = XmlReader.Create(new StreamReader(fileName, Encoding.GetEncoding("ISO-8859-9")))) {
+
+
+    //        //--------------------------------
+    //        //XmlReader xml = XmlReader.Create(stReader);
+    //        //List<ModelNPC.ObjectData> ObjectsNew = new List<ModelNPC.ObjectData>();
+
+    //        int indProgress = 0;
+    //        int limitUpdate = 10;
+
+    //        //using (XmlReader xml = XmlReader.Create(stReader))
+    //        using (XmlReader xml = XmlReader.Create(datapathPart))
+    //        //using (XmlReader xml = XmlReader.Create(new StreamReader(datapathPart, System.Text.Encoding.UTF8)))
+    //        {
+    //            while (xml.Read())
+    //            {
+    //                switch (xml.NodeType)
+    //                {
+    //                    case XmlNodeType.Element:
+    //                        if (xml.Name == "Key")
+    //                        {
+    //                            //----------------------------
+    //                            //if (ObjectsNew.Count > 0)
+    //                            //{
+    //                            //    _GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+    //                            //    {
+    //                            //        NameField = nameField,
+    //                            //        Objects = ObjectsNew
+    //                            //    });
+    //                            //    ObjectsNew.Clear();
+    //                            //}
+    //                            ////----------------------------
+    //                            XElement el = XElement.ReadFrom(xml) as XElement;
+    //                            nameField = el.Value;
+    //                            break;
+    //                        }
+
+    //                        //if (xml.Name == "Objects")
+    //                        if (xml.Name == "ObjectData") //WWW
+    //                        {
+    //                            indProgress++;
+    //                            if (indProgress > limitUpdate)
+    //                            {
+    //                                indProgress = 0;
+    //                                yield return null;
+    //                            }
+
+    //                            XElement el = XElement.ReadFrom(xml) as XElement;
+    //                            string inputString = el.ToString();
+
+    //                            //---------------
+    //                            //XmlSerializer serializer = new XmlSerializer(typeof(List<ModelNPC.ObjectData>), Serializator.extraTypes);
+    //                            //WWW
+    //                            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
+    //                            //--------------
+    //                            StringReader stringReader = new StringReader(inputString);
+    //                            //stringReader.Read(); // skip BOM
+    //                            //--------------
+
+    //                            //List<KeyValuePair<string, ModelNPC.FieldData>> dataResult = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
+    //                            //Debug.Log("! " + inputString);
+    //                            //List<ModelNPC.ObjectData> dataResult;
+    //                            ModelNPC.ObjectData dataResult;
+    //                            try
+    //                            {
+    //                                //System.Object dataObj = serializer.Deserialize(stringReader); //WWW
+    //                                //dataResult = (List<ModelNPC.ObjectData>)serializer.Deserialize(stringReader);
+    //                                dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
+
+    //                            }
+    //                            catch (Exception x)
+    //                            {
+
+    //                                Debug.Log("############# " + x.Message);
+    //                                yield break;
+    //                            }
+    //                            //-------------------------
+    //                            ModelNPC.FieldData fieldData = new ModelNPC.FieldData();
+    //                            if (_GridDataG.FieldsD.ContainsKey(nameField))
+    //                            {
+    //                                _GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+    //                            }
+    //                            else
+    //                            {
+    //                                _GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+    //                                {
+    //                                    NameField = nameField,
+    //                                    Objects = new List<ModelNPC.ObjectData>() { dataResult }
+    //                                });
+    //                            }
+    //                        }
+    //                        break;
+    //                }
+    //            }
+    //        }
+
+    //        //xml.Close();
+    //        //stReader.Close();
+    //    }
+
+
+    //}
+
     //public void CreateTextureMap(int scaleCell = 1, bool isRefresh = false)
     //{
     //    string indErr = "start";

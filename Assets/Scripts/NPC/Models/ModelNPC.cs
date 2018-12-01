@@ -45,11 +45,15 @@ public class ModelNPC
 
 
     //++++
-    [XmlType("Object")] //++
+    //[XmlRoot("ObjRoot")]
+    //[XmlType("Object")] //++
     [XmlInclude(typeof(PersonData))]
     [XmlInclude(typeof(TerraData))]
     //[XmlInclude(typeof(GameDataNPC))] //$$
-
+    //[Serializable, XmlRoot("ObjRoot")]
+    //[XmlRoot(Namespace = "www.my.com", ElementName = "MyGroupName", DataType = "string", IsNullable = true)]
+    //[XmlRoot(Namespace = "www.my.com", ElementName = "ObjectData", IsNullable = true)]
+    [XmlRoot(ElementName = "ObjectData"), XmlType("ObjectData")]
     public class ObjectData : ICloneable
     {
         public string NameObject { get; set; }

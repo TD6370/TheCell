@@ -407,7 +407,8 @@ public class UIEvents : MonoBehaviour {
                 SetTittle = "Level saving...";
                 //m_scriptData.SaveLevel();
                 //#TEST
-                m_scriptData.SaveLevelParts();
+                //m_scriptData.SaveLevelParts();
+                m_scriptData.SaveLevelCash();
                 SetTittle = "Level saved.";
                 break;
             case "LoadWorld":

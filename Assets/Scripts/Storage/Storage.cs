@@ -641,6 +641,7 @@ public class Storage : MonoBehaviour {
             //--load parts 
             //StartCoroutine(StartLoadDataPartsXML());
             //--load cash
+
             StartCoroutine(StartLoadDataBigXML());
         }
         else
@@ -671,80 +672,92 @@ public class Storage : MonoBehaviour {
         string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
         if (File.Exists(datapathPart))
         {
-            //yield return new WaitForSeconds(0.3f);
-            //yield return null;
-            //yield return StartCoroutine(StartLoadPartXML(datapathPart));
+            string nameField = "";
+            int indProgress = 0;
+            int limitUpdate = 10;
 
-            //-------------------
-            //using (XmlReader reader = XmlReader.Create(datapathPart))
-            //{
-            //    reader.MoveToContent();
-            //    while (reader.Read())
-            //    {
-            //        //reader.NodeType;
-
-            //        //switch (reader.NodeType)
-            //        //{
-            //        //    case XmlNodeType.Element:
-            //        //        if (reader.Name == matchName)
-            //        //        {
-            //        //            XElement el = XElement.ReadFrom(reader)
-            //        //                                  as XElement;
-            //        //            if (el != null)
-            //        //                yield return el;
-            //        //        }
-            //        //        break;
-            //        //}
-            //    }
-            //    reader.Close();
-            //}
-            //--------------------------------
+            //using (XmlReader xml = XmlReader.Create(stReader))
             using (XmlReader xml = XmlReader.Create(datapathPart))
+            //using (XmlReader xml = XmlReader.Create(new StreamReader(datapathPart, System.Text.Encoding.UTF8)))
             {
-                 while (xml.Read())
-                 {
-                     switch (xml.NodeType)
-                     {
+                while (xml.Read())
+                {
+                    switch (xml.NodeType)
+                    {
                         case XmlNodeType.Element:
-                            if (xml.Name == "Fields")
+                            if (xml.Name == "Key")
                             {
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                nameField = el.Value;
                                 break;
                             }
-
-                            // нашли элемент member
-                            if (xml.Name == "Field")
+                            //if (xml.Name == "Objects")
+                            if (xml.Name == "ObjectData") //WWW
                             {
+                                indProgress++;
+                                if(indProgress > limitUpdate)
+                                {
+                                    indProgress = 0;
+                                    yield return null;
+                                }
 
-                                //[XmlArray("Fields")]
-                                //[XmlArrayItem("Field")]
-                                //public List<KeyValuePair<string, FieldData>> FieldsXML = new List<KeyValuePair<string, FieldData>>();
-
-                                //ModelNPC.GridData m = xml.ReadOuterXml() as ModelNPC.GridData;
                                 XElement el = XElement.ReadFrom(xml) as XElement;
-                                string inputString = el.Value;
-                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
-                                //XmlSerializer serializer = new XmlSerializer(typeof(List<KeyValuePair<string, ModelNPC.FieldData>>), Serializator.extraTypes);
-                                StringReader rdr = new StringReader(inputString);
-                                ModelNPC.GridData dataResult = (ModelNPC.GridData)serializer.Deserialize(rdr);
-                                //List<KeyValuePair<string, ModelNPC.FieldData>> FieldsXML = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
+                                string inputString = el.ToString();
+                              
+                                //---------------
+                                //XmlSerializer serializer = new XmlSerializer(typeof(List<ModelNPC.ObjectData>), Serializator.extraTypes);
+                                //WWW
+                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
+                                //--------------
+                                StringReader stringReader = new StringReader(inputString);
+                                //stringReader.Read(); // skip BOM
+                                //--------------
 
-                                Dictionary<string, ModelNPC.FieldData> FieldsD = dataResult.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
-                                //string fieldName = FieldsD;
-                                //if(_GridDataG.FieldsD.ContainsKey(fieldName))
-                                //    _GridDataG.FieldsD.Add("",)
-
-                                //var t = el.Value;
-                                //ModelNPC.GridData m = (ModelNPC.GridData)el.Value;
-                                //ModelNPC.GridData m = (ModelNPC.GridData)el;
-                                //_GridDataG.FieldsD = _GridDataG.FieldsD.Concat(itemGridData.FieldsD)
-                                //    .ToDictionary(x => x.Key, x => x.Value);
-
+                                //List<KeyValuePair<string, ModelNPC.FieldData>> dataResult = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
+                                //Debug.Log("! " + inputString);
+                                //List<ModelNPC.ObjectData> dataResult;
+                                ModelNPC.ObjectData dataResult;
+                                try
+                                {
+                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
+                                }
+                                catch(Exception x)
+                                {
+                                    Debug.Log("############# " + x.Message);
+                                    yield break;
+                                }
+                                //-------------------------
+                                ModelNPC.FieldData fieldData = new ModelNPC.FieldData();
+                                if (_GridDataG.FieldsD.ContainsKey(nameField))
+                                {
+                                    _GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+                                }
+                                else
+                                {
+                                    _GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+                                    {
+                                        NameField = nameField,
+                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                    });
+                                }
                             }
                             break;
-                     }
-                 }
+                    }
+                }
             }
+
+            //xml.Close();
+            //stReader.Close();
         }
+
+        
+    }
+
+    byte[] StringToUTF8ByteArray(string pXmlString)
+    {
+        System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+        byte[] byteArray = encoding.GetBytes(pXmlString);
+        return byteArray;
     }
 
     IEnumerator StartLoadDataPartsXML()

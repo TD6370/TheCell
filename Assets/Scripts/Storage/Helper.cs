@@ -917,17 +917,54 @@ public class Serializator
         Debug.Log("SaveXml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapathPart);
 
         indErr = "3";
+        //XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
         XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
 
+
+        System.Text.UTF8Encoding encodingT = new System.Text.UTF8Encoding();
         indErr = "5";
         using (FileStream fs = new FileStream(datapathPart, FileMode.CreateNew))
         {
             indErr = "6";
+
+            //-----------
+            //var memoryStream = new MemoryStream();
+            //var streamWriter = new StreamWriter(memoryStream, System.Text.Encoding.UTF8);
+            //serializer.Serialize(streamWriter, state);
+            //serializer.Serialize(fs, streamWriter);
+            ////----------------
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    //XmlSerializer s = new XmlSerializer(typeof(T));
+            //    //Console.WriteLine("Testing for type: {0}", typeof(T));
+            //    serializer.Serialize(System.Xml.XmlWriter.Create(stream), state);
+            //    stream.Flush();
+            //    stream.Seek(0, SeekOrigin.Begin);
+            //    object o = s.Deserialize(XmlReader.Create(stream));
+            //    Console.WriteLine("  Deserialized type: {0}", o.GetType());
+            //}
+            //--------------------
+
+            //
+            //System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+            //inputString = encoding.GetString(inputString);
+            //serializer.Serialize(fs, state, encodingStyle: "UTF8Encoding");
+            //var encoding = Encoding.GetEncoding("ISO-8859-1");
+            //using (StreamWriter sw = new StreamWriter(fname, appendMode, encoding))
+
+            //----------------
             serializer.Serialize(fs, state);
+            //----------------
 
             indErr = "7";
             fs.Close();
         }
+
+        //FileStream fs = new FileStream(datapathPart, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+        //StreamWriter swFromFileTrueUTF8 = new StreamWriter(datapathPart, true, System.Text.Encoding.UTF8);
+        //swFromFileTrueUTF8.Write(textToAdd);
+        //swFromFileTrueUTF8.Flush();
+        //swFromFileTrueUTF8.Close();
     }
 
     static public ModelNPC.GridData LoadGridPartsXml()
