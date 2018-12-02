@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEngine.Tilemaps;
+using System.Xml;
+using System.Xml.Linq;
 
 public class SaveLoadData : MonoBehaviour {
 
@@ -28,7 +30,7 @@ public class SaveLoadData : MonoBehaviour {
     public static float Spacing = 2f;
 
     private GenerateGridFields _scriptGrid;
-   
+    private float LoadingWordlTimer = 0f;
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -37,7 +39,7 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
 
-  
+
 
     private IEnumerable<string> _namesPrefabs
     {   get
@@ -978,47 +980,296 @@ public class SaveLoadData : MonoBehaviour {
         return TypePrefabs.PrefabField;
     }
 
+    public void LoadDataBigXML()
+    {
+        //--load parts 
+        //StartCoroutine(StartLoadDataPartsXML());
+        //--load asinc
+        //StartCoroutine(StartLoadDataBigXML());
 
-    //public void CreateStructDataTile(string NameStructMap, BoundsInt boundsStruct, TileBase[] allTiles, BoundsInt boundsMap)
-    //{
-    //    int countFindTiles = 0;
-    //    List<DataTile> listDataTiles = new List<DataTile>();
+        //-- Load in thread
+        //StartCoroutine(StartBackgroundLoadDataBigXML());
 
-    //    int startX = boundsStruct.x + Math.Abs(boundsMap.x);
-    //    int startY = boundsStruct.y + Math.Abs(boundsMap.y);
-    //    int boundsSizeX = startX + boundsStruct.size.x;
-    //    int boundsSizeY = startY + boundsStruct.size.y;
+        //-- load old style
+        StartCoroutine(StartInGameLoadDataBigXML());
+    }
+
+    IEnumerator StartInGameLoadDataBigXML()
+    {
+        yield return new WaitForSeconds(2f);
+
+        Storage.Events.SetMessage("Подожди говнюк...");
+
+        yield return null;
+
+        LoadingWordlTimer = Time.time;
+        var fieldsD_Temp = Serializator.LoadGridXml(Storage.Data.DataPathBigPart);
+        //yield return null;
+        Storage.Data.SetGridDatatBig = fieldsD_Temp.FieldsD;
+
+        //yield return null;
+        Storage.Data.CompletedLoadWorld();//fieldsD_Temp
+
+        float loadingTime = Time.time - LoadingWordlTimer;
+        Storage.Events.SetMessage("Ты ждал: " + loadingTime);
+
+        yield return new WaitForSeconds(0.5f);
+
+        Storage.Events.HideMessage();
+
+        yield break;
+    }
+
+    IEnumerator StartBackgroundLoadDataBigXML()
+    {
+        yield return null;
+
+        LoadingWordlTimer = Time.time;
+
+        Storage.Data.LoadBigWorldThread();
+
+        yield return new WaitForSeconds(1f);
+
+        while (!Storage.Data.IsThreadLoadWorldCompleted)
+        {
+
+            yield return new WaitForSeconds(2f);
+        }
+
+        Storage.Data.CompletedLoadWorld();
+
+        float loadingTime = Time.time - LoadingWordlTimer;
+        Storage.Events.SetTittle = "Loaded:" + loadingTime;
+        Storage.Events.ListLogAdd = "Loaded:" + loadingTime;
+        Debug.Log("*********************** Time loding World: " + loadingTime);
+
+        yield break;
+    }
+
+    IEnumerator StartLoadDataBigXML()
+    {
+        string stepErr = "start";
+        Debug.Log("Loaded Xml GridData start...");
+
+        Dictionary<string, ModelNPC.FieldData> fieldsD_Test = new Dictionary<string, ModelNPC.FieldData>();
+
+        yield return null;
+
+        LoadingWordlTimer = Time.time;
+
+        string nameField = "";
+
+        stepErr = "c.1";
+        string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
+        if (File.Exists(datapathPart))
+        {
+            
+            int indProgress = 0;
+            int limitUpdate = 20;
+
+            //using (XmlReader xml = XmlReader.Create(stReader))
+            using (XmlReader xml = XmlReader.Create(datapathPart))
+            //using (XmlReader xml = XmlReader.Create(new StreamReader(datapathPart, System.Text.Encoding.UTF8)))
+            {
+                while (xml.Read())
+                {
+                    switch (xml.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            if (xml.Name == "Key")
+                            {
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                nameField = el.Value;
+                                //nameField = xml.Value.Clone().ToString();
+                                break;
+                            }
+                            //if (xml.Name == "Objects")
+                            if (xml.Name == "ObjectData") //WWW
+                            {
+                                indProgress++;
+                                if (indProgress > limitUpdate)
+                                {
+                                    indProgress = 0;
+                                    yield return null;
+                                }
+
+                                XElement el = XElement.ReadFrom(xml) as XElement;
+                                string inputString = el.ToString();
+
+                                //---------------
+                                //XmlSerializer serializer = new XmlSerializer(typeof(List<ModelNPC.ObjectData>), Serializator.extraTypes);
+                                //WWW
+                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
+                                //--------------
+                                StringReader stringReader = new StringReader(inputString);
+                                //stringReader.Read(); // skip BOM
+                                //--------------
+
+                                //List<KeyValuePair<string, ModelNPC.FieldData>> dataResult = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
+                                //Debug.Log("! " + inputString);
+                                //List<ModelNPC.ObjectData> dataResult;
+                                ModelNPC.ObjectData dataResult;
+                                try
+                                {
+                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
+                                }
+                                catch (Exception x)
+                                {
+                                    Debug.Log("############# " + x.Message);
+                                    yield break;
+                                }
+                                //-------------------------
+                                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                                {
+                                    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
+                                    fieldsD_Test[nameField].Objects.Add(dataResult);
+                                }
+                                else
+                                {
+                                    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
+                                    //{
+                                    //    NameField = nameField,
+                                    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                    //});
+                                    fieldsD_Test.Add(nameField, new ModelNPC.FieldData()
+                                    {
+                                        NameField = nameField,
+                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
+                                    });
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+
+            //xml.Close();
+            //stReader.Close();
+        }
+
+        //------------
+        Storage.Data.SetGridDatatBig = fieldsD_Test;
+
+        yield return null;
+        Storage.Data.CompletedLoadWorld();//fieldsD_Temp
+        //--------------
+
+        float loadingTime = Time.time - LoadingWordlTimer;
+        Storage.Events.SetMessage("Ты ждал: " + loadingTime);
+
+        yield return new WaitForSeconds(4f);
+
+        Storage.Events.HideMessage();
+    }
 
 
 
-    //    for (int x = startX; x < boundsSizeX; x++)
-    //    {
-    //        for (int y = startY; y < boundsSizeY; y++)
-    //        {
-    //            TileBase tile = allTiles[x + y * boundsMap.size.x];
+    byte[] StringToUTF8ByteArray(string pXmlString)
+    {
+        System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+        byte[] byteArray = encoding.GetBytes(pXmlString);
+        return byteArray;
+    }
+
+    IEnumerator StartLoadDataPartsXML()
+    {
+        string datapath;
+        string stepErr = "start";
+        Debug.Log("Loaded Xml GridData start...");
+
+        yield return null;
+
+        for (int partX = 0; partX < Helper.SizePart; partX++)
+        {
+            for (int partY = 0; partY < Helper.SizePart; partY++)
+            {
+                //--- skip first part
+                if (partX == 0 && partY == 0)
+                    continue;
+
+                //yield return null;
+
+                stepErr = "c.1";
+                string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+                string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+                datapath = datapathPart;
+                if (File.Exists(datapathPart))
+                {
+                    //yield return new WaitForSeconds(0.3f);
+                    yield return null;
+                    yield return StartCoroutine(StartLoadPartXML(datapathPart));
+                }
+
+            }
+        }
+    }
+
+    IEnumerator StartLoadPartXML(string datapathPart)
+    {
+        string stepErr = "start";
+
+        //yield return null;
+        ModelNPC.GridData itemGridData = null;
+        stepErr = ".1";
+        stepErr = ".2";
+        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
+        stepErr = ".3";
+        using (FileStream fs = new FileStream(datapathPart, FileMode.Open))
+        {
+            stepErr = ".4";
+            itemGridData = (ModelNPC.GridData)serializer.Deserialize(fs);
+            stepErr = ".5";
+            fs.Close();
+        }
+        yield return null;
+        stepErr = ".6";
+        itemGridData.FieldsD = itemGridData.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+        stepErr = ".7";
+        Debug.Log("Loaded Xml GridData D:" + itemGridData.FieldsD.Count() + "     datapath=" + datapathPart);
+        //## 
+        itemGridData.FieldsXML = null;
+        stepErr = ".8";
+        //yield return null;
+        Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(itemGridData.FieldsD)
+            .ToDictionary(x => x.Key, x => x.Value);
+
+    }
 
 
-    //            if (tile != null)
-    //            {
-    //                int cellX = x + -startX;
-    //                int cellY = y + -startY;
+    public void ClearWorld(bool isReload = true)
+    {
+        Storage.Instance.StopGame();
+        Storage.Pool.Restart();
+        Storage.Instance.DestroyAllGamesObjects();
+        Storage.Pool.Restart();
+        Storage.Instance.GridDataG.FieldsD.Clear();
+        if(isReload)
+            Storage.Player.LoadPositionHero();
+        //Storage.Instance.GridDataG.FieldsD.Clear();
+    }
 
-    //                DataTile dataTiles = new DataTile()
-    //                {
-    //                    X = cellX,
-    //                    Y = cellY,
-    //                    NameTales = tile.name
-    //                };
+    public void GenWorld(bool isReload = true)
+    {
+        //Storage.Instance.StopGame();
+        //Storage.Pool.Restart();
+        //Storage.Instance.DestroyAllGamesObjects();
+        //DataConstructionTiles dataTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+        //------------------------------
 
-    //                listDataTiles.Add(dataTiles);
-    //                countFindTiles++;
-    //            }
-    //        }
-    //    }
 
-    //    CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+        Storage.PaletteMap.GenericOnWorld(SaveLoadData.TypePrefabs.PrefabElka); // BrushCells(bool isOnFullMap = false)
 
-    //}
+
+
+        //------------------------------
+        //Storage.Pool.Restart();
+        //Storage.Instance.GridDataG.FieldsD.Clear();
+        //if (isReload)
+        //    Storage.Player.LoadPositionHero();
+        //Storage.Instance.GridDataG.FieldsD.Clear();
+    }
+
+
 
 
 

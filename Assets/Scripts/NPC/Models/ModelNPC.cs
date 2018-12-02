@@ -70,6 +70,10 @@ public class ModelNPC
         {
         }
 
+        public virtual void Init()
+        {
+        }
+
         public virtual void UpdateGameObject(GameObject objGame)
         {
 
@@ -99,6 +103,9 @@ public class ModelNPC
     public class GameDataNPC : ObjectData
     {
         [XmlIgnore]
+        public bool IsLoadad { get; set; }
+
+        [XmlIgnore]
         public virtual Vector3 TargetPosition { get; set; }
 
         [XmlIgnore]
@@ -115,12 +122,12 @@ public class ModelNPC
                 m_Position = value;
 
 
-                if (IsCanSetTargetPosition)
+                if (IsCanSetTargetPosition && IsReality)
                     SetTargetPosition();
             }
         }
 
-        private bool IsCanSetTargetPosition
+        protected bool IsCanSetTargetPosition
         {
             get
             {
@@ -146,11 +153,11 @@ public class ModelNPC
         {
             var _position = Position;
 
-            //int distX = UnityEngine.Random.Range(-15, 15);
-            //int distY = UnityEngine.Random.Range(-15, 15);
-            System.Random rng = new System.Random();
-            int distX = rng.Next(-15, 15); 
-            int distY = rng.Next(-15, 15);
+            int distX = UnityEngine.Random.Range(-15, 15);
+            int distY = UnityEngine.Random.Range(-15, 15);
+            //System.Random rng = new System.Random();
+            //int distX = rng.Next(-15, 15); 
+            //int distY = rng.Next(-15, 15);
 
             float xT = _position.x + distX;
             float yT = _position.y + distY;
@@ -260,6 +267,9 @@ public class ModelNPC
 
         public virtual string Update(GameObject gobj)
         {
+
+          
+
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;
             string nameObject = gobj.name;
@@ -338,23 +348,32 @@ public class ModelNPC
         public GameDataUfo()
             : base()
         {
-            Init();
+            //Init();
         }
 
-        private void Init()
+        public override void Init()
         {
             System.Random rnd = new System.Random();
 
-            float r = rnd.Next(1, 100) / 100;
-            float g = rnd.Next(1, 100) / 100;
-            float b = rnd.Next(1, 100) / 100;
-            //ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
-            ColorRender = new Color(r, g, b, 1);
+            //float r = rnd.Next(1, 100) / 100;
+            //float g = rnd.Next(1, 100) / 100;
+            //float b = rnd.Next(1, 100) / 100;
+            ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
+            //ColorRender = new Color(r, g, b, 1);
             Speed = 3;
+            IsLoadad = true;
+
+            //if (IsCanSetTargetPosition && IsReality)
+            if (IsCanSetTargetPosition)
+                SetTargetPosition();
         }
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            //#INTI
+            if(!IsLoadad && IsReality)
+                Init();
+
             string nameObjData = ((GameDataUfo)this).NameObject;
             if (nameObjData != objGame.name)
             {
@@ -399,18 +418,18 @@ public class ModelNPC
         public PersonDataBoss()
             : base()
         {
-            System.Random rng = new System.Random();
+            //System.Random rng = new System.Random();
 
-            if (Level == 0)
-            {
-                //Level = UnityEngine.Random.Range(1, 7);
-                Level = rng.Next(1,7);
-            }
+            //if (Level == 0)
+            //{
+            //    //Level = UnityEngine.Random.Range(1, 7);
+            //    Level = rng.Next(1,7);
+            //}
 
-            if (Life == 0)
-                Life = Level * 10;
+            //if (Life == 0)
+            //    Life = Level * 10;
 
-            Speed = Level;
+            //Speed = Level;
         }
     }
 
@@ -478,14 +497,40 @@ public class ModelNPC
 
         public GameDataBoss() : base()
         {
-            Speed = 5;
+            //Init();
+        }
+
+
+        public override void Init()
+        {
+            //--- init person boss data
+            System.Random rng = new System.Random();
+
+            if (Level == 0)
+            {
+                //Level = UnityEngine.Random.Range(1, 7);
+                Level = rng.Next(1, 7);
+            }
+
+            if (Life == 0)
+                Life = Level * 10;
+
+            Speed = Level;
+            //---------------------
+
+            //Speed = 5;
 
             if (m_ColorRender != Color.clear)
                 return;
 
             InitColor();
-        }
 
+            //#fix load
+            if (IsCanSetTargetPosition && IsReality)
+                SetTargetPosition();
+
+            IsLoadad = true;
+        }
 
         private void InitColor()
         {
@@ -497,6 +542,10 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            //#INTI
+            if (!IsLoadad && IsReality)
+                Init();
+
             bool isUpdateStyle = false;
 
             string nameObjData = ((GameDataBoss)this).NameObject;
@@ -566,16 +615,26 @@ public class ModelNPC
         public bool IsGen { get; set; }
         public int BlockResources { get; set; }
 
+        [XmlIgnore]
+        private bool IsLoadad { get; set; }
+
         private string idTerra = "?";
 
         //public TerraData(bool isGen) {
         public TerraData()
         {
-            idTerra = Guid.NewGuid().ToString().Substring(0,4);
+            //Init();
+        }
+
+        public void Init()
+        {
+            idTerra = Guid.NewGuid().ToString().Substring(0, 4);
 
             bool isGen = true;
 
-            if (Storage.TilesManager==null)
+            IsLoadad = true;
+
+            if (Storage.TilesManager == null)
             {
                 Debug.Log("######## Init TerraData: Storage.TilesManager is Empty");
                 return;
@@ -595,9 +654,13 @@ public class ModelNPC
         public override void UpdateGameObject(GameObject objGame)
         {
             {
+                //#INTI
+                if (!IsLoadad && IsReality)
+                    Init();
+
                 //return;
 
-                if(objGame.name.IndexOf("Field1x0")!=-1 )
+                if (objGame.name.IndexOf("Field1x0")!=-1 )
                 {
                     Debug.Log("TEST Filed " + TileName + "  IsGen=" + IsGen + " id=" + idTerra);
                 }

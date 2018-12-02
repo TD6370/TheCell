@@ -25,6 +25,7 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnTeleport;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
+    public Button btnDestroyWorld;
     public Button btnUp;
     public Button btnDown;
     public InputField btxSizeBrush;
@@ -108,7 +109,7 @@ public class PaletteMapController : MonoBehaviour {
 
 
     //Percent
-    private int m_OptionGenPercent2 = 100;
+    private int m_OptionGenPercent2 = 80;
     public int OptionGenPercent {
         get {
             if (btxIntGenOption2.text != m_OptionGenPercent2.ToString())
@@ -122,30 +123,48 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    //Fragments
-    private int m_OptionGen3 = 1;
-    public int OptionGen3 {
+
+    //Segments
+    private int m_OptionGenSegments3 = 5;
+    public int OptionGenSegments
+    {
         get {
-            if (btxIntGenOption3.text != m_OptionGen3.ToString())
-                btxIntGenOption3.text = m_OptionGen3.ToString();
-            return m_OptionGen3;
+            if (btxIntGenOption3.text != m_OptionGenSegments3.ToString())
+                btxIntGenOption3.text = m_OptionGenSegments3.ToString();
+            return m_OptionGenSegments3;
         }
         set {
-            m_OptionGen3 = value;
-            btxIntGenOption3.text = m_OptionGen3.ToString();
+            m_OptionGenSegments3 = value;
+            btxIntGenOption3.text = m_OptionGenSegments3.ToString();
         }
     }
 
     //Level
-    private int m_OptionGen4 = 1;
-    public int OptionGen4 {
+    private int m_OptionGenLevel4 = 10;
+    public int OptionGenLevel {
         get {
-            if (btxIntGenOption4.text != m_OptionGen4.ToString())
-                btxIntGenOption4.text = m_OptionGen4.ToString();
-            return m_OptionGen4;
+            if (btxIntGenOption4.text != m_OptionGenLevel4.ToString())
+                btxIntGenOption4.text = m_OptionGenLevel4.ToString();
+            return m_OptionGenLevel4;
         }
-        set { m_OptionGen4 = value;
-            btxIntGenOption4.text = m_OptionGen4.ToString();
+        set { m_OptionGenLevel4 = value;
+            btxIntGenOption4.text = m_OptionGenLevel4.ToString();
+        }
+    }
+
+    private int m_OptionGen5 = 1;
+    public int OptionGen5
+    {
+        get
+        {
+            if (btxIntGenOption5.text != m_OptionGen5.ToString())
+                btxIntGenOption5.text = m_OptionGen5.ToString();
+            return m_OptionGen5;
+        }
+        set
+        {
+            m_OptionGen5 = value;
+            btxIntGenOption5.text = m_OptionGen5.ToString();
         }
     }
 
@@ -405,6 +424,12 @@ public class PaletteMapController : MonoBehaviour {
                 TeleportHero();
                 break;
             case ToolBarPaletteMapAction.Brush:
+                //if (SelectedTypeBrush == TypesBrushGrid.Prefabs) {
+                //    Paste();
+                //}
+                //else {
+                //    BrushCells();
+                //}
                 BrushCells();
                 break;
             case ToolBarPaletteMapAction.Cursor:
@@ -566,17 +591,31 @@ public class PaletteMapController : MonoBehaviour {
             m_PasteOnLayer = btnOnLayer.isOn;
         });
 
-
+        //--- Generic New World ---
         btnReloadWorld.onClick.AddListener(delegate
         {
-            Storage.Events.ReloadWorld();
+            //---------------------------
+            //Storage.Events.ReloadWorld();
+            //---------------------------
+            Storage.Instance.CreateWorld(true);
+            Storage.Map.RefreshFull();
         });
+
+        //--- Clear full World ---
+        btnDestroyWorld.onClick.AddListener(delegate
+        {
+            Storage.GridData.ClearWorld();
+            Storage.Map.RefreshFull();
+        });
+
+        //--- Refresh map ---
         btnRefreshMap.onClick.AddListener(delegate
         {
+            Storage.Map.RefreshFull();
             Storage.Map.Create(true);
         });
 
-        
+
         btnUp.onClick.AddListener(delegate
         {
             SizeBrush+=3;
@@ -622,17 +661,26 @@ public class PaletteMapController : MonoBehaviour {
         });
         btxIntGenOption3.onValueChange.AddListener(delegate
         {
+            //OptionGenSegments
             //OptionGen3 = int.Parse(btxIntGenOption3.text);
-            OptionGen3 = IntPrseDef(btxIntGenOption3.text, OptionGen3);
-            if (btxIntGenOption3.text != OptionGen3.ToString())
-                btxIntGenOption3.text = OptionGen3.ToString();
+            OptionGenSegments = IntPrseDef(btxIntGenOption3.text, OptionGenSegments);
+            if (btxIntGenOption3.text != OptionGenSegments.ToString())
+                btxIntGenOption3.text = OptionGenSegments.ToString();
         });
         btxIntGenOption4.onValueChange.AddListener(delegate
         {
             //OptionGen4 = int.Parse(btxIntGenOption4.text);
-            OptionGen4 = IntPrseDef(btxIntGenOption4.text, OptionGen4);
-            if (btxIntGenOption4.text != OptionGen4.ToString())
-                btxIntGenOption4.text = OptionGen4.ToString();
+            OptionGenLevel = IntPrseDef(btxIntGenOption4.text, OptionGenLevel);
+            if (btxIntGenOption4.text != OptionGenLevel.ToString())
+                btxIntGenOption4.text = OptionGenLevel.ToString();
+
+        });
+        btxIntGenOption5.onValueChange.AddListener(delegate
+        {
+            //OptionGenLevel = int.Parse(btxIntGenOption4.text);
+            OptionGen5 = IntPrseDef(btxIntGenOption5.text, OptionGenLevel);
+            if (btxIntGenOption5.text != OptionGen5.ToString())
+                btxIntGenOption5.text = OptionGen5.ToString();
 
         });
     }
@@ -951,9 +999,44 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    private void BrushCells()
+    public void GenericOnWorld(SaveLoadData.TypePrefabs prefab)
     {
-        DataTile sel = SelectedCell;
+        DataTile genPrefab;
+        if (prefab== SaveLoadData.TypePrefabs.PrefabField)
+        {
+            genPrefab = new DataTile()
+            {
+                Name = prefab.ToString(),
+                Tag = TypesStructure.Terra.ToString()
+            };
+        }
+        else
+        {
+            genPrefab = new DataTile()
+            {
+                Name = prefab.ToString(),
+                Tag = TypesStructure.Prefab.ToString()
+            };
+        }
+
+        //TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
+        //if (structType == TypesStructure.Terra)
+        //{
+        //    prefabName = TypePrefabs.PrefabField;
+        //}
+        //if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
+        //{
+        //    prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
+        //}
+
+        BrushCells(true, genPrefab);
+    }
+
+    private void BrushCells(bool isOnFullMap = false, DataTile sel = null)
+    {
+        if(sel==null)
+            sel = SelectedCell;
+
         if (sel == null)
         {
             Debug.Log("######## BrushCells SelectedCell is empty");
@@ -967,22 +1050,32 @@ public class PaletteMapController : MonoBehaviour {
         //DelayTimer = Time.time + ActionRate;
 
         string fieldStart = Storage.Instance.SelectFieldCursor;
+        if (isOnFullMap)
+            fieldStart = Helper.GetNameField(0, 0);
+
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
         bool isClearLayer = !m_PasteOnLayer;
+
+        if (isOnFullMap)
+            isClearLayer = false;
+
         //if (isClearLayer)
         //    ClearLayerForStructure(fieldStart);
 
 
-        //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
+            //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
 
-        //---------- Brush zone
+            //---------- Brush zone
         int size = SizeBrush;
+        if (isOnFullMap)
+            size = Helper.WidthLevel;
+
         int sizeX = (int)posStructFieldNew.x + size;
         int sizeY = (int)posStructFieldNew.y + size;
 
-        if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric)
+        if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         { 
             for (int x = (int)posStructFieldNew.x; x < sizeX; x++)
             {
@@ -1002,19 +1095,73 @@ public class PaletteMapController : MonoBehaviour {
             //Generic
             int CountObjects = OptionGenCount;
             int Percent = OptionGenPercent;
-            int SubsystemSegments = OptionGen3;
-            int SubsystemLevel = OptionGen4;
+            int SubsystemSegments = OptionGenSegments;
+            int SubsystemLevel = OptionGenLevel;
+            if (SubsystemLevel == 0) SubsystemLevel = 10;
             //int CountObjects = OptionGen1;
-            for (int i =0; i< CountObjects;i++)
-            {
-                int x = Random.Range((int)posStructFieldNew.x, sizeX);
-                int y = Random.Range((int)posStructFieldNew.y, sizeY);
-                string fieldNew = Helper.GetNameField(x, y);
-                if (isClearLayer)
-                    ClearLayerForStructure(fieldNew);
 
-                Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+            if (OptionGenSegments < 2)
+            {
+                Storage.Events.ListLogAdd = "standart generation 1.";
+                //------ standart 1.
+                for (int i = 0; i < CountObjects; i++)
+                {
+                    int x = Random.Range((int)posStructFieldNew.x, sizeX);
+                    int y = Random.Range((int)posStructFieldNew.y, sizeY);
+                    string fieldNew = Helper.GetNameField(x, y);
+                    if (isClearLayer)
+                        ClearLayerForStructure(fieldNew);
+
+                    Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                }
+                //------
             }
+            else
+            //------ Segment
+            {
+                Storage.Events.ListLogAdd = "Segments generation.";
+                bool isSteps = false;
+                //Step
+                if (SubsystemSegments == 0) SubsystemSegments = 1;
+
+                int ContAll = CountObjects / SubsystemSegments;
+                int startX = (int)posStructFieldNew.x;
+                int startY = (int)posStructFieldNew.y;
+                int minLevel = (SubsystemLevel / 2) * (-1);
+                int maxLevel = (SubsystemLevel / 2);
+
+                for (int i = 0; i < ContAll; i++)
+                {
+                    startX = Random.Range((int)posStructFieldNew.x, sizeX);
+                    startY = Random.Range((int)posStructFieldNew.y, sizeY);
+
+                    for (int s = 0; s < SubsystemSegments; s++)
+                    {
+                        int offsetX = Random.Range(minLevel, maxLevel);
+                        int offsetY = Random.Range(minLevel, maxLevel);
+                        int x = 0;
+                        int y = 0;
+                        if (isSteps)
+                        {
+                            startX += offsetX;
+                            startY += offsetY;
+                            x = startX;
+                            y = startY;
+                        }
+                        else
+                        {
+                            x = startX + offsetX;
+                            y = startY + offsetY;
+                        }
+                        string fieldNew = Helper.GetNameField(x, y);
+                        if (isClearLayer)
+                            ClearLayerForStructure(fieldNew);
+
+                        Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                    }
+                }
+            }
+            //------
         }
         //-------------
         //int sizeX = (int)posStructFieldNew.x + size;
@@ -1133,11 +1280,15 @@ public class PaletteMapController : MonoBehaviour {
         OptionGenPercent+=10;
     }
     public void UpOptionGen3() {
-        OptionGen3++;
+        OptionGenSegments++;
     }
     public void UpOptionGen4()
     {
-        OptionGen4++;
+        OptionGenLevel++;
+    }
+    public void UpOptionGen5()
+    {
+        OptionGen5++;
     }
 
     public void DownOptionGen1() {
@@ -1148,11 +1299,15 @@ public class PaletteMapController : MonoBehaviour {
     }
     public void DownOptionGen3()
     {
-        OptionGen3--;
+        OptionGenSegments--;
     }
     public void DownOptionGen4()
     {
-        OptionGen4--;
+        OptionGenLevel--;
+    }
+    public void DownOptionGen5()
+    {
+        OptionGen5--;
     }
 
     //public void OptionGenOnChanged1()
@@ -1172,7 +1327,7 @@ public class PaletteMapController : MonoBehaviour {
     //    OptionGen4 = int.Parse(btxIntGenOption4.text);
     //}
 
-private void ClearLayerForStructure(string field, bool isClearData = false)
+    private void ClearLayerForStructure(string field, bool isClearData = false)
     {
         //Destroy All Objects
         if (Storage.Instance.GamesObjectsReal.ContainsKey(field))

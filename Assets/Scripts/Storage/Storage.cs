@@ -510,15 +510,17 @@ public class Storage : MonoBehaviour {
         Storage.Pool.Restart();
 
         InitObjectsGrid();
+
+        
     }
 
-    public void CreateWorld()
+    public void CreateWorld(bool isGenNewWorld = false)
     {
         StopGame();
-        LoadGameObjects(true, true);
+        LoadGameObjects(true, true, isGenNewWorld);
     }
 
-    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false)
+    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false, bool isGenNewWorld = false)
     {
         Debug.Log("III LoadGameObjects ::::_______________");
 
@@ -541,7 +543,14 @@ public class Storage : MonoBehaviour {
 
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
-        _scriptData.CreateDataGamesObjectsWorld(isCreate);
+        if (isGenNewWorld)
+        {
+            _scriptData.GenWorld();
+        }
+        else
+        {
+            _scriptData.CreateDataGamesObjectsWorld(isCreate);
+        }
 
         //Debug.Log("III ....Init Position HERO......");
         //_screiptHero.FindFieldCurrent();
@@ -562,7 +571,7 @@ public class Storage : MonoBehaviour {
             _scriptNPC.SartCrateNPC();
         }
 
-        
+        Map.RefreshFull();
     }
 
     private void LoadDefaultUI()
@@ -644,8 +653,12 @@ public class Storage : MonoBehaviour {
 
             //StartCoroutine(StartLoadDataBigXML());
 
+            //-- load old style
+            //StartCoroutine(StartInGameLoadDataBigXML());
+            GridData.LoadDataBigXML();
+
             //-- Load Async
-            StartCoroutine(StartBackgroundLoadDataBigXML());
+            //StartCoroutine(StartBackgroundLoadDataBigXML());
         }
         else
         {
@@ -662,200 +675,6 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
-    }
-
-
-
-    IEnumerator StartBackgroundLoadDataBigXML()
-    {
-        yield return null;
-
-        Storage.Data.LoadBigWorldThread();
-
-        yield return new WaitForSeconds(1f);
-
-        while (!Storage.Data.IsThreadLoadWorldCompleted)
-        {
-
-            yield return new WaitForSeconds(2f);
-        }
-
-        Storage.Data.CompletedLoadWorld();
-
-        yield break;
-    }
-
-    IEnumerator StartLoadDataBigXML()
-    {
-        string stepErr = "start";
-        Debug.Log("Loaded Xml GridData start...");
-
-        Dictionary<string, ModelNPC.FieldData> fieldsD_Test = new Dictionary<string, ModelNPC.FieldData>();
-
-        yield return null;
-        
-        stepErr = "c.1";
-        string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
-        if (File.Exists(datapathPart))
-        {
-            string nameField = "";
-            int indProgress = 0;
-            int limitUpdate = 20;
-
-            //using (XmlReader xml = XmlReader.Create(stReader))
-            using (XmlReader xml = XmlReader.Create(datapathPart))
-            //using (XmlReader xml = XmlReader.Create(new StreamReader(datapathPart, System.Text.Encoding.UTF8)))
-            {
-                while (xml.Read())
-                {
-                    switch (xml.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            if (xml.Name == "Key")
-                            {
-                                //XElement el = XElement.ReadFrom(xml) as XElement;
-                                //nameField = el.Value;
-                                nameField = xml.Value;
-                                break;
-                            }
-                            //if (xml.Name == "Objects")
-                            if (xml.Name == "ObjectData") //WWW
-                            {
-                                indProgress++;
-                                if(indProgress > limitUpdate)
-                                {
-                                    indProgress = 0;
-                                    yield return null;
-                                }
-
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                string inputString = el.ToString();
-                              
-                                //---------------
-                                //XmlSerializer serializer = new XmlSerializer(typeof(List<ModelNPC.ObjectData>), Serializator.extraTypes);
-                                //WWW
-                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
-                                //--------------
-                                StringReader stringReader = new StringReader(inputString);
-                                //stringReader.Read(); // skip BOM
-                                //--------------
-
-                                //List<KeyValuePair<string, ModelNPC.FieldData>> dataResult = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
-                                //Debug.Log("! " + inputString);
-                                //List<ModelNPC.ObjectData> dataResult;
-                                ModelNPC.ObjectData dataResult;
-                                try
-                                {
-                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
-                                }
-                                catch(Exception x)
-                                {
-                                    Debug.Log("############# " + x.Message);
-                                    yield break;
-                                }
-                                //-------------------------
-                                if (_GridDataG.FieldsD.ContainsKey(nameField))
-                                {
-                                    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
-                                    fieldsD_Test[nameField].Objects.Add(dataResult);
-                                }
-                                else
-                                {
-                                    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
-                                    //{
-                                    //    NameField = nameField,
-                                    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                    //});
-                                    fieldsD_Test.Add(nameField, new ModelNPC.FieldData()
-                                    {
-                                        NameField = nameField,
-                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                    });
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-
-            //xml.Close();
-            //stReader.Close();
-        }
-
-        
-    }
-
-    
-
-    byte[] StringToUTF8ByteArray(string pXmlString)
-    {
-        System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
-        byte[] byteArray = encoding.GetBytes(pXmlString);
-        return byteArray;
-    }
-
-    IEnumerator StartLoadDataPartsXML()
-    {
-        string datapath;
-        string stepErr = "start";
-        Debug.Log("Loaded Xml GridData start...");
-
-        yield return null;
-
-        for (int partX = 0; partX < Helper.SizePart; partX++)
-        {
-            for (int partY = 0; partY < Helper.SizePart; partY++)
-            {
-                //--- skip first part
-                if (partX == 0 && partY == 0)
-                    continue;
-
-                //yield return null;
-
-                stepErr = "c.1";
-                string nameFileXML = +(partX + 1) + "x" + (partY + 1);
-                string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
-                datapath = datapathPart;
-                if (File.Exists(datapathPart))
-                {
-                    //yield return new WaitForSeconds(0.3f);
-                    yield return null;
-                    yield return StartCoroutine(StartLoadPartXML(datapathPart));
-                }
-
-            }
-        }
-    }
-
-    IEnumerator StartLoadPartXML(string datapathPart)
-    {
-        string stepErr = "start";
-
-        //yield return null;
-        ModelNPC.GridData itemGridData = null;
-        stepErr = ".1";
-        stepErr = ".2";
-        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
-        stepErr = ".3";
-        using (FileStream fs = new FileStream(datapathPart, FileMode.Open))
-        {
-            stepErr = ".4";
-            itemGridData = (ModelNPC.GridData)serializer.Deserialize(fs);
-            stepErr = ".5";
-            fs.Close();
-        }
-        yield return null;
-        stepErr = ".6";
-        itemGridData.FieldsD = itemGridData.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
-        stepErr = ".7";
-        Debug.Log("Loaded Xml GridData D:" + itemGridData.FieldsD.Count() + "     datapath=" + datapathPart);
-        //## 
-        itemGridData.FieldsXML = null;
-        stepErr = ".8";
-        //yield return null;
-        _GridDataG.FieldsD = _GridDataG.FieldsD.Concat(itemGridData.FieldsD)
-            .ToDictionary(x => x.Key, x => x.Value);
-
     }
 
     //return LoadGridPartsXml();

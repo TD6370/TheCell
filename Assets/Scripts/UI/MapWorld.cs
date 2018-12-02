@@ -649,7 +649,7 @@ public class MapWorld : MonoBehaviour {
         if (!isRefresh)
             CreateFrameMap();
 
-        Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
+        //Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
 
         bool isPerson = false;
         //Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
@@ -796,7 +796,7 @@ public class MapWorld : MonoBehaviour {
         //if (!isRefresh)
         //    CreateFrameMap();
 
-        Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
+        //Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
 
         //bool isPerson = false;
         //Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
@@ -1114,9 +1114,9 @@ public class MapWorld : MonoBehaviour {
 
         //Storage.Map.SelectPointField;
 
-        Storage.Events.ListLogAdd = "-------------------------------- SizeWorldOffSet: "  + Helper.SizeWorldOffSet;
-        Storage.Events.ListLogAdd = "SelectPointField: " + Storage.Map.SelectPointField;
-        Storage.Events.ListLogAdd = "MarkerMapWorldCell: " + MarkerMapWorldCell.transform.position;
+        //Storage.Events.ListLogAdd = "-------------------------------- SizeWorldOffSet: "  + Helper.SizeWorldOffSet;
+        //Storage.Events.ListLogAdd = "SelectPointField: " + Storage.Map.SelectPointField;
+        //Storage.Events.ListLogAdd = "MarkerMapWorldCell: " + MarkerMapWorldCell.transform.position;
     }
 
     
@@ -1348,6 +1348,20 @@ public class MapWorld : MonoBehaviour {
         AddUpdatingField(newSector);
     }
 
+    public void RefreshFull()
+    {
+        int sizeWorldSector = Helper.WidthLevel / SizeCellMap; //12
+        for (int x=0; x< sizeWorldSector; x++) 
+        {
+            for (int y = 0; y < sizeWorldSector; y++)
+            {
+                string sector = Helper.GetNameField(x + 1, y + 1);
+                AddUpdatingField(sector);
+            }
+        }
+    }
+
+
     public string FieldToSector(string p_field)
     {
         string sector = "";
@@ -1355,7 +1369,7 @@ public class MapWorld : MonoBehaviour {
         float posSectorX = posF.x / SizeCellMap;
         float posSectorY = posF.y / SizeCellMap;
         sector = Helper.GetNameField(posSectorX + 1, posSectorY + 1);
-        Storage.Events.ListLogAdd = "   }}}}  Sector: " + sector;
+        //Storage.Events.ListLogAdd = "   }}}}  Sector: " + sector;
         return sector;
     }
 

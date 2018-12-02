@@ -45,6 +45,8 @@ public class UIEvents : MonoBehaviour {
     public GameObject PrefabExpandPanel;
     public GameObject ScrollListBoxPerson;
     public GameObject PointGO;
+    public GameObject PanelMessage;
+    public Text MessageBox;
 
     public Text prefabText;
     public Button prefabButtonCommand;
@@ -1175,6 +1177,17 @@ public class UIEvents : MonoBehaviour {
             txtMessage.text = value;
         }
     }
+
+    public void SetMessage(string message)
+    {
+        PanelMessage.SetActive(true);
+        MessageBox.text = message;
+    }
+    public void HideMessage()
+    {
+        PanelMessage.SetActive(false);
+    }
+
 }
 
 public class CommandStore

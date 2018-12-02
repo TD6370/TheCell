@@ -61,6 +61,19 @@ public class MovementNPC : MonoBehaviour {
             StopCoroutine(moveObject);
         }
 
+        //----------------------------
+        //if (_dataNPC == null)
+        //{
+        //    _dataNPC = FindObjectData<T>(info);
+        //    if (_dataNPC == null)
+        //    {
+        //        Debug.Log("########################## UFO Start MoveObjectToPosition dataUfo is EMPTY");
+        //        UpdateData("MoveObjectToPosition");
+        //    }
+            
+        //}
+        //----------------------------
+
         StartMoving();
 
         //GameObject UIcontroller = GameObject.FindWithTag("UI");
@@ -260,6 +273,8 @@ public class MovementNPC : MonoBehaviour {
 
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
+       
+
         //if(isRunning)
         //{
         //    Debug.Log("######### MoveObjectToPosition IS PROGRESS......");
@@ -298,6 +313,10 @@ public class MovementNPC : MonoBehaviour {
         {
             speed = _dataNPC.Speed;
             //Debug.Log("Speed (" + this.name + ") : " + speed);
+        }
+        else
+        {
+            Debug.Log("############# MoveObjectToPosition Not FIND dataNPC " + this.gameObject.name + "     tag:" + this.gameObject.tag);
         }
 
         step = speed * Time.deltaTime;
@@ -367,6 +386,8 @@ public class MovementNPC : MonoBehaviour {
             {
                 Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
                 //Storage.Fix.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+
+                UpdateData("MoveObjectToPosition");
                 isRunning = false;
                 yield break;
             }
@@ -511,6 +532,8 @@ public class MovementNPC : MonoBehaviour {
             Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo is Empty !!!!    :" + callFunc);
             return null;
         }
+
+        _dataNPC.Init();
 
         if (_dataNPC.NameObject != this.name)
         {

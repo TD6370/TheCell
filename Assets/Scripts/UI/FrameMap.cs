@@ -690,7 +690,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             }
             else if (SizeZoom > 1f)
             {
-                Debug.Log("---------------------------ZOOM:" + SizeZoom);
+                //Debug.Log("---------------------------ZOOM:" + SizeZoom);
                 if (isLog)
                 {
                     //----------------------
@@ -763,7 +763,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
             if (SizeZoom > 1f && Helper.IsBigWorld) // ------ Step 3.
             {
-                Debug.Log("factorBorder===" + factorXBorder + " : " + factorXBorder);
+                //Debug.Log("factorBorder===" + factorXBorder + " : " + factorXBorder);
                 float _koofBorder = 0;
                 if (!sizeCorrect.ContainsKey(SizeZoom.ToString()))
                 {

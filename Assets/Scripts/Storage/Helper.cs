@@ -20,8 +20,10 @@ public static class Helper { //: MonoBehaviour {
 
     public static bool IsBigWorld = true;// false; //
 
+    public static float SpeedTimer = 0f;// Time.time
+
     //private float  = 100f;
-    
+
 
     public static int WidthZona
     {
@@ -589,9 +591,23 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
+
+
     #endregion
 
+    #region Profiler
 
+    public static void StartControlTime()
+    {
+        Helper.SpeedTimer = Time.time;
+    }
+
+    public static void StopControlTime(string info)
+    {
+        Storage.Events.ListLogAdd = info + (Time.time - Helper.SpeedTimer);
+    }
+
+    #endregion
 }
 
 public static class HelperExtension
@@ -620,7 +636,6 @@ public static class HelperExtension
 
         return id;
     }
-
 }
 
 #region Serialize Helper
@@ -826,55 +841,53 @@ public class Serializator
 
     static public void SaveGridCashXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
-
         string indErr = "start";
-
-       
-
         try
         {
+            Dictionary<string, ModelNPC.FieldData> dataSave = new Dictionary<string, ModelNPC.FieldData>(state.FieldsD);
+
             Dictionary<string, ModelNPC.FieldData> FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
             int SizePart = Helper.WidthLevel / Helper.SizePart;
 
             Dictionary<string, Dictionary<string, ModelNPC.FieldData>> PartsGrids = new Dictionary<string, Dictionary<string, ModelNPC.FieldData>>();
-            //for (int partX = 0; partX < Helper.SizePart; partX++)
-            //{
-            //    for (int partY = 0; partY < Helper.SizePart; partY++)
-            //    {
-                    int partX = 0;
-                    int partY = 0;
-                    FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
-                    string nameFileXML = +(partX + 1) + "x" + (partY + 1);
-                    int startX = partX * SizePart;
-                    int startY = partY * SizePart;
-                    int widthX = startX + SizePart;
-                    int widthY = startY + SizePart;
-                    for (int x = startX; x < widthX; x++)
+         
+            int partX = 0;
+            int partY = 0;
+            FieldsPart = new Dictionary<string, ModelNPC.FieldData>();
+            string nameFileXML = +(partX + 1) + "x" + (partY + 1);
+            int startX = partX * SizePart;
+            int startY = partY * SizePart;
+            int widthX = startX + SizePart;
+            int widthY = startY + SizePart;
+
+            Helper.StartControlTime();
+
+            for (int x = startX; x < widthX; x++)
+            {
+                for (int y = startY; y < widthY; y++)
+                {
+                    indErr = "d.1";
+                    string fieldName = Helper.GetNameField(x, y);
+                    indErr = "d.2";
+                    //if (state.FieldsD.ContainsKey(fieldName))
+                    if (dataSave.ContainsKey(fieldName))
                     {
-                        for (int y = startY; y < widthY; y++)
-                        {
-                            indErr = "d.1";
-                            string fieldName = Helper.GetNameField(x, y);
-                            indErr = "d.2";
-                            if (state.FieldsD.ContainsKey(fieldName))
-                            {
-                                ModelNPC.FieldData copyFields = state.FieldsD[fieldName];
+                        //ModelNPC.FieldData copyFields = state.FieldsD[fieldName];
+                        ModelNPC.FieldData copyFields = dataSave[fieldName];
 
-                                FieldsPart.Add(fieldName, copyFields);
-                                state.FieldsD.Remove(fieldName);
-                            }
-                        }
+                        FieldsPart.Add(fieldName, copyFields);
+                        //state.FieldsD.Remove(fieldName);
+                        dataSave.Remove(fieldName);
                     }
-                    indErr = "d.3";
-            //PartsGrids.Add(nameFileXML, FieldsPart);
-            //    }
-            //}
+                }
+            }
+            indErr = "d.3";
 
+            Helper.StopControlTime("...time: SaveGridCashXml FieldsPart: ");
 
             //Dictionary<string, ModelNPC.FieldData> cashPart = PartsGrids["1x1"];
             Dictionary<string, ModelNPC.FieldData> cashPart = FieldsPart;
-            Dictionary<string, ModelNPC.FieldData> bigPart = new Dictionary<string, ModelNPC.FieldData>();
-            bigPart = state.FieldsD;
+            Dictionary<string, ModelNPC.FieldData> bigPart = dataSave;
 
             //foreach (var partGrid in PartsGrids)
             //{
@@ -884,11 +897,15 @@ public class Serializator
             //        .ToDictionary(x => x.Key, x => x.Value);
             //    }
             //}
-
+            Helper.StartControlTime();
             ModelNPC.GridData stateCash = new ModelNPC.GridData() { FieldsD = cashPart };
             SavePartXML(stateCash, "1x1");
+            Helper.StopControlTime("...time: SaveGridCashXml Save Cash");
+
+            Helper.StartControlTime();
             ModelNPC.GridData stateBig = new ModelNPC.GridData() { FieldsD = bigPart };
             SavePartXML(stateBig, "1x2");
+            Helper.StopControlTime("...time: SaveGridCashXml Save Big");
 
 
             indErr = "8";
@@ -908,6 +925,18 @@ public class Serializator
         //Dictionary<string, ModelNPC.FieldData> partGridFields = partGrid;
         indErr = "1.1.";
         string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
+        if (File.Exists(datapathPart))
+        {
+            try
+            {
+                indErr = "delete";
+                File.Delete(datapathPart);
+            }
+            catch (Exception x)
+            {
+                Debug.Log("############# Error SavePartXML NOT File Delete: " + datapathPart + " : " + x.Message);
+            }
+        }
 
         indErr = "1.3.";
 

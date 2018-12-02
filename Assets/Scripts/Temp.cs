@@ -14,6 +14,47 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public void CreateStructDataTile(string NameStructMap, BoundsInt boundsStruct, TileBase[] allTiles, BoundsInt boundsMap)
+    //{
+    //    int countFindTiles = 0;
+    //    List<DataTile> listDataTiles = new List<DataTile>();
+
+    //    int startX = boundsStruct.x + Math.Abs(boundsMap.x);
+    //    int startY = boundsStruct.y + Math.Abs(boundsMap.y);
+    //    int boundsSizeX = startX + boundsStruct.size.x;
+    //    int boundsSizeY = startY + boundsStruct.size.y;
+
+
+
+    //    for (int x = startX; x < boundsSizeX; x++)
+    //    {
+    //        for (int y = startY; y < boundsSizeY; y++)
+    //        {
+    //            TileBase tile = allTiles[x + y * boundsMap.size.x];
+
+
+    //            if (tile != null)
+    //            {
+    //                int cellX = x + -startX;
+    //                int cellY = y + -startY;
+
+    //                DataTile dataTiles = new DataTile()
+    //                {
+    //                    X = cellX,
+    //                    Y = cellY,
+    //                    NameTales = tile.name
+    //                };
+
+    //                listDataTiles.Add(dataTiles);
+    //                countFindTiles++;
+    //            }
+    //        }
+    //    }
+
+    //    CollectionDataMapTales.Add(NameStructMap, listDataTiles);
+
+    //}
+
     //IEnumerator StartLoadDataBigXML()
     //{
     //    string stepErr = "start";

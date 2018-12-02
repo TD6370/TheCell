@@ -409,20 +409,30 @@ public class UpdateData { //: MonoBehaviour {
     //}
 
     Thread threadLoadWorld = null;
-    string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
+    public string DataPathBigPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
 
     public void LoadBigWorldThread()
     {
+        if (threadLoadWorld != null && threadLoadWorld.IsAlive)
+        {
+            Debug.Log("threadLoadWorld is run");
+            return;
+        }
+
         fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
 
-        threadLoadWorld = new Thread(()=>
+
+        if (threadLoadWorld == null)
         {
-            BackgroundLoadDataBigXML();
-        });
+            threadLoadWorld = new Thread(() =>
+            {
+                BackgroundLoadDataBigXML();
+            });
+        }
 
         threadLoadWorld.Start();
 
-        var isRun = threadLoadWorld.IsAlive;
+        //var isRun = threadLoadWorld.IsAlive;
     }
 
     public bool IsThreadLoadWorldCompleted
@@ -461,9 +471,20 @@ public class UpdateData { //: MonoBehaviour {
         }
         //Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
         //                            .ToDictionary(x => x.Key, x => x.Value);
+
+        Storage.Events.SetTittle = "World is loaded";
+        Storage.Events.ListLogAdd = "************** World is loaded **************";
     }
 
     Dictionary<string, ModelNPC.FieldData> fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
+
+    public Dictionary<string, ModelNPC.FieldData> SetGridDatatBig
+    {
+        set
+        {
+            fieldsD_Temp = value;
+        }
+    }
 
     public void BackgroundLoadDataBigXML()
     {
@@ -474,11 +495,11 @@ public class UpdateData { //: MonoBehaviour {
 
         string saveField = "";
 
-        if (File.Exists(datapathPart))
+        if (File.Exists(DataPathBigPart))
         {
             string nameField = "";
 
-            using (XmlReader xml = XmlReader.Create(datapathPart))
+            using (XmlReader xml = XmlReader.Create(DataPathBigPart))
             {
                 while (xml.Read())
                 {
