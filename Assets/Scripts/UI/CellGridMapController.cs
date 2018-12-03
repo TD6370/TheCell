@@ -93,14 +93,19 @@ public class CellGridMapController : MonoBehaviour {
         UpdateSprite();
     }
 
+    Texture2D TextureMap = null;
+
     private void UpdateSprite()
     {
         int offsetX = (X - 1);
         int offsetY = (Y - 1);
 
-        //#fix mem
         Sprite = null;
-        Sprite = Storage.Map.GetSpriteMap(Storage.Map.SizeCellMap, false, offsetX, offsetY);
+        //#fix mem 3.
+        if (TextureMap != null)
+            Destroy(TextureMap);
+
+        Sprite = Storage.Map.GetSpriteMap(out TextureMap, Storage.Map.SizeCellMap, false, offsetX, offsetY);
 
         MapWorld.IsReloadGridMap = false;
     }

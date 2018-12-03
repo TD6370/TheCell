@@ -71,7 +71,7 @@ public class MapWorld : MonoBehaviour {
     List<SaveLoadData.TypePrefabs> listPersonsTypes;
     List<Texture2D> listPersonsPrefabTexture;
     List<Texture2D> listPersonsMapTexture;
-    Texture2D textureMap;
+    //Texture2D textureMap;//#fix mem
     //Sprite spriteMap; //#fix mem
 
     //--- Grid Map
@@ -130,7 +130,7 @@ public class MapWorld : MonoBehaviour {
         //colorsPersons = new List<Color>();
         //texture = new Texture2D(sizeDraw, sizeDraw);
         int sizeDraw = Helper.HeightLevel * SizeCellMap;
-        textureMap = new Texture2D(sizeDraw, sizeDraw);
+        //textureMap = new Texture2D(sizeDraw, sizeDraw); //#fix mem 2. Texture2D textureMap;
         listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
         listPersonsPrefabTexture = new List<Texture2D>();
         listPersonsMapTexture = new List<Texture2D>();
@@ -218,7 +218,7 @@ public class MapWorld : MonoBehaviour {
             //hero.GetComponent<Rigidbody2D>().mass = 10000;
             hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
             hero.Rb2D.Sleep();
-            if(isRestartingLocation) //#fix
+            if(isRestartingLocation) 
                 hero.CameraMap.transform.position = hero.MainCamera.transform.position;
             hero.CameraMap.enabled = true;
             hero.MainCamera.enabled = false;
@@ -676,8 +676,10 @@ public class MapWorld : MonoBehaviour {
         //----------------------
 
         //textureMap
-        textureMap = null;
-        textureMap = new Texture2D(sizeDraw, sizeDraw);
+        //textureMap = null;
+        //        textureMap = new Texture2D(sizeDraw, sizeDraw);
+        //# fix mem 2. 
+        Texture2D textureMap = new Texture2D(sizeDraw, sizeDraw);
 
 
         try
@@ -775,15 +777,12 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
-    public Sprite GetSpriteMap(int scaleCell = 1, bool isRefresh = false, int offsetMapX =0, int offsetMapY =0)
+    //Texture2D textureMap = null;
+
+    public Sprite GetSpriteMap(out Texture2D textureMap, int scaleCell = 1, bool isRefresh = false, int offsetMapX =0, int offsetMapY =0)
     {
         string indErr = "start";
-        //int sizeMap = Helper.HeightLevel;
-        //int sizeDraw = Helper.HeightLevel * scaleCell;
-        //int sizeCellImage = 25;
-        //int CellsInSectror = 25;
 
-        //int sizeMap = sizeCellImage * CellsInSectror;
         int sizeMap = 25;
         int sizeDraw = sizeMap * scaleCell;
 
@@ -792,13 +791,7 @@ public class MapWorld : MonoBehaviour {
         offsetMapX *= sizeMap;
         offsetMapY *= sizeMap;
 
-        //#fix mem
-        textureMap = null;
         textureMap = new Texture2D(sizeDraw, sizeDraw);
-
-        //#fix mem
-        //if(textureMap == null)
-        //    textureMap = new Texture2D(sizeDraw, sizeDraw);
 
         try
         {
@@ -826,8 +819,6 @@ public class MapWorld : MonoBehaviour {
                         continue;
                     }
                     //--------------
-
-
                     indErr = "7";
                     if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
                     {
@@ -857,26 +848,20 @@ public class MapWorld : MonoBehaviour {
             return null;
         }
 
-
-        //-----------------
-        //textureMap = DrawLocationHero(textureMap);
-        //saveHeroPosField
-
-
-        //textureMap = DrawLocationHero(textureMap);
-
         textureMap.Apply();
 
         //spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
         Sprite _spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-
-        //#fix mem
-        textureMap = null;
-
         return _spriteMap;
     }
    
+
+    //public void DestroyTexture()
+    //{
+    //    Destroy(textureMap);
+    //    textureMap = null;
+    //}
 
     private string saveHeroPosField = "";
     public void DrawLocationHero(bool isOpenChange = false)
@@ -1025,13 +1010,39 @@ public class MapWorld : MonoBehaviour {
 
     }
 
+   
+
     public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
+        //------------------
         Texture2D texturePrefab = GetPrefabTexture(prefabType);
+        //------------------
+        //var TexturesMaps = new Dictionary<string, string>
+        //{
+        //    {"PrefabVood", "VoodMap" },
+        //    {"PrefabElka", "ElkaMap" },
+        //    {"PrefabRock", "RockMap" },
+        //    {"PrefabWallRock", "WallRockMap" },
+        //    {"PrefabWallWood","WallWoodMap" },
+        //    {"PrefabField", "FieldMap" },
+        //    {"PrefabHero", "HeroMap" },
+
+        //};
+
+        //string typePref = prefabType.ToString();
+        //if(!TexturesMaps.ContainsKey(typePref))
+        //{
+        //    Debug.Log("############ TexturesMaps not ContainsKey " + typePref);
+        //    return;
+        //}
+        //string _pathSprites = @"Textures/Map/" + TexturesMaps[typePref];
+        //Texture2D texturePrefab = Resources.Load<Texture2D>(_pathSprites);
+        //------------------
+
         if (texturePrefab == null)
         {
             Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + " texturePrefab Is NULL ");
-            //continue;
+            //return;
         }
        
         int startX1 = x * scaleCell;
@@ -1041,7 +1052,7 @@ public class MapWorld : MonoBehaviour {
         startY1 = texture.height - startY1 - addSize;
         //.................
 
-        if (texture.format.ToString() != texturePrefab.format.ToString())
+        if (texturePrefab!=null && texture.format.ToString() != texturePrefab.format.ToString())
         {
             Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startX1 + "x" + startY1 + " Size=" + addSize);
             Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
@@ -1049,6 +1060,7 @@ public class MapWorld : MonoBehaviour {
             return;
         }
 
+        
         Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
     }
 

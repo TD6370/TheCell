@@ -1257,7 +1257,7 @@ public class PaletteMapController : MonoBehaviour {
         bool isClearLayer = !m_PasteOnLayer;
 
 
-        posStructFieldStart.y--; //#fix
+        posStructFieldStart.y--; 
 
         //int size = (int)Mathf.Sqrt(listTiles.Count) - 1;
         int size = dataTiles.Height;

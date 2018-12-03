@@ -14,8 +14,6 @@ public class ManagerPalette : MonoBehaviour {
     public static Dictionary<string, Color> PaletteColors = new Dictionary<string, Color>();
     public Dictionary<string, Texture2D> TexturesPrefabs = new Dictionary<string, Texture2D>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
-    
-
 
     private void Awake()
     {
@@ -79,7 +77,7 @@ public class ManagerPalette : MonoBehaviour {
             //{"PrefaField", Storage.GridData .GetComponent<SpriteRenderer>().sprite.texture },
         };
 
-
+        //Resources.Load ()
         TexturesMaps = new Dictionary<string, Texture2D>
         {
             {"PrefabVood", Storage.Map.textureVood },
