@@ -504,12 +504,12 @@ public class ModelNPC
         public override void Init()
         {
             //--- init person boss data
-            System.Random rng = new System.Random();
+            //System.Random rng = new System.Random();
 
             if (Level == 0)
             {
-                //Level = UnityEngine.Random.Range(1, 7);
-                Level = rng.Next(1, 7);
+                Level = UnityEngine.Random.Range(1, 7);
+                //Level = rng.Next(1, 7);
             }
 
             if (Life == 0)

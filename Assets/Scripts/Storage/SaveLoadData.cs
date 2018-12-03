@@ -1250,6 +1250,8 @@ public class SaveLoadData : MonoBehaviour {
 
     public void GenWorld(bool isReload = true)
     {
+        Storage.Instance.IsLoadingWorld = true;
+
         //Storage.Instance.StopGame();
         //Storage.Pool.Restart();
         //Storage.Instance.DestroyAllGamesObjects();
@@ -1267,6 +1269,8 @@ public class SaveLoadData : MonoBehaviour {
         //if (isReload)
         //    Storage.Player.LoadPositionHero();
         //Storage.Instance.GridDataG.FieldsD.Clear();
+
+        Storage.Instance.IsLoadingWorld = false;
     }
 
 

@@ -97,6 +97,9 @@ public class CellGridMapController : MonoBehaviour {
     {
         int offsetX = (X - 1);
         int offsetY = (Y - 1);
+
+        //#fix mem
+        Sprite = null;
         Sprite = Storage.Map.GetSpriteMap(Storage.Map.SizeCellMap, false, offsetX, offsetY);
 
         MapWorld.IsReloadGridMap = false;

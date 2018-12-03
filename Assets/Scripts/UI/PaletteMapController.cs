@@ -23,6 +23,7 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle btnCursor;
     public Toggle btnOnLayer;
     public Toggle btnTeleport;
+    public Toggle checkStepGen;
     public Button btnReloadWorld;
     public Button btnRefreshMap;
     public Button btnDestroyWorld;
@@ -109,7 +110,8 @@ public class PaletteMapController : MonoBehaviour {
 
 
     //Percent
-    private int m_OptionGenPercent2 = 80;
+    private int m_OptionGenPercent2 = 50;
+    
     public int OptionGenPercent {
         get {
             if (btxIntGenOption2.text != m_OptionGenPercent2.ToString())
@@ -1028,7 +1030,9 @@ public class PaletteMapController : MonoBehaviour {
         //{
         //    prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
         //}
-
+        int size = Helper.WidthLevel;
+        //OptionGenCount = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent2 / 100;
+        OptionGenCount = (size * size) * m_OptionGenPercent2 / 100;
         BrushCells(true, genPrefab);
     }
 
@@ -1120,7 +1124,8 @@ public class PaletteMapController : MonoBehaviour {
             //------ Segment
             {
                 Storage.Events.ListLogAdd = "Segments generation.";
-                bool isSteps = false;
+                bool isSteps = checkStepGen.isOn;
+                //bool isSteps = true;
                 //Step
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
 

@@ -52,6 +52,7 @@ public class Storage : MonoBehaviour {
     public List<string> KillObject = new List<string>();
     public List<GameObject> DestroyObjectList;
     public bool IsCorrectData = false;
+
     public string CorrectCreateName = "";
     public bool IsLoadingWorld = false;
     public bool IsTartgetPositionAll = false;

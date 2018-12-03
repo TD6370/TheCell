@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -71,7 +72,7 @@ public class MapWorld : MonoBehaviour {
     List<Texture2D> listPersonsPrefabTexture;
     List<Texture2D> listPersonsMapTexture;
     Texture2D textureMap;
-    Sprite spriteMap;
+    //Sprite spriteMap; //#fix mem
 
     //--- Grid Map
     public GameObject PrefabGridMap;
@@ -674,6 +675,8 @@ public class MapWorld : MonoBehaviour {
         }
         //----------------------
 
+        //textureMap
+        textureMap = null;
         textureMap = new Texture2D(sizeDraw, sizeDraw);
 
 
@@ -761,9 +764,10 @@ public class MapWorld : MonoBehaviour {
 
         textureMap.Apply();
 
-        spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //#fix mem
+        var _spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
 
-        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMap;
+        prefabFrameMap.GetComponent<SpriteRenderer>().sprite = _spriteMap;
         BoxCollider2D colliderMap = prefabFrameMap.GetComponent<BoxCollider2D>();
         if (colliderMap != null)
         {
@@ -788,19 +792,13 @@ public class MapWorld : MonoBehaviour {
         offsetMapX *= sizeMap;
         offsetMapY *= sizeMap;
 
-        //List<Color> colorsPersons = new List<Color>();
-        //List<SaveLoadData.TypePrefabs> listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
-        //List<Texture2D> listPersonsPrefabTexture = new List<Texture2D>();
-        //List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
-
-        //if (!isRefresh)
-        //    CreateFrameMap();
-
-        //Storage.Events.ListLogAdd = "Loaded map.." + DateTime.Now.ToLongTimeString();
-
-        //bool isPerson = false;
-        //Texture2D texture = new Texture2D(sizeDraw, sizeDraw);
+        //#fix mem
+        textureMap = null;
         textureMap = new Texture2D(sizeDraw, sizeDraw);
+
+        //#fix mem
+        //if(textureMap == null)
+        //    textureMap = new Texture2D(sizeDraw, sizeDraw);
 
         try
         {
@@ -869,10 +867,14 @@ public class MapWorld : MonoBehaviour {
 
         textureMap.Apply();
 
-        spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+        Sprite _spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
 
 
-        return spriteMap;
+        //#fix mem
+        textureMap = null;
+
+        return _spriteMap;
     }
    
 
@@ -1161,24 +1163,29 @@ public class MapWorld : MonoBehaviour {
         {
             for (int y = 1; y < maxCellGridMap + 1; y++)
             {
-                var cellMap = (GameObject)Instantiate(PrefabSpriteCellMap);
-                //cellMap.transform.SetParent(this.gameObject.transform);
-                cellMap.transform.SetParent(m_GridMap.transform);
-                //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
-                //Sprite spriteTile = cellMap.GetComponent<SpriteRenderer>().sprite;
 
-                //field = Helper.GetNameField(x, y);
-                field = Helper.GetNameField(y, x); //FIX
+                ///-------------------
+                //var cellMap = (GameObject)Instantiate(PrefabSpriteCellMap);
+                ////cellMap.transform.SetParent(this.gameObject.transform);
+                //cellMap.transform.SetParent(m_GridMap.transform);
+                ////Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
+                ////Sprite spriteTile = cellMap.GetComponent<SpriteRenderer>().sprite;
 
-                cellMap.name = "MapGridCell" + field;
-                cellMap.tag = "MapGridCell";
+                ////field = Helper.GetNameField(x, y);
+                //field = Helper.GetNameField(y, x); //FIX
 
-                //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
-                //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
-                //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
-                cellMap.SetActive(true);
+                //cellMap.name = "MapGridCell" + field;
+                //cellMap.tag = "MapGridCell";
 
-                m_listCellsGridMap.Add(cellMap);
+                ////cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
+                ////cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+                ////cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
+                //cellMap.SetActive(true);
+
+                //m_listCellsGridMap.Add(cellMap);
+                //--------------------------------------
+                CreateCell(x, y);
+
                 index++;
             }
         }
@@ -1193,6 +1200,54 @@ public class MapWorld : MonoBehaviour {
             StartCoroutine(StartLoadGrid());
         }
      }
+
+    private void ReloadCellGrid(int x, int y)
+    {
+        DestroyCell(x,y);
+        CreateCell(x, y);
+    }
+
+    private void DestroyCell(int x, int y)
+    {
+        string field = Helper.GetNameField(y, x); //FIX
+        string name = "MapGridCell" + field;
+        //cellMap.name = "MapGridCell" + field;
+        //GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("MapGridCell");
+        GameObject gobjCell = GameObject.Find(name);
+        if(gobjCell!=null)
+            Destroy(gobjCell);
+        //var destroyObjs = m_listCellsGridMap.Where(p=> p == null).ToList();
+        //for (int i = 0; i < destroyObjs.Count() ; i++)
+        //{
+        //    m_listCellsGridMap.Remove(destroyObjs[i]);
+        //}
+
+        int destroyObjsIndex = m_listCellsGridMap.FindIndex(p => p == null);
+        if(destroyObjsIndex!=-1)
+            m_listCellsGridMap.RemoveAt(destroyObjsIndex);
+    }
+
+    private void CreateCell(int x, int y)
+    {
+        GameObject cellMap = (GameObject)Instantiate(PrefabSpriteCellMap);
+        //cellMap.transform.SetParent(this.gameObject.transform);
+        cellMap.transform.SetParent(m_GridMap.transform);
+        //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
+        //Sprite spriteTile = cellMap.GetComponent<SpriteRenderer>().sprite;
+
+        //field = Helper.GetNameField(x, y);
+        var field = Helper.GetNameField(y, x); //FIX
+
+        cellMap.name = "MapGridCell" + field;
+        cellMap.tag = "MapGridCell";
+
+        //cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
+        //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+        //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
+        cellMap.SetActive(true);
+
+        m_listCellsGridMap.Add(cellMap);
+    }
 
     IEnumerator StartLoadGrid()
     {
@@ -1250,6 +1305,14 @@ public class MapWorld : MonoBehaviour {
 
     public void RefreshGrid()
     {
+        //#fix mem
+        //string sector1 = StackSectorsUpdating.Peek();
+        //foreach (string itemSector in StackSectorsUpdating)
+        //{
+        //    Vector2 posSector = Helper.GetPositByField(itemSector);
+        //    ReloadCellGrid((int)posSector.x, (int)posSector.y);
+        //}
+
         StartCoroutine(StartRefresh());
 
         return;
@@ -1268,6 +1331,20 @@ public class MapWorld : MonoBehaviour {
 
     public void RefreshGrid(string sector)
     {
+        if (Storage.Instance.IsLoadingWorld)
+            return;
+
+        ////#fix mem
+        //Vector2 posSector = Helper.GetPositByField(sector);
+        //ReloadCellGrid((int)posSector.x, (int)posSector.y);
+        //for (int i = m_listCellsGridMap.Count - 1; i >= 0; i--)
+        //{
+        //    if (m_listCellsGridMap[i] == null)
+        //    {
+        //        m_listCellsGridMap.RemoveAt(i);
+        //    }
+        //}
+
         GameObject cellMap = m_listCellsGridMap.Find(p => p.name == "MapGridCell" + sector);
         if (cellMap == null)
         {
@@ -1293,8 +1370,20 @@ public class MapWorld : MonoBehaviour {
 
         yield return null;
 
+
+        ////#fix mem
+        ////string sector1 = StackSectorsUpdating.Peek();
+        //foreach (string itemSector in StackSectorsUpdating)
+        //{
+        //    Vector2 posSector = Helper.GetPositByField(itemSector);
+        //    ReloadCellGrid((int)posSector.x, (int)posSector.y);
+        //}
+
         while (StackSectorsUpdating.Count > 0)
         {
+            if (Storage.Instance.IsLoadingWorld)
+                yield return null;
+
             yield return null;
 
             if(IsReloadGridMap)
