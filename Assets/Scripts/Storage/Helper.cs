@@ -636,6 +636,19 @@ public static class HelperExtension
 
         return id;
     }
+
+    public static string GetNameTextureMap(this string nameObj)
+    {
+        string result = nameObj.Replace("Prefab", "") + "Map";
+        return result;
+    }
+    public static string GetNamePrefabByTextureMap(this string nameObj)
+    {
+        string result = "Prefab" + nameObj.Replace("Map", "");
+        result = result.Replace("(Clone)", "");
+        return result;
+    }
+    //"PrefabVood", TexturesMapsTemp["VoodMap"]
 }
 
 #region Serialize Helper

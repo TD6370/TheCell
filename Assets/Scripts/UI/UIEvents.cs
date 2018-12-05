@@ -403,7 +403,23 @@ public class UIEvents : MonoBehaviour {
             case "None":
                 SetTittle = "...";
                 //TEST
-                Storage.Events.ListLogAdd = Helper.GetNameFieldByName("PrefabField_Field21x9_a87f");
+                //Storage.Events.ListLogAdd = Helper.GetNameFieldByName("PrefabField_Field21x9_a87f");
+                Sprite[] _sprites = Storage.Map.GetSpritesAtlasPrefab();
+                foreach (var item in _sprites)
+                {
+                    //Storage.Map.CreateCell(item);
+                    //Storage.PaletteMap.CreateCellPalette(item);
+                    
+                    Storage.PaletteMap.CreateCellPalette2(item);
+                }
+                //Texture2D texturePrefab = Storage.Map.GetPrefabTexture(SaveLoadData.TypePrefabs.PrefabField);
+                //Storage.PaletteMap.CreateCellPalette(texturePrefab);
+                //foreach (var item in Storage.Palette.TexturesMaps)
+                //{
+                //    Storage.PaletteMap.CreateCellPalette(item.Value);
+                //}
+
+                
                 break;
             case "SaveWorld":
                 SetTittle = "Level saving...";

@@ -105,6 +105,8 @@ public class CellGridMapController : MonoBehaviour {
         if (TextureMap != null)
             Destroy(TextureMap);
 
+
+
         Sprite = Storage.Map.GetSpriteMap(out TextureMap, Storage.Map.SizeCellMap, false, offsetX, offsetY);
 
         MapWorld.IsReloadGridMap = false;

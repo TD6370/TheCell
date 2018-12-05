@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+//UnityEditor
+//using UnityEditor.Sprites;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -111,7 +113,7 @@ public class PaletteMapController : MonoBehaviour {
 
     //Percent
     private int m_OptionGenPercent2 = 50;
-    
+    //[NonSerialized]
     public int OptionGenPercent {
         get {
             if (btxIntGenOption2.text != m_OptionGenPercent2.ToString())
@@ -217,9 +219,6 @@ public class PaletteMapController : MonoBehaviour {
      
         //--------- After Update
         StartCoroutine(LoadMap());
-
-        OptionGenPercent = 100;
-
 
         if(CanvasUI==null)
         {
@@ -754,6 +753,50 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    public void CreateCellPalette(Sprite spriteTile)
+    {
+        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+        cellMap.transform.SetParent(this.gameObject.transform);
+        cellMap.GetComponent<Image>().sprite = spriteTile;
+        cellMap.SetActive(true);
+    }
+
+    public void CreateCellPalette2(Sprite spriteTile)
+    {
+        //Rect rectTexture = spriteTile.textureRect;
+        //Vector2 textureRectOffset = spriteTile.textureRectOffset;
+
+        Texture2D textureAtlas; // = spriteTile.texture;
+        string nameS = "";
+        //Packer.GetAtlasDataForSprite(spriteTile, out nameS, out textureAtlas);
+        UnityEngine.U2D.SpriteAtlas atlas = Storage.Map.SpriteAtlasMapPrefab;
+        textureAtlas = spriteTile.texture;
+        //textureAtlas = SpriteUtility.GetSpriteTexture(spriteTile, false /* getAtlasData */);//#UnityEditor
+        //--------------
+        //textureAtlas = new Texture2D((int)spriteTile.rect.width, (int)spriteTile.rect.height);
+        //var pixels = spriteTile.texture.GetPixels((int)spriteTile.textureRect.x,
+        //                                        (int)spriteTile.textureRect.y,
+        //                                        (int)spriteTile.textureRect.width,
+        //                                        (int)spriteTile.textureRect.height);
+        //textureAtlas.SetPixels(pixels);
+        //textureAtlas.Apply();
+        //-----------------
+        Sprite spriteTileRes = Sprite.Create(textureAtlas, new Rect(0.0f, 0.0f, textureAtlas.width, textureAtlas.height), new Vector2(0.5f, 0.5f), 100.0f);
+        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+        cellMap.transform.SetParent(this.gameObject.transform);
+        cellMap.GetComponent<Image>().sprite = spriteTileRes;
+        cellMap.SetActive(true);
+    }
+
+    public void CreateCellPalette(Texture2D textureTile)
+    {
+        Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
+        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+        cellMap.transform.SetParent(this.gameObject.transform);
+        cellMap.GetComponent<Image>().sprite = spriteTile;
+        cellMap.SetActive(true);
+    }
+
     private void LoadTypeBrushOnPalette(TypesBrushGrid selectTypeBrush)
     {
         ToolBarBrushPalette.SetActive(false);
@@ -1062,16 +1105,19 @@ public class PaletteMapController : MonoBehaviour {
 
         bool isClearLayer = !m_PasteOnLayer;
 
+
+        //---------------------
         if (isOnFullMap)
             isClearLayer = false;
+        //---------------------
 
         //if (isClearLayer)
         //    ClearLayerForStructure(fieldStart);
 
 
-            //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
+        //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
 
-            //---------- Brush zone
+        //---------- Brush zone
         int size = SizeBrush;
         if (isOnFullMap)
             size = Helper.WidthLevel;

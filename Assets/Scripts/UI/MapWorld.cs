@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class MapWorld : MonoBehaviour {
@@ -78,6 +80,7 @@ public class MapWorld : MonoBehaviour {
     public GameObject PrefabGridMap;
     public GameObject PrefabSpriteCellMap;
     public Stack<string> StackSectorsUpdating;
+    public SpriteAtlas SpriteAtlasMapPrefab;
 
     private GridLayoutGroup m_GridMap;
     private List<GameObject> m_listCellsGridMap = new List<GameObject>();
@@ -134,6 +137,8 @@ public class MapWorld : MonoBehaviour {
         listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
         listPersonsPrefabTexture = new List<Texture2D>();
         listPersonsMapTexture = new List<Texture2D>();
+
+        //var init = SpritesMaps;
     }
 
     public void Refresh()
@@ -792,6 +797,8 @@ public class MapWorld : MonoBehaviour {
         offsetMapY *= sizeMap;
 
         textureMap = new Texture2D(sizeDraw, sizeDraw);
+        //textureMap = new Texture2D(sizeDraw, sizeDraw, UnityEngine.Experimental.Rendering.GraphicsFormat.RGBA_DXT5_SRGB, UnityEngine.Experimental.Rendering.TextureCreationFlags.MipChain);
+        //textureMap = new Texture2D(sizeDraw, sizeDraw, UnityEngine.Experimental.Rendering.GraphicsFormat.RGBA_DXT5_UNorm, UnityEngine.Experimental.Rendering.TextureCreationFlags.MipChain);
 
         try
         {
@@ -848,14 +855,31 @@ public class MapWorld : MonoBehaviour {
             return null;
         }
 
-        textureMap.Apply();
+        //textureMap.Apply();
+        try
+        {
+            textureMap.Apply();
+            //textureMap.Apply(false, true);
+        }
+        catch (Exception x2)
+        {
+            Debug.Log("############# GetTextureMap:  textureMap.Apply " + indErr + "  " + x2.Message);
+            return null;
+        }
 
-        //spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
-        Sprite _spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
-
+        Sprite _spriteMap = null;
+        try
+        {
+            //spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+            _spriteMap = Sprite.Create(textureMap, new Rect(0.0f, 0.0f, textureMap.width, textureMap.height), new Vector2(0.5f, 0.5f), 100.0f);
+        }
+        catch (Exception x2)
+        {
+            Debug.Log("############# GetTextureMap:  Sprite.Create " + indErr + "  " + x2.Message);
+            return null;
+        }
         return _spriteMap;
     }
-   
 
     //public void DestroyTexture()
     //{
@@ -1010,33 +1034,85 @@ public class MapWorld : MonoBehaviour {
 
     }
 
-   
+    private Dictionary<string, string> m_NamesTexturesMaps = null;
+    Dictionary<string, string> NamesTexturesMaps
+    {
+        get
+        {
+            if (m_NamesTexturesMaps == null)
+            {
+                m_NamesTexturesMaps = new Dictionary<string, string>
+                {
+                    {"PrefabVood", "VoodMap" },
+                    {"PrefabElka", "ElkaMap" },
+                    {"PrefabRock", "RockMap" },
+                    {"PrefabWallRock", "WallRockMap" },
+                    {"PrefabWallWood","WallWoodMap" },
+                    {"PrefabField", "FieldMap" },
+                    {"PrefabHero", "HeroMap" },
+                };
+
+            }
+            return m_NamesTexturesMaps;
+        }
+
+    }
+
+    Dictionary<string, Texture2D> TexturesMaps;
+
+    private Dictionary<string, Sprite> m_SpritesMaps = null;
+    Dictionary<string, Sprite> SpritesMaps
+    {
+        get
+        {
+            if (m_SpritesMaps == null)
+            {
+                //SpriteAtlas atlasPredab = Resources.Load<SpriteAtlas>("SpriteAtlasMap");
+                m_SpritesMaps = new Dictionary<string, Sprite>();
+                TexturesMaps = new Dictionary<string, Texture2D>();
+                Sprite[] _sprites = GetSpritesAtlasPrefab();
+                //foreach(var item in m_TexturesMaps)
+                //{
+                //    m_SpritesMaps[item.n]
+                //}
+                string nameSprite; 
+                foreach(Sprite sprt in _sprites)
+                {
+                    nameSprite = sprt.name.Replace("(Clone)", "");
+                    m_SpritesMaps.Add(nameSprite, sprt);
+                    TexturesMaps.Add(nameSprite, sprt.texture);
+                }
+            }
+            return m_SpritesMaps;
+        }
+
+    }
+
+    public Sprite[] GetSpritesAtlasPrefab()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
+        SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
+
+    public Sprite GetSpriteAtlasPrefab(string prefabType)
+    {
+        string nameTexture = NamesTexturesMaps[prefabType];
+        //Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
+        //SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
+        //SpriteAtlasMapPrefab
+        return SpriteAtlasMapPrefab.GetSprite(nameTexture);// .Find(p=>p.name=="");
+    }
 
     public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
         //------------------
         Texture2D texturePrefab = GetPrefabTexture(prefabType);
         //------------------
-        //var TexturesMaps = new Dictionary<string, string>
-        //{
-        //    {"PrefabVood", "VoodMap" },
-        //    {"PrefabElka", "ElkaMap" },
-        //    {"PrefabRock", "RockMap" },
-        //    {"PrefabWallRock", "WallRockMap" },
-        //    {"PrefabWallWood","WallWoodMap" },
-        //    {"PrefabField", "FieldMap" },
-        //    {"PrefabHero", "HeroMap" },
-
-        //};
-
-        //string typePref = prefabType.ToString();
-        //if(!TexturesMaps.ContainsKey(typePref))
-        //{
-        //    Debug.Log("############ TexturesMaps not ContainsKey " + typePref);
-        //    return;
-        //}
-        //string _pathSprites = @"Textures/Map/" + TexturesMaps[typePref];
-        //Texture2D texturePrefab = Resources.Load<Texture2D>(_pathSprites);
+        //string nameTexture = NamesTexturesMaps[prefabType.ToString()];
+        //Texture2D texturePrefab = TexturesMaps[nameTexture];
+        //------------------
+        //Texture2D texturePrefab = GetSpriteAtlasPrefab(prefabType.ToString()).texture;
         //------------------
 
         if (texturePrefab == null)
@@ -1052,7 +1128,7 @@ public class MapWorld : MonoBehaviour {
         startY1 = texture.height - startY1 - addSize;
         //.................
 
-        if (texturePrefab!=null && texture.format.ToString() != texturePrefab.format.ToString())
+        if (texturePrefab != null && texture.format.ToString() != texturePrefab.format.ToString())
         {
             Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startX1 + "x" + startY1 + " Size=" + addSize);
             Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
@@ -1060,8 +1136,13 @@ public class MapWorld : MonoBehaviour {
             return;
         }
 
-        
-        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
+        try
+        {
+            Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
+        }catch(Exception ex)
+        {
+            Debug.Log("############## DrawTextureTo " + ex.Message);
+        }
     }
 
     private void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, Texture2D texturePrefab)
@@ -1072,8 +1153,14 @@ public class MapWorld : MonoBehaviour {
         // Correct .............
         startY1 = texture.height - startY1 - addSize;
         //.................
+        try
+        {
 
-        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
+            Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
+        }catch(Exception ex)
+        {
+            Debug.Log("############## DrawTextureTo texturePrefab " + ex.Message);
+        }
     }
 
 
@@ -1488,5 +1575,6 @@ public static class MapExtension
     }
 
 }
+
 
 

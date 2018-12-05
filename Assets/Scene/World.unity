@@ -2876,6 +2876,10 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: e5cb3747268ac7a44a2e49db72c15b65,
         type: 3}
+    - target: {fileID: 1828618149702586, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
   m_IsPrefabAsset: 0
@@ -4477,7 +4481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.0000021020057}
+  m_AnchoredPosition: {x: 8.5, y: 0.00006614833}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -4838,7 +4842,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1736101719947554, guid: 0d70e830e2198f0428159dad41177765, type: 2}
       propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1507004415067752, guid: 0d70e830e2198f0428159dad41177765, type: 2}
       propertyPath: m_StaticEditorFlags
@@ -6823,6 +6827,7 @@ MonoBehaviour:
   SizeCellMap: 25
   PrefabGridMap: {fileID: 1624284556}
   PrefabSpriteCellMap: {fileID: 14120020}
+  SpriteAtlasMapPrefab: {fileID: 0}
 --- !u!114 &580250726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7287,7 +7292,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1482996925449300, guid: e90ee8d74ed523b4690f9ca26c8348a3, type: 2}
       propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e90ee8d74ed523b4690f9ca26c8348a3, type: 2}
@@ -9429,7 +9434,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 354061448}
   m_HandleRect: {fileID: 354061447}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15595,7 +15600,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1368893299798028, guid: b15c5d2785ce5ab46b08ffbec8732a30, type: 2}
       propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b15c5d2785ce5ab46b08ffbec8732a30, type: 2}
@@ -22778,7 +22783,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -23857,7 +23862,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.000021009051}
+  m_AnchoredPosition: {x: 8.5, y: -0.000020387473}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -24312,7 +24317,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1584952636479378, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
       propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
@@ -25489,7 +25494,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1294785076359862, guid: 5b2bd27fbef486a49842a7c841cc6675, type: 2}
       propertyPath: m_StaticEditorFlags
-      value: 4294967295
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b2bd27fbef486a49842a7c841cc6675, type: 2}

@@ -14,6 +14,93 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
+    //{
+    //    //------------------
+    //    Texture2D texturePrefab = GetPrefabTexture(prefabType);
+
+    //    //------------------
+    //    string nameTexture = NamesTexturesMaps[prefabType.ToString()];
+    //    //Texture2D texturePrefab = TexturesMaps[nameTexture];
+    //    //------------------
+    //    //Texture2D texturePrefab = GetSpriteAtlasPrefab(prefabType.ToString()).texture;
+    //    //------------------
+
+    //    //string nameSprite = prefabType.ToString();
+    //    //string nameTexture = TexturesMaps[prefabType.ToString()];
+    //    Sprite sprite_T = Resources.Load<Sprite>(nameTexture);
+    //    //Texture2D texturePrefab_T = Resources.Load<Texture2D>(nameTexture);
+    //    //Texture2D[] texturePrefab_T2 = Resources.LoadAll<Texture2D>("spriteFile");
+    //    //Sprite[] sprite = new Sprite[countSprites];
+
+
+    //    //------------------
+    //    //string nameTexture = TexturesMaps["PrefabRock"];
+    //    //Sprite sprite = SpriteAtlasMapPrefab.GetSprite(nameTexture);
+    //    //Sprite spriteAtlas = SpriteAtlasMapPrefab.GetSprite("WallWoodMap");
+
+    //    //Sprite spriteAtlas = SpritesMaps[nameTexture];
+    //    //if (spriteAtlas == null)
+    //    //{
+    //    //    Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   Sprite:" + nameTexture + " not find in SpriteAtlasMap");
+    //    //    return;
+    //    //}
+    //    //Texture2D texturePrefab = spriteAtlas.texture;
+    //    //------------------
+
+    //    //Sprite[] SpritePrefab_T = Resources.LoadAll<Sprite>("spriteFile");
+    //    //string typePref = prefabType.ToString();
+    //    //if(!TexturesMaps.ContainsKey(typePref))
+    //    //{
+    //    //    Debug.Log("############ TexturesMaps not ContainsKey " + typePref);
+    //    //    return;
+    //    //}
+    //    //string _pathSprites = @"Textures/Map/" + TexturesMaps[typePref];
+    //    //Texture2D texturePrefab = Resources.Load<Texture2D>(_pathSprites);
+    //    //------------------
+
+    //    if (texturePrefab == null)
+    //    {
+    //        Debug.Log("###### CreateTextureMap.ManagerPalette: " + indErr + "   prefabType:" + prefabType + " texturePrefab Is NULL ");
+    //        //return;
+    //    }
+
+    //    int startX1 = x * scaleCell;
+    //    int startY1 = y * scaleCell;
+
+    //    // Correct .............
+    //    startY1 = texture.height - startY1 - addSize;
+    //    //.................
+
+    //    //#TEST
+    //    //var rt1 = texturePrefab1.format.ToString();
+    //    //var rt2 = texturePrefab1.format.ToString();
+    //    //var rt3 = texture.format.ToString();
+
+
+    //    if (texturePrefab != null && texture.format.ToString() != texturePrefab.format.ToString())
+    //    {
+    //        Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startX1 + "x" + startY1 + " Size=" + addSize);
+    //        Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
+    //        Debug.Log(".......... Start CopyTexture " + prefabType + "  Formats texturePrefab:" + texturePrefab.format.ToString());
+    //        return;
+    //    }
+    //    if (texturePrefab == null)
+    //    {
+    //        Debug.Log(".......... Start CopyTexture texturePrefab is null");
+    //        return;
+    //    }
+
+    //    try
+    //    {
+    //        Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, texture, 0, 0, (int)startX1, (int)startY1);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.Log("############## DrawTextureTo " + ex.Message);
+    //    }
+    //}
+
     /*
     private void CalculatePointOnMap_()
     {

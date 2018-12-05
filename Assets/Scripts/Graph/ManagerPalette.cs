@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Sprites;
 using UnityEngine;
 
 public class ManagerPalette : MonoBehaviour {
@@ -77,6 +78,20 @@ public class ManagerPalette : MonoBehaviour {
             //{"PrefaField", Storage.GridData .GetComponent<SpriteRenderer>().sprite.texture },
         };
 
+        //---------------- Atlas
+        //Sprite[] spritesPrefabs = Storage.Map.GetSpritesAtlasPrefab();
+        //TexturesMaps = new Dictionary<string, Texture2D>();
+        //foreach (var sprt in spritesPrefabs)
+        //{
+        //    string namePrefab = sprt.name.GetNamePrefabByTextureMap();
+
+        //    //Texture2D _texture = sprt.texture;
+        //    Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
+        //    //_texture.Apply();
+        //    TexturesMaps.Add(namePrefab, _texture);
+        //}
+        //---------------- Atlas
+
         //Resources.Load ()
         TexturesMaps = new Dictionary<string, Texture2D>
         {
@@ -87,7 +102,7 @@ public class ManagerPalette : MonoBehaviour {
             {"PrefabWallWood", Storage.Map.textureWallWood },
             {"PrefabField", Storage.Map.textureField },
             {"PrefabHero", Storage.Map.textureHero },
-            
+
         };
 
         //public Texture2D textureField;
@@ -97,9 +112,9 @@ public class ManagerPalette : MonoBehaviour {
         //public Texture2D textureWallRock;
         //public Texture2D textureWallWood;
 
-}
+    }
 
-public static Color GetColor(string nameColor)
+    public static Color GetColor(string nameColor)
     {
         return PaletteColors[nameColor];
     }
