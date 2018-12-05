@@ -781,16 +781,21 @@ public class SaveLoadData : MonoBehaviour {
             indErr = "2";
             //Case 1.
             //string spriteName = NemesSpritesBoss[index];
-            string spriteName = 
+            //string spriteName = Storage.Person.GetNameSpriteForIndexLevel(index);
 
-            indErr = "3";
-            if (!Storage.Person.SpriteCollection.ContainsKey(spriteName))
-            {
-                Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
-                return null;
-            }
-            indErr = "4";
-            Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
+            //indErr = "3";
+
+            //if (!Storage.Person.SpriteCollection.ContainsKey(spriteName))
+            //{
+            //    Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
+            //    return null;
+            //}
+            //indErr = "4";
+
+            //Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
+            string spriteName = "";
+            Sprite spriteBoss = GetSpriteBoss(index, out spriteName);
+
             if (spriteBoss == null)
             {
                 Debug.Log("############ spritesBoss is null");
@@ -804,7 +809,7 @@ public class SaveLoadData : MonoBehaviour {
         }catch(Exception x)
         {
             Debug.Log("################# GetSpriteBoss #" + indErr + " [" + index + "] : " + x.Message);
-            return GetSpriteBossTrue(index);
+            return null;// GetSpriteBossTrue(index);
         }
 
         return null;

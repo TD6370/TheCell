@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.Sprites;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class ManagerPalette : MonoBehaviour {
 
@@ -14,7 +15,10 @@ public class ManagerPalette : MonoBehaviour {
 
     public static Dictionary<string, Color> PaletteColors = new Dictionary<string, Color>();
     public Dictionary<string, Texture2D> TexturesPrefabs = new Dictionary<string, Texture2D>();
+    public Dictionary<string, Sprite> SpritesPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
+
+    public SpriteAtlas SpriteAtlasPrefab;
 
     private void Awake()
     {
@@ -41,9 +45,16 @@ public class ManagerPalette : MonoBehaviour {
 
         };
 
-        
+       
         //{ "PrefabVood",ColorVood },
         //{ "PrefabRock",ColorRock },
+    }
+
+    public Sprite[] GetSpritesAtlasPrefab()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasPrefab.spriteCount];
+        SpriteAtlasPrefab.GetSprites(spritesAtlas);
+        return spritesAtlas;
     }
 
     // Use this for initialization
@@ -67,6 +78,17 @@ public class ManagerPalette : MonoBehaviour {
         //    {"PrefabWallWood",ColorWallWood },
 
         //};
+
+        Sprite[] spritesPrefabsAtlas = GetSpritesAtlasPrefab();
+        foreach (var sprt in spritesPrefabsAtlas)
+        {
+            string namePrefab = sprt.name.GetNamePrefabByTextureMap();
+
+            //Texture2D _texture = sprt.texture;
+            //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
+            //_texture.Apply();
+            SpritesPrefabs.Add(namePrefab, sprt);
+        }
 
         TexturesPrefabs = new Dictionary<string, Texture2D>
         {

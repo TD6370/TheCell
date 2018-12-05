@@ -1070,7 +1070,7 @@ public class MapWorld : MonoBehaviour {
                 //SpriteAtlas atlasPredab = Resources.Load<SpriteAtlas>("SpriteAtlasMap");
                 m_SpritesMaps = new Dictionary<string, Sprite>();
                 TexturesMaps = new Dictionary<string, Texture2D>();
-                Sprite[] _sprites = GetSpritesAtlasPrefab();
+                Sprite[] _sprites = GetSpritesAtlasMapPrefab();
                 //foreach(var item in m_TexturesMaps)
                 //{
                 //    m_SpritesMaps[item.n]
@@ -1088,7 +1088,7 @@ public class MapWorld : MonoBehaviour {
 
     }
 
-    public Sprite[] GetSpritesAtlasPrefab()
+    public Sprite[] GetSpritesAtlasMapPrefab()
     {
         Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
         SpriteAtlasMapPrefab.GetSprites(spritesAtlas);

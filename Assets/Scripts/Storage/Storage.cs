@@ -416,12 +416,14 @@ public class Storage : MonoBehaviour {
 
 
         //Reinit Component
-        _StoragePerson = gameObject.GetComponent<StoragePerson>();
-        if (_StoragePerson != null)
-        {
-            Destroy(_StoragePerson);
-        }
-        _StoragePerson = gameObject.AddComponent<StoragePerson>();
+        //_StoragePerson = gameObject.GetComponent<StoragePerson>();
+        _StoragePerson = MainCamera.GetComponent<StoragePerson>();
+        //#fix atlas
+        //if (_StoragePerson != null)
+        //{
+        //    Destroy(_StoragePerson);
+        //}
+        //_StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
 
         //_PlayerManager = gameObject.AddComponent<PlayerManager>();

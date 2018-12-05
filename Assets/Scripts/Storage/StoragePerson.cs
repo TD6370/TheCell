@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class StoragePerson : MonoBehaviour {
 
@@ -42,6 +43,8 @@ public class StoragePerson : MonoBehaviour {
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
+    public SpriteAtlas SpriteAtlasNPC;
+
     public TypeModifPerson ModificatorPerson = TypeModifPerson.PointPos;
 
     public enum TypeModifPerson
@@ -52,7 +55,30 @@ public class StoragePerson : MonoBehaviour {
         Paint,
     }
 
-    public Dictionary<string, Sprite> SpriteCollection;
+    //#Atlas SpriteCollection
+    private Dictionary<string, Sprite> m_SpriteCollection;
+    public Dictionary<string, Sprite> SpriteCollection
+    {
+        get
+        {
+            if (m_SpriteCollection == null || m_SpriteCollection.Count ==0)
+            {
+                m_SpriteCollection = new Dictionary<string, Sprite>();
+
+                Sprite[] spritesPrefabsAtlas = GetSpritesAtlasNPC();
+                foreach (var sprt in spritesPrefabsAtlas)
+                {
+                    string namePrefab = sprt.name;//.GetNamePrefabByTextureMap();
+                    namePrefab = namePrefab.Replace("(Clone)", "");
+                    //Texture2D _texture = sprt.texture;
+                    //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
+                    //_texture.Apply();
+                    m_SpriteCollection.Add(namePrefab, sprt);
+                }
+            }
+            return m_SpriteCollection;
+        }
+    }
 
     private static Dictionary<int, Color> _colorsPresent = null;
     public static Dictionary<int, Color> GetColorsLevel
@@ -85,18 +111,22 @@ public class StoragePerson : MonoBehaviour {
             _personsData = new ModelNPC.LevelData();
         else
             _personsData = _newData;
+
+        
     }
 
     void Awake()
     {
+        
+
         PersonsDataInit();
         LoadTexturesMap();
-        LoadSprites();
+        
     }
 
     // Use this for initialization
     void Start() {
-        
+        LoadSprites();
     }
 
     // Update is called once per frame
@@ -116,49 +146,183 @@ public class StoragePerson : MonoBehaviour {
         TextureBossMap = TextureBoss;
     }
 
+    //private void LoadSprites()
+    //{
+    //    string indErr = "";
+    //    try
+    //    {
+    //        indErr = "start";
+    //        string pathSprites = "Textures/NPC/";
+    //        int colSprites = 0;
+
+    //        Debug.Log("Loading Sprites from Resources...");
+
+    //        SpriteCollection = new Dictionary<string, Sprite>();
+
+    //        foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
+    //        {
+    //            Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+
+    //            if (_texturesBoss == null || _texturesBoss.Length == 0)
+    //            {
+    //                Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
+    //                continue;
+    //            }
+    //            Texture2D _texture = _texturesBoss[0];
+    //            //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
+    //            Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+    //            if (!SpriteCollection.ContainsKey(nameStrite))
+    //            {
+    //                indErr = "6.";
+    //                SpriteCollection.Add(nameStrite, spriteBoss);
+    //                colSprites++;
+    //            }
+    //            else
+    //            {
+    //                Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
+    //            }
+    //        }
+    //        Debug.Log("Loaded Sprites Boss : " + colSprites);
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
+    //    }
+    //}
+
+    public Sprite[] GetSpritesAtlasNPC()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasNPC.spriteCount];
+        SpriteAtlasNPC.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
+
     private void LoadSprites()
     {
-        string indErr = "";
-        try
+        if(SpriteAtlasNPC==null)
         {
-            indErr = "start";
-            string pathSprites = "Textures/NPC/";
-            int colSprites = 0;
-
-            Debug.Log("Loading Sprites from Resources...");
-
-            SpriteCollection = new Dictionary<string, Sprite>();
-            foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
-            {
-                Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-
-                if (_texturesBoss == null || _texturesBoss.Length == 0)
-                {
-                    Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
-                    continue;
-                }
-                Texture2D _texture = _texturesBoss[0];
-                //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
-                Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-
-                if (!SpriteCollection.ContainsKey(nameStrite))
-                {
-                    indErr = "6.";
-                    SpriteCollection.Add(nameStrite, spriteBoss);
-                    colSprites++;
-                }
-                else
-                {
-                    Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
-                }
-            }
-            Debug.Log("Loaded Sprites Boss : " + colSprites);
+            Debug.Log("########### SpriteAtlasNPCis empty");
+            return;
         }
-        catch (Exception x)
-        {
-            Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
-        }
+
+        //if (m_SpriteCollection == null || m_SpriteCollection.Count == 0)
+        //{
+        //    m_SpriteCollection = new Dictionary<string, Sprite>();
+
+        //    Sprite[] spritesPrefabsAtlas = GetSpritesAtlasNPC();
+        //    foreach (var sprt in spritesPrefabsAtlas)
+        //    {
+        //        string namePrefab = sprt.name;
+        //        namePrefab = namePrefab.Replace("(Clone)", "");
+        //        m_SpriteCollection.Add(namePrefab, sprt);
+        //    }
+        //}
+        //--------------------------
+
+        //SpriteCollection = new Dictionary<string, Sprite>();
+
+        //Sprite[] spritesPrefabsAtlas = GetSpritesAtlasNPC();
+        //foreach (var sprt in spritesPrefabsAtlas)
+        //{
+        //    string namePrefab = sprt.name;//.GetNamePrefabByTextureMap();
+        //    namePrefab = namePrefab.Replace("(Clone)", "");
+        //    //Texture2D _texture = sprt.texture;
+        //    //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
+        //    //_texture.Apply();
+        //    SpriteCollection.Add(namePrefab, sprt);
+        //}
+
+        //--------------------------
+
+        //SpriteCollection = 
+
+        //string indErr = "";
+        //try
+        //{
+        //    indErr = "start";
+        //    string pathSprites = "Textures/NPC/";
+        //    int colSprites = 0;
+
+        //    Debug.Log("Loading Sprites from Resources...");
+
+        //    SpriteCollection = new Dictionary<string, Sprite>();
+
+        //    foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
+        //    {
+        //        Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+
+        //        if (_texturesBoss == null || _texturesBoss.Length == 0)
+        //        {
+        //            Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
+        //            continue;
+        //        }
+        //        Texture2D _texture = _texturesBoss[0];
+        //        //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
+        //        Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+        //        if (!SpriteCollection.ContainsKey(nameStrite))
+        //        {
+        //            indErr = "6.";
+        //            SpriteCollection.Add(nameStrite, spriteBoss);
+        //            colSprites++;
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
+        //        }
+        //    }
+        //    Debug.Log("Loaded Sprites Boss : " + colSprites);
+        //}
+        //catch (Exception x)
+        //{
+        //    Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
+        //}
     }
+
+    //private void LoadSprites()
+    //{
+    //    string indErr = "";
+    //    try
+    //    {
+    //        indErr = "start";
+    //        string pathSprites = "Textures/NPC/";
+    //        int colSprites = 0;
+
+    //        Debug.Log("Loading Sprites from Resources...");
+
+    //        SpriteCollection = new Dictionary<string, Sprite>();
+    //        foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
+    //        {
+    //            Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
+
+    //            if (_texturesBoss == null || _texturesBoss.Length == 0)
+    //            {
+    //                Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
+    //                continue;
+    //            }
+    //            Texture2D _texture = _texturesBoss[0];
+    //            //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
+    //            Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+    //            if (!SpriteCollection.ContainsKey(nameStrite))
+    //            {
+    //                indErr = "6.";
+    //                SpriteCollection.Add(nameStrite, spriteBoss);
+    //                colSprites++;
+    //            }
+    //            else
+    //            {
+    //                Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
+    //            }
+    //        }
+    //        Debug.Log("Loaded Sprites Boss : " + colSprites);
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
+    //    }
+    //}
 
 
     public IEnumerable<GameObject> GetAllRealPersons()
@@ -599,8 +763,32 @@ public class TypeBoss
     public string GetNameSpriteForIndexLevel(int p_level)
     {
         //string spriteName =  NemesSpritesBoss[index];
-        string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
+        //string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
+        if(!GetNamesSpritesNPC.ContainsKey(p_level))
+        {
+            Debug.Log("######### GetNameSpriteForIndexLevel not level " + p_level);
+            return "Error";
+        }
+        string spriteName = GetNamesSpritesNPC[p_level];
         return spriteName;
+    }
+
+    private Dictionary<int, string> m_getNamesSpritesNPC = null;
+    public Dictionary<int, string> GetNamesSpritesNPC
+    {
+        get
+        {
+            if(m_getNamesSpritesNPC==null)
+            {
+                m_getNamesSpritesNPC = new Dictionary<int, string>();
+                foreach (var item in Instance._TypesBoss)
+                {
+                    m_getNamesSpritesNPC.Add(item.Level, item.NameTextura2D);
+                }
+
+            }
+            return m_getNamesSpritesNPC;
+        }
     }
 
     public Texture2D GetNameTextureMapForIndexLevel(int p_level)
