@@ -118,33 +118,36 @@ public class MovementNPC : MonoBehaviour {
 
     void OnGUI()
     {
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 13;
-        style.normal.textColor = Color.black;
-
-        IsSelectedMe();
-        if (objID == Storage.Instance.SelectGameObjectID)
+        if (Storage.Person.IsShowTittlePerson)
         {
-            style.fontSize = 15;
-            style.fontStyle = FontStyle.Bold;
-            style.normal.textColor = Color.yellow;
-        }
-        else
-        {
+            GUIStyle style = new GUIStyle();
             style.fontSize = 13;
-            style.fontStyle = FontStyle.Normal;
-            if(style.normal.textColor== Color.black)
-                style.normal.textColor = "#b3fff0".ToColor();//  Color.black;
+            style.normal.textColor = Color.black;
+
+            IsSelectedMe();
+            if (objID == Storage.Instance.SelectGameObjectID)
+            {
+                style.fontSize = 15;
+                style.fontStyle = FontStyle.Bold;
+                style.normal.textColor = Color.yellow;
+            }
             else
-                style.normal.textColor = Color.black;
+            {
+                style.fontSize = 13;
+                style.fontStyle = FontStyle.Normal;
+                if (style.normal.textColor == Color.black)
+                    style.normal.textColor = "#b3fff0".ToColor();//  Color.black;
+                else
+                    style.normal.textColor = Color.black;
+            }
+
+            if (Camera.main == null)
+                return;
+
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
+            GUI.Label(position1, objID, style);
         }
-
-        if (Camera.main == null)
-            return;
-
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
-        GUI.Label(position1, objID, style);
     }
 
     void OnEnable()

@@ -620,6 +620,9 @@ public class ModelNPC
 
         private string idTerra = "?";
 
+        [XmlIgnore]
+        private bool isUseAtlas = true; //false;//
+
         //public TerraData(bool isGen) {
         public TerraData()
         {
@@ -659,38 +662,48 @@ public class ModelNPC
                     Init();
 
                 //return;
+                if (!isUseAtlas)
+                {
+                    //if (Storage.TilesManager == null)
+                    //{
+                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager  is Empty");
+                    //    return;
+                    //}
+                    //if (Storage.TilesManager.CollectionSpriteTiles == null)
+                    //{
+                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager.CollectionTextureTiles  is Empty");
+                    //    return;
+                    //}
 
-                if (objGame.name.IndexOf("Field1x0")!=-1 )
-                {
-                    Debug.Log("TEST Filed " + TileName + "  IsGen=" + IsGen + " id=" + idTerra);
-                }
+                    //if (!Storage.TilesManager.CollectionSpriteTiles.ContainsKey(TileName))
+                    //{
+                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " not found TileName: " + TileName);
+                    //    return;
+                    //}
+                    //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
+                    //if (spriteTile != null)
+                    //{
+                    //    objGame.GetComponent<SpriteRenderer>().sprite = spriteTile;
+                    //}
+                    //else
+                    //{
+                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " by TileName L " + TileName);
+                    //}
 
-                if (Storage.TilesManager == null)
-                {
-                    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager  is Empty");
-                    return;
-                }
-                if (Storage.TilesManager.CollectionSpriteTiles == null)
-                {
-                    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager.CollectionTextureTiles  is Empty");
-                    return;
-                }
-
-                if (!Storage.TilesManager.CollectionSpriteTiles.ContainsKey(TileName))
-                {
-                    Debug.Log("############## NOT Update new Sprite " + NameObject + " not found TileName: " + TileName);
-                    return;
-                }
-
-                Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
-                if (spriteTile != null)
-                {
-                    objGame.GetComponent<SpriteRenderer>().sprite = spriteTile;
+                    objGame.GetComponent<SpriteRenderer>().sprite = Storage.TilesManager.CollectionSpriteTiles[TileName];
                 }
                 else
+                //------------------------- Atlas
                 {
-                    Debug.Log("############## NOT Update new Sprite " + NameObject + " by TileName L " + TileName);
+                    //if (!Storage.Palette.SpritesPrefabs.ContainsKey(TileName))
+                    //{
+                    //    Debug.Log("######### TerraData SpritesPrefabs not find TileName: " + TileName);
+                    //    return;
+                    //}
+                    //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
+                    objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[TileName];
                 }
+                //-------------------------
             }
         }
     }

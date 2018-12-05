@@ -7,6 +7,8 @@ using UnityEngine.U2D;
 
 public class StoragePerson : MonoBehaviour {
 
+    public bool IsShowTittlePerson = false;
+
     public Vector3 PersonsTargetPosition { get; set; }
 
     public Color ColorSelectedCursorObject = Color.cyan;

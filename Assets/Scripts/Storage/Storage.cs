@@ -426,6 +426,14 @@ public class Storage : MonoBehaviour {
         //_StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
 
+        _Palette = gameObject.GetComponent<ManagerPalette>();
+        if (_Palette == null)
+        {
+            Debug.Log("########## InitComponents _Palette is Empty");
+            return;
+        }
+        _Palette.LoadSpritePrefabs();
+
         //_PlayerManager = gameObject.AddComponent<PlayerManager>();
         //_PlayerManager = GetComponentInParent<PlayerManager>();
         _PlayerManager = GetComponent<PlayerManager>();
@@ -436,12 +444,12 @@ public class Storage : MonoBehaviour {
         }
         _PlayerManager.Init();
 
-        _Palette = gameObject.GetComponent<ManagerPalette>();
-        if (_Palette == null)
-        {
-            Debug.Log("########## InitComponents _Palette is Empty");
-            return;
-        }
+        //_Palette = gameObject.GetComponent<ManagerPalette>();
+        //if (_Palette == null)
+        //{
+        //    Debug.Log("########## InitComponents _Palette is Empty");
+        //    return;
+        //}
 
         _TilesManager = gameObject.GetComponent<DataTilesManager>();
         if (_TilesManager == null)

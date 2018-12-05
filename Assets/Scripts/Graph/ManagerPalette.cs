@@ -59,6 +59,14 @@ public class ManagerPalette : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+       
+
+    }
+
+
+    public void LoadSpritePrefabs()
+    {
+
         //PaletteColors = new Dictionary<string, Color>
         //{
         //    {"SpriteBossLizard",ColorBossLizard },
@@ -82,12 +90,14 @@ public class ManagerPalette : MonoBehaviour {
         Sprite[] spritesPrefabsAtlas = GetSpritesAtlasPrefab();
         foreach (var sprt in spritesPrefabsAtlas)
         {
-            string namePrefab = sprt.name.GetNamePrefabByTextureMap();
+            //string namePrefab = sprt.name.GetNamePrefabByTextureMap();
 
             //Texture2D _texture = sprt.texture;
             //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
             //_texture.Apply();
-            SpritesPrefabs.Add(namePrefab, sprt);
+            string nameSprite= sprt.name.Replace("(Clone)", "");
+            SpritesPrefabs.Add(nameSprite, sprt);
+            Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
         }
 
         TexturesPrefabs = new Dictionary<string, Texture2D>
@@ -133,7 +143,6 @@ public class ManagerPalette : MonoBehaviour {
         //public Texture2D textureElka;
         //public Texture2D textureWallRock;
         //public Texture2D textureWallWood;
-
     }
 
     public static Color GetColor(string nameColor)
