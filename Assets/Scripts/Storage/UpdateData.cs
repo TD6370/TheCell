@@ -166,7 +166,7 @@ public class UpdateData { //: MonoBehaviour {
         return fieldData;
     }
 
-    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false)
+    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false)
     {
         ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
@@ -175,22 +175,23 @@ public class UpdateData { //: MonoBehaviour {
         }
         else
         {
+            if (isTestFilledField)
+                return true;
+
             fieldData = _GridDataG.FieldsD[nameField];
+
+            if (isTestExistMeType)
+            {
+                var indTM = fieldData.Objects.FindIndex(p => p.TagObject == objDataSave.TagObject);
+                if (indTM != -1)
+                    return true;
+            }
         }
 
         if (isClaerField)
         {
             if (PoolGameObjects.IsUsePoolObjects)
             {
-                //RemoveDataObjectInGrid(nameField,)
-                //RemoveDataObjectInGrid(nameField);
-                //RemoveFieldRealObject(nameField, "AddDataObjectInGrid");
-                //Storage.Pool.Restart();
-                //Storage.GenGrid.RemoveRealObjects(nameField);
-                //if (fieldData!=null && fieldData.Objects!=null)
-                //{
-                //    fieldData.Objects.Clear();
-                //}
                 fieldData.Objects.Clear();
             }
             else

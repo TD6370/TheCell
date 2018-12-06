@@ -10,6 +10,10 @@ using UnityEngine.UI;
 
 public class PaletteMapController : MonoBehaviour {
 
+    public bool IsLogGenericWorld = true;
+    public bool IsTestFilledFieldGen = false;
+    public bool IsTestExistMeTypeGen = true;
+
     public GameObject FramePaletteMap;
     public Button btnClose;
     public Dropdown ListConstructsControl;
@@ -72,7 +76,7 @@ public class PaletteMapController : MonoBehaviour {
     {
         get
         {
-            return checkOptStartSegmentIsFirstLast.isOn;
+            return !checkOptStartSegmentIsFirstLast.isOn;
         }
     }
 
@@ -366,6 +370,8 @@ public class PaletteMapController : MonoBehaviour {
             Debug.Log("####### EventsUI Palette PointerEventData is empty");
         }
 
+        LoadOptionGen();
+        
     }
 
     private void LateUpdate()
@@ -474,6 +480,11 @@ public class PaletteMapController : MonoBehaviour {
                     SizeBrush =1;
             }
         }
+    }
+
+    private void LoadOptionGen()
+    {
+        OptionGenPercent = 20;
     }
 
     public void ShowBorderBrush()
@@ -1216,25 +1227,33 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    public void GenericOnWorld(SaveLoadData.TypePrefabs prefab)
+    public void GenericOnWorld(bool isSelected = false, SaveLoadData.TypePrefabs prefab = SaveLoadData.TypePrefabs.PrefabElka)
     {
-        DataTile genPrefab;
-        if (prefab== SaveLoadData.TypePrefabs.PrefabField)
+        DataTile genPrefab =null;
+        if (isSelected)
+            genPrefab = SelectedCell;
+
+        if (genPrefab == null)
         {
-            genPrefab = new DataTile()
+            if (prefab == SaveLoadData.TypePrefabs.PrefabField)
             {
-                Name = prefab.ToString(),
-                Tag = TypesStructure.Terra.ToString()
-            };
-        }
-        else
-        {
-            genPrefab = new DataTile()
+                genPrefab = new DataTile()
+                {
+                    Name = prefab.ToString(),
+                    Tag = TypesStructure.Terra.ToString()
+                };
+            }
+            else
             {
-                Name = prefab.ToString(),
-                Tag = TypesStructure.Prefab.ToString()
-            };
+                genPrefab = new DataTile()
+                {
+                    Name = prefab.ToString(),
+                    Tag = TypesStructure.Prefab.ToString()
+                };
+            }
         }
+
+        
 
         //TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
         //if (structType == TypesStructure.Terra)
@@ -1248,15 +1267,16 @@ public class PaletteMapController : MonoBehaviour {
         int size = Helper.WidthLevel;
         //OptionGenCount = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent2 / 100;
         OptionGenCount = (size * size) * m_OptionGenPercent2 / 100;
-        BrushCells(true, genPrefab);
+        BrushCells(true, genPrefab, IsTestFilledFieldGen, IsTestExistMeTypeGen);
     }
 
-    private void BrushCells(bool isOnFullMap = false, DataTile sel = null)
+    private void BrushCells(bool isOnFullMap = false, DataTile selDataTile = null, bool isTestFilledField = false, bool isTestExistMeType = false)
     {
-        if(sel==null)
-            sel = SelectedCell;
+        if(selDataTile==null)
+            selDataTile = SelectedCell;
 
-        if (sel == null)
+
+        if (selDataTile == null)
         {
             Debug.Log("######## BrushCells SelectedCell is empty");
             return;
@@ -1276,7 +1296,7 @@ public class PaletteMapController : MonoBehaviour {
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
         bool isClearLayer = !m_PasteOnLayer;
-
+        string info = "";
 
         //---------------------
         if (isOnFullMap)
@@ -1296,6 +1316,7 @@ public class PaletteMapController : MonoBehaviour {
 
         int sizeX = (int)posStructFieldNew.x + size;
         int sizeY = (int)posStructFieldNew.y + size;
+        bool isSteps = checkStepGen.isOn;
 
         if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         { 
@@ -1308,7 +1329,7 @@ public class PaletteMapController : MonoBehaviour {
                     if (isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer);
                 }
             }
         }
@@ -1334,7 +1355,7 @@ public class PaletteMapController : MonoBehaviour {
                     if (isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer);
                 }
                 //------
             }
@@ -1342,8 +1363,6 @@ public class PaletteMapController : MonoBehaviour {
             //------ Segment
             {
                 Storage.Events.ListLogAdd = "Segments generation.";
-                bool isSteps = checkStepGen.isOn;
-                //bool isSteps = true;
                 //Step
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
 
@@ -1380,7 +1399,7 @@ public class PaletteMapController : MonoBehaviour {
                         if (isClearLayer)
                             ClearLayerForStructure(fieldNew);
 
-                        Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer, isTestFilledField, isTestExistMeType);
                     }
                 }
             }else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
@@ -1399,18 +1418,27 @@ public class PaletteMapController : MonoBehaviour {
                 int minLevel = (SubsystemLevel / 2) * (-1);
                 int maxLevel = (SubsystemLevel / 2);
 
+                int startSegmentX = 0;
+                int startSegmentY = 0;
+                List<Vector2Int> stepsPointsSart = new List<Vector2Int>();
+
                 for (int i = 0; i < ContAll; i++)
                 {
                     startX = Random.Range((int)posStructFieldNew.x, sizeX);
                     startY = Random.Range((int)posStructFieldNew.y, sizeY);
 
-                    List<Vector2Int> stepsPointsSart = new List<Vector2Int>();
+                    if (!isSteps)
+                        stepsPointsSart = new List<Vector2Int>();
+
                     stepsPointsSart.Add(new Vector2Int(startX, startY));
 
                     for (int s = 0; s < SubsystemSegments; s++)
                     {
-                        int startSegmentX = 0;
-                        int startSegmentY = 0;
+                        if (!isSteps)
+                        {
+                            startSegmentX = 0;
+                            startSegmentY = 0;
+                        }
                         if(s<3)
                         {
                             startSegmentX = startX;
@@ -1427,7 +1455,7 @@ public class PaletteMapController : MonoBehaviour {
                             //public float LastLimitMargin = 0f;
                             //public float LastLimitRange = 0f;
                             //public float LastLimit
-                            if(ModeSegmentMarginLimit== ModeStartSegmentGen.Margin) //------------ number limit
+                            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin) //------------ number limit
                             {
                                 int max = stepsPointsSart.Count - 1;
 
@@ -1439,46 +1467,91 @@ public class PaletteMapController : MonoBehaviour {
                                 if (IsFirstStartSegment)
                                 {
                                     SelectedPintindex = Random.Range(0, firstCorr);
+
+                                    if (IsLogGenericWorld)
+                                        info = "margin (0--" + firstCorr + ")   max = " + max + "  I=" + SelectedPintindex + "  [" + FirstLimit + @"\" + LastLimit + "]";
                                 }
                                 else
                                 {
-                                    SelectedPintindex = Random.Range(lastCorr, max);
+                                    SelectedPintindex = Random.Range(max - lastCorr, max);
+
+                                    if (IsLogGenericWorld)
+                                        info = "margin (" + (max - lastCorr) + "--" + max + ")    max = " + max + "  I=" + SelectedPintindex + "  [" + FirstLimit + @"\" + LastLimit + "]";
                                 }
+
                                 startSegmentX = stepsPointsSart[SelectedPintindex].x;
                                 startSegmentY = stepsPointsSart[SelectedPintindex].y;
+
+                                if (IsLogGenericWorld)
+                                {
+                                    info += " < " + startSegmentX + "x" + startSegmentY + " >";
+                                    Storage.Events.ListLogAdd = info;
+                                    //Debug.Log(info);
+                                }
                             }
                             if (ModeSegmentMarginLimit == ModeStartSegmentGen.Range) //------------ percent limit
                             {
                                 int max = stepsPointsSart.Count - 1;
 
-                                if(FirstLimit < 0f || FirstLimit >= 1f)
-                                    FirstLimit = 0f;
-                                if (LastLimit > 1f || FirstLimit <= 0)
-                                    FirstLimit = 1f;
+                                float firstCorr = FirstLimit;
+                                if (firstCorr < 0f || firstCorr >= 1f)
+                                    firstCorr = 0.5f;
+                                float lastCorr = LastLimit;
+                                if (lastCorr < 0f || firstCorr >= 1f)
+                                    firstCorr = 0.5f;
 
-                                float percentPoints = (max / 100);
-                                float firstCorr = (FirstLimit * 100);
-                                float lastCorr = (LastLimit * 100);
+                                //float percentPoints = (max / 100);
+                                //if (percentPoints == 0)
+                                //    percentPoints = 1;
+                                //firstCorr = (firstCorr * 100);
+                                //lastCorr = (lastCorr * 100);
 
                                 int SelectedPintindex = 0;
                                 if (IsFirstStartSegment)
                                 {
-                                    firstCorr  = Random.Range(1, firstCorr);
-                                    firstCorr = percentPoints * firstCorr;
+                                    //int maxFirst = (int)firstCorr;
+                                    //firstCorr = Random.Range(1, maxFirst);
+                                    //firstCorr *= percentPoints;
+                                    //firstCorr *= (int)firstCorr;
+                                    firstCorr = max * FirstLimit;
+                                    firstCorr = (int)firstCorr;
+                                    if (firstCorr < 1)
+                                        firstCorr = 1;
 
                                     SelectedPintindex = Random.Range(0, (int)firstCorr);
+
+                                    if (IsLogGenericWorld)
+                                        info = "percent 0 -- " + firstCorr + "  max = " + max + "   index = " + SelectedPintindex;
                                 }
                                 else
                                 {
-                                    lastCorr = Random.Range(0, lastCorr);
-                                    lastCorr = percentPoints * lastCorr;
-                                    lastCorr = max - lastCorr;
+                                    //int maxLast = (int)lastCorr;
+                                    //lastCorr = Random.Range(1, maxLast);
+                                    //lastCorr *= percentPoints;
+                                    //lastCorr = (int)lastCorr;
+                                    //lastCorr = max - lastCorr;
+                                    //if (lastCorr < 0)
+                                    //    lastCorr = max - (max*LastLimit);
 
+                                    lastCorr = max - (max * LastLimit);
+                                    lastCorr = (int)lastCorr;
                                     SelectedPintindex = Random.Range((int)lastCorr, max);
+
+                                    if (IsLogGenericWorld)
+                                        info = "percent  " + lastCorr + " -- " + max + "    max = " + max + "   index = " + SelectedPintindex;
                                 }
 
+                              
+                                 
                                 startSegmentX = stepsPointsSart[SelectedPintindex].x;
                                 startSegmentY = stepsPointsSart[SelectedPintindex].y;
+
+                                if (IsLogGenericWorld)
+                                {
+                                    info += " < " + startSegmentX + "x" + startSegmentY + " >";
+                                    Storage.Events.ListLogAdd = info;
+                                    //Debug.Log(info);
+                                }
                             }
                             //--------------------
                         }
@@ -1496,7 +1569,9 @@ public class PaletteMapController : MonoBehaviour {
                         if (isClearLayer)
                             ClearLayerForStructure(fieldNew);
 
-                        Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                        //bool isValid = IsTestFieldFilled(fieldNew, selDataTile, isTestFilledField, isTestExistMeType);
+                        //if(isValid)
+                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer, isTestFilledField, isTestExistMeType);
                     }
                 }
                 //------
@@ -1519,23 +1594,55 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    private bool IsTestFieldFilled(string nameField, DataTile itemTile, bool isTestFilledField = false, bool isTestExistMeType = false)
+    {
+        if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+        {
+            if (isTestFilledField)
+                return true;
+
+            if (isTestExistMeType)
+            {
+                var indTM = Storage.Instance.GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.TagObject == itemTile.Tag);
+                if (indTM != -1)
+                    return true;
+            }
+        }
+        return false;
+    }
 
     private Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
     {
         int firstCorr =
-                (int)FirstLimit > max - 1 ?
-                max - 1 :
-                (int)FirstLimit;
+            (int)FirstLimit > max - 1 ?
+            max - 1 :
+            (int)FirstLimit;
         int lastCorr =
             (int)LastLimit > max ?
-            max :
-            max - (int)LastLimit;
-        if (firstCorr < 0) firstCorr = 0;
-        if (lastCorr < 1) lastCorr = max;
-        if (firstCorr > lastCorr)
-            firstCorr = lastCorr - 1;
+            max - 1 :
+            (int)LastLimit;
+        if (firstCorr < 1) firstCorr = 1;
+        if (lastCorr < 1) lastCorr = 1;
+        
         return new Vector2Int(firstCorr, lastCorr);
     }
+
+    //private Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
+    //{
+    //    int firstCorr =
+    //            (int)FirstLimit > max - 1 ?
+    //            max - 1 :
+    //            (int)FirstLimit;
+    //    int lastCorr =
+    //        (int)LastLimit > max ?
+    //        max :
+    //        max - (int)LastLimit;
+    //    if (firstCorr < 0) firstCorr = 0;
+    //    if (lastCorr < 1) lastCorr = max;
+    //    if (firstCorr > lastCorr)
+    //        firstCorr = lastCorr - 1;
+    //    return new Vector2Int(firstCorr, lastCorr);
+    //}
 
     private Vector2Int GetValidRange(int FirstLimit, int LastLimit, int max)
     {

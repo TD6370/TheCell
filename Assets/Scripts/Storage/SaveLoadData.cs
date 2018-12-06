@@ -921,7 +921,7 @@ public class SaveLoadData : MonoBehaviour {
     }
 
 
-    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false)
+    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
 
@@ -976,7 +976,7 @@ public class SaveLoadData : MonoBehaviour {
             objTerra.TileName = itemTile.Name;
         }
 
-        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField);
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField, isTestFilledField, isTestExistMeType);
     }
 
     private TypePrefabs GetPrefabByTile(string TileName)
@@ -1264,8 +1264,17 @@ public class SaveLoadData : MonoBehaviour {
         //------------------------------
 
 
-        Storage.PaletteMap.GenericOnWorld(SaveLoadData.TypePrefabs.PrefabElka); // BrushCells(bool isOnFullMap = false)
+        //
+        
 
+        if(Storage.PaletteMap.SelectedCell == null)
+        { 
+            Storage.PaletteMap.GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+        }
+        else
+        {
+            Storage.PaletteMap.GenericOnWorld(true); 
+        }
 
 
         //------------------------------
