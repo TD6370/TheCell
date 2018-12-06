@@ -38,6 +38,122 @@ public class PaletteMapController : MonoBehaviour {
     public InputField btxIntGenOption4;
     public InputField btxIntGenOption5;
 
+    // # Segmnt Next Point Gen
+    public Toggle checkOptStartSegmentMarginLimit;
+    public Toggle checkOptStartSegmentRange;
+    public Toggle checkOptStartSegmentIsFirstLast;
+    public InputField tbxOptStartSegment;
+    public InputField tbxOptEndSegment;
+
+    public enum ModeStartSegmentGen
+    {
+        Margin,
+        Range,
+        None
+    }
+
+    public ModeStartSegmentGen ModeSegmentMarginLimit
+    {
+        get
+        {
+            if(checkOptStartSegmentMarginLimit.isOn)
+            {
+                return ModeStartSegmentGen.Margin;
+            }
+            if(checkOptStartSegmentRange.isOn)
+            {
+                return ModeStartSegmentGen.Range;
+            }
+            return ModeStartSegmentGen.None;
+        }
+    }
+
+    public bool IsFirstStartSegment
+    {
+        get
+        {
+            return checkOptStartSegmentIsFirstLast.isOn;
+        }
+    }
+
+    public float FirstLimitMargin = 0f;
+    public float FirstLimitRange = 0f;
+    public float FirstLimit
+    {
+        get
+        {
+            float resF = 0f;
+            if (float.TryParse(tbxOptStartSegment.text, out resF))
+            {
+                if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                    FirstLimitMargin = resF;
+                else
+                    FirstLimitRange = resF;
+            }
+            else
+            {
+                if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                    resF = FirstLimitMargin;
+                else
+                    resF = FirstLimitRange;
+            }
+            return resF;
+        }
+        set
+        {
+            float resF = value;
+            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                FirstLimitMargin = resF;
+            else
+                FirstLimitRange = resF;
+            
+        }
+    }
+
+    //IsFirstStartSegment
+    //ModeSegmentMarginLimit
+    //public float FirstLimitMargin = 0f;
+    //public float FirstLimitRange = 0f;
+    //public float FirstLimit
+    //public float LastLimitMargin = 0f;
+    //public float LastLimitRange = 0f;
+    //public float LastLimit
+
+    public float LastLimitMargin = 0f;
+    public float LastLimitRange = 0f;
+    public float LastLimit
+    {
+        get
+        {
+            float resF = 0f;
+            if (float.TryParse(tbxOptEndSegment.text, out resF))
+            {
+                if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                    LastLimitMargin = resF;
+                else
+                    LastLimitRange = resF;
+            }
+            else
+            {
+                if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                    resF = LastLimitMargin;
+                else
+                    resF = LastLimitRange;
+            }
+            return resF;
+        }
+        set
+        {
+            float resF = value;
+            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin)
+                LastLimitMargin = resF;
+            else
+                LastLimitRange = resF;
+
+        }
+    }
+
+
     public GameObject ToolBarBrushPalette;
 
     private List<Toggle> m_listToggleMode;
@@ -592,6 +708,41 @@ public class PaletteMapController : MonoBehaviour {
             m_PasteOnLayer = btnOnLayer.isOn;
         });
 
+        //public Toggle checkOptStartSegmentMarginLimit;
+        //public Toggle checkOptStartSegmentRange;
+        //public Toggle checkOptStartSegmentIsFirstLast;
+        //------------
+        //public float FirstLimitMargin = 0f;
+        //public float FirstLimitRange = 0f;
+        //public float FirstLimit
+        //public float LastLimitMargin = 0f;
+        //public float LastLimitRange = 0f;
+        //public float LastLimit
+        //public InputField tbxOptStartSegment;
+        //public InputField tbxOptEndSegment;
+        //---------------
+
+        checkOptStartSegmentMarginLimit.onValueChanged.AddListener(delegate
+        {
+            if(checkOptStartSegmentMarginLimit.isOn)
+            {
+                checkOptStartSegmentRange.isOn = false;
+
+                tbxOptStartSegment.text = FirstLimitMargin.ToString();
+                tbxOptEndSegment.text = LastLimitMargin.ToString();
+            }
+        });
+        checkOptStartSegmentRange.onValueChanged.AddListener(delegate
+        {
+            if (checkOptStartSegmentRange.isOn)
+            {
+                checkOptStartSegmentMarginLimit.isOn = false;
+
+                tbxOptStartSegment.text = FirstLimitRange.ToString();
+                tbxOptEndSegment.text = LastLimitRange.ToString();
+            }
+        });
+
         //--- Generic New World ---
         btnReloadWorld.onClick.AddListener(delegate
         {
@@ -683,6 +834,27 @@ public class PaletteMapController : MonoBehaviour {
             if (btxIntGenOption5.text != OptionGen5.ToString())
                 btxIntGenOption5.text = OptionGen5.ToString();
 
+        });
+
+        //public InputField tbxOptStartSegment;
+        //public InputField tbxOptEndSegment;
+        tbxOptStartSegment.onValueChange.AddListener(delegate
+        {
+            //OptionGenLevel = int.Parse(btxIntGenOption4.text);
+            float resF = 0f;
+            if (float.TryParse(tbxOptStartSegment.text, out resF))
+            {
+                FirstLimit = resF;
+            }
+        });
+        tbxOptEndSegment.onValueChange.AddListener(delegate
+        {
+            //OptionGenLevel = int.Parse(btxIntGenOption4.text);
+            float resF = 0f;
+            if (float.TryParse(tbxOptEndSegment.text, out resF))
+            {
+                LastLimit = resF;
+            }
         });
     }
 
@@ -1166,7 +1338,7 @@ public class PaletteMapController : MonoBehaviour {
                 }
                 //------
             }
-            else
+            else if(ModeSegmentMarginLimit == ModeStartSegmentGen.None)
             //------ Segment
             {
                 Storage.Events.ListLogAdd = "Segments generation.";
@@ -1211,10 +1383,127 @@ public class PaletteMapController : MonoBehaviour {
                         Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
                     }
                 }
+            }else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
+
+                //------------- # Segmnt Next Point Gen
+               
+                Storage.Events.ListLogAdd = "Segments next Point generation.";
+                //bool isSteps = checkStepGen.isOn;
+                //bool isSteps = true;
+                //Step
+                if (SubsystemSegments == 0) SubsystemSegments = 1;
+
+                int ContAll = CountObjects / SubsystemSegments;
+                int startX = (int)posStructFieldNew.x;
+                int startY = (int)posStructFieldNew.y;
+                int minLevel = (SubsystemLevel / 2) * (-1);
+                int maxLevel = (SubsystemLevel / 2);
+
+                for (int i = 0; i < ContAll; i++)
+                {
+                    startX = Random.Range((int)posStructFieldNew.x, sizeX);
+                    startY = Random.Range((int)posStructFieldNew.y, sizeY);
+
+                    List<Vector2Int> stepsPointsSart = new List<Vector2Int>();
+                    stepsPointsSart.Add(new Vector2Int(startX, startY));
+
+                    for (int s = 0; s < SubsystemSegments; s++)
+                    {
+                        int startSegmentX = 0;
+                        int startSegmentY = 0;
+                        if(s<3)
+                        {
+                            startSegmentX = startX;
+                            startSegmentY = startY;
+                        }
+                        else
+                        {
+                            //-------------------- Select Next start Point segment
+                            //IsFirstStartSegment
+                            //ModeSegmentMarginLimit
+                            //public float FirstLimitMargin = 0f;
+                            //public float FirstLimitRange = 0f;
+                            //public float FirstLimit
+                            //public float LastLimitMargin = 0f;
+                            //public float LastLimitRange = 0f;
+                            //public float LastLimit
+                            if(ModeSegmentMarginLimit== ModeStartSegmentGen.Margin) //------------ number limit
+                            {
+                                int max = stepsPointsSart.Count - 1;
+
+                                Vector2Int corrRange = GetValidMargin((int)FirstLimit, (int)LastLimit, max);
+                                int firstCorr = corrRange.x;
+                                int lastCorr = corrRange.y;
+
+                                int SelectedPintindex = 0;
+                                if (IsFirstStartSegment)
+                                {
+                                    SelectedPintindex = Random.Range(0, firstCorr);
+                                }
+                                else
+                                {
+                                    SelectedPintindex = Random.Range(lastCorr, max);
+                                }
+                                startSegmentX = stepsPointsSart[SelectedPintindex].x;
+                                startSegmentY = stepsPointsSart[SelectedPintindex].y;
+                            }
+                            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Range) //------------ percent limit
+                            {
+                                int max = stepsPointsSart.Count - 1;
+
+                                if(FirstLimit < 0f || FirstLimit >= 1f)
+                                    FirstLimit = 0f;
+                                if (LastLimit > 1f || FirstLimit <= 0)
+                                    FirstLimit = 1f;
+
+                                float percentPoints = (max / 100);
+                                float firstCorr = (FirstLimit * 100);
+                                float lastCorr = (LastLimit * 100);
+
+                                int SelectedPintindex = 0;
+                                if (IsFirstStartSegment)
+                                {
+                                    firstCorr  = Random.Range(1, firstCorr);
+                                    firstCorr = percentPoints * firstCorr;
+
+                                    SelectedPintindex = Random.Range(0, (int)firstCorr);
+                                }
+                                else
+                                {
+                                    lastCorr = Random.Range(0, lastCorr);
+                                    lastCorr = percentPoints * lastCorr;
+                                    lastCorr = max - lastCorr;
+
+                                    SelectedPintindex = Random.Range((int)lastCorr, max);
+                                }
+
+                                startSegmentX = stepsPointsSart[SelectedPintindex].x;
+                                startSegmentY = stepsPointsSart[SelectedPintindex].y;
+                            }
+                            //--------------------
+                        }
+
+                        int offsetX = Random.Range(minLevel, maxLevel);
+                        int offsetY = Random.Range(minLevel, maxLevel);
+                        int x = 0;
+                        int y = 0;
+                        x = startSegmentX + offsetX;
+                        y = startSegmentY + offsetY;
+
+                        stepsPointsSart.Add(new Vector2Int(x, y));
+
+                        string fieldNew = Helper.GetNameField(x, y);
+                        if (isClearLayer)
+                            ClearLayerForStructure(fieldNew);
+
+                        Storage.GridData.AddConstructInGridData(fieldNew, sel, isClearLayer);
+                    }
+                }
+                //------
             }
-            //------
+
         }
-        //-------------
+        
         //int sizeX = (int)posStructFieldNew.x + size;
         //int sizeY = (int)posStructFieldNew.y + size;
         bool isZoneStart = Helper.IsValidFieldInZona(posStructFieldNew.x, posStructFieldNew.y);
@@ -1229,6 +1518,42 @@ public class PaletteMapController : MonoBehaviour {
             //Storage.Events.ListLogAdd = "Create construct NOT in zona";
         }
     }
+
+
+    private Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
+    {
+        int firstCorr =
+                (int)FirstLimit > max - 1 ?
+                max - 1 :
+                (int)FirstLimit;
+        int lastCorr =
+            (int)LastLimit > max ?
+            max :
+            max - (int)LastLimit;
+        if (firstCorr < 0) firstCorr = 0;
+        if (lastCorr < 1) lastCorr = max;
+        if (firstCorr > lastCorr)
+            firstCorr = lastCorr - 1;
+        return new Vector2Int(firstCorr, lastCorr);
+    }
+
+    private Vector2Int GetValidRange(int FirstLimit, int LastLimit, int max)
+    {
+        int firstCorr =
+                (int)FirstLimit > max - 1 ?
+                max - 1 :
+                (int)FirstLimit;
+        int lastCorr =
+            (int)LastLimit > max ?
+            max :
+            (int)LastLimit;
+        if (firstCorr < 0) firstCorr = 0;
+        if (lastCorr < 1) lastCorr = max;
+        if (firstCorr > lastCorr)
+            firstCorr = lastCorr - 1;
+        return new Vector2Int(firstCorr, lastCorr);
+    }
+
 
     private void Paste()
     {

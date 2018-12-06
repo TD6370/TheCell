@@ -97,7 +97,7 @@ public class ManagerPalette : MonoBehaviour {
             //_texture.Apply();
             string nameSprite= sprt.name.Replace("(Clone)", "");
             SpritesPrefabs.Add(nameSprite, sprt);
-            Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
+            //Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
         }
 
         TexturesPrefabs = new Dictionary<string, Texture2D>
