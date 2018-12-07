@@ -1235,7 +1235,7 @@ public class Serializator
     //    public DataTile() { }
     //}
 
-    static public T LoadXml<T>(string datapath) where T : class
+    static public T LoadXml<T>(string datapath, Type[] p_extraTypes = null) where T : class
     {
         string stepErr = "start";
         T state = null;
@@ -1243,9 +1243,12 @@ public class Serializator
         {
             //Debug.Log("Loaded Xml GridData start...");
 
+            if (p_extraTypes == null)
+                p_extraTypes = extraTypes;
+
             stepErr = ".1";
             stepErr = ".2";
-            XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+            XmlSerializer serializer = new XmlSerializer(typeof(T), p_extraTypes);
             stepErr = ".3";
             FileStream fs = new FileStream(datapath, FileMode.Open);
             stepErr = ".4";
@@ -1264,7 +1267,7 @@ public class Serializator
         return state;
     }
 
-    static public void SaveXml<T>(T state, string datapath, bool isResave = false) where T : class
+    static public void SaveXml<T>(T state, string datapath, bool isResave = false, System.Type[] p_extraTypes = null) where T : class
     {
 
         if (isResave)
@@ -1282,7 +1285,10 @@ public class Serializator
             }
         }
 
-        XmlSerializer serializer = new XmlSerializer(typeof(T), extraTypes);
+        if (p_extraTypes == null)
+            p_extraTypes = extraTypes;
+
+        XmlSerializer serializer = new XmlSerializer(typeof(T), p_extraTypes);
 
         FileStream fs = new FileStream(datapath, FileMode.Create);
 

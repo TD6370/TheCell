@@ -233,6 +233,12 @@ public class Storage : MonoBehaviour {
         get { return _GridDataG; }
     }
 
+    private string _datapathVersionOptGenericWorld = null;
+    public string DataPathVersion
+    {
+        get { return _datapathVersionOptGenericWorld; }
+    }
+
     private string _datapathLevel = null;
     public string DataPathLevel
     {
@@ -328,6 +334,7 @@ public class Storage : MonoBehaviour {
         _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
         _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
         _datapathTiles = Application.dataPath + "/Levels/TilesData.xml";
+        _datapathVersionOptGenericWorld = Application.dataPath + "/UserConfig/VersionsOptGeneric.xml";
 
         ZonaField = null;
         ZonaReal = null;

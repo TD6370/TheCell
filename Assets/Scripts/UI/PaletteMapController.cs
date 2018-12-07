@@ -1,7 +1,9 @@
 ﻿//using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 //UnityEditor
 //using UnityEditor.Sprites;
 using UnityEngine;
@@ -11,14 +13,16 @@ using UnityEngine.UI;
 public class PaletteMapController : MonoBehaviour {
 
     public bool IsLogGenericWorld = true;
-    public bool IsTestFilledFieldGen = false;
+    public bool IsTestFilledFieldGen = true;
     public bool IsTestExistMeTypeGen = true;
 
     public GameObject FramePaletteMap;
     public Button btnClose;
-    public Dropdown ListConstructsControl;
+    public Dropdown dpdListConstructsControl;
+    
     public string SelectedConstruction { get; set; }
     public DataTile SelectedCell { get; set; }
+    private DataTile selectGeneticObject { get; set; }
     public GameObject PrefabCellMapPalette;
 
     //public Button btnOnPaint;
@@ -35,6 +39,7 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnDestroyWorld;
     public Button btnUp;
     public Button btnDown;
+
     public InputField btxSizeBrush;
     public InputField btxIntGenOption1;
     public InputField btxIntGenOption2;
@@ -42,12 +47,31 @@ public class PaletteMapController : MonoBehaviour {
     public InputField btxIntGenOption4;
     public InputField btxIntGenOption5;
 
+    bool IsSteps
+    {
+        get
+        {
+            return checkStepGen.isOn; 
+        }
+        set
+        {
+            checkStepGen.isOn = value;
+        }
+    }
+
     // # Segmnt Next Point Gen
     public Toggle checkOptStartSegmentMarginLimit;
     public Toggle checkOptStartSegmentRange;
     public Toggle checkOptStartSegmentIsFirstLast;
     public InputField tbxOptStartSegment;
     public InputField tbxOptEndSegment;
+
+    // --- Save version generic option
+    public Dropdown dpdListGenOptionsVersion;
+    public InputField tbxVersionNameGenOption; //ListGenOptionsVersion
+    public Button btnAddVersionOptGen;
+    private List<Dropdown.OptionData> m_ListVersionNameGenOptionData;
+    private List<GenericOptionsWorld> m_ListGenOptionsVersion;
 
     public enum ModeStartSegmentGen
     {
@@ -77,6 +101,10 @@ public class PaletteMapController : MonoBehaviour {
         get
         {
             return !checkOptStartSegmentIsFirstLast.isOn;
+        }
+        set
+        {
+            checkOptStartSegmentIsFirstLast.isOn = !value;
         }
     }
 
@@ -157,6 +185,18 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+
+    public bool IsClearLayer
+    {
+        get
+        {
+            return !m_PasteOnLayer;
+        }
+        set
+        {
+            m_PasteOnLayer = !value;
+        }
+    }
 
     public GameObject ToolBarBrushPalette;
 
@@ -484,7 +524,31 @@ public class PaletteMapController : MonoBehaviour {
 
     private void LoadOptionGen()
     {
+        // --- Save version generic option
+        //public Dropdown dpdListGenOptionsVersion;
+        //public InputField tbxVersionNameGenOption;
+        //public Button btnAddVersionOptGen;
+        //private List<Dropdown.OptionData> m_ListVersionNameGenOptionData;
+        //private List<GenericOprionsWorld> m_ListGenOptionsVersion;
+
         OptionGenPercent = 20;
+
+        LoadListVersionGeneticOptons();
+
+        btnAddVersionOptGen.onClick.AddListener(() =>
+        {
+            bool isEdit = dpdListGenOptionsVersion.gameObject.activeSelf;
+            dpdListGenOptionsVersion.gameObject.SetActive(!isEdit);
+            tbxVersionNameGenOption.gameObject.SetActive(isEdit);
+            if (!isEdit)
+            {
+                string nameVersion = tbxVersionNameGenOption.text;
+                if(!string.IsNullOrEmpty(nameVersion))
+                {
+                    AddVersionGenericOptions(nameVersion);
+                }
+            }
+        });
     }
 
     public void ShowBorderBrush()
@@ -525,8 +589,11 @@ public class PaletteMapController : MonoBehaviour {
         else
         {
             LoadListConstructsControl();
+            //LoadListVersionGeneticOptons();
         }
     }
+
+    
 
     //private void LoadPalette()
     //{
@@ -569,8 +636,9 @@ public class PaletteMapController : MonoBehaviour {
             Storage.Map.Refresh();
     }
 
+    
 
-    void DropdownValueChanged(Dropdown dpntStructurs)
+    void ConstructsValueChanged(Dropdown dpntStructurs)
     {
         //LoadConstructOnPalette(dpntStructurs.captionText.ToString());
         //LoadConstructOnPalette(dpntStructurs.value);
@@ -693,8 +761,12 @@ public class PaletteMapController : MonoBehaviour {
 
     private void InitEventsButtonMenu()
     {
-        ListConstructsControl.onValueChanged.AddListener(delegate {
-            DropdownValueChanged(ListConstructsControl);
+        dpdListConstructsControl.onValueChanged.AddListener(delegate {
+            ConstructsValueChanged(dpdListConstructsControl);
+        });
+
+        dpdListGenOptionsVersion.onValueChanged.AddListener(delegate {
+            VersionGenOptionValueChanged(dpdListGenOptionsVersion);
         });
 
 
@@ -1150,13 +1222,13 @@ public class PaletteMapController : MonoBehaviour {
             m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = item.ToString() });
         }
 
-        ListConstructsControl.ClearOptions();
-        ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
+        dpdListConstructsControl.ClearOptions();
+        dpdListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
     }
 
     public void LoadListConstructsControl()
     {
-        if (ListConstructsControl == null)
+        if (dpdListConstructsControl == null)
         {
             Debug.Log("###### LoadListConstructsContro  ListConstructsControl is Empty");
             return;
@@ -1184,9 +1256,11 @@ public class PaletteMapController : MonoBehaviour {
             m_ListConstructsOptopnsData.Add(new Dropdown.OptionData() { text = itemTileData.Key });
         }
 
-        ListConstructsControl.ClearOptions();
-        ListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
+        dpdListConstructsControl.ClearOptions();
+        dpdListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
     }
+
+   
 
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
@@ -1282,6 +1356,8 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
+        selectGeneticObject = selDataTile;
+
         //public float ActionRate = 0.5f;
         //private float DelayTimer = 0F;
         //if (Time.time < DelayTimer)
@@ -1295,12 +1371,12 @@ public class PaletteMapController : MonoBehaviour {
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
-        bool isClearLayer = !m_PasteOnLayer;
+        bool _isClearLayer = IsClearLayer;//!m_PasteOnLayer;
         string info = "";
 
         //---------------------
         if (isOnFullMap)
-            isClearLayer = false;
+            _isClearLayer = false;
         //---------------------
 
         //if (isClearLayer)
@@ -1316,7 +1392,7 @@ public class PaletteMapController : MonoBehaviour {
 
         int sizeX = (int)posStructFieldNew.x + size;
         int sizeY = (int)posStructFieldNew.y + size;
-        bool isSteps = checkStepGen.isOn;
+        
 
         if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         { 
@@ -1326,10 +1402,10 @@ public class PaletteMapController : MonoBehaviour {
                 {
                     //posStructFieldNew = posStructFieldStart + new Vector2(sizeX, sizeY);
                     string fieldNew = Helper.GetNameField(x, y);
-                    if (isClearLayer)
+                    if (_isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer);
+                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
                 }
             }
         }
@@ -1352,10 +1428,10 @@ public class PaletteMapController : MonoBehaviour {
                     int x = Random.Range((int)posStructFieldNew.x, sizeX);
                     int y = Random.Range((int)posStructFieldNew.y, sizeY);
                     string fieldNew = Helper.GetNameField(x, y);
-                    if (isClearLayer)
+                    if (_isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer);
+                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
                 }
                 //------
             }
@@ -1383,7 +1459,7 @@ public class PaletteMapController : MonoBehaviour {
                         int offsetY = Random.Range(minLevel, maxLevel);
                         int x = 0;
                         int y = 0;
-                        if (isSteps)
+                        if (IsSteps)
                         {
                             startX += offsetX;
                             startY += offsetY;
@@ -1396,10 +1472,10 @@ public class PaletteMapController : MonoBehaviour {
                             y = startY + offsetY;
                         }
                         string fieldNew = Helper.GetNameField(x, y);
-                        if (isClearLayer)
+                        if (_isClearLayer)
                             ClearLayerForStructure(fieldNew);
 
-                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer, isTestFilledField, isTestExistMeType);
+                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer, isTestFilledField, isTestExistMeType);
                     }
                 }
             }else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
@@ -1427,14 +1503,14 @@ public class PaletteMapController : MonoBehaviour {
                     startX = Random.Range((int)posStructFieldNew.x, sizeX);
                     startY = Random.Range((int)posStructFieldNew.y, sizeY);
 
-                    if (!isSteps)
+                    if (!IsSteps)
                         stepsPointsSart = new List<Vector2Int>();
 
                     stepsPointsSart.Add(new Vector2Int(startX, startY));
 
                     for (int s = 0; s < SubsystemSegments; s++)
                     {
-                        if (!isSteps)
+                        if (!IsSteps)
                         {
                             startSegmentX = 0;
                             startSegmentY = 0;
@@ -1566,12 +1642,12 @@ public class PaletteMapController : MonoBehaviour {
                         stepsPointsSart.Add(new Vector2Int(x, y));
 
                         string fieldNew = Helper.GetNameField(x, y);
-                        if (isClearLayer)
+                        if (_isClearLayer)
                             ClearLayerForStructure(fieldNew);
 
                         //bool isValid = IsTestFieldFilled(fieldNew, selDataTile, isTestFilledField, isTestExistMeType);
                         //if(isValid)
-                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isClearLayer, isTestFilledField, isTestExistMeType);
+                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer, isTestFilledField, isTestExistMeType);
                     }
                 }
                 //------
@@ -1732,7 +1808,7 @@ public class PaletteMapController : MonoBehaviour {
         Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
-        bool isClearLayer = !m_PasteOnLayer;
+        bool _isClearLayer = IsClearLayer;// !m_PasteOnLayer;
 
 
         posStructFieldStart.y--; 
@@ -1749,10 +1825,10 @@ public class PaletteMapController : MonoBehaviour {
 
             string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
 
-            if (isClearLayer)
+            if (_isClearLayer)
                 ClearLayerForStructure(fieldNew);
 
-            Storage.GridData.AddConstructInGridData(fieldNew, itemTile, isClearLayer);
+            Storage.GridData.AddConstructInGridData(fieldNew, itemTile, _isClearLayer);
         }
     }
 
@@ -1855,6 +1931,156 @@ public class PaletteMapController : MonoBehaviour {
     //    int hSize = Mathf.FloorToInt(width / sizeButt);
     //    lg.constraintCount = hSize;
     //}
+
+    #region Save generic options
+
+    System.Type[] extraTypesOtions = {
+            typeof(GenericOptionsWorld)
+        };
+
+    private void LoadListVersionGeneticOptons()
+    {
+        //public InputField tbxVersionNameGenOption; //ListGenOptionsVersion
+
+        LoadVersionsGenericOptions();
+
+        if (m_ListGenOptionsVersion == null)
+            m_ListGenOptionsVersion = new List<GenericOptionsWorld>();
+
+        if (m_ListVersionNameGenOptionData != null)
+            m_ListVersionNameGenOptionData.Clear();
+        m_ListVersionNameGenOptionData = new List<Dropdown.OptionData>();
+
+        foreach (var itemVersion in m_ListGenOptionsVersion)
+        {
+            m_ListVersionNameGenOptionData.Add(new Dropdown.OptionData() { text = itemVersion.NameVersion });
+        }
+
+        dpdListGenOptionsVersion.ClearOptions();
+        if (m_ListVersionNameGenOptionData.Count > 0)
+            dpdListGenOptionsVersion.AddOptions(m_ListVersionNameGenOptionData);
+    }
+
+    // --- Save version generic option
+    //public InputField tbxVersionNameGenOption; //ListGenOptionsVersion
+    //private List<Dropdown.OptionData> m_ListVersionNameGenOptionData;
+    //private List<string> m_ListVersionNameGenOption;
+    //ListGenOptionsVersion.onValueChanged.AddListener(delegate {
+    //        VersionGenOptionValueChanged(ListGenOptionsVersion);
+    //});
+    void VersionGenOptionValueChanged(Dropdown dpntGenOptionsVersion)
+    {
+        if (dpntGenOptionsVersion.value > m_ListVersionNameGenOptionData.Count - 1)
+        {
+            Debug.Log("######## VersionGenOptionValueChanged NOT dpntGenOptionsVersion.value[" + dpntGenOptionsVersion.value + "] > m_ListVersionNameGenOptionData.Length[" + m_ListVersionNameGenOptionData.Count + "]");
+            return;
+        }
+
+        GenericOptionsWorld selVers = m_ListGenOptionsVersion[dpntGenOptionsVersion.value];
+
+
+        //Load Options
+
+        //NameObject = selectGeneticObject.Name,
+        selectGeneticObject.Name = selVers.NameObject;
+        //TagObject = selectGeneticObject.Tag,
+        selectGeneticObject.Tag = selVers.TagObject;
+
+        //NameVersion = nameVerion,
+        //CountObjects = OptionGenCount,
+        OptionGenCount = selVers.CountObjects;
+        OptionGenSegments = selVers.Segment;
+        OptionGenLevel = selVers.Level;
+
+        IsClearLayer = selVers.IsClear;
+        IsSteps = selVers.IsSteps;
+        IsTestFilledFieldGen = selVers.IsTestField;
+        IsTestExistMeTypeGen = selVers.IsTestType;
+
+        LastLimit = selVers.LastLimit;
+        FirstLimit = selVers.FirstLimit;
+        IsFirstStartSegment = selVers.IsSegmentNextPointFirst;
+        //IsSegmentNextPointMargin = ModeSegmentMarginLimit == ModeStartSegmentGen.Margin,
+        //IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
+
+        checkOptStartSegmentMarginLimit.isOn = selVers.IsSegmentNextPointMargin;
+        checkOptStartSegmentRange.isOn = selVers.IsSegmentNextPointRange;
+    }
+
+    public void AddVersionGenericOptions(string nameVerion)
+    {
+        //public InputField btxSizeBrush;
+        //public InputField btxIntGenOption1;
+        //public InputField btxIntGenOption2;
+        //public InputField btxIntGenOption3;
+        //public InputField btxIntGenOption4;
+        //public InputField btxIntGenOption5;
+
+        //// # Segmnt Next Point Gen
+        //public Toggle checkOptStartSegmentMarginLimit;
+        //public Toggle checkOptStartSegmentRange;
+        //public Toggle checkOptStartSegmentIsFirstLast;
+        //public InputField tbxOptStartSegment;
+        //public InputField tbxOptEndSegment;
+
+        //Create Options
+        //SizeBrush
+        GenericOptionsWorld saveOptions = new GenericOptionsWorld()
+        {
+            NameVersion = nameVerion,
+            NameObject = selectGeneticObject.Name,
+            TagObject = selectGeneticObject.Tag,
+
+            CountObjects = OptionGenCount,
+            Segment = OptionGenSegments,
+            Level = OptionGenLevel,
+
+            IsClear = IsClearLayer,
+            IsSteps = IsSteps,
+            IsTestField = IsTestFilledFieldGen,
+            IsTestType = IsTestExistMeTypeGen,
+
+            LastLimit = LastLimit,
+            FirstLimit = FirstLimit,
+            IsSegmentNextPointFirst = IsFirstStartSegment,
+            IsSegmentNextPointMargin = ModeSegmentMarginLimit == ModeStartSegmentGen.Margin,
+            IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
+        };
+        m_ListGenOptionsVersion.Add(saveOptions);
+        SaveVersionsGenericOptions();
+    }
+
+
+    public void SaveVersionsGenericOptions()
+    {
+        string nameXML = Storage.Instance.DataPathVersion;
+        ContainerOptionsWorld state = new ContainerOptionsWorld()
+        {
+            NameVersion = nameXML,
+            ListGenericOprionsWorld = m_ListGenOptionsVersion
+        };
+        string pathVersOptions = "";
+
+        
+
+        Serializator.SaveXml(state, pathVersOptions, false, extraTypesOtions);
+        //m_ListGenOptionsVersion;
+    }
+    public void LoadVersionsGenericOptions()
+    {
+        string pathVersOptions = Storage.Instance.DataPathVersion;
+        ContainerOptionsWorld state =  Serializator.LoadXml<ContainerOptionsWorld>(pathVersOptions, extraTypesOtions);
+        if(state==null)
+        {
+            m_ListGenOptionsVersion = new List<GenericOptionsWorld>();
+        }
+        else
+        {
+            m_ListGenOptionsVersion = state.ListGenericOprionsWorld;
+        }
+    }
+
+    #endregion
 }
 
 public enum ToolBarPaletteMapAction
@@ -1866,4 +2092,43 @@ public enum ToolBarPaletteMapAction
     Teleport,
     Transfer,
     Brush
+}
+
+//[XmlRoot("Grid")]
+//[XmlInclude(typeof(FieldData))]
+//[XmlType("Field")] 
+
+[XmlRoot("OptionsWorld")]
+[XmlInclude(typeof(GenericOptionsWorld))]
+public class ContainerOptionsWorld
+{
+    public string NameVersion;
+    public List<GenericOptionsWorld> ListGenericOprionsWorld;
+}
+
+[XmlType("Option")]
+public class GenericOptionsWorld
+{
+    public string NameVersion { get; set; }
+
+    public int CountObjects;
+    public int Segment;
+    public int Level;
+
+    //public int OptStartSegment;
+    //public int OptEndSegment;
+    public float LastLimit;
+    public float FirstLimit;
+
+    public string TagObject;
+    public string NameObject;
+
+    public bool IsClear;
+    public bool IsTestField;
+    public bool IsTestType;
+
+    public bool IsSteps;
+    public bool IsSegmentNextPointMargin;
+    public bool IsSegmentNextPointRange;
+    public bool IsSegmentNextPointFirst;
 }
