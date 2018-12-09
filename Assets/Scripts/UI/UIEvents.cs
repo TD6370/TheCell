@@ -39,7 +39,7 @@ public class UIEvents : MonoBehaviour {
     public Toggle btnShowLog;
     public InputField tbxTest;
     public GameObject PanelLog;
-    public GameObject contentList;
+    public GameObject ContentListLogCommand;
     public GameObject ListBoxExpandPerson;
     public GameObject contentListExpandPerson;
     public GameObject PrefabExpandPanel;
@@ -383,7 +383,7 @@ public class UIEvents : MonoBehaviour {
         CommandExecute(selectCommand);
 
         
-        CreateCommandLogButton(selectCommand, Color.white, contentList.transform, null, true);
+        CreateCommandLogButton(selectCommand, Color.white, ContentListLogCommand.transform, null, true);
 
         //txtMessage.text = string.Join("\n", messages.ToArray()); // "Selected: [" + tbxTest.text + "]"; 
         //SetTextLog = string.Join("\n", messages.ToArray());
@@ -1101,7 +1101,7 @@ public class UIEvents : MonoBehaviour {
             ClearAllCommandButtonsTool();
             foreach (string nameCommand in storeComm.CommadsTemplate)
             {
-                CreateCommandLogButton(nameCommand, Color.white, contentList.transform, null, true);
+                CreateCommandLogButton(nameCommand, Color.white, ContentListLogCommand.transform, null, true);
             }
 
             //Debug.Log("---- LoadCommandTool Loaded..........");
