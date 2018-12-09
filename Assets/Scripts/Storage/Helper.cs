@@ -246,6 +246,19 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
+    public static bool IsTerra(this string typePrefabStr)
+    {
+        try
+        {
+            SaveLoadData.TypePrefabs typePrefab = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), typePrefabStr);
+            return IsTerra(typePrefab);
+        }catch(Exception x)
+        {
+            Debug.Log("IsTerra " + x.Message);
+            return false;
+        }
+    }
+        
     public static bool IsUpdateTexture(SaveLoadData.TypePrefabs typePrefab)
     {
         switch (typePrefab)
@@ -636,6 +649,12 @@ public static class HelperExtension
 
         return id;
     }
+
+    public static bool IsField(this string text)
+    {
+        return !string.IsNullOrEmpty(text) && text == SaveLoadData.TypePrefabs.PrefabField.ToString();
+    }
+
 
     public static string GetNameTextureMap(this string nameObj)
     {

@@ -921,7 +921,25 @@ public class SaveLoadData : MonoBehaviour {
     }
 
 
-    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false)
+    //public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false,
+    //    PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
+    //    PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
+    //public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, 
+    //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
+    //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
+
+    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
+    {
+        
+        PaletteMapController.SelCheckOptDel modeDelete = PaletteMapController.SelCheckOptDel.None;
+        if (isClaerField)
+            modeDelete = PaletteMapController.SelCheckOptDel.DelFull;
+        AddConstructInGridData(nameField, itemTile, modeDelete);
+    }
+
+    public void AddConstructInGridData(string nameField, DataTile itemTile,
+    PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
+    PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
 
@@ -976,7 +994,14 @@ public class SaveLoadData : MonoBehaviour {
             objTerra.TileName = itemTile.Name;
         }
 
-        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField, isTestFilledField, isTestExistMeType);
+        //Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField, isTestFilledField, isTestExistMeType,
+        //    p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
+
+        //if (isClaerField)
+        //    p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.DelFull;
+
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
+            p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
     }
 
     private TypePrefabs GetPrefabByTile(string TileName)

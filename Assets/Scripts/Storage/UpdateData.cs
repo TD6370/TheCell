@@ -166,7 +166,7 @@ public class UpdateData { //: MonoBehaviour {
         return fieldData;
     }
 
-    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false)
+    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc)
     {
         ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
@@ -175,30 +175,155 @@ public class UpdateData { //: MonoBehaviour {
         }
         else
         {
-            if (isTestFilledField)
-                return true;
+            fieldData = _GridDataG.FieldsD[nameField];
+        }
 
+        if (isTestSlow)
+        {
+            var ind = fieldData.Objects.FindIndex(p => p.NameObject == objDataSave.NameObject);
+            if (ind != -1)
+            {
+
+                Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE:   in " + nameField + "    " + callFunc);
+
+                //var gobj = fieldData.Objects.Find(p => p.NameObject == objDataSave.NameObject);
+                //if (gobj != null)
+                //Storage.Instance.AddDestroyGameObject(gobj.NameObject);
+                Storage.Log.GetHistory(objDataSave.NameObject);
+                return false;
+            }
+        }
+
+        fieldData.Objects.Add(objDataSave);
+
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
+
+        Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
+
+        return true;
+    }
+
+
+    //public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false,
+    public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc,
+         PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
+        PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
+    {
+        bool isLog = true;
+
+        //bool isDel = p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.None;
+
+        if (isLog)
+        {
+            Storage.Events.ListLogAdd = "Add IN GRID: d: " + p_TypeModeOptStartDelete + " c: " + p_TypeModeOptStartCheck;  
+        }
+
+        ModelNPC.FieldData fieldData;
+        if (!_GridDataG.FieldsD.ContainsKey(nameField))
+        {
+            fieldData = AddNewFieldInGrid(nameField, callFunc);
+        }
+        //else
+        else 
+        {
             fieldData = _GridDataG.FieldsD[nameField];
 
-            if (isTestExistMeType)
-            {
-                var indTM = fieldData.Objects.FindIndex(p => p.TagObject == objDataSave.TagObject);
-                if (indTM != -1)
+            if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelFull)
+            { 
+                //if (!isDel)
+                //{
+                //if (isTestFilledField)
+                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelFull && p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelFull)
                     return true;
+
+                //if (isTestExistMeType)
+                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelType && 
+                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelType)
+                {
+                    var indTM = fieldData.Objects.FindIndex(p => p.TagObject == objDataSave.TagObject);
+                    if (indTM != -1)
+                    {
+                        if(isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Type";
+                        return true;
+                    }
+                }
+                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelPrefab && 
+                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelPrefab)
+                {
+                    //var indTM = fieldData.Objects.FindIndex(p => p.TagObject.IsTerra());
+                    var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsField());
+                    if (indTM != -1)
+                    {
+                        if (isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Prefab";
+                        return true;
+                    }
+                }
+                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelTerra && 
+                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelTerra)
+                {
+                    //var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsTerra());
+                    var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsField());
+                    if (indTM != -1)
+                    {
+                        if (isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Terra";
+                        return true;
+                    }
+                }
+                //}
+                //else
+                //{
+                if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelType)
+                {
+                    var ListRemove = fieldData.Objects.Where(p => p.TagObject == objDataSave.TagObject).ToList();
+                    for(int i=ListRemove.Count -1; i>=0;i--)
+                    {
+                        if (isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR type";
+                        //ListRemove.RemoveAt(i);
+                        fieldData.Objects.Remove(ListRemove[i]);
+                    }
+                }
+                else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
+                {
+                    var ListRemove = fieldData.Objects.Where(p => !p.TagObject.IsField()).ToList();
+                    for (int i = ListRemove.Count - 1; i >= 0; i--)
+                    {
+                        if (isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
+                        //ListRemove.RemoveAt(i);
+                        fieldData.Objects.Remove(ListRemove[i]);
+                    }
+                }
+                else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelTerra)
+                {
+                    var ListRemove = fieldData.Objects.Where(p => p.TagObject.IsField()).ToList();
+                    for (int i = ListRemove.Count - 1; i >= 0; i--)
+                    {
+                        if (isLog)
+                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
+                        //ListRemove.RemoveAt(i);
+                        fieldData.Objects.Remove(ListRemove[i]);
+                    }
+                }
+
             }
         }
 
-        if (isClaerField)
+        if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelFull)
         {
-            if (PoolGameObjects.IsUsePoolObjects)
-            {
-                fieldData.Objects.Clear();
-            }
-            else
-            {
-                fieldData.Objects.Clear();
-            }
+            if (isLog)
+                Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR FULL ";
+            fieldData.Objects.Clear();
         }
+
+        //if (isClaerField)
+        //{
+        //    fieldData.Objects.Clear();
+        //}
 
         if (isTestSlow)
         {
