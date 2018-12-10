@@ -471,6 +471,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _PaletteMapController is Empty");
             return;
         }
+        _PaletteMapController.Init();
 
         _DrawGeom = GetComponent<DrawGeometry>();
         if (_DrawGeom == null)
