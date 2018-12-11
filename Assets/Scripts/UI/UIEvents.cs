@@ -683,6 +683,32 @@ public class UIEvents : MonoBehaviour {
         //Debug.Log("CreateCommandLogText : " + p_text);
     }
 
+    //public void CreateListButtton(string p_text, Color color, Transform p_parent, Delegate action)
+    //{
+    //    //string nameGO = "text" + p_text.Replace(" ", "-");
+    //    Vector3 pos = new Vector3(0, 0, 0);
+    //    Button resGO = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
+    //    //resGO.name = nameGO;
+    //    resGO.GetComponent<Text>().text = p_text;
+    //    resGO.transform.SetParent(p_parent);
+    //    resGO.onClick.AddListener(delegate {
+    //        action()
+    //    });
+
+    //    //Debug.Log("CreateCommandLogText : " + p_text);
+    //}
+    public void CreateListButtton(string p_text, Transform p_parent, out Button resGO)
+    {
+        //string nameGO = "text" + p_text.Replace(" ", "-");
+        Vector3 pos = new Vector3(0, 0, 0);
+        resGO = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
+        //resGO.name = nameGO;
+        //resGO.GetComponent<Text>().text = p_text;
+        resGO.GetComponentInChildren<Text>().text = p_text;
+        resGO.transform.SetParent(p_parent);
+        //Debug.Log("CreateCommandLogText : " + p_text);
+    }
+
     public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null, bool isValidExistCommand = false, ExpandControl expControl = null)
     {
         bool isPersonComm = false;

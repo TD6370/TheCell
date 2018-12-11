@@ -1342,6 +1342,8 @@ public class PaletteMapController : MonoBehaviour {
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
         SelectedCell = DataTileCell;
+        if (selectGeneticObject == null)
+            selectGeneticObject = DataTileCell;
 
         if (lastSelectCellPalette != null)
             lastSelectCellPalette.GetComponent<Image>().color = Color.white;
@@ -2046,7 +2048,7 @@ public class PaletteMapController : MonoBehaviour {
 
     private void LoadVersionOptons()
     {
-       
+
         //LoadVersionsGenericOptionsXML();
         LoadVersionsGenericXML();
 
@@ -2098,7 +2100,7 @@ public class PaletteMapController : MonoBehaviour {
         bntAddInContainer.onClick.AddListener(() =>
         {
             AddOptionsInContainer();
-            
+
         });
 
         //-------- new
@@ -2299,6 +2301,12 @@ public class PaletteMapController : MonoBehaviour {
 
     private void AddOptionsInContainer()
     {
+        if (SelectedVersionWorld == null)
+        {
+            Storage.Events.ListLogAdd = "### Not selected World version";
+            return;
+        }
+
         if (SelectedGenericOptionsWorld != null)
         {
             if (m_ListGenOptionsVersionForContainer == null)
@@ -2329,15 +2337,19 @@ public class PaletteMapController : MonoBehaviour {
 
     private void AddListVersionsWorld(string value)
     {
+        if (m_ListGenOptionsVersionForContainer == null)
+            m_ListGenOptionsVersionForContainer = new List<GenericOptionsWorld>();
+        m_ListGenOptionsVersionForContainer.Clear();
+
         AddContainerVersionGeneric(value, m_ListGenOptionsVersionForContainer); //New container
         //LoadVersionsGenericXML();
         UpdateListVersions();
     }
 
-    private void DeleteVersionsOption(string  nameVersion)
+    private void DeleteVersionsOption(string nameVersion)
     {
         var delVers = m_ListGenOptionsVersion.Find(p => p.NameVersion == nameVersion);
-        if(delVers!=null)
+        if (delVers != null)
         {
             m_ListGenOptionsVersion.Remove(delVers);
             SaveVersionsGeneric();
@@ -2407,7 +2419,7 @@ public class PaletteMapController : MonoBehaviour {
 
         ContainerOptionsWorld saveOptions = new ContainerOptionsWorld()
         {
-            NameVersion = value, 
+            NameVersion = value,
             ListGenericOprionsWorld = p_listGenOptionsVersion
         };
         m_ListGenWorldVersion.Add(saveOptions);
@@ -2430,20 +2442,28 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-      
-        GenericOptionsWorld selVers = m_ListGenOptionsVersion[dpntGenOptionsVersion.value];
+        SelectedVersionGenOption(dpntGenOptionsVersion.value);
+    }
+
+    private void SelectedVersionGenOption(int index)
+    {
+        GenericOptionsWorld selVers = m_ListGenOptionsVersion[index];
+        SelectedVersionGenOption(selVers);
+    }
+
+    private void SelectedVersionGenOption(GenericOptionsWorld selVers)
+    {
+
         SelectedGenericOptionsWorld = selVers;
         //Load Options
 
-
-
         //if (selectGeneticObject == null)
         //{
-            selectGeneticObject = new DataTile()
-            {
-                Name = selVers.NameObject,
-                Tag = selVers.TagObject
-            };
+        selectGeneticObject = new DataTile()
+        {
+            Name = selVers.NameObject,
+            Tag = selVers.TagObject
+        };
         //}
         //selectGeneticObject.Name = selVers.NameObject;
         //selectGeneticObject.Tag = selVers.TagObject;
@@ -2464,7 +2484,7 @@ public class PaletteMapController : MonoBehaviour {
         m_ModeOptStartDeletePrefab = ModeDelete.Off;
         m_ModeOptStartDeleteTerra = ModeDelete.Off;
 
-        switch(selVers.TypeModeOptStartDelete)
+        switch (selVers.TypeModeOptStartDelete)
         {
             case "DelFull":
                 m_ModeOptStartDeleteFull = ModeDelete.Clear;
@@ -2500,7 +2520,7 @@ public class PaletteMapController : MonoBehaviour {
         checkOptStartSegmentMarginLimit.isOn = selVers.IsSegmentNextPointMargin;
         checkOptStartSegmentRange.isOn = selVers.IsSegmentNextPointRange;
 
-        
+
 
         // 3. 
         LastLimit = selVers.LastLimit;
@@ -2508,7 +2528,7 @@ public class PaletteMapController : MonoBehaviour {
 
         //-------
         tbxOptStartSegment.text = selVers.FirstLimit.ToString();
-        tbxOptEndSegment.text = selVers.LastLimit.ToString(); 
+        tbxOptEndSegment.text = selVers.LastLimit.ToString();
         //if (selVers.IsSegmentNextPointMargin)
         //{
         //    tbxOptStartSegment.text = FirstLimitMargin.ToString();
@@ -2529,7 +2549,6 @@ public class PaletteMapController : MonoBehaviour {
         //IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
 
 
-
     }
 
     void VersionGenWorldValueChanged(Dropdown dpntGenWorldVersion)
@@ -2540,11 +2559,17 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        SelectedVersionWorld = m_ListGenWorldVersion[dpntGenWorldVersion.value];
+        SelectedVersionWorldChange(dpntGenWorldVersion.value);
+    }
+
+    private void SelectedVersionWorldChange(int index)
+    {
+        SelectedVersionWorld = m_ListGenWorldVersion[index];
         if (SelectedVersionWorld.ListGenericOprionsWorld == null)
             SelectedVersionWorld.ListGenericOprionsWorld = new List<GenericOptionsWorld>();
 
         List<GenericOptionsWorld> listOptGen = SelectedVersionWorld.ListGenericOprionsWorld;
+        //#LIST IN WORLD
         m_ListGenOptionsVersionForContainer = SelectedVersionWorld.ListGenericOprionsWorld;
         UpdateListOptionsInContainer();
     }
@@ -2554,20 +2579,61 @@ public class PaletteMapController : MonoBehaviour {
         if (m_ListGenOptionsVersionForContainer == null)
             return;
 
-        var itemsDestroy = ContentListVersionsGenericWorld.GetComponentsInChildren<GameObject>();
-        if(itemsDestroy != null)
+        //var itemsDestroy = ContentListVersionsGenericWorld.GetComponentsInChildren<GameObject>();
+        foreach (Transform itemsDestroy in ContentListVersionsGenericWorld.transform)
         {
-            foreach(var itemDel in itemsDestroy)
-                Destroy(itemDel);
+            //child is your child transform
+            if (itemsDestroy != null)
+            {
+                Destroy(itemsDestroy.gameObject);
+            }
         }
+        //if (itemsDestroy != null)
+        //{
+        //    foreach(var itemDel in itemsDestroy)
+        //        Destroy(itemDel);
+        //}
 
         foreach (var itemOpt in m_ListGenOptionsVersionForContainer)
         {
-            Storage.Events.CreateCommandLogText(itemOpt.NameVersion, Color.white, ContentListVersionsGenericWorld.transform);
+            //Storage.Events.CreateCommandLogText(itemOpt.NameVersion, Color.white, ContentListVersionsGenericWorld.transform);
+            Button buttonVersOpt;
+            Storage.Events.CreateListButtton(itemOpt.NameVersion, ContentListVersionsGenericWorld.transform, out buttonVersOpt);
+            buttonVersOpt.onClick.AddListener(delegate () {
+                //string nameVersOpt = buttonVersOpt.GetComponent<Text>().text;
+                string nameVersOpt = buttonVersOpt.GetComponentInChildren<Text>().text;
+                SelectionVersionOptInContainer(nameVersOpt);
+            });
         }
     }
 
-    public void AddVersionGenericOptions(string nameVerion)
+    private void SelectionVersionOptInContainer(string nameVersOpt)
+    {
+        GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer.Find(p => p.NameVersion == nameVersOpt);
+        if (genOpt != null)
+        {
+            int index = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVersOpt);
+            if (index != -1)
+            {
+                dpnListGenOptionsVersion.value = index;
+            }
+            else
+            {
+                m_ListGenOptionsVersion.Add(genOpt);
+                if (dpnListGenOptionsVersion.options.Count>0)
+                    dpnListGenOptionsVersion.value = dpnListGenOptionsVersion.options.Count-1;
+                SaveVersionsGeneric();
+            }
+
+            SelectedVersionGenOption(genOpt);
+        }
+        else
+        {
+            Storage.Events.ListLogAdd = "#### Not find version in ListGenOptionsVersionForContainer: " + nameVersOpt;
+        }
+    }
+
+        public void AddVersionGenericOptions(string nameVerion)
     {
         if(selectGeneticObject == null)
         {
