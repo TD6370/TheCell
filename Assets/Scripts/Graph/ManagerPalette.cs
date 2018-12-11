@@ -95,8 +95,12 @@ public class ManagerPalette : MonoBehaviour {
             //Texture2D _texture = sprt.texture;
             //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
             //_texture.Apply();
-            string nameSprite= sprt.name.Replace("(Clone)", "");
-            SpritesPrefabs.Add(nameSprite, sprt);
+            sprt.name = sprt.name.ClearClone();
+            if (sprt.name.IndexOf("Wall") != -1)
+            {
+                sprt.name = "Prefab" + sprt.name;
+            }
+            SpritesPrefabs.Add(sprt.name, sprt);
             //Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
         }
 

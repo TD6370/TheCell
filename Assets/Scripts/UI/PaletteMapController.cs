@@ -17,12 +17,14 @@ public class PaletteMapController : MonoBehaviour {
     //public bool IsTestExistMeTypeGen = true;
 
     public GameObject FramePaletteMap;
+    public GameObject ToolBarBrushPalette;
     public Button btnClose;
+    public Button btnCloseToolBarBrushPalette;//ToolBarBrushPalette.SetActive(false);
     public Dropdown dpdListConstructsControl;
 
     public string SelectedConstruction { get; set; }
     public DataTile SelectedCell { get; set; }
-    private DataTile selectGeneticObject { get; set; }
+    //private DataTile selectGeneticObject { get; set; }
     public GameObject PrefabCellMapPalette;
 
     //public Button btnOnPaint;
@@ -276,8 +278,6 @@ public class PaletteMapController : MonoBehaviour {
             m_PasteOnLayer = !value;
         }
     }
-
-    public GameObject ToolBarBrushPalette;
 
     private List<Toggle> m_listToggleMode;
 
@@ -851,6 +851,10 @@ public class PaletteMapController : MonoBehaviour {
         {
             Show(false);
         });
+        btnCloseToolBarBrushPalette.onClick.AddListener(delegate
+        {
+            ToolBarBrushPalette.SetActive(!ToolBarBrushPalette.activeSelf); 
+        });
         btnOnPaint.onValueChanged.AddListener(delegate
         {
             isPaletteBrushOn = !isPaletteBrushOn;
@@ -1031,7 +1035,16 @@ public class PaletteMapController : MonoBehaviour {
 
     public void PrefabsOnPalette()
     {
-        List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
+        //#fix terra
+        //List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
+        //foreach (var item in listTextures)
+        //{
+        //    Debug.Log("TileName :: " + item.name);
+        //}
+        //foreach (Sprite item in Storage.Palette.SpritesPrefabs.Values)
+        //{
+        //    Debug.Log("SpriteName :: " + item.name); 
+        //}
 
         //int countColumnMap = listTextures[0].width;
         int countColumnMap = 6;
@@ -1050,20 +1063,33 @@ public class PaletteMapController : MonoBehaviour {
 
         m_listCallsOnPalette.Clear();
 
-        //m_GridMap.constraintCount = countColumnMap;
-
         int index = 0;
-        foreach (var item in listTextures)
+
+        //foreach (var item in listTextures)
+        //@FiX terra
+        foreach (Sprite item in Storage.Palette.SpritesPrefabs.Values)
         {
+            //item.name = item.name.ClearClone();
+            //if (item.name.IndexOf("Wall") != -1)
+            //{
+            //    item.name = "Prefab" + item.name;
+            //}
+
+            string spriteName = item.name;
+            
+
             var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
             cellMap.transform.SetParent(this.gameObject.transform);
-            Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
 
+            //@FiX terra
+            //----------------
+            //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
+            //----------------
             TypesStructure typeTilePrefab = TypesStructure.Prefab;
             try
             {
                 //TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
-                if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), item.name))
+                if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), spriteName))
                 {
                     typeTilePrefab = TypesStructure.Terra;
                     Debug.Log("Not Prefab");
@@ -1075,9 +1101,9 @@ public class PaletteMapController : MonoBehaviour {
             }
 
 
-            cellMap.GetComponent<Image>().sprite = spriteTile;
+            cellMap.GetComponent<Image>().sprite = item;
             //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
-            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
+            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = typeTilePrefab.ToString() };
             cellMap.SetActive(true);
 
             m_listCallsOnPalette.Add(cellMap);
@@ -1342,8 +1368,8 @@ public class PaletteMapController : MonoBehaviour {
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
         SelectedCell = DataTileCell;
-        if (selectGeneticObject == null)
-            selectGeneticObject = DataTileCell;
+        //if (selectGeneticObject == null)
+        //    selectGeneticObject = DataTileCell;
 
         if (lastSelectCellPalette != null)
             lastSelectCellPalette.GetComponent<Image>().color = Color.white;
@@ -1384,7 +1410,11 @@ public class PaletteMapController : MonoBehaviour {
     {
         DataTile genPrefab = null;
         if (isSelected)
-            genPrefab = SelectedCell;
+        {
+            genPrefab = SelectedCell;//  selectGeneticObject;
+            if(genPrefab==null)
+                genPrefab = SelectedCell;
+        }
 
         if (genPrefab == null)
         {
@@ -1438,7 +1468,12 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        selectGeneticObject = selDataTile;
+
+        
+        //selectGeneticObject = selDataTile;
+        SelectedCell = selDataTile;
+        Storage.Events.ListLogAdd = "Generic prefab: " + SelectedCell.Name + @" \ " + SelectedCell.Tag;
+
 
         //public float ActionRate = 0.5f;
         //private float DelayTimer = 0F;
@@ -2467,11 +2502,12 @@ public class PaletteMapController : MonoBehaviour {
 
         //if (selectGeneticObject == null)
         //{
-        selectGeneticObject = new DataTile()
+        SelectedCell = new DataTile()
         {
             Name = selVers.NameObject,
             Tag = selVers.TagObject
         };
+        Storage.Events.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
         //}
         //selectGeneticObject.Name = selVers.NameObject;
         //selectGeneticObject.Tag = selVers.TagObject;
@@ -2685,7 +2721,7 @@ public class PaletteMapController : MonoBehaviour {
 
         public void AddVersionGenericOptions(string nameVerion)
     {
-        if(selectGeneticObject == null)
+        if(SelectedCell == null)
         {
             Storage.Events.ListLogAdd = "##### Not Selected Genetic Object !!!!!!";
             Debug.Log("###### Not Selected Genetic Object");
@@ -2702,8 +2738,8 @@ public class PaletteMapController : MonoBehaviour {
         GenericOptionsWorld saveOptions = new GenericOptionsWorld()
         {
             NameVersion = nameVerion,
-            NameObject = selectGeneticObject.Name,
-            TagObject = selectGeneticObject.Tag,
+            NameObject = SelectedCell.Name,
+            TagObject = SelectedCell.Tag,
 
             CountObjects = OptionGenCount,
             Segment = OptionGenSegments,

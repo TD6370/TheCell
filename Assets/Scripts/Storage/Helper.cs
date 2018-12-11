@@ -655,6 +655,11 @@ public static class HelperExtension
         return !string.IsNullOrEmpty(text) && text == SaveLoadData.TypePrefabs.PrefabField.ToString();
     }
 
+    public static string ClearClone(this string text)
+    {
+        return text.Replace("(Clone)","");
+    }
+    
 
     public static string GetNameTextureMap(this string nameObj)
     {
