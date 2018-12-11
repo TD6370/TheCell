@@ -3,158 +3,12 @@
   <ListGenericWorlds>
     <ContainerOptionsWorld>
       <NameVersion>World1</NameVersion>
-      <ListGenericOprionsWorld>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>50</Segment>
-          <Level>5</Level>
-          <LastLimit>0</LastLimit>
-          <FirstLimit>0</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelTerra</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelPrefab</TypeModeOptStartCheck>
-          <IsSteps>false</IsSteps>
-          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-          <NameVersion>t2</NameVersion>
-        </Option>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>5</Segment>
-          <Level>10</Level>
-          <LastLimit>7</LastLimit>
-          <FirstLimit>2</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelFull</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelType</TypeModeOptStartCheck>
-          <IsSteps>true</IsSteps>
-          <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
-          <NameVersion>100</NameVersion>
-        </Option>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>50</Segment>
-          <Level>5</Level>
-          <LastLimit>0</LastLimit>
-          <FirstLimit>0</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>None</TypeModeOptStartCheck>
-          <IsSteps>false</IsSteps>
-          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-          <NameVersion>clear</NameVersion>
-        </Option>
-      </ListGenericOprionsWorld>
-    </ContainerOptionsWorld>
-    <ContainerOptionsWorld>
-      <NameVersion>W2</NameVersion>
-      <ListGenericOprionsWorld>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>50</Segment>
-          <Level>5</Level>
-          <LastLimit>0</LastLimit>
-          <FirstLimit>0</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelType</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelPrefab</TypeModeOptStartCheck>
-          <IsSteps>false</IsSteps>
-          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-          <NameVersion>t2</NameVersion>
-        </Option>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>5</Segment>
-          <Level>10</Level>
-          <LastLimit>7</LastLimit>
-          <FirstLimit>2</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelFull</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelType</TypeModeOptStartCheck>
-          <IsSteps>true</IsSteps>
-          <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
-          <NameVersion>100</NameVersion>
-        </Option>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>50</Segment>
-          <Level>5</Level>
-          <LastLimit>0</LastLimit>
-          <FirstLimit>0</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelType</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelPrefab</TypeModeOptStartCheck>
-          <IsSteps>false</IsSteps>
-          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-          <NameVersion>4443</NameVersion>
-        </Option>
-        <Option>
-          <CountObjects>0</CountObjects>
-          <Segment>50</Segment>
-          <Level>5</Level>
-          <LastLimit>0</LastLimit>
-          <FirstLimit>0</FirstLimit>
-          <TagObject>Prefab</TagObject>
-          <NameObject>PrefabWallWood</NameObject>
-          <IsClear>true</IsClear>
-          <TypeModeOptStartDelete>DelType</TypeModeOptStartDelete>
-          <TypeModeOptStartCheck>DelPrefab</TypeModeOptStartCheck>
-          <IsSteps>false</IsSteps>
-          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-          <NameVersion>bbb</NameVersion>
-        </Option>
-      </ListGenericOprionsWorld>
-    </ContainerOptionsWorld>
-    <ContainerOptionsWorld>
-      <NameVersion>W3</NameVersion>
       <ListGenericOprionsWorld />
     </ContainerOptionsWorld>
   </ListGenericWorlds>
   <GenericOptions>
     <NameVersion>Options</NameVersion>
     <ListGenericOprionsWorld>
-      <Option>
-        <CountObjects>0</CountObjects>
-        <Segment>5</Segment>
-        <Level>10</Level>
-        <LastLimit>7</LastLimit>
-        <FirstLimit>2</FirstLimit>
-        <TagObject>Prefab</TagObject>
-        <NameObject>PrefabWallWood</NameObject>
-        <IsClear>true</IsClear>
-        <TypeModeOptStartDelete>DelFull</TypeModeOptStartDelete>
-        <TypeModeOptStartCheck>DelType</TypeModeOptStartCheck>
-        <IsSteps>true</IsSteps>
-        <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
-        <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-        <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
-        <NameVersion>100</NameVersion>
-      </Option>
       <Option>
         <CountObjects>0</CountObjects>
         <Segment>50</Segment>
@@ -188,23 +42,6 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
         <NameVersion>t2</NameVersion>
-      </Option>
-      <Option>
-        <CountObjects>0</CountObjects>
-        <Segment>50</Segment>
-        <Level>5</Level>
-        <LastLimit>0</LastLimit>
-        <FirstLimit>0</FirstLimit>
-        <TagObject>Prefab</TagObject>
-        <NameObject>PrefabWallWood</NameObject>
-        <IsClear>true</IsClear>
-        <TypeModeOptStartDelete>DelType</TypeModeOptStartDelete>
-        <TypeModeOptStartCheck>DelPrefab</TypeModeOptStartCheck>
-        <IsSteps>false</IsSteps>
-        <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
-        <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
-        <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-        <NameVersion>4443</NameVersion>
       </Option>
       <Option>
         <CountObjects>0</CountObjects>

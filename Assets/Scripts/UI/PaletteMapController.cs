@@ -2385,7 +2385,11 @@ public class PaletteMapController : MonoBehaviour {
 
         dpnListGenOptionsVersion.ClearOptions();
         if (m_ListVersionNameGenOptionData.Count > 0)
+        {
             dpnListGenOptionsVersion.AddOptions(m_ListVersionNameGenOptionData);
+            dpnListGenOptionsVersion.value = 0;
+            SelectedVersionGenOption(0);
+        }
     }
 
     private void LoadListContainersVersionsGeneticOptons()
@@ -2404,9 +2408,13 @@ public class PaletteMapController : MonoBehaviour {
 
         dpnListVersionGenWorld.ClearOptions();
         if (m_ListVersionNameGenWorldData.Count > 0)
+        {
             dpnListVersionGenWorld.AddOptions(m_ListVersionNameGenWorldData);
-
-
+            dpnListVersionGenWorld.value = 0;
+            SelectedVersionWorldChange(0);
+            //SelectionVersionOptInContainer(0);
+            //SelectionVersionOptInContainer(m_ListGenWorldVersion[0].NameVersion);
+        }
     }
 
     private void AddContainerVersionGeneric(string value, List<GenericOptionsWorld> p_listGenOptionsVersion)
@@ -2598,21 +2606,63 @@ public class PaletteMapController : MonoBehaviour {
         {
             //Storage.Events.CreateCommandLogText(itemOpt.NameVersion, Color.white, ContentListVersionsGenericWorld.transform);
             Button buttonVersOpt;
-            Storage.Events.CreateListButtton(itemOpt.NameVersion, ContentListVersionsGenericWorld.transform, out buttonVersOpt);
+            Button btnSubCommand;
+            Storage.Events.CreateListButtton(itemOpt.NameVersion, ContentListVersionsGenericWorld.transform, out buttonVersOpt, out btnSubCommand);
             buttonVersOpt.onClick.AddListener(delegate () {
+                //Selected item version in World
+                
                 //string nameVersOpt = buttonVersOpt.GetComponent<Text>().text;
                 string nameVersOpt = buttonVersOpt.GetComponentInChildren<Text>().text;
+                Storage.Events.ListLogAdd = ">> Selected " + nameVersOpt + " in " + SelectedVersionWorld.NameVersion;
                 SelectionVersionOptInContainer(nameVersOpt);
             });
+
+            //#TEST
+            if(btnSubCommand.name!= "btnSubCommand")
+            {
+                Storage.Events.ListLogAdd = "#######  btnSubCommand.name!= btnSubCommand    " + btnSubCommand.name ;
+            }
+
+            btnSubCommand.onClick.AddListener(delegate () {
+                //Remove version in World
+                string nameVersOpt = itemOpt.NameVersion;// buttonVersOpt.GetComponentInChildren<Text>().text;
+                GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer.Find(p => p.NameVersion == nameVersOpt);
+                if (genOpt != null)
+                {
+                    Storage.Events.ListLogAdd = ">> Remove " + genOpt + " in " + SelectedVersionWorld.NameVersion;
+                    m_ListGenOptionsVersionForContainer.Remove(genOpt);
+                    ///----
+                    if (dpnListGenOptionsVersion.options.Count > 0)
+                        dpnListGenOptionsVersion.value = 0;
+                    SaveVersionsGeneric();
+                    SelectedVersionGenOption(0);
+                    UpdateListOptionsInContainer();
+                    ///---
+                }
+            });
         }
+    }
+
+    private void SelectionVersionOptInContainer(int index)
+    {
+        GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer[index];
+        SelectionVersionOptInContainer(genOpt);
     }
 
     private void SelectionVersionOptInContainer(string nameVersOpt)
     {
         GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer.Find(p => p.NameVersion == nameVersOpt);
+        SelectionVersionOptInContainer(genOpt);
+    }
+
+    private void SelectionVersionOptInContainer(GenericOptionsWorld genOpt) //string nameVersOpt)
+    {
+        //GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer.Find(p => p.NameVersion == nameVersOpt);
         if (genOpt != null)
         {
-            int index = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVersOpt);
+            //int index = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVersOpt);
+            int index = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == genOpt.NameVersion);
+            
             if (index != -1)
             {
                 dpnListGenOptionsVersion.value = index;
@@ -2629,7 +2679,7 @@ public class PaletteMapController : MonoBehaviour {
         }
         else
         {
-            Storage.Events.ListLogAdd = "#### Not find version in ListGenOptionsVersionForContainer: " + nameVersOpt;
+            Storage.Events.ListLogAdd = "#### Not find version in ListGenOptionsVersionForContainer: " + genOpt.NameVersion;
         }
     }
 

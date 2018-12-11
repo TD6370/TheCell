@@ -697,7 +697,7 @@ public class UIEvents : MonoBehaviour {
 
     //    //Debug.Log("CreateCommandLogText : " + p_text);
     //}
-    public void CreateListButtton(string p_text, Transform p_parent, out Button resGO)
+    public void CreateListButtton(string p_text, Transform p_parent, out Button resGO, out Button btnSubCommand)
     {
         //string nameGO = "text" + p_text.Replace(" ", "-");
         Vector3 pos = new Vector3(0, 0, 0);
@@ -706,6 +706,29 @@ public class UIEvents : MonoBehaviour {
         //resGO.GetComponent<Text>().text = p_text;
         resGO.GetComponentInChildren<Text>().text = p_text;
         resGO.transform.SetParent(p_parent);
+
+        //btnSubCommand = (Button)resGO.GetComponentInChildren<Button>();//btnSubCommand.name!= "btnSubCommand"
+        Button btnSub = null;
+        foreach (Transform itemSub in resGO.transform)
+        {
+            if(itemSub.gameObject.name == "btnSubCommand")
+            {
+                btnSub = itemSub.gameObject.GetComponent<Button>();
+                continue;
+            }
+        }
+        btnSubCommand = btnSub as Button;
+
+        if (btnSubCommand != null)
+        {
+            //btnSubCommand
+            btnSubCommand.gameObject.SetActive(true);
+        }
+        else
+        {
+            Storage.Events.ListLogAdd = "#### btnSubCommand is null";
+        }
+
         //Debug.Log("CreateCommandLogText : " + p_text);
     }
 
