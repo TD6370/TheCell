@@ -1067,6 +1067,7 @@ public class GenerateGridFields : MonoBehaviour {
         string typePrefab = objData.TagObject;
         string namePrefab = objData.NameObject;
         Vector3 pos = objData.Position;
+        
 
         //#TEST #PREFABF
         //---------------- 1.

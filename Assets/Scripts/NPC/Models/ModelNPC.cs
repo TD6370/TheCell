@@ -631,7 +631,8 @@ public class ModelNPC
 
         public void Init()
         {
-            idTerra = Guid.NewGuid().ToString().Substring(0, 4);
+            //if(!IsReality) //#FIX
+                idTerra = Guid.NewGuid().ToString().Substring(0, 4);
 
             bool isGen = true;
 
@@ -648,10 +649,14 @@ public class ModelNPC
                 return;
             }
 
-            if (isGen)
-                TileName = Storage.TilesManager.GenNameTileTerra();
-            else
-                TileName = Storage.TilesManager.ListTexturs[0].name;
+            //#FIX
+            if (!IsLoadad && !IsReality)
+            {
+                if (isGen)
+                    TileName = Storage.TilesManager.GenNameTileTerra();
+                else
+                    TileName = Storage.TilesManager.ListTexturs[0].name;
+            }
         }
 
         public override void UpdateGameObject(GameObject objGame)
