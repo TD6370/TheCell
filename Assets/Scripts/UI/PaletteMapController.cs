@@ -1513,6 +1513,11 @@ public class PaletteMapController : MonoBehaviour {
         int sizeY = (int)posStructFieldNew.y + size;
 
 
+        bool isValidResult = true;
+        bool IsRepeatFind = true;
+        int limitRepeat = 500;
+        int indexRepeat = 0;
+
         if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         {
             for (int x = (int)posStructFieldNew.x; x < sizeX; x++)
@@ -1527,14 +1532,22 @@ public class PaletteMapController : MonoBehaviour {
 
                     if (!IsGenericContruct)
                     {
-                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
+                        isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
                     }
                     else
                     {
                         Storage.Instance.SelectFieldCursor = fieldNew;
                         GenericContructInGridData();
                     }
+
+                    if(!isValidResult && IsRepeatFind && indexRepeat<limitRepeat)
+                    {
+                        //#repeat
+                        y--;
+                        indexRepeat++;
+                    }
                 }
+                indexRepeat = 0;
             }
         }
         else
@@ -1573,11 +1586,18 @@ public class PaletteMapController : MonoBehaviour {
                         ClearLayerForStructure(fieldNew);
 
                     if (!IsGenericContruct) {
-                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                        isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
                     }
                     else {
                         Storage.Instance.SelectFieldCursor = fieldNew;
                         GenericContructInGridData();
+                    }
+
+                    if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
+                    {
+                        //#repeat
+                        i--;
+                        indexRepeat++;
                     }
                 }
                 //------
@@ -1625,14 +1645,22 @@ public class PaletteMapController : MonoBehaviour {
 
                         if (!IsGenericContruct)
                         {
-                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                            isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
                         }
                         else
                         {
                             Storage.Instance.SelectFieldCursor = fieldNew;
                             GenericContructInGridData();
                         }
+
+                        if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
+                        {
+                            //#repeat
+                            s--;
+                            indexRepeat++;
+                        }
                     }
+                    indexRepeat = 0;
                 }
             } else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
 
@@ -1788,14 +1816,22 @@ public class PaletteMapController : MonoBehaviour {
 
                         if (!IsGenericContruct)
                         {
-                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                            isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
                         }
                         else
                         {
                             Storage.Instance.SelectFieldCursor = fieldNew;
                             GenericContructInGridData();
                         }
+
+                        if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
+                        {
+                            //#repeat
+                            s--;
+                            indexRepeat++;
+                        }
                     }
+                    indexRepeat=0;
                 }
                 //------
             }

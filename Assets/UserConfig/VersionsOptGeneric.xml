@@ -99,6 +99,24 @@
         <IsConstruction>true</IsConstruction>
         <NameVersion>BolotoConstr</NameVersion>
       </Option>
+      <Option>
+        <CountObjects>18000</CountObjects>
+        <Segment>150</Segment>
+        <Level>15</Level>
+        <LastLimit>1</LastLimit>
+        <FirstLimit>2</FirstLimit>
+        <TagObject>Prefab</TagObject>
+        <NameObject>PrefabRock</NameObject>
+        <IsClear>true</IsClear>
+        <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+        <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+        <IsSteps>false</IsSteps>
+        <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
+        <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+        <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
+        <IsConstruction>false</IsConstruction>
+        <NameVersion>cloud</NameVersion>
+      </Option>
     </ListGenericOprionsWorld>
   </GenericOptions>
 </GenWorld>

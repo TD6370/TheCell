@@ -926,14 +926,6 @@ public class Serializator
             Dictionary<string, ModelNPC.FieldData> cashPart = FieldsPart;
             Dictionary<string, ModelNPC.FieldData> bigPart = dataSave;
 
-            //foreach (var partGrid in PartsGrids)
-            //{
-            //    if (partGrid.Key != "1x1")
-            //    {
-            //        bigPart = bigPart.Concat(partGrid.Value)
-            //        .ToDictionary(x => x.Key, x => x.Value);
-            //    }
-            //}
             Helper.StartControlTime();
             ModelNPC.GridData stateCash = new ModelNPC.GridData() { FieldsD = cashPart };
             SavePartXML(stateCash, "1x1");

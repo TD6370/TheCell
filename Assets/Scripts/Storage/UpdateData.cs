@@ -235,7 +235,7 @@ public class UpdateData { //: MonoBehaviour {
                 //{
                 //if (isTestFilledField)
                 if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelFull && p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelFull)
-                    return true;
+                    return false;
 
                 //if (isTestExistMeType)
                 if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelType && 
@@ -246,7 +246,7 @@ public class UpdateData { //: MonoBehaviour {
                     {
                         if(isLog)
                             Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Type";
-                        return true;
+                        return false;
                     }
                 }
                 if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelPrefab && 
@@ -258,7 +258,7 @@ public class UpdateData { //: MonoBehaviour {
                     {
                         if (isLog)
                             Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Prefab";
-                        return true;
+                        return false;
                     }
                 }
                 if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelTerra && 
@@ -270,7 +270,7 @@ public class UpdateData { //: MonoBehaviour {
                     {
                         if (isLog)
                             Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Terra";
-                        return true;
+                        return false;
                     }
                 }
                 //}

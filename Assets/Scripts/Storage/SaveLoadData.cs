@@ -928,16 +928,16 @@ public class SaveLoadData : MonoBehaviour {
     //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
     //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
 
-    public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
+    public bool AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
     {
         
         PaletteMapController.SelCheckOptDel modeDelete = PaletteMapController.SelCheckOptDel.None;
         if (isClaerField)
             modeDelete = PaletteMapController.SelCheckOptDel.DelFull;
-        AddConstructInGridData(nameField, itemTile, modeDelete);
+        return AddConstructInGridData(nameField, itemTile, modeDelete);
     }
 
-    public void AddConstructInGridData(string nameField, DataTile itemTile,
+    public bool AddConstructInGridData(string nameField, DataTile itemTile,
     PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
     PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
     {
@@ -954,7 +954,7 @@ public class SaveLoadData : MonoBehaviour {
         if (itemTile == null)
         {
             Debug.Log("####### AddConstructInGridData  itemTile == null");
-            return;
+            return false;
         }
 
         TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
@@ -989,7 +989,7 @@ public class SaveLoadData : MonoBehaviour {
             if(objTerra==null)
             {
                 Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
-                return;
+                return false;
             }
             objTerra.TileName = itemTile.Name;
         }
@@ -1000,7 +1000,7 @@ public class SaveLoadData : MonoBehaviour {
         //if (isClaerField)
         //    p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.DelFull;
 
-        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
+        return Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
     }
 
