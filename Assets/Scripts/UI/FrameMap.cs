@@ -964,6 +964,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         Vector3 newPos = new Vector3(correctPosX, correctPosY, -10);
 
+        
         ValidateStartPosition();
 
         //Correct Offset Zoom
@@ -1062,7 +1063,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         return OffsetCell;
     }
 
-    private void ValidateStartPosition()
+    public void ValidateStartPosition()
     {
 
         //if (!Storage.Map.IsValid)

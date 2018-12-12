@@ -177,7 +177,7 @@ public class MapWorld : MonoBehaviour {
             Storage.DrawGeom.DrawClear();
             //DrawLocationHero(true);
             float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
-            if (distMap > 30f)
+            if (distMap > 50f)
             {
                 Frame.Restart();
             }
@@ -214,12 +214,26 @@ public class MapWorld : MonoBehaviour {
         RefreshGrid(); 
     }
 
+    Vector3 oldPosCamMap = new Vector3();
+
     public void CameraMapOn(bool isOpenMap, bool isRestartingLocation = true)
     {
         var hero = Storage.PlayerController;
 
         if (isOpenMap)
         {
+            //#fix map
+            //prefabFrameMap.transform.position = hero.MainCamera.transform.position;
+            //prefabFrameMap.transform.SetParent(Storage.PlayerController.transform);
+            //CreateFrameMap();
+            Frame.ValidateStartPosition();
+            if(oldPosCamMap!= hero.MainCamera.transform.position)
+            {
+                Vector3 posMove = hero.MainCamera.transform.position - oldPosCamMap;
+                hero.CameraMap.transform.position += posMove;
+                oldPosCamMap = hero.MainCamera.transform.position;
+            }
+
             //hero.GetComponent<Rigidbody2D>().mass = 10000;
             hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
             hero.Rb2D.Sleep();
@@ -242,10 +256,13 @@ public class MapWorld : MonoBehaviour {
             hero.Rb2D.WakeUp();
             hero.MainCamera.enabled = true;
             hero.CameraMap.enabled = false;
+            
             int LayerUI = LayerMask.NameToLayer("LayerUI");
             int LayerObjects = LayerMask.NameToLayer("LayerObjects");
             Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
             Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
+
+            
         }
 
         //Debug.Log("---------- Change ----E:" + hero.enabled + " S:" + hero.Rb2D.IsSleeping() + " / C:"  + hero.MainCamera.enabled + "   [" + DateTime.Now);

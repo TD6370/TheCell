@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public class PaletteMapController : MonoBehaviour {
 
     public bool IsLogGenericWorld = true;
+    public bool IsGenericContruct = true;
     //public bool IsTestFilledFieldGen = true;
     //public bool IsTestExistMeTypeGen = true;
 
@@ -1436,7 +1437,13 @@ public class PaletteMapController : MonoBehaviour {
             }
         }
 
+        IsGenericContruct = ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn;
 
+        if (IsGenericContruct && string.IsNullOrEmpty(SelectedConstruction))
+        {
+            Storage.Events.ListLogAdd = "#### Not selected construction !!!";
+            return;
+        }
 
         //TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
         //if (structType == TypesStructure.Terra)
@@ -1468,8 +1475,6 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-
-        
         //selectGeneticObject = selDataTile;
         SelectedCell = selDataTile;
         Storage.Events.ListLogAdd = "Generic prefab: " + SelectedCell.Name + @" \ " + SelectedCell.Tag;
@@ -1520,7 +1525,15 @@ public class PaletteMapController : MonoBehaviour {
                     if (_isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
+                    if (!IsGenericContruct)
+                    {
+                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
+                    }
+                    else
+                    {
+                        Storage.Instance.SelectFieldCursor = fieldNew;
+                        GenericContructInGridData();
+                    }
                 }
             }
         }
@@ -1559,9 +1572,13 @@ public class PaletteMapController : MonoBehaviour {
                     if (_isClearLayer)
                         ClearLayerForStructure(fieldNew);
 
-                    //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
-                    //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, false, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                    Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                    if (!IsGenericContruct) {
+                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                    }
+                    else {
+                        Storage.Instance.SelectFieldCursor = fieldNew;
+                        GenericContructInGridData();
+                    }
                 }
                 //------
             }
@@ -1606,9 +1623,15 @@ public class PaletteMapController : MonoBehaviour {
                         if (_isClearLayer)
                             ClearLayerForStructure(fieldNew);
 
-                        //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, isTestFilledField, isTestExistMeType);
-                        //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, false, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                        if (!IsGenericContruct)
+                        {
+                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                        }
+                        else
+                        {
+                            Storage.Instance.SelectFieldCursor = fieldNew;
+                            GenericContructInGridData();
+                        }
                     }
                 }
             } else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
@@ -1657,14 +1680,6 @@ public class PaletteMapController : MonoBehaviour {
                         else
                         {
                             //-------------------- Select Next start Point segment
-                            //IsFirstStartSegment
-                            //ModeSegmentMarginLimit
-                            //public float FirstLimitMargin = 0f;
-                            //public float FirstLimitRange = 0f;
-                            //public float FirstLimit
-                            //public float LastLimitMargin = 0f;
-                            //public float LastLimitRange = 0f;
-                            //public float LastLimit
                             if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin) //------------ number limit
                             {
                                 int max = stepsPointsSart.Count - 1;
@@ -1711,19 +1726,9 @@ public class PaletteMapController : MonoBehaviour {
                                 if (lastCorr < 0f || firstCorr >= 1f)
                                     firstCorr = 0.5f;
 
-                                //float percentPoints = (max / 100);
-                                //if (percentPoints == 0)
-                                //    percentPoints = 1;
-                                //firstCorr = (firstCorr * 100);
-                                //lastCorr = (lastCorr * 100);
-
                                 int SelectedPintindex = 0;
                                 if (IsFirstStartSegment)
                                 {
-                                    //int maxFirst = (int)firstCorr;
-                                    //firstCorr = Random.Range(1, maxFirst);
-                                    //firstCorr *= percentPoints;
-                                    //firstCorr *= (int)firstCorr;
                                     firstCorr = max * FirstLimit;
                                     firstCorr = (int)firstCorr;
                                     if (firstCorr < 1)
@@ -1736,13 +1741,6 @@ public class PaletteMapController : MonoBehaviour {
                                 }
                                 else
                                 {
-                                    //int maxLast = (int)lastCorr;
-                                    //lastCorr = Random.Range(1, maxLast);
-                                    //lastCorr *= percentPoints;
-                                    //lastCorr = (int)lastCorr;
-                                    //lastCorr = max - lastCorr;
-                                    //if (lastCorr < 0)
-                                    //    lastCorr = max - (max*LastLimit);
 
                                     lastCorr = max - (max * LastLimit);
                                     lastCorr = (int)lastCorr;
@@ -1751,8 +1749,6 @@ public class PaletteMapController : MonoBehaviour {
                                     if (IsLogGenericWorld)
                                         info = "percent  " + lastCorr + " -- " + max + "    max = " + max + "   index = " + SelectedPintindex;
                                 }
-
-
 
                                 startSegmentX = stepsPointsSart[SelectedPintindex].x;
                                 startSegmentY = stepsPointsSart[SelectedPintindex].y;
@@ -1768,27 +1764,37 @@ public class PaletteMapController : MonoBehaviour {
                             //--------------------
                         }
 
+                        //---- #fix start gen
                         int offsetX = Random.Range(minLevel, maxLevel);
                         int offsetY = Random.Range(minLevel, maxLevel);
                         int x = 0;
                         int y = 0;
+                        bool isLeft = 1 == Random.Range(1, 3);
+                        bool isTop = 1 == Random.Range(1, 3);
+                        if (isLeft)
+                            offsetX *= -1;
+                        if (isTop)
+                            offsetY *= -1;
                         x = startSegmentX + offsetX;
                         y = startSegmentY + offsetY;
+                        //------------
 
                         stepsPointsSart.Add(new Vector2Int(x, y));
 
                         string fieldNew = Helper.GetNameField(x, y);
-                        //if (_isClearLayer)
+
                         if (_isClearLayer || TypeModeOptStartDelete == SelCheckOptDel.DelFull)
                             ClearLayerForStructure(fieldNew);
 
-                        //bool isValid = IsTestFieldFilled(fieldNew, selDataTile, isTestFilledField, isTestExistMeType);
-                        //if(isValid)
-                        //SelCheckOptDel TypeModeOptStartDelete //TypeModeOptStartCheck
-
-                        //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer, isTestFilledField, isTestExistMeType, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                        //Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, false, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                        Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                        if (!IsGenericContruct)
+                        {
+                            Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+                        }
+                        else
+                        {
+                            Storage.Instance.SelectFieldCursor = fieldNew;
+                            GenericContructInGridData();
+                        }
                     }
                 }
                 //------
@@ -1809,6 +1815,15 @@ public class PaletteMapController : MonoBehaviour {
         {
             //Storage.Events.ListLogAdd = "Create construct NOT in zona";
         }
+    }
+
+    private void GenericContructInGridData()
+    {
+        if (string.IsNullOrEmpty(SelectedConstruction))
+            return;
+        //Storage.Instance.SelectFieldCursor = ""; // if (!IsGenericContruct)
+
+        SaveConstructTileInGridData();
     }
 
     private bool IsTestFieldFilled(string nameField, DataTile itemTile, bool isTestFilledField = false, bool isTestExistMeType = false)
@@ -2500,13 +2515,21 @@ public class PaletteMapController : MonoBehaviour {
         SelectedGenericOptionsWorld = selVers;
         //Load Options
 
-        //if (selectGeneticObject == null)
-        //{
-        SelectedCell = new DataTile()
+        if (selVers.IsConstruction)
         {
-            Name = selVers.NameObject,
-            Tag = selVers.TagObject
-        };
+            ModePaint = ToolBarPaletteMapAction.Paste;
+            isPaletteBrushOn = false;
+            SelectedConstruction = selVers.NameObject;
+            IsGenericContruct = true;
+        }
+        else
+        {
+            SelectedCell = new DataTile()
+            {
+                Name = selVers.NameObject,
+                Tag = selVers.TagObject
+            };
+        }
         Storage.Events.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
         //}
         //selectGeneticObject.Name = selVers.NameObject;
@@ -2564,8 +2587,6 @@ public class PaletteMapController : MonoBehaviour {
         checkOptStartSegmentMarginLimit.isOn = selVers.IsSegmentNextPointMargin;
         checkOptStartSegmentRange.isOn = selVers.IsSegmentNextPointRange;
 
-
-
         // 3. 
         LastLimit = selVers.LastLimit;
         FirstLimit = selVers.FirstLimit;
@@ -2573,25 +2594,11 @@ public class PaletteMapController : MonoBehaviour {
         //-------
         tbxOptStartSegment.text = selVers.FirstLimit.ToString();
         tbxOptEndSegment.text = selVers.LastLimit.ToString();
-        //if (selVers.IsSegmentNextPointMargin)
-        //{
-        //    tbxOptStartSegment.text = FirstLimitMargin.ToString();
-        //    tbxOptEndSegment.text = LastLimitMargin.ToString();
-        //}
-        //if (selVers.IsSegmentNextPointRange)
-        //{
-        //    tbxOptStartSegment.text = FirstLimitRange.ToString();
-        //    tbxOptEndSegment.text = LastLimitRange.ToString();
-        //}
-
-        //---------------
 
         // 2.
         IsFirstStartSegment = selVers.IsSegmentNextPointFirst;
 
-        //IsSegmentNextPointMargin = ModeSegmentMarginLimit == ModeStartSegmentGen.Margin,
-        //IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
-
+        
 
     }
 
@@ -2734,12 +2741,15 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
+        string nameObject = IsGenericContruct ? SelectedConstruction : SelectedCell.Name;
+        string tagObject = IsGenericContruct ? "" : SelectedCell.Tag;
+
         //Create Options
         GenericOptionsWorld saveOptions = new GenericOptionsWorld()
         {
             NameVersion = nameVerion,
-            NameObject = SelectedCell.Name,
-            TagObject = SelectedCell.Tag,
+            NameObject = nameObject,
+            TagObject = tagObject,
 
             CountObjects = OptionGenCount,
             Segment = OptionGenSegments,
@@ -2757,7 +2767,22 @@ public class PaletteMapController : MonoBehaviour {
             IsSegmentNextPointFirst = IsFirstStartSegment,
             IsSegmentNextPointMargin = ModeSegmentMarginLimit == ModeStartSegmentGen.Margin,
             IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
+
+            IsConstruction = IsGenericContruct
         };
+
+        //-----
+         //if (string.IsNullOrEmpty(SelectedConstruction))
+        //    return;
+        //Storage.Instance.SelectFieldCursor = ""; // if (!IsGenericContruct)
+        //if (selVers.IsConstruction)
+        //{
+        //    ModePaint = ToolBarPaletteMapAction.Paste;
+        //    isPaletteBrushOn = false;
+        //    SelectedConstruction = selVers.NameObject;
+        //    IsGenericContruct = true;
+        //----
+
         m_ListGenOptionsVersion.Add(saveOptions);
         //SaveVersionsGenericOptions();
         SaveVersionsGeneric();
@@ -2894,4 +2919,6 @@ public class GenericOptionsWorld
     public bool IsSegmentNextPointMargin;
     public bool IsSegmentNextPointRange;
     public bool IsSegmentNextPointFirst;
+
+    public bool IsConstruction;
 }

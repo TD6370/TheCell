@@ -312,6 +312,9 @@ public class CompletePlayerController : MonoBehaviour {
 
     private void MovementMap(float moveHorizontal, float moveVertical)
     {
+        if (moveHorizontal == 0f && moveVertical == 0f)
+            return;
+
         if (Storage.Map.StartPositFrameMap == new Vector3())
             Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
 
