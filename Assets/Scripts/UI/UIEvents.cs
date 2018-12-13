@@ -46,7 +46,11 @@ public class UIEvents : MonoBehaviour {
     public GameObject ScrollListBoxPerson;
     public GameObject PointGO;
     public GameObject PanelMessage;
+    public GameObject PrefabListBox;
+    public GameObject PanelInventory;
+    public GameObject BackgroundTittle;
     public Text MessageBox;
+    public Toggle checkHideCanvasUI;
 
     public Text prefabText;
     public Button prefabButtonCommand;
@@ -116,7 +120,20 @@ public class UIEvents : MonoBehaviour {
         {
             PanelLog.SetActive(btnShowLog.isOn);
         });
-
+        checkHideCanvasUI.onValueChanged.AddListener(delegate
+        {
+            PanelLog.SetActive(checkHideCanvasUI.isOn);
+            if (!checkHideCanvasUI.isOn)
+            {
+                btnShowLog.isOn = checkHideCanvasUI.isOn;
+            }
+            PrefabListBox.SetActive(checkHideCanvasUI.isOn);
+            dpnMenuCommandTest.gameObject.SetActive(checkHideCanvasUI.isOn);
+            tbxTest.gameObject.SetActive(checkHideCanvasUI.isOn);
+            btnTest.gameObject.SetActive(checkHideCanvasUI.isOn);
+            PanelInventory.gameObject.SetActive(checkHideCanvasUI.isOn);
+            BackgroundTittle.gameObject.SetActive(checkHideCanvasUI.isOn);
+        });
 
         btnTest.onClick.AddListener(TestClick);
 

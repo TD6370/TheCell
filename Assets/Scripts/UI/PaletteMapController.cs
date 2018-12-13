@@ -66,6 +66,18 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle checkOptStartSegmentMarginLimit;
     public Toggle checkOptStartSegmentRange;
     public Toggle checkOptStartSegmentIsFirstLast;
+    public Toggle checkOptRepeatFind;
+    bool IsRepeatFind {
+        get
+        {
+           return checkOptRepeatFind.isOn;
+        }
+        set
+        {
+            checkOptRepeatFind.isOn = value;
+        }
+    }
+
     public InputField tbxOptStartSegment;
     public InputField tbxOptEndSegment;
 
@@ -88,6 +100,7 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnAddVersionGenWorld;
     public Button bntDeleteVersionGenWorld;
     public Button bntAddInContainer;
+    public Button bntGenVersionSaveUpdate;
     public GameObject ContentListVersionsGenericWorld;
     private List<Dropdown.OptionData> m_ListVersionNameGenWorldData;
     private List<ContainerOptionsWorld> m_ListGenWorldVersion;
@@ -1514,9 +1527,16 @@ public class PaletteMapController : MonoBehaviour {
 
 
         bool isValidResult = true;
-        bool IsRepeatFind = true;
+        
         int limitRepeat = 500;
         int indexRepeat = 0;
+
+        int countCellInConstruct =1;
+        if(IsGenericContruct)
+        {
+            DataConstructionTiles dtTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
+            countCellInConstruct = dtTiles.Height * dtTiles.Height;
+        }
 
         if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         {
@@ -1565,7 +1585,9 @@ public class PaletteMapController : MonoBehaviour {
             //---------------------
 
             //Generic
-            int CountObjects = OptionGenCount;
+            int CountObjects = OptionGenCount / countCellInConstruct;
+            if (CountObjects < 1)
+                CountObjects = 1;
             int Percent = OptionGenPercent;
             int SubsystemSegments = OptionGenSegments;
             int SubsystemLevel = OptionGenLevel;
@@ -1674,6 +1696,7 @@ public class PaletteMapController : MonoBehaviour {
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
 
                 int ContAll = CountObjects / SubsystemSegments;
+
                 int startX = (int)posStructFieldNew.x;
                 int startY = (int)posStructFieldNew.y;
                 int minLevel = (SubsystemLevel / 2) * (-1);
@@ -1974,7 +1997,7 @@ public class PaletteMapController : MonoBehaviour {
 
         //var listTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
         DataConstructionTiles dataTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
-
+        
         if (dataTiles.ListDataTileTerra != null && dataTiles.ListDataTileTerra.Count > 0)
         {
             SaveLayerConstrTileInGridData(SelectedConstruction, dataTiles.ListDataTileTerra, dataTiles, TypesStructure.Terra);
@@ -2186,9 +2209,13 @@ public class PaletteMapController : MonoBehaviour {
         bntAddInContainer.onClick.AddListener(() =>
         {
             AddOptionsInContainer();
-
         });
 
+        bntGenVersionSaveUpdate.onClick.AddListener(() =>
+        {
+            SaveUpdateVersionGenOptions();
+            //SaveVersionsGeneric();
+        });
         //-------- new
 
         CheckStateOpionsDelete(SelCheckOptDel.All);
@@ -2414,6 +2441,14 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    private void SaveUpdateVersionGenOptions()
+    {
+        string nameVerion = SelectedGenericOptionsWorld.NameVersion;
+        AddVersionGenericOptions(nameVerion, true); //New verion
+        //LoadVersionsGenericXML();
+        UpdateListVersions();
+    }
+
     private void AddListVersions(string value)
     {
         AddVersionGenericOptions(value); //New verion
@@ -2474,7 +2509,7 @@ public class PaletteMapController : MonoBehaviour {
         {
             dpnListGenOptionsVersion.AddOptions(m_ListVersionNameGenOptionData);
             dpnListGenOptionsVersion.value = 0;
-            SelectedVersionGenOption(0);
+            SelectVersionGenOption(0);
         }
     }
 
@@ -2536,16 +2571,16 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        SelectedVersionGenOption(dpntGenOptionsVersion.value);
+        SelectVersionGenOption(dpntGenOptionsVersion.value);
     }
 
-    private void SelectedVersionGenOption(int index)
+    private void SelectVersionGenOption(int index)
     {
         GenericOptionsWorld selVers = m_ListGenOptionsVersion[index];
-        SelectedVersionGenOption(selVers);
+        SelectVersionGenOption(selVers);
     }
 
-    private void SelectedVersionGenOption(GenericOptionsWorld selVers)
+    private void SelectVersionGenOption(GenericOptionsWorld selVers)
     {
 
         SelectedGenericOptionsWorld = selVers;
@@ -2634,8 +2669,7 @@ public class PaletteMapController : MonoBehaviour {
         // 2.
         IsFirstStartSegment = selVers.IsSegmentNextPointFirst;
 
-        
-
+        IsRepeatFind = selVers.IsRepeatFind;
     }
 
     void VersionGenWorldValueChanged(Dropdown dpntGenWorldVersion)
@@ -2714,7 +2748,7 @@ public class PaletteMapController : MonoBehaviour {
                     if (dpnListGenOptionsVersion.options.Count > 0)
                         dpnListGenOptionsVersion.value = 0;
                     SaveVersionsGeneric();
-                    SelectedVersionGenOption(0);
+                    SelectVersionGenOption(0);
                     UpdateListOptionsInContainer();
                     ///---
                 }
@@ -2754,7 +2788,7 @@ public class PaletteMapController : MonoBehaviour {
                 SaveVersionsGeneric();
             }
 
-            SelectedVersionGenOption(genOpt);
+            SelectVersionGenOption(genOpt);
         }
         else
         {
@@ -2762,7 +2796,7 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-        public void AddVersionGenericOptions(string nameVerion)
+    public void AddVersionGenericOptions(string nameVerion, bool isUpdate = false)
     {
         if(SelectedCell == null)
         {
@@ -2804,11 +2838,12 @@ public class PaletteMapController : MonoBehaviour {
             IsSegmentNextPointMargin = ModeSegmentMarginLimit == ModeStartSegmentGen.Margin,
             IsSegmentNextPointRange = ModeSegmentMarginLimit == ModeStartSegmentGen.Range,
 
-            IsConstruction = IsGenericContruct
+            IsConstruction = IsGenericContruct,
+            IsRepeatFind = IsRepeatFind
         };
 
         //-----
-         //if (string.IsNullOrEmpty(SelectedConstruction))
+        //if (string.IsNullOrEmpty(SelectedConstruction))
         //    return;
         //Storage.Instance.SelectFieldCursor = ""; // if (!IsGenericContruct)
         //if (selVers.IsConstruction)
@@ -2818,8 +2853,19 @@ public class PaletteMapController : MonoBehaviour {
         //    SelectedConstruction = selVers.NameObject;
         //    IsGenericContruct = true;
         //----
-
-        m_ListGenOptionsVersion.Add(saveOptions);
+        if (!isUpdate)
+        {
+            m_ListGenOptionsVersion.Add(saveOptions);
+        }
+        else
+        {
+            int indUpdate = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVerion);
+            if (indUpdate != -1)
+                m_ListGenOptionsVersion[indUpdate] = saveOptions;
+            else
+                Storage.Events.ListLogAdd = "#### Not find option gen : " + saveOptions;
+            //SelectedGenericOptionsWorld
+        }
         //SaveVersionsGenericOptions();
         SaveVersionsGeneric();
     }
@@ -2957,4 +3003,5 @@ public class GenericOptionsWorld
     public bool IsSegmentNextPointFirst;
 
     public bool IsConstruction;
+    public bool IsRepeatFind;
 }

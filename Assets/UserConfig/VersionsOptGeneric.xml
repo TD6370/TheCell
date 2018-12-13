@@ -25,6 +25,7 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
         <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>clear</NameVersion>
       </Option>
       <Option>
@@ -43,6 +44,7 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
         <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>Forest</NameVersion>
       </Option>
       <Option>
@@ -61,6 +63,7 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
         <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>Rock</NameVersion>
       </Option>
       <Option>
@@ -79,6 +82,7 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
         <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>RockSierra</NameVersion>
       </Option>
       <Option>
@@ -97,6 +101,7 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
         <IsConstruction>true</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>BolotoConstr</NameVersion>
       </Option>
       <Option>
@@ -115,7 +120,45 @@
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
         <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>cloud</NameVersion>
+      </Option>
+      <Option>
+        <CountObjects>1</CountObjects>
+        <Segment>9</Segment>
+        <Level>9</Level>
+        <LastLimit>0.9</LastLimit>
+        <FirstLimit>0.8</FirstLimit>
+        <TagObject />
+        <IsClear>true</IsClear>
+        <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+        <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+        <IsSteps>false</IsSteps>
+        <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
+        <IsSegmentNextPointRange>true</IsSegmentNextPointRange>
+        <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
+        <IsConstruction>true</IsConstruction>
+        <IsRepeatFind>true</IsRepeatFind>
+        <NameVersion>test9</NameVersion>
+      </Option>
+      <Option>
+        <CountObjects>1</CountObjects>
+        <Segment>10</Segment>
+        <Level>50</Level>
+        <LastLimit>1</LastLimit>
+        <FirstLimit>0</FirstLimit>
+        <TagObject />
+        <NameObject>BildPolyanka</NameObject>
+        <IsClear>true</IsClear>
+        <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+        <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+        <IsSteps>true</IsSteps>
+        <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
+        <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+        <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
+        <IsConstruction>true</IsConstruction>
+        <IsRepeatFind>true</IsRepeatFind>
+        <NameVersion>PrefabLine</NameVersion>
       </Option>
     </ListGenericOprionsWorld>
   </GenericOptions>
