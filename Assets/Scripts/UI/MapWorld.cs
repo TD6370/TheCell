@@ -235,16 +235,20 @@ public class MapWorld : MonoBehaviour {
             }
 
             //hero.GetComponent<Rigidbody2D>().mass = 10000;
-            hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
-            hero.Rb2D.Sleep();
-            if(isRestartingLocation) 
+            //hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
+            //hero.Rb2D.Sleep();
+            Storage.PlayerController.Disable();
+
+            if (isRestartingLocation) 
                 hero.CameraMap.transform.position = hero.MainCamera.transform.position;
             hero.CameraMap.enabled = true;
             hero.MainCamera.enabled = false;
-            int LayerUI = LayerMask.NameToLayer("LayerUI");
-            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-            Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
-            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
+
+            //#TEST
+            //int LayerUI = LayerMask.NameToLayer("LayerUI");
+            //int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            //Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
+            //Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
 
             //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
             //CameraMap.cullingMask = LayerObjects;
@@ -252,17 +256,21 @@ public class MapWorld : MonoBehaviour {
         else
         {
             //hero.GetComponent<Rigidbody2D>().mass = 0;
-            hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
-            hero.Rb2D.WakeUp();
+
+            //hero.GetComponent<CapsuleCollider2D>().enabled = !hero.GetComponent<CapsuleCollider2D>().enabled;
+            //hero.Rb2D.WakeUp();
+            Storage.PlayerController.Enable();
+            if (!Storage.Player.HeroExtremal)
+                Storage.Player.HeroExtremal = false;
+
             hero.MainCamera.enabled = true;
             hero.CameraMap.enabled = false;
-            
-            int LayerUI = LayerMask.NameToLayer("LayerUI");
-            int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-            Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
-            Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
 
-            
+            //#TEST
+            //int LayerUI = LayerMask.NameToLayer("LayerUI");
+            //int LayerObjects = LayerMask.NameToLayer("LayerObjects");
+            //Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
+            //Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
         }
 
         //Debug.Log("---------- Change ----E:" + hero.enabled + " S:" + hero.Rb2D.IsSleeping() + " / C:"  + hero.MainCamera.enabled + "   [" + DateTime.Now);

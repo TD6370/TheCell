@@ -49,14 +49,25 @@ public class PlayerManager : MonoBehaviour {
     {
         // m_HeroExtremal
         var hero = Storage.Instance.HeroObject;
-        var collider = hero.GetComponent<CapsuleCollider2D>();
-        if(collider==null)
-        {
-            Debug.Log("###### HeroExtremalChangeOn CapsuleCollider2D is empty");
-            return;
-        }
 
-        collider.enabled = !m_HeroExtremal;
+        //if (Storage.PlayerController.CameraMap.enabled)
+        if(Storage.Map.IsOpen)
+            return;
+        //hero.camera
+        //if (CameraMap.enabled)
+
+        //var collider = hero.GetComponent<CapsuleCollider2D>();
+        //if(collider==null)
+        //{
+        //    Debug.Log("###### HeroExtremalChangeOn CapsuleCollider2D is empty");
+        //    return;
+        //}
+
+        //collider.enabled = !m_HeroExtremal;
+        if (m_HeroExtremal)
+            Storage.PlayerController.GhostOn();
+        else
+            Storage.PlayerController.GhostOff();
 
         float _alpha = m_HeroExtremal ? 0.5f : 1f;
         //hero.SetAlpha(_alpha);
@@ -68,11 +79,11 @@ public class PlayerManager : MonoBehaviour {
             hero.GetComponent<SpriteRenderer>().color = Color.white;
         //hero.GetComponent<SpriteRenderer>().color = m_HeroExtremal ? "#80D3F6".ToColor() : Color.white;
         //hero.GetComponent<RenderTexture>()
-        if (collider.enabled)
-        {
+        //if (collider.enabled)
+        //{
             
 
-        }
+        //}
     }
 
     public void SavePlayerXML()

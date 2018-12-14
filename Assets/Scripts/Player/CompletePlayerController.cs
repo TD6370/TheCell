@@ -36,7 +36,15 @@ public class CompletePlayerController : MonoBehaviour {
     //List<string> listLog = new List<string>();
 
     private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
-                                    //[SerializeField]
+    public Rigidbody2D RigidbodyHero
+    {
+        get
+        {
+            return rb2d;
+        }
+    }
+
+    //[SerializeField]
     private int _count;				//Integer to store the number of pickups collected so far.
     private int _posLastX = 0;
     private int _posLastY = 0;
@@ -151,7 +159,8 @@ public class CompletePlayerController : MonoBehaviour {
         else
         {
             //---Move Hero
-            rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
+            //if(!RigidbodyHero.IsSleeping())
+                rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
             //--------------
         }
 
@@ -245,6 +254,11 @@ public class CompletePlayerController : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
 
+        //#TEST
+        var t1= this.GetComponent<CapsuleCollider2D>().enabled; 
+        var t2= this.Rb2D.IsSleeping();
+
+
         if (!CameraMap.enabled)
         {
             //Debug.Log("OnTriggerEnter2D.............................................");
@@ -270,6 +284,28 @@ public class CompletePlayerController : MonoBehaviour {
         //Debug.Log("Current detected event: " + Event.current);
         CursorEvents();
     }
+
+    public void Disable()
+    {
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        Rb2D.Sleep();
+    }
+
+    public void Enable()
+    {
+        GetComponent<CapsuleCollider2D>().enabled = true;
+        Rb2D.WakeUp();
+    }
+
+    public void GhostOn()
+    {
+        GetComponent<CapsuleCollider2D>().enabled = false;
+    }
+    public void GhostOff()
+    {
+        GetComponent<CapsuleCollider2D>().enabled = true;
+    }
+
     #endregion
 
     #region Coroutine

@@ -680,14 +680,11 @@ public class PaletteMapController : MonoBehaviour {
     }
 
 
-
-    //private void LoadPalette()
-    //{
-    //    StartCoroutine(LoadMap());
-    //}
-
     public void PaintAction()
     {
+        if (Time.time < DelayTimerPaletteUse)
+            return;
+
         bool isValidRefreshMap = true;
 
         //ToolBarPaletteMapAction ModePaint
@@ -726,10 +723,6 @@ public class PaletteMapController : MonoBehaviour {
 
     void ConstructsValueChanged(Dropdown dpntStructurs)
     {
-        //LoadConstructOnPalette(dpntStructurs.captionText.ToString());
-        //LoadConstructOnPalette(dpntStructurs.value);
-        //LoadConstructOnPalette(dpntStructurs.itemText.ToString() + " .2");
-        //string selectStructure = 
         if (dpntStructurs.value > m_ListNamesConstructs.Count - 1)
         {
             Debug.Log("######## DropdownValueChanged NOT dpntStructurs.value[" + dpntStructurs.value + "] > m_ListNmeStructurs.Length[" + m_ListNamesConstructs.Count + "]");
@@ -885,20 +878,6 @@ public class PaletteMapController : MonoBehaviour {
             }
             m_PasteOnLayer = btnOnLayer.isOn;
         });
-
-        //public Toggle checkOptStartSegmentMarginLimit;
-        //public Toggle checkOptStartSegmentRange;
-        //public Toggle checkOptStartSegmentIsFirstLast;
-        //------------
-        //public float FirstLimitMargin = 0f;
-        //public float FirstLimitRange = 0f;
-        //public float FirstLimit
-        //public float LastLimitMargin = 0f;
-        //public float LastLimitRange = 0f;
-        //public float LastLimit
-        //public InputField tbxOptStartSegment;
-        //public InputField tbxOptEndSegment;
-        //---------------
 
         checkOptStartSegmentMarginLimit.onValueChanged.AddListener(delegate
         {
@@ -1458,15 +1437,6 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        //TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
-        //if (structType == TypesStructure.Terra)
-        //{
-        //    prefabName = TypePrefabs.PrefabField;
-        //}
-        //if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
-        //{
-        //    prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
-        //}
         int size = Helper.WidthLevel;
         //OptionGenCount = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent2 / 100;
         OptionGenCount = (size * size) * m_OptionGenPercent2 / 100;
@@ -1492,13 +1462,6 @@ public class PaletteMapController : MonoBehaviour {
         SelectedCell = selDataTile;
         Storage.Events.ListLogAdd = "Generic prefab: " + SelectedCell.Name + @" \ " + SelectedCell.Tag;
 
-
-        //public float ActionRate = 0.5f;
-        //private float DelayTimer = 0F;
-        //if (Time.time < DelayTimer)
-        //    return;
-        //DelayTimer = Time.time + ActionRate;
-
         string fieldStart = Storage.Instance.SelectFieldCursor;
         if (isOnFullMap)
             fieldStart = Helper.GetNameField(0, 0);
@@ -1508,12 +1471,6 @@ public class PaletteMapController : MonoBehaviour {
 
         bool _isClearLayer = IsClearLayer;//!m_PasteOnLayer;
         string info = "";
-
-
-
-        //if (isClearLayer)
-        //    ClearLayerForStructure(fieldStart);
-
 
         //Storage.GridData.AddConstructInGridData(fieldStart, sel, isClearLayer);
 
@@ -1572,11 +1529,6 @@ public class PaletteMapController : MonoBehaviour {
         }
         else
         {
-            //m_ModeOptStartDeleteFull = ModeDelete.Clear;
-            //m_ModeOptStartDeleteTypePrefab = ModeDelete.Clear;
-            //m_ModeOptStartDeletePrefab = ModeDelete.Clear;
-            //m_ModeOptStartDeleteTerra = ModeDelete.Clear;
-
             //---------------------
             if (m_ModeOptStartDeleteFull == ModeDelete.Clear)
                 _isClearLayer = true;
@@ -1918,23 +1870,6 @@ public class PaletteMapController : MonoBehaviour {
         return new Vector2Int(firstCorr, lastCorr);
     }
 
-    //private Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
-    //{
-    //    int firstCorr =
-    //            (int)FirstLimit > max - 1 ?
-    //            max - 1 :
-    //            (int)FirstLimit;
-    //    int lastCorr =
-    //        (int)LastLimit > max ?
-    //        max :
-    //        max - (int)LastLimit;
-    //    if (firstCorr < 0) firstCorr = 0;
-    //    if (lastCorr < 1) lastCorr = max;
-    //    if (firstCorr > lastCorr)
-    //        firstCorr = lastCorr - 1;
-    //    return new Vector2Int(firstCorr, lastCorr);
-    //}
-
     private Vector2Int GetValidRange(int FirstLimit, int LastLimit, int max)
     {
         int firstCorr =
@@ -2084,23 +2019,6 @@ public class PaletteMapController : MonoBehaviour {
         OptionGen5--;
     }
 
-    //public void OptionGenOnChanged1()
-    //{
-    //    OptionGen1 = int.Parse(btxIntGenOption1.text);
-    //}
-    //public void OptionGenOnChanged2()
-    //{
-    //    OptionGenPercent = int.Parse(btxIntGenOption2.text);
-    //}
-    //public void OptionGenOnChanged3()
-    //{
-    //    OptionGen3 = int.Parse(btxIntGenOption3.text);
-    //}
-    //public void OptionGenOnChanged4()
-    //{
-    //    OptionGen4 = int.Parse(btxIntGenOption4.text);
-    //}
-
     private void ClearLayerForStructure(string field, bool isClearData = false)
     {
         //Destroy All Objects
@@ -2134,18 +2052,6 @@ public class PaletteMapController : MonoBehaviour {
             }
         }
     }
-
-    //--- fixed Bug ---
-    //void Start()
-    //{
-    //    float width;
-    //    GridLayoutGroup lg;
-    //    lg = GetComponent<GridLayoutGroup>();
-    //    width = gameObject.GetComponent<RectTransform>().rect.width;
-    //    float sizeButt = lg.cellSize.x + lg.spacing.x;
-    //    int hSize = Mathf.FloorToInt(width / sizeButt);
-    //    lg.constraintCount = hSize;
-    //}
 
     #region Save generic options
 
@@ -2237,25 +2143,6 @@ public class PaletteMapController : MonoBehaviour {
             CheckStateOpionsDelete(SelCheckOptDel.DelTerra);
         });
 
-        //checkOptVersionGeneric.onValueChanged.AddListener(delegate
-        //{
-        //    if (checkOptVersionGeneric.isOn)
-        //    {
-        //        checkOptVersionContainerGenerics.isOn = false;
-        //        m_IsListModeIsContainerGeneticOtions = false;
-        //        UpdateListVersions();
-        //    }
-        //});
-        //checkOptVersionContainerGenerics.onValueChanged.AddListener(delegate
-        //{
-        //    if (checkOptVersionContainerGenerics.isOn)
-        //    {
-        //        checkOptVersionGeneric.isOn = false;
-        //        m_IsListModeIsContainerGeneticOtions = true;
-        //        UpdateListVersions();
-        //    }
-        //});
-
         //bntDeleteVersionOptGen
     }
 
@@ -2334,28 +2221,6 @@ public class PaletteMapController : MonoBehaviour {
 
     private void UpdateStateOptDelUI()
     {
-        //SetStateDefuault(checkOptStartDeleteFull, false);
-        //SetStateDefuault(checkOptStartDeleteTypePrefab, false);
-        //SetStateDefuault(checkOptStartDeletePrefab, false);
-        //SetStateDefuault(checkOptStartDeleteTerra, false);
-
-        //checkOptStartDeleteFull.isOn = m_ModeOptStartDeleteFull == ModeDelete.Clear;
-        //SetStateDefuault(checkOptStartDeleteFull, checkOptStartDeleteFull.isOn);
-
-        //checkOptStartDeleteTypePrefab.isOn = m_ModeOptStartDeleteTypePrefab == ModeDelete.Clear;
-        //SetStateDefuault(checkOptStartDeleteTypePrefab, checkOptStartDeleteTypePrefab.isOn);
-
-        //checkOptStartDeletePrefab.isOn = m_ModeOptStartDeletePrefab == ModeDelete.Clear;
-        //SetStateDefuault(checkOptStartDeletePrefab, checkOptStartDeletePrefab.isOn);
-
-        //checkOptStartDeleteTerra.isOn = m_ModeOptStartDeleteTerra == ModeDelete.Clear;
-        //SetStateDefuault(checkOptStartDeleteTerra, checkOptStartDeleteTerra.isOn);
-
-        //CheckStateOpionsDelete(SelCheckOptDel.DelFull);
-        //CheckStateOpionsDelete(SelCheckOptDel.DelType);
-        //CheckStateOpionsDelete(SelCheckOptDel.DelPrefab);
-        //CheckStateOpionsDelete(SelCheckOptDel.DelTerra);
-
         //----------------
         m_isNotCheckindOptDelete = true;
 
@@ -2388,27 +2253,10 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    //private void UncheckedOptionsDel(string name)
-    //{
-    //    foreach (var opt in ListCheckGenOptDel)
-    //    {
-    //        if(opt.name != name)
-    //        {
-    //            opt.isOn = false;
-    //        }
-    //    }
-    //}
-
     private void UpdateListVersions()
     {
-        //if (!m_IsListModeIsContainerGeneticOtions)
-        //{
         LoadListVersionGeneticOptons();
-        //}
-        //else
-        //{
         LoadListContainersVersionsGeneticOptons();
-        //}
     }
 
 
@@ -2533,8 +2381,6 @@ public class PaletteMapController : MonoBehaviour {
             dpnListVersionGenWorld.AddOptions(m_ListVersionNameGenWorldData);
             dpnListVersionGenWorld.value = 0;
             SelectedVersionWorldChange(0);
-            //SelectionVersionOptInContainer(0);
-            //SelectionVersionOptInContainer(m_ListGenWorldVersion[0].NameVersion);
         }
     }
 
@@ -2555,14 +2401,6 @@ public class PaletteMapController : MonoBehaviour {
         SaveVersionsGeneric();
     }
 
-
-    // --- Save version generic option
-    //public InputField tbxVersionNameGenOption; //ListGenOptionsVersion
-    //private List<Dropdown.OptionData> m_ListVersionNameGenOptionData;
-    //private List<string> m_ListVersionNameGenOption;
-    //ListGenOptionsVersion.onValueChanged.AddListener(delegate {
-    //        VersionGenOptionValueChanged(ListGenOptionsVersion);
-    //});
     void VersionGenOptionValueChanged(Dropdown dpntGenOptionsVersion)
     {
         if (dpntGenOptionsVersion.value > m_ListVersionNameGenOptionData.Count - 1)
@@ -2602,20 +2440,13 @@ public class PaletteMapController : MonoBehaviour {
             };
         }
         Storage.Events.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
-        //}
-        //selectGeneticObject.Name = selVers.NameObject;
-        //selectGeneticObject.Tag = selVers.TagObject;
 
-        //NameVersion = nameVerion,
-        //CountObjects = OptionGenCount,
         OptionGenCount = selVers.CountObjects;
         OptionGenSegments = selVers.Segment;
         OptionGenLevel = selVers.Level;
 
         IsClearLayer = selVers.IsClear;
         IsSteps = selVers.IsSteps;
-        //IsTestFilledFieldGen = selVers.IsTestField;
-        //IsTestExistMeTypeGen = selVers.IsTestType;
 
         m_ModeOptStartDeleteFull = ModeDelete.Off;
         m_ModeOptStartDeleteTypePrefab = ModeDelete.Off;
@@ -2709,12 +2540,6 @@ public class PaletteMapController : MonoBehaviour {
                 Destroy(itemsDestroy.gameObject);
             }
         }
-        //if (itemsDestroy != null)
-        //{
-        //    foreach(var itemDel in itemsDestroy)
-        //        Destroy(itemDel);
-        //}
-
         foreach (var itemOpt in m_ListGenOptionsVersionForContainer)
         {
             //Storage.Events.CreateCommandLogText(itemOpt.NameVersion, Color.white, ContentListVersionsGenericWorld.transform);
@@ -2827,8 +2652,7 @@ public class PaletteMapController : MonoBehaviour {
 
             IsClear = IsClearLayer,
             IsSteps = IsSteps,
-            //IsTestField = IsTestFilledFieldGen,
-            //IsTestType = IsTestExistMeTypeGen,
+
             TypeModeOptStartCheck = TypeModeOptStartCheck.ToString(),
             TypeModeOptStartDelete = TypeModeOptStartDelete.ToString(),
 
@@ -2842,17 +2666,6 @@ public class PaletteMapController : MonoBehaviour {
             IsRepeatFind = IsRepeatFind
         };
 
-        //-----
-        //if (string.IsNullOrEmpty(SelectedConstruction))
-        //    return;
-        //Storage.Instance.SelectFieldCursor = ""; // if (!IsGenericContruct)
-        //if (selVers.IsConstruction)
-        //{
-        //    ModePaint = ToolBarPaletteMapAction.Paste;
-        //    isPaletteBrushOn = false;
-        //    SelectedConstruction = selVers.NameObject;
-        //    IsGenericContruct = true;
-        //----
         if (!isUpdate)
         {
             m_ListGenOptionsVersion.Add(saveOptions);
@@ -2869,19 +2682,6 @@ public class PaletteMapController : MonoBehaviour {
         //SaveVersionsGenericOptions();
         SaveVersionsGeneric();
     }
-
-
-    //public void SaveVersionsGenericWorld()
-    //{
-    //    string nameXML = Storage.Instance.DataPathVersion;
-    //    ContainerOptionsWorld state = new ContainerOptionsWorld()
-    //    {
-    //        NameVersion = nameXML,
-    //        ListGenericOprionsWorld = m_ListGenOptionsVersion
-    //    };
-    //    string pathVersOptions = "";
-    //    Serializator.SaveXml(state, pathVersOptions, false, extraTypesOtions);
-    //}
 
     public void SaveVersionsGeneric()
     {
@@ -2909,35 +2709,6 @@ public class PaletteMapController : MonoBehaviour {
             m_ListGenWorldVersion = state.ListGenericWorlds;
         }
     }
-
-    //public void SaveVersionsGenericOptions()
-    //{
-    //    string nameXML = Storage.Instance.DataPathVersion;
-    //    ContainerOptionsWorld state = new ContainerOptionsWorld()
-    //    {
-    //        NameVersion = nameXML,
-    //        ListGenericOprionsWorld = m_ListGenOptionsVersion
-    //    };
-    //    string pathVersOptions = "";
-
-        
-
-    //    Serializator.SaveXml(state, pathVersOptions, false, extraTypesOtions);
-    //    //m_ListGenOptionsVersion;
-    //}
-    //public void LoadVersionsGenericOptionsXML()
-    //{
-    //    string pathVersOptions = Storage.Instance.DataPathVersion;
-    //    ContainerOptionsWorld state =  Serializator.LoadXml<ContainerOptionsWorld>(pathVersOptions, extraTypesOtions);
-    //    if(state==null)
-    //    {
-    //        m_ListGenOptionsVersion = new List<GenericOptionsWorld>();
-    //    }
-    //    else
-    //    {
-    //        m_ListGenOptionsVersion = state.ListGenericOprionsWorld;
-    //    }
-    //}
 
     #endregion
 }
