@@ -13,9 +13,11 @@ using UnityEngine.UI;
 public class PaletteMapController : MonoBehaviour {
 
     public bool IsLogGenericWorld = true;
-    public bool IsGenericContruct = true;
+        
     //public bool IsTestFilledFieldGen = true;
     //public bool IsTestExistMeTypeGen = true;
+
+    public Text labelNameSelectedGenObject;
 
     public GameObject FramePaletteMap;
     public GameObject ToolBarBrushPalette;
@@ -23,8 +25,53 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnCloseToolBarBrushPalette;//ToolBarBrushPalette.SetActive(false);
     public Dropdown dpdListConstructsControl;
 
-    public string SelectedConstruction { get; set; }
-    public DataTile SelectedCell { get; set; }
+
+    private string m_SelectedConstruction;
+    public string SelectedConstruction {
+        get {
+            return m_SelectedConstruction;
+        }
+        set {
+            m_SelectedConstruction = value;
+            var t = NameSelectedGenObject;
+        }
+    }
+    public string NameSelectedGenObject
+    {
+        get
+        {
+            string nameObject = IsGenericContruct ? SelectedConstruction : SelectedCell.Name + " " + SelectedCell.Tag;
+            labelNameSelectedGenObject.text = nameObject;
+            return labelNameSelectedGenObject.text;
+        }
+    }
+
+    public bool m_IsGenericContruct = true;
+    //#FIX SELGEN 
+    public bool IsGenericContruct
+    {
+        get
+        {
+            m_IsGenericContruct = (ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn);
+            //m_IsGenericContruct = (ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn) ||
+            //    SelectedGenericOptionsWorld.IsConstruction;
+            return m_IsGenericContruct;
+        }
+    }
+
+    private DataTile m_selectedCell;
+    public DataTile SelectedCell
+    {
+        get
+        {
+            return m_selectedCell;
+        }
+        set
+        {
+            m_selectedCell = value;
+            var t = NameSelectedGenObject;
+        }
+    }
     //private DataTile selectGeneticObject { get; set; }
     public GameObject PrefabCellMapPalette;
 
@@ -471,7 +518,7 @@ public class PaletteMapController : MonoBehaviour {
 
 
         //--------- After Update
-        StartCoroutine(LoadMap());
+        StartCoroutine(StartLoadPaletteMenu());
 
         if (CanvasUI == null)
         {
@@ -504,7 +551,6 @@ public class PaletteMapController : MonoBehaviour {
         }
 
         //LoadOptionGen();
-
     }
 
     public void Init()
@@ -661,7 +707,7 @@ public class PaletteMapController : MonoBehaviour {
     }
 
 
-    IEnumerator LoadMap()
+    IEnumerator StartLoadPaletteMenu()
     {
         yield return new WaitForSeconds(0.3f);
 
@@ -671,6 +717,21 @@ public class PaletteMapController : MonoBehaviour {
             yield return null;
             PrefabsOnPalette();
             //LoadTypeBrushOnPalette(TypesBrushGrid.Brushes);
+        }
+        else
+        {
+            LoadListConstructsControl();
+            //LoadListVersionGeneticOptons();
+        }
+    }
+
+    private void LoadPaletteMenu()
+    {
+
+        if (isPaletteBrushOn)
+        {
+            LoadListBrushTypesControl();
+            PrefabsOnPalette();
         }
         else
         {
@@ -795,8 +856,9 @@ public class PaletteMapController : MonoBehaviour {
         {
             ModePaint = ToolBarPaletteMapAction.None;
         }
-        Storage.DrawGeom.DrawClear();
 
+        if(Storage.DrawGeom !=null)
+            Storage.DrawGeom.DrawClear();
 
         return toggleOn.isOn;
     }
@@ -865,7 +927,8 @@ public class PaletteMapController : MonoBehaviour {
         btnOnPaint.onValueChanged.AddListener(delegate
         {
             isPaletteBrushOn = !isPaletteBrushOn;
-            StartCoroutine(LoadMap());
+            //StartCoroutine(StartLoadPaletteMenu());
+            LoadPaletteMenu();
         });
 
         InitEventsButtonMenuOtions();
@@ -1429,7 +1492,7 @@ public class PaletteMapController : MonoBehaviour {
             }
         }
 
-        IsGenericContruct = ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn;
+        //#FIX SELGEN IsGenericContruct = ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn;
 
         if (IsGenericContruct && string.IsNullOrEmpty(SelectedConstruction))
         {
@@ -2339,6 +2402,15 @@ public class PaletteMapController : MonoBehaviour {
 
     private void LoadListVersionGeneticOptons()
     {
+        //GenericOptionsWorld lastSelectGenOptions = m_ListGenOptionsVersion.FindIndex(p=>p.NameObject == SelectedGenericOptionsWorld.NameObject);
+
+        int indexOptopn = 0;
+        if (SelectedGenericOptionsWorld != null && SelectedGenericOptionsWorld.NameVersion != null)
+        {
+            indexOptopn = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == SelectedGenericOptionsWorld.NameVersion);
+            //if(indexOptopn == -1)
+            //    indexOptopn = m_ListGenOptionsVersion.FindIndex(p => p.TagObject == SelectedGenericOptionsWorld.NameObject);
+        }
 
         if (m_ListGenOptionsVersion == null)
             m_ListGenOptionsVersion = new List<GenericOptionsWorld>();
@@ -2356,13 +2428,17 @@ public class PaletteMapController : MonoBehaviour {
         if (m_ListVersionNameGenOptionData.Count > 0)
         {
             dpnListGenOptionsVersion.AddOptions(m_ListVersionNameGenOptionData);
-            dpnListGenOptionsVersion.value = 0;
-            SelectVersionGenOption(0);
+            if (indexOptopn == -1)
+                indexOptopn = 0;
+            dpnListGenOptionsVersion.value = indexOptopn;
+            SelectVersionGenOption(indexOptopn);
         }
     }
 
     private void LoadListContainersVersionsGeneticOptons()
     {
+        
+
         if (m_ListGenWorldVersion == null)
             m_ListGenWorldVersion = new List<ContainerOptionsWorld>();
 
@@ -2379,6 +2455,9 @@ public class PaletteMapController : MonoBehaviour {
         if (m_ListVersionNameGenWorldData.Count > 0)
         {
             dpnListVersionGenWorld.AddOptions(m_ListVersionNameGenWorldData);
+
+            
+
             dpnListVersionGenWorld.value = 0;
             SelectedVersionWorldChange(0);
         }
@@ -2424,12 +2503,20 @@ public class PaletteMapController : MonoBehaviour {
         SelectedGenericOptionsWorld = selVers;
         //Load Options
 
-        if (selVers.IsConstruction)
+        if (selVers.IsConstruction && selVers.NameObject != null)
         {
-            ModePaint = ToolBarPaletteMapAction.Paste;
-            isPaletteBrushOn = false;
             SelectedConstruction = selVers.NameObject;
-            IsGenericContruct = true;
+            //#FIX SELGEN IsGenericContruct = true;
+
+            //#FIX SELGEN
+            //ModePaint = ToolBarPaletteMapAction.Paste;
+            btnOnPaint.isOn = false;
+            //ModePaint = ToolBarPaletteMapAction.Paste;
+            btnPaste.isOn = true;
+            //isPaletteBrushOn = false;
+            LoadConstructOnPalette(SelectedConstruction);
+
+            
         }
         else
         {
@@ -2438,8 +2525,47 @@ public class PaletteMapController : MonoBehaviour {
                 Name = selVers.NameObject,
                 Tag = selVers.TagObject
             };
+
+            //#FIX SELGEN
+            //btnOnPaint.isOn = true;
+            btnOnPaint.isOn = true;
+            //isPaletteBrushOn = true;
+            //ModePaint = ToolBarPaletteMapAction.Paste;
+            btnBrush.isOn = true;
+
+            LoadTypeBrushOnPalette(TypesBrushGrid.Prefabs);
+            ToolBarBrushPalette.SetActive(true);
+
+            GameObject objCell = null;
+            foreach (var cellMap in m_listCallsOnPalette)
+            {
+                if (cellMap.GetComponent<CellMapControl>().DataTileCell.Name == SelectedCell.Name)
+                    objCell = cellMap;
+            }
+
+            if (objCell != null)
+            {
+                var border = objCell.GetComponent<CellMapControl>().BorderCellPalette;
+                SelectedCellMap(SelectedCell, objCell, border);
+            }
+            else
+            {
+                Debug.Log("######  SelectVersionGenOption Not find Cell in Palette map : " + SelectedCell.Name);
+            }
         }
+        //if (isPaletteBrushOn)
+        //{
+        //    LoadTypeBrushOnPalette(ListTypesBrushes[dpntStructurs.value]);
+        //}
+        //else
+        //{
+        //    LoadConstructOnPalette(m_ListNamesConstructs[dpntStructurs.value]);
+        //}
+
+
         Storage.Events.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
+        //NameSelectedGenObject = selVers.NameObject + @" \ " + selVers.TagObject; 
+        var t = NameSelectedGenObject;
 
         OptionGenCount = selVers.CountObjects;
         OptionGenSegments = selVers.Segment;
@@ -2623,6 +2749,8 @@ public class PaletteMapController : MonoBehaviour {
 
     public void AddVersionGenericOptions(string nameVerion, bool isUpdate = false)
     {
+
+
         if(SelectedCell == null)
         {
             Storage.Events.ListLogAdd = "##### Not Selected Genetic Object !!!!!!";
@@ -2630,14 +2758,21 @@ public class PaletteMapController : MonoBehaviour {
             return;
         }
 
-        int ind = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVerion);
-        if (ind != -1)
+
+
+
+        if (!isUpdate)
         {
-            return;
+            int ind = m_ListGenOptionsVersion.FindIndex(p => p.NameVersion == nameVerion);
+            if (ind != -1)
+                return;
         }
 
         string nameObject = IsGenericContruct ? SelectedConstruction : SelectedCell.Name;
         string tagObject = IsGenericContruct ? "" : SelectedCell.Tag;
+
+        //#TEST
+        var t = SelectedGenericOptionsWorld;
 
         //Create Options
         GenericOptionsWorld saveOptions = new GenericOptionsWorld()

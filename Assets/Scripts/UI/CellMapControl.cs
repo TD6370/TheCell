@@ -66,7 +66,6 @@ public class CellMapControl : MonoBehaviour, IPointerDownHandler {
 
     }
 
-
     // Update is called once per frame
     void Update () {
 	    	

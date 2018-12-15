@@ -15,8 +15,8 @@
         <Level>5</Level>
         <LastLimit>0</LastLimit>
         <FirstLimit>0</FirstLimit>
-        <TagObject>Prefab</TagObject>
-        <NameObject>PrefabWallWood</NameObject>
+        <TagObject>Terra</TagObject>
+        <NameObject>Block</NameObject>
         <IsClear>true</IsClear>
         <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
         <TypeModeOptStartCheck>None</TypeModeOptStartCheck>
@@ -105,13 +105,13 @@
         <NameVersion>BolotoConstr</NameVersion>
       </Option>
       <Option>
-        <CountObjects>18000</CountObjects>
+        <CountObjects>5</CountObjects>
         <Segment>150</Segment>
         <Level>15</Level>
         <LastLimit>1</LastLimit>
         <FirstLimit>2</FirstLimit>
-        <TagObject>Prefab</TagObject>
-        <NameObject>PrefabRock</NameObject>
+        <TagObject />
+        <NameObject>BildPrefab</NameObject>
         <IsClear>true</IsClear>
         <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
         <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
@@ -119,17 +119,18 @@
         <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
         <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
         <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
-        <IsConstruction>false</IsConstruction>
+        <IsConstruction>true</IsConstruction>
         <IsRepeatFind>false</IsRepeatFind>
         <NameVersion>cloud</NameVersion>
       </Option>
       <Option>
-        <CountObjects>1</CountObjects>
+        <CountObjects>5</CountObjects>
         <Segment>9</Segment>
         <Level>9</Level>
         <LastLimit>0.9</LastLimit>
         <FirstLimit>0.8</FirstLimit>
         <TagObject />
+        <NameObject>BildPrefab</NameObject>
         <IsClear>true</IsClear>
         <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
         <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
