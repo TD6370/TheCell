@@ -1021,8 +1021,16 @@ public class SaveLoadData : MonoBehaviour {
         //StartCoroutine(StartBackgroundLoadDataBigXML());
 
         //-- load old style
-        StartCoroutine(StartInGameLoadDataBigXML());
+        //StartCoroutine(StartInGameLoadDataBigXML());
+
+        //-- Load in thread full
+        StartCoroutine(StartThreadLoadDataBigXML());
     }
+
+    //public void LoadDataBigThreadXML()
+    //{
+    //    StartCoroutine(StartThreadLoadDataBigXML());
+    //}
 
     IEnumerator StartInGameLoadDataBigXML()
     {
@@ -1064,6 +1072,34 @@ public class SaveLoadData : MonoBehaviour {
         {
 
             yield return new WaitForSeconds(2f);
+        }
+
+        Storage.Data.CompletedLoadWorld();
+
+        float loadingTime = Time.time - LoadingWordlTimer;
+        Storage.Events.SetTittle = "Loaded:" + loadingTime;
+        Storage.Events.ListLogAdd = "Loaded:" + loadingTime;
+        Debug.Log("*********************** Time loding World: " + loadingTime);
+
+        yield break;
+    }
+
+    IEnumerator StartThreadLoadDataBigXML()
+    {
+        yield return null;
+
+        LoadingWordlTimer = Time.time;
+
+        Storage.Data.LoadBigWorldThread(true);
+
+        //yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+
+        while (!Storage.Data.IsThreadLoadWorldCompleted)
+        {
+
+            yield return new WaitForSeconds(0.2f);
+            //yield return new WaitForSeconds(0.3f);
         }
 
         Storage.Data.CompletedLoadWorld();

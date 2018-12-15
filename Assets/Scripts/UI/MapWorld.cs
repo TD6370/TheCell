@@ -1513,6 +1513,10 @@ public class MapWorld : MonoBehaviour {
             if(IsReloadGridMap)
                 yield return null;
 
+            //#?????
+            if(StackSectorsUpdating.Count == 0)
+                yield return null;
+
             string sector = StackSectorsUpdating.Pop();
             //Debug.Log("************ RefreshGrid " + sector);
 

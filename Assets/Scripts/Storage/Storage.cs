@@ -674,10 +674,14 @@ public class Storage : MonoBehaviour {
 
             //-- load old style
             //StartCoroutine(StartInGameLoadDataBigXML());
-            GridData.LoadDataBigXML();
+            GridData.LoadDataBigXML(); //<<<
 
             //-- Load Async
             //StartCoroutine(StartBackgroundLoadDataBigXML());
+
+            //-- Load Async
+            //StartCoroutine(StartThreadLoadDataBigXML());
+            //GridData.LoadDataBigThreadXML();
         }
         else
         {

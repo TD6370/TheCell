@@ -537,7 +537,7 @@ public class UpdateData { //: MonoBehaviour {
     Thread threadLoadWorld = null;
     public string DataPathBigPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
 
-    public void LoadBigWorldThread()
+    public void LoadBigWorldThread(bool isFull = false)
     {
         if (threadLoadWorld != null && threadLoadWorld.IsAlive)
         {
@@ -552,7 +552,10 @@ public class UpdateData { //: MonoBehaviour {
         {
             threadLoadWorld = new Thread(() =>
             {
-                BackgroundLoadDataBigXML();
+                if(!isFull)
+                    BackgroundLoadDataBigXML();
+                else
+                    ThreadLoadDataBigXML();
             });
         }
 
@@ -576,27 +579,29 @@ public class UpdateData { //: MonoBehaviour {
 
     public void CompletedLoadWorld()
     {
-        //Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
-        //                        .ToDictionary(x => x.Key, x => x.Value);
-        //fieldsD_Temp
+        //v.1
+        Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
+                                .ToDictionary(x => x.Key, x => x.Value);
 
-        foreach (var itemObj in fieldsD_Temp)
-        {
-            if(Storage.Instance.GridDataG.FieldsD.ContainsKey(itemObj.Key))
-            {
-                Storage.Instance.GridDataG.FieldsD[itemObj.Key].Objects.AddRange(itemObj.Value.Objects);
-            }
-            else
-            {
-                Storage.Instance.GridDataG.FieldsD.Add(itemObj.Key, new ModelNPC.FieldData()
-                {
-                    NameField = itemObj.Key,
-                    Objects = itemObj.Value.Objects
-                });
-            }
-        }
-        //Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
-        //                            .ToDictionary(x => x.Key, x => x.Value);
+        //return;
+
+        //v.2
+        //foreach (var itemObj in fieldsD_Temp)
+        //{
+        //    if(Storage.Instance.GridDataG.FieldsD.ContainsKey(itemObj.Key))
+        //    {
+        //        Storage.Instance.GridDataG.FieldsD[itemObj.Key].Objects.AddRange(itemObj.Value.Objects);
+        //    }
+        //    else
+        //    {
+        //        Storage.Instance.GridDataG.FieldsD.Add(itemObj.Key, new ModelNPC.FieldData()
+        //        {
+        //            NameField = itemObj.Key,
+        //            Objects = itemObj.Value.Objects
+        //        });
+        //    }
+        //}
+        
 
         Storage.Events.SetTittle = "World is loaded";
         Storage.Events.ListLogAdd = "************** World is loaded **************";
@@ -609,6 +614,17 @@ public class UpdateData { //: MonoBehaviour {
         set
         {
             fieldsD_Temp = value;
+        }
+    }
+
+    public void ThreadLoadDataBigXML()
+    {
+        string stepErr = "start";
+
+        if (File.Exists(DataPathBigPart))
+        {
+            var tempGridData = Serializator.LoadGridXml(DataPathBigPart);
+            fieldsD_Temp = tempGridData.FieldsD;
         }
     }
 

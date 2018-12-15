@@ -40,8 +40,8 @@ MonoBehaviour:
     y: 0
     width: 255
     height: 243
-  m_MinSize: {x: 240, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 244, y: 221}
+  m_MaxSize: {x: 4004, y: 4021}
   m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 22}
@@ -67,10 +67,10 @@ MonoBehaviour:
     y: 705
     width: 528
     height: 243
-  m_MinSize: {x: 502, y: 241}
-  m_MaxSize: {x: 8002, y: 4021}
+  m_MinSize: {x: 506, y: 241}
+  m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 113
+  controlID: 141
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -116,10 +116,10 @@ MonoBehaviour:
     y: 0
     width: 528
     height: 948
-  m_MinSize: {x: 502, y: 312}
-  m_MaxSize: {x: 8002, y: 8042}
+  m_MinSize: {x: 506, y: 291}
+  m_MaxSize: {x: 8006, y: 8021}
   vertical: 1
-  controlID: 112
+  controlID: 140
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -204,10 +204,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 948
-  m_MinSize: {x: 908, y: 342}
-  m_MaxSize: {x: 16008, y: 8042}
+  m_MinSize: {x: 910, y: 342}
+  m_MaxSize: {x: 16010, y: 8042}
   vertical: 0
-  controlID: 77
+  controlID: 33
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,10 +228,10 @@ MonoBehaviour:
     y: 0
     width: 1392
     height: 948
-  m_MinSize: {x: 406, y: 342}
-  m_MaxSize: {x: 8006, y: 8042}
+  m_MinSize: {x: 404, y: 342}
+  m_MaxSize: {x: 8004, y: 8042}
   vertical: 1
-  controlID: 78
+  controlID: 34
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -252,10 +252,10 @@ MonoBehaviour:
     y: 0
     width: 1392
     height: 677
-  m_MinSize: {x: 406, y: 221}
-  m_MaxSize: {x: 8006, y: 4021}
+  m_MinSize: {x: 404, y: 221}
+  m_MaxSize: {x: 8004, y: 4021}
   vertical: 0
-  controlID: 79
+  controlID: 35
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -274,8 +274,8 @@ MonoBehaviour:
     y: 0
     width: 340
     height: 677
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -351,8 +351,8 @@ MonoBehaviour:
     y: 0
     width: 528
     height: 705
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 23}
   m_Panes:
   - {fileID: 23}
@@ -497,10 +497,10 @@ MonoBehaviour:
     height: 656
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 65}
-    m_SelectedIDs: 6c150000
-    m_LastClickedID: 5484
-    m_ExpandedIDs: e4fbffff00000000881100000a120000501500006c15000084150000561600005a17000086170000b41700008c180000c2180000ee190000bc1a0000
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: dcfbffff00000000c21a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -551,7 +551,7 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_MaximizeOnPlay: 0
   m_Gizmos: 0
-  m_Stats: 0
+  m_Stats: 1
   m_SelectedSizes: 04000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_TargetDisplay: 0
   m_ZoomArea:
@@ -653,7 +653,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 375}
     m_SelectedIDs: de0a0000
     m_LastClickedID: 2782
-    m_ExpandedIDs: 0000000098090000f0090000100a0000a40a0000a60a0000360b00007e0b0000760c00008c0c0000b60c0000ba0c00006c0d0000ca0d0000ea0d00007c0e0000be0e0000220f00002a0f00004c0f0000c40f0000d20f00002c10000058100000
+    m_ExpandedIDs: 000000009e090000f6090000160a0000aa0a0000ac0a00003c0b0000840b00007c0c0000920c0000bc0c0000c00c0000720d0000d00d0000f00d0000820e0000c40e0000280f0000300f0000520f0000ca0f0000d80f0000321000005e100000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -681,7 +681,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000098090000f0090000100a0000a40a0000a60a0000360b00007e0b0000760c00008c0c0000b60c0000ba0c00006c0d0000ca0d0000ea0d00007c0e0000be0e0000220f00002a0f00004c0f0000c40f0000d20f00002c10000058100000
+    m_ExpandedIDs: 000000009e090000f6090000160a0000aa0a0000ac0a00003c0b0000840b00007c0c0000920c0000bc0c0000c00c0000720d0000d00d0000f00d0000820e0000c40e0000280f0000300f0000520f0000ca0f0000d80f0000321000005e100000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
