@@ -650,7 +650,9 @@ public class ModelNPC
             }
 
             //#FIX
-            if (!IsLoadad && !IsReality)
+            //if (!IsLoadad && !IsReality)
+            //#FIX null
+            if ((!IsLoadad && !IsReality) || TileName==null)
             {
                 if (isGen)
                     TileName = Storage.TilesManager.GenNameTileTerra();
@@ -663,7 +665,9 @@ public class ModelNPC
         {
             {
                 //#INTI
-                if (!IsLoadad && IsReality)
+                //if(!IsLoadad && IsReality)
+                //#FIX null
+                if ((!IsLoadad || TileName == null) && IsReality)
                     Init();
 
                 //return;

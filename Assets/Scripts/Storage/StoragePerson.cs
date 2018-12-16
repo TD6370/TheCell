@@ -616,6 +616,12 @@ public static class PersonsExtensions
     {
         return Storage.Person.NamesPersons.Contains(typePrefab);
     }
+    public static bool IsSpritePerson(this string typePrefab)
+    {
+        return typePrefab.IndexOf("Boss") != -1 ||
+            typePrefab.IndexOf("Ufo") != -1; 
+        //return Storage.Person.NamesPersons.Contains(typePrefab);
+    }
 
     public static MovementUfo GetMoveUfo(this GameObject gobj)
     {

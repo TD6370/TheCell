@@ -1064,6 +1064,8 @@ public class GenerateGridFields : MonoBehaviour {
     //+++ CreateObjectData +++ LoadObjectForLook
     public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     {
+        string strErr = "start";
+
         string typePrefab = objData.TagObject;
         string namePrefab = objData.NameObject;
         Vector3 pos = objData.Position;
@@ -1079,6 +1081,7 @@ public class GenerateGridFields : MonoBehaviour {
         GameObject newObjGame = null;// = new GameObject();
         try
         {
+            strErr = "1";
             newObjGame = FindPrefab(typePrefab, objData.NameObject);
 
             //if (PoolGameObjects.IsUsePoolObjects)
@@ -1095,19 +1098,23 @@ public class GenerateGridFields : MonoBehaviour {
 
             newObjGame.transform.position = pos; //@!@.1
 
+            strErr = "2";
             SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
 
 
+            strErr = "3";
             if (!String.IsNullOrEmpty(newObjGame.tag))
                 prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), newObjGame.tag.ToString()); ;
 
             switch (prefabType)
             {
                 case SaveLoadData.TypePrefabs.PrefabUfo:
+                    strErr = "4";
                     var objUfo = objData as ModelNPC.GameDataUfo;
                     if (objUfo != null)
                     {
                         //LoadObjectForLook:  DATA -->> PERSONA #P#
+                        strErr = "5";
                         objUfo.UpdateGameObject(newObjGame);
                     }
                     else
@@ -1116,11 +1123,12 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     break;
                 case SaveLoadData.TypePrefabs.PrefabBoss: //$$
-
+                    strErr = "6";
                     //Debug.Log("################ CreatePrefabByName.. BOSS: " + prefabType);
                     var objBoss = objData as ModelNPC.GameDataBoss;
                     if (objBoss != null)
                     {
+                        strErr = "7";
                         objBoss.UpdateGameObject(newObjGame);
                     }
                     else
@@ -1129,9 +1137,11 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     break;
                 case SaveLoadData.TypePrefabs.PrefabField:
+                    strErr = "8";
                     var objTerra = objData as ModelNPC.TerraData;
                     if (objTerra != null)
                     {
+                        strErr = "9";
                         objTerra.UpdateGameObject(newObjGame);
                     }
                     else
@@ -1144,13 +1154,13 @@ public class GenerateGridFields : MonoBehaviour {
                     break;
             }
             //.............
-
+            strErr = "10";
             newObjGame.name = namePrefab;
 
         }
         catch (Exception x)
         {
-            Debug.Log("############### CreatePrefabByName: tag " + newObjGame.tag + " " + x.Message);
+            Debug.Log("###############" + strErr + " CreatePrefabByName: tag " + newObjGame.tag + " " + x.Message);
         }
 
         return newObjGame;

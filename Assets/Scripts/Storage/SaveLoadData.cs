@@ -942,6 +942,7 @@ public class SaveLoadData : MonoBehaviour {
     PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
+        string personTextureName = "";
 
         //public enum TypesStructure
         //{
@@ -957,13 +958,25 @@ public class SaveLoadData : MonoBehaviour {
             return false;
         }
 
+        //ArgumentException: The requested value 'SpriteBossAlien(Clone)' was not found.
+
         TypesStructure structType = (TypesStructure)Enum.Parse(typeof(TypesStructure), itemTile.Tag); ;
+
         if (structType == TypesStructure.Terra)
         {
             prefabName = TypePrefabs.PrefabField; 
         }
-        if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
+        if (structType == TypesStructure.Person)
         {
+            personTextureName = itemTile.Name.ClearClone();
+            //prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
+            prefabName = TypePrefabs.PrefabBoss;
+        }
+        //if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
+        if (structType == TypesStructure.Prefab)
+        {
+            //ArgumentException: The requested value 'SpriteBossAlien(Clone)' was not found.
+
             prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
             //prefabName = GetPrefabByTile(itemTile.Name);
             //GameObject prefab = Storage.GridData.FindPrefab(itemTile.Name);
@@ -993,7 +1006,22 @@ public class SaveLoadData : MonoBehaviour {
             }
             objTerra.TileName = itemTile.Name;
         }
-
+        if (structType == TypesStructure.Person)
+        {
+            var objPerson = objDataSave as ModelNPC.GameDataBoss;
+            if (objPerson == null)
+            {
+                Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
+                return false;
+            }
+            //objPerson.Level = Storage.Instance._TypesBoss.Where(p => p.TextureMap == personType).Select(p => p.Level).FirstOrDefault(); ;
+            if (!string.IsNullOrEmpty(personTextureName))
+            {
+                objPerson.Level = TypeBoss.Instance._TypesBoss.Where(p => p.NameTextura2D == personTextureName).Select(p => p.Level).FirstOrDefault();
+                //objPerson.Init();
+            }
+        }
+        
         //Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField, isTestFilledField, isTestExistMeType,
         //    p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
 

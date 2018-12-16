@@ -23,6 +23,7 @@ public class PaletteMapController : MonoBehaviour {
     public GameObject ToolBarBrushPalette;
     public Button btnClose;
     public Button btnCloseToolBarBrushPalette;//ToolBarBrushPalette.SetActive(false);
+    
     public Dropdown dpdListConstructsControl;
 
 
@@ -75,7 +76,7 @@ public class PaletteMapController : MonoBehaviour {
     //private DataTile selectGeneticObject { get; set; }
     public GameObject PrefabCellMapPalette;
 
-    //public Button btnOnPaint;
+    //Paint tools
     public Toggle btnOnPaint;
     public Toggle btnPaste;
     public Toggle btnBrush;
@@ -90,6 +91,7 @@ public class PaletteMapController : MonoBehaviour {
     public Button btnUp;
     public Button btnDown;
 
+    //Gen options
     public InputField btxSizeBrush;
     public InputField btxIntGenOption1;
     public InputField btxIntGenOption2;
@@ -129,11 +131,6 @@ public class PaletteMapController : MonoBehaviour {
     public InputField tbxOptEndSegment;
 
     // --- Save version generic option
-    //private bool m_IsListModeIsContainerGeneticOtions = false;
-    //public Toggle checkOptVersionGeneric;
-    //public Toggle checkOptVersionContainerGenerics;
-
-
     public Dropdown dpnListGenOptionsVersion;
     public InputField tbxVersionNameGenOption; //ListGenOptionsVersion
     public Button btnAddVersionOptGen;
@@ -148,7 +145,9 @@ public class PaletteMapController : MonoBehaviour {
     public Button bntDeleteVersionGenWorld;
     public Button bntAddInContainer;
     public Button bntGenVersionSaveUpdate;
+    public Button bntGenVersionPlay;
     public GameObject ContentListVersionsGenericWorld;
+
     private List<Dropdown.OptionData> m_ListVersionNameGenWorldData;
     private List<ContainerOptionsWorld> m_ListGenWorldVersion;
     private List<GenericOptionsWorld> m_ListGenOptionsVersionForContainer;
@@ -377,6 +376,7 @@ public class PaletteMapController : MonoBehaviour {
         Prefabs,
         Brushes,
         PaintBrush,
+        Persons,
         OptionsGeneric
     }
 
@@ -497,8 +497,9 @@ public class PaletteMapController : MonoBehaviour {
         ListTypesBrushes = new List<TypesBrushGrid>
         {
             TypesBrushGrid.Prefabs,
-            TypesBrushGrid.Brushes,
-            TypesBrushGrid.PaintBrush,
+            TypesBrushGrid.Persons,
+            //TypesBrushGrid.Brushes,
+            //TypesBrushGrid.PaintBrush,
             TypesBrushGrid.OptionsGeneric
         };
 
@@ -723,6 +724,49 @@ public class PaletteMapController : MonoBehaviour {
             LoadListConstructsControl();
             //LoadListVersionGeneticOptons();
         }
+    }
+
+    IEnumerator StartPlayGenericVersionWorld()
+    {
+        //yield return new WaitForSeconds(0.3f);
+
+        yield return null;
+        Storage.Events.SetTittle = "Start generic...";
+        yield return null;
+        Storage.GridData.ClearWorld();
+        yield return null;
+        Storage.Map.RefreshFull();
+        yield return null;
+        foreach (var itemGenOpt in m_ListGenOptionsVersionForContainer)
+        {
+
+            Storage.Events.SetTittle = ".." + itemGenOpt.NameVersion;
+            yield return null;
+            SelectionVersionOptInContainer(itemGenOpt.NameVersion);
+            //VersionGenWorldValueChanged(dpnListVersionGenWorld);
+            //GenWorld();
+            yield return null;
+
+            //yield return StartCoroutine(StartGenericOnWorld());
+                //GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+                GenericOnWorld(true);
+
+            //yield return whi 
+            //GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+            yield return null;
+        }
+        yield return null;
+        //Storage.Map.RefreshFull();
+        Storage.Player.LoadPositionHero();
+        yield return null;
+        Storage.Events.SetTittle = "End generic";
+    }
+
+    IEnumerator StartGenericOnWorld()
+    {
+        yield return null;
+        GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+        yield return null;
     }
 
     private void LoadPaletteMenu()
@@ -1089,6 +1133,39 @@ public class PaletteMapController : MonoBehaviour {
         return resValue;
     }
 
+    public void PersonsOnPalette()
+    {
+        int countColumnMap = 6;
+        SizeBrush = 1;
+        m_GridMap.childAlignment = TextAnchor.UpperLeft;
+        m_GridMap.constraintCount = countColumnMap;
+        ResizeScaleGrid(countColumnMap, 1.1f);
+
+        GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
+        for (int i = 0; i < gobjCells.Length; i++)
+        {
+            Destroy(gobjCells[i]);
+        }
+
+        m_listCallsOnPalette.Clear();
+
+        int index = 0;
+        foreach (Sprite item in Storage.Person.SpriteCollection.Values)
+        {
+            string spriteName = item.name;
+
+            var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+            cellMap.transform.SetParent(this.gameObject.transform);
+
+            cellMap.GetComponent<Image>().sprite = item;
+            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = TypesStructure.Person.ToString() };
+            cellMap.SetActive(true);
+
+            m_listCallsOnPalette.Add(cellMap);
+            index++;
+        }
+    }
+
     public void PrefabsOnPalette()
     {
         //#fix terra
@@ -1224,6 +1301,9 @@ public class PaletteMapController : MonoBehaviour {
             case TypesBrushGrid.Brushes:
                 break;
             case TypesBrushGrid.PaintBrush:
+                break;
+            case TypesBrushGrid.Persons:
+                PersonsOnPalette();
                 break;
             case TypesBrushGrid.OptionsGeneric:
                 ToolBarBrushPalette.SetActive(true);
@@ -1419,7 +1499,11 @@ public class PaletteMapController : MonoBehaviour {
         dpdListConstructsControl.AddOptions(m_ListConstructsOptopnsData);
     }
 
-
+    public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette)
+    {
+        GameObject borderCellPalette = selCellPalette.GetComponent<CellMapControl>().BorderCellPalette;
+        SelectedCellMap(DataTileCell, selCellPalette, borderCellPalette);
+    }
 
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
@@ -2185,6 +2269,11 @@ public class PaletteMapController : MonoBehaviour {
             SaveUpdateVersionGenOptions();
             //SaveVersionsGeneric();
         });
+
+        bntGenVersionPlay.onClick.AddListener(() =>
+        {
+            PlayGenericVersionWorld();
+        });
         //-------- new
 
         CheckStateOpionsDelete(SelCheckOptDel.All);
@@ -2360,6 +2449,23 @@ public class PaletteMapController : MonoBehaviour {
         UpdateListVersions();
     }
 
+    private void PlayGenericVersionWorld()
+    {
+        StartCoroutine(StartPlayGenericVersionWorld());
+
+        //Storage.GridData.ClearWorld();
+        //Storage.Map.RefreshFull();
+
+        //foreach (var itemGenOpt in m_ListGenOptionsVersionForContainer)
+        //{
+            
+        //    SelectionVersionOptInContainer(itemGenOpt.NameVersion);
+        //    //VersionGenWorldValueChanged(dpnListVersionGenWorld);
+        //    //GenWorld();
+        //    GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+        //}
+    }
+
     private void AddListVersions(string value)
     {
         AddVersionGenericOptions(value); //New verion
@@ -2515,8 +2621,6 @@ public class PaletteMapController : MonoBehaviour {
             btnPaste.isOn = true;
             //isPaletteBrushOn = false;
             LoadConstructOnPalette(SelectedConstruction);
-
-            
         }
         else
         {
@@ -2532,8 +2636,11 @@ public class PaletteMapController : MonoBehaviour {
             //isPaletteBrushOn = true;
             //ModePaint = ToolBarPaletteMapAction.Paste;
             btnBrush.isOn = true;
+            if(selVers.NameObject.IsSpritePerson())
+                LoadTypeBrushOnPalette(TypesBrushGrid.Persons);
+            else
+                LoadTypeBrushOnPalette(TypesBrushGrid.Prefabs);
 
-            LoadTypeBrushOnPalette(TypesBrushGrid.Prefabs);
             ToolBarBrushPalette.SetActive(true);
 
             GameObject objCell = null;
@@ -2545,8 +2652,10 @@ public class PaletteMapController : MonoBehaviour {
 
             if (objCell != null)
             {
-                var border = objCell.GetComponent<CellMapControl>().BorderCellPalette;
-                SelectedCellMap(SelectedCell, objCell, border);
+                //GameObject border = objCell.GetComponent<CellMapControl>().BorderCellPalette;
+                SelectedCellMap(SelectedCell, objCell);
+                //objCell.GetComponent<CellMapControl>().DataTileCell = SelectedCell;
+                //objCell.GetComponent<CellMapControl>().BorderShow();
             }
             else
             {

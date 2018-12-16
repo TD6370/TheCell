@@ -81,6 +81,15 @@ public class CellMapControl : MonoBehaviour, IPointerDownHandler {
         
     }
 
+    //public void BorderShow()
+    //{
+    //    if (BorderCellPalette == null || m_DataTileCell!=null || _scriptMap == null)
+    //        return;
+    //    //BorderCellPalette.SetActive(true);
+    //    _scriptMap.SelectedCellMap(m_DataTileCell, this.gameObject, BorderCellPalette);
+    //}
+
+
     //private void OnGUI()
     //{
     //    if (DataTileCell != null)

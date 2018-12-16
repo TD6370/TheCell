@@ -3,7 +3,84 @@
   <ListGenericWorlds>
     <ContainerOptionsWorld>
       <NameVersion>World1</NameVersion>
-      <ListGenericOprionsWorld />
+      <ListGenericOprionsWorld>
+        <Option>
+          <CountObjects>0</CountObjects>
+          <Segment>50</Segment>
+          <Level>6</Level>
+          <LastLimit>0</LastLimit>
+          <FirstLimit>20</FirstLimit>
+          <TagObject>Prefab</TagObject>
+          <NameObject>PrefabVood</NameObject>
+          <IsClear>true</IsClear>
+          <TypeModeOptStartDelete>DelFull</TypeModeOptStartDelete>
+          <TypeModeOptStartCheck>None</TypeModeOptStartCheck>
+          <IsSteps>false</IsSteps>
+          <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
+          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+          <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
+          <IsConstruction>false</IsConstruction>
+          <IsRepeatFind>false</IsRepeatFind>
+          <NameVersion>Forest</NameVersion>
+        </Option>
+        <Option>
+          <CountObjects>0</CountObjects>
+          <Segment>5</Segment>
+          <Level>2</Level>
+          <LastLimit>1</LastLimit>
+          <FirstLimit>2</FirstLimit>
+          <TagObject>Prefab</TagObject>
+          <NameObject>PrefabWallWood</NameObject>
+          <IsClear>true</IsClear>
+          <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+          <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+          <IsSteps>true</IsSteps>
+          <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
+          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+          <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
+          <IsConstruction>false</IsConstruction>
+          <IsRepeatFind>false</IsRepeatFind>
+          <NameVersion>RockSierra</NameVersion>
+        </Option>
+        <Option>
+          <CountObjects>5</CountObjects>
+          <Segment>9</Segment>
+          <Level>9</Level>
+          <LastLimit>0.9</LastLimit>
+          <FirstLimit>0.8</FirstLimit>
+          <TagObject />
+          <NameObject>BildPrefab</NameObject>
+          <IsClear>true</IsClear>
+          <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+          <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+          <IsSteps>false</IsSteps>
+          <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
+          <IsSegmentNextPointRange>true</IsSegmentNextPointRange>
+          <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
+          <IsConstruction>true</IsConstruction>
+          <IsRepeatFind>true</IsRepeatFind>
+          <NameVersion>test9</NameVersion>
+        </Option>
+        <Option>
+          <CountObjects>0</CountObjects>
+          <Segment>1</Segment>
+          <Level>20</Level>
+          <LastLimit>1</LastLimit>
+          <FirstLimit>0</FirstLimit>
+          <TagObject />
+          <NameObject>BildBoloto</NameObject>
+          <IsClear>true</IsClear>
+          <TypeModeOptStartDelete>DelFull</TypeModeOptStartDelete>
+          <TypeModeOptStartCheck>None</TypeModeOptStartCheck>
+          <IsSteps>false</IsSteps>
+          <IsSegmentNextPointMargin>true</IsSegmentNextPointMargin>
+          <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+          <IsSegmentNextPointFirst>false</IsSegmentNextPointFirst>
+          <IsConstruction>true</IsConstruction>
+          <IsRepeatFind>false</IsRepeatFind>
+          <NameVersion>BolotoConstr</NameVersion>
+        </Option>
+      </ListGenericOprionsWorld>
     </ContainerOptionsWorld>
   </ListGenericWorlds>
   <GenericOptions>
@@ -67,13 +144,13 @@
         <NameVersion>Rock</NameVersion>
       </Option>
       <Option>
-        <CountObjects>4500</CountObjects>
+        <CountObjects>0</CountObjects>
         <Segment>5</Segment>
         <Level>2</Level>
         <LastLimit>1</LastLimit>
         <FirstLimit>2</FirstLimit>
         <TagObject>Prefab</TagObject>
-        <NameObject>PrefabRock</NameObject>
+        <NameObject>PrefabWallWood</NameObject>
         <IsClear>true</IsClear>
         <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
         <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
@@ -160,6 +237,25 @@
         <IsConstruction>true</IsConstruction>
         <IsRepeatFind>true</IsRepeatFind>
         <NameVersion>PrefabLine</NameVersion>
+      </Option>
+      <Option>
+        <CountObjects>900</CountObjects>
+        <Segment>1</Segment>
+        <Level>1</Level>
+        <LastLimit>0</LastLimit>
+        <FirstLimit>0</FirstLimit>
+        <TagObject>Person</TagObject>
+        <NameObject>SpriteBossDroid(Clone)</NameObject>
+        <IsClear>true</IsClear>
+        <TypeModeOptStartDelete>None</TypeModeOptStartDelete>
+        <TypeModeOptStartCheck>DelFull</TypeModeOptStartCheck>
+        <IsSteps>false</IsSteps>
+        <IsSegmentNextPointMargin>false</IsSegmentNextPointMargin>
+        <IsSegmentNextPointRange>false</IsSegmentNextPointRange>
+        <IsSegmentNextPointFirst>true</IsSegmentNextPointFirst>
+        <IsConstruction>false</IsConstruction>
+        <IsRepeatFind>false</IsRepeatFind>
+        <NameVersion>boss1</NameVersion>
       </Option>
     </ListGenericOprionsWorld>
   </GenericOptions>
