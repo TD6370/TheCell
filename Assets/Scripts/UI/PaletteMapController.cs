@@ -154,6 +154,49 @@ public class PaletteMapController : MonoBehaviour {
     private GenericOptionsWorld SelectedGenericOptionsWorld;
     private ContainerOptionsWorld SelectedVersionWorld;
 
+    //Option Generic Person
+    public Toggle checkOptSpawnPoint;
+    public InputField tbxOptSpawnPointRadius;
+    public InputField tbxOptSpawnPointScope;
+
+    //bool IsSpawnPoint
+    //int SpawnPointRadius
+    //int SpawnPointScope
+
+    private bool IsSpawnPoint
+    {
+        get
+        {
+            return checkOptSpawnPoint.isOn;
+        }
+    }
+    private int SpawnPointRadius
+    {
+        get
+        {
+            int _SpawnPointRadius = 0;
+            int.TryParse(tbxOptSpawnPointRadius.text, out _SpawnPointRadius);
+            return _SpawnPointRadius;
+        }
+        set
+        {
+            tbxOptSpawnPointRadius.text = value.ToString();
+        }
+    }
+    private int SpawnPointScope
+    {
+        get
+        {
+            int _SpawnPointScope = 0;
+            int.TryParse(tbxOptSpawnPointScope.text, out _SpawnPointScope);
+            return _SpawnPointScope;
+        }
+        set
+        {
+            tbxOptSpawnPointScope.text = value.ToString();
+        }
+    }
+
     // --- options Delete cell prefabs generic option
     private SelCheckOptDel m_TypeModeOptStartDelete = SelCheckOptDel.All;
     private SelCheckOptDel TypeModeOptStartDelete
@@ -502,7 +545,8 @@ public class PaletteMapController : MonoBehaviour {
             //TypesBrushGrid.PaintBrush,
             TypesBrushGrid.OptionsGeneric
         };
-
+        SpawnPointRadius = 100;
+        SpawnPointScope = 2;
     }
 
 
@@ -1693,7 +1737,65 @@ public class PaletteMapController : MonoBehaviour {
             if (SubsystemLevel == 0) SubsystemLevel = 10;
             //int CountObjects = OptionGen1;
 
-            if (OptionGenSegments < 2)
+
+            if(IsSpawnPoint)
+            {
+                //bool IsSpawnPoint
+                //int SpawnPointRadius
+                //int SpawnPointScope
+                if (isLog)
+                    Storage.Events.ListLogAdd = "standart generation 1.";
+
+                int startX = Random.Range((int)posStructFieldNew.x, sizeX);
+                int startY = Random.Range((int)posStructFieldNew.y, sizeY);
+
+                int ContAll = CountObjects;// / SpawnPointScope;
+                int radiusSpawn = SpawnPointRadius;
+                int indexDiff = 0;
+                //int limitDiff = (int)( CountObjects / SpawnPointScope);
+
+                //------ Spawn Point
+                for (int i = 0; i < ContAll; i++)
+                {
+                    
+                    int offsetX = Random.Range(1, radiusSpawn);
+                    int offsetY = Random.Range(1, radiusSpawn);
+                    bool isLeft = 1 == Random.Range(1, 3);
+                    bool isTop = 1 == Random.Range(1, 3);
+                    if (isLeft)
+                        offsetX *= -1;
+                    if (isTop)
+                        offsetY *= -1;
+                    int x = startX + offsetX;
+                    int y = startY + offsetY;
+
+                    string fieldNew = Helper.GetNameField(x, y);
+                    if (_isClearLayer)
+                        ClearLayerForStructure(fieldNew);
+
+                    isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
+
+                    if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
+                    {
+                        //#repeat
+                        i--;
+                        indexRepeat++;
+                    }
+
+                    //Spawn activity
+                    indexDiff++;
+                    if (indexDiff >= SpawnPointScope)
+                    {
+                        indexDiff = 0;
+                        radiusSpawn -= SpawnPointScope;
+                        if (radiusSpawn < 2)
+                            radiusSpawn = 2;
+                    }
+                }
+                //------
+
+            }
+            else if (OptionGenSegments < 2)
             {
                 if (isLog)
                     Storage.Events.ListLogAdd = "standart generation 1.";
