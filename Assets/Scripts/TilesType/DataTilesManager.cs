@@ -22,6 +22,7 @@ public class DataTilesManager : MonoBehaviour {
     public  Texture2D[] ListTexturs
     {
         get{
+            //if (m_listTexturs == null || m_listTextursNames == null || m_listTextursNames.Count ==0)
             if (m_listTexturs == null)
             {
                 try
@@ -375,8 +376,12 @@ public class DataTilesManager : MonoBehaviour {
         //if (m_listTextursTerra == null || m_listTextursTerra.Count == 0)
         if(m_listTextursNames == null || m_listTextursNames.Count == 0)
         {
-            //Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
-            return nameTile;
+            var init = ListTexturs;
+            if (m_listTextursNames == null || m_listTextursNames.Count == 0)
+            {
+                Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
+                return nameTile;
+            }
         }
 
         //int ind = 0;
