@@ -16,6 +16,7 @@ public class ManagerPalette : MonoBehaviour {
     public static Dictionary<string, Color> PaletteColors = new Dictionary<string, Color>();
     public Dictionary<string, Texture2D> TexturesPrefabs = new Dictionary<string, Texture2D>();
     public Dictionary<string, Sprite> SpritesPrefabs = new Dictionary<string, Sprite>();
+    public Dictionary<string, Sprite> SpritesWorldPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
 
     public SpriteAtlas SpriteAtlasPrefab;
@@ -88,6 +89,7 @@ public class ManagerPalette : MonoBehaviour {
         //};
 
         Sprite[] spritesPrefabsAtlas = GetSpritesAtlasPrefab();
+        
         foreach (var sprt in spritesPrefabsAtlas)
         {
             //string namePrefab = sprt.name.GetNamePrefabByTextureMap();
@@ -96,6 +98,9 @@ public class ManagerPalette : MonoBehaviour {
             //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
             //_texture.Apply();
             sprt.name = sprt.name.ClearClone();
+
+            SpritesWorldPrefabs.Add(sprt.name, sprt);
+
             if (sprt.name.IndexOf("Wall") != -1)
             {
                 sprt.name = "Prefab" + sprt.name;
@@ -104,15 +109,15 @@ public class ManagerPalette : MonoBehaviour {
             //Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
         }
 
-        TexturesPrefabs = new Dictionary<string, Texture2D>
-        {
-            {"PrefabVood", Storage.GridData.PrefabVood.GetComponent<SpriteRenderer>().sprite.texture },
-            {"PrefabElka", Storage.GridData.PrefabElka .GetComponent<SpriteRenderer>().sprite.texture },
-            {"PrefabRock", Storage.GridData.PrefabRock.GetComponent<SpriteRenderer>().sprite.texture },
-            {"PrefabWallRock", Storage.GridData.PrefabWallRock.GetComponent<SpriteRenderer>().sprite.texture },
-            {"PrefabWallWood", Storage.GridData.PrefabWallWood.GetComponent<SpriteRenderer>().sprite.texture },
-            //{"PrefaField", Storage.GridData .GetComponent<SpriteRenderer>().sprite.texture },
-        };
+        //TexturesPrefabs = new Dictionary<string, Texture2D>
+        //{
+        //    {"PrefabVood", Storage.GridData.PrefabVood.GetComponent<SpriteRenderer>().sprite.texture },
+        //    {"PrefabElka", Storage.GridData.PrefabElka .GetComponent<SpriteRenderer>().sprite.texture },
+        //    {"PrefabRock", Storage.GridData.PrefabRock.GetComponent<SpriteRenderer>().sprite.texture },
+        //    {"PrefabWallRock", Storage.GridData.PrefabWallRock.GetComponent<SpriteRenderer>().sprite.texture },
+        //    {"PrefabWallWood", Storage.GridData.PrefabWallWood.GetComponent<SpriteRenderer>().sprite.texture },
+        //    //{"PrefaField", Storage.GridData .GetComponent<SpriteRenderer>().sprite.texture },
+        //};
 
         //---------------- Atlas
         //Sprite[] spritesPrefabs = Storage.Map.GetSpritesAtlasPrefab();

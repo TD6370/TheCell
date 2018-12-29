@@ -14,6 +14,78 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public void CreateDataGamesObjectsExtremalWorld__()
+    //{
+    //    int coutCreateObjects = 0;
+    //    TypePrefabs prefabName = TypePrefabs.PrefabField;
+    //    Debug.Log("# CreateDataGamesObjectsWorld...");
+    //    Storage.Instance.ClearGridData();
+
+    //    int countAll = Helper.HeightLevel * 2;
+    //    int index = 1;
+
+    //    for (int y = 0; y < Helper.HeightLevel; y++)
+    //    {
+    //        for (int x = 0; x < Helper.WidthLevel; x++)
+    //        {
+    //            int intRndCount = UnityEngine.Random.Range(0, 5);
+
+    //            int maxObjectInField = 1;
+
+    //            if (intRndCount == 0)
+    //                maxObjectInField = 2;
+    //            else
+    //                maxObjectInField = 1;
+
+    //            intRndCount = UnityEngine.Random.Range(0, 3);
+
+    //            string nameField = Helper.GetNameField(x, y);
+
+    //            index++;
+    //            Storage.Events.SetTittle = String.Format("Loading {0} %", (countAll / index).ToString());
+
+    //            List<GameObject> ListNewObjects = new List<GameObject>();
+    //            for (int i = 0; i < maxObjectInField; i++)
+    //            {
+    //                //GEN -----
+    //                //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
+    //                //if (prefabName == TypePrefabs.PrefabField)
+    //                //continue;
+    //                //-----------
+    //                if (i == 0)
+    //                    prefabName = TypePrefabs.PrefabField;
+    //                else
+    //                    prefabName = TypePrefabs.PrefabBoss;
+
+    //                int _y = y * (-1);
+    //                Vector3 pos = new Vector3(x, _y, 0) * Spacing;
+    //                pos.z = -1;
+    //                if (prefabName == TypePrefabs.PrefabUfo)
+    //                    pos.z = -2;
+
+    //                string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
+    //                ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
+    //                objDataSave.NameObject = nameObject;
+    //                objDataSave.TagObject = prefabName.ToString();
+    //                objDataSave.Position = pos;
+
+    //                coutCreateObjects++;
+
+    //                Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+    //            }
+    //        }
+    //    }
+
+    //    Storage.Data.SaveGridGameObjectsXml(true);
+
+    //    Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
+
+    //    Storage.Events.SetTittle = String.Format("World is Loaded");
+
+
+    //}
+
+
     //public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     //{
     //    //------------------

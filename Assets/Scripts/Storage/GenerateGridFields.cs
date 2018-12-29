@@ -969,7 +969,7 @@ public class GenerateGridFields : MonoBehaviour {
 
 
     //ADD NEW GEN GAME OBJECT 
-    public void ActiveGameObject(GameObject p_saveObject)
+    public void ActiveGameObject_lagacy(GameObject p_saveObject)
     {
         int x = 0;
         int y = 0;
@@ -980,10 +980,10 @@ public class GenerateGridFields : MonoBehaviour {
         string p_nameField = Helper.GetNameFieldPosit(x, y);
 
         p_saveObject.name = Helper.CreateName(p_saveObject.tag, p_nameField, "", p_saveObject.name);
-        SaveNewGameObjectToData(p_nameField, p_saveObject);
+        SaveNewGameObjectToData_lagacy(p_nameField, p_saveObject);
     }
 
-    private void SaveNewGameObjectToData(string p_nameField, GameObject p_saveObject)
+    private void SaveNewGameObjectToData_lagacy(string p_nameField, GameObject p_saveObject)
     {
         var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
         var _gridData = Storage.Instance.GridDataG;
@@ -1008,7 +1008,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         //Debug.Log("______________________________________CALL CreateObjectData 3. @@Create_________________________");
-        ModelNPC.ObjectData dataObjectSave = SaveLoadData.CreateObjectData(p_saveObject);
+        ModelNPC.ObjectData dataObjectSave = SaveLoadData.CreateObjectData_lagacy(p_saveObject);
 
         if (dataObjectSave == null)
         {

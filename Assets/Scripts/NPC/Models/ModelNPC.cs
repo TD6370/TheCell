@@ -607,6 +607,416 @@ public class ModelNPC
         }
     }
 
+    [XmlType("PersonAlien")]
+    public class PersonDataAlien : PersonData
+    {
+        public string TypeAlien { get; set; }
+
+        
+        public PersonDataAlien()
+            : base()
+        {
+        }
+    }
+
+
+    [XmlType("Alien")]
+    public class GameDataAlien : PersonDataAlien
+    {
+        public virtual int Life { get; set; }
+
+        [XmlIgnore]
+        public string NameSprite { get; private set; }
+
+        [XmlIgnore]
+        public virtual int Level { get; set; }
+
+        public GameDataAlien() : base()
+        {
+        }
+
+        public override void Init()
+        {
+            //--- init person boss data
+            //System.Random rng = new System.Random();
+
+            if (string.IsNullOrEmpty(TypeAlien))
+            {
+                int maxT = Storage.GridData.NamesPrefabNPC.Count;
+                int indT = UnityEngine.Random.Range(0, maxT);
+                //Level = rng.Next(1, 7);
+
+                //TypeAlien = Storage.Person.GenTypeAlien()
+                //TypeAlien = Storage.GridData.NamesPrefabNPC[indT];
+                //NameSprite = TypeAlien;
+                //GameDataAlien obj = new GameDataAlienInspector();
+                GameDataAlien obj = Storage.Person.GenTypeAlien();
+                TypeAlien = obj.TypeAlien;// Storage.Person.GenTypeAlien()
+                NameSprite = obj.NameSprite;
+                Level = obj.Level;
+                Life = obj.Life;
+                Speed = Level * 10;
+            }
+
+            //#fix load
+            if (IsCanSetTargetPosition && IsReality)
+                SetTargetPosition();
+
+            IsLoadad = true;
+        }
+
+      
+
+        public override void UpdateGameObject(GameObject objGame)
+        {
+            //#INTI
+            if (!IsLoadad && IsReality)
+                Init();
+
+            bool isUpdateStyle = false;
+
+            
+            if (NameObject != objGame.name)
+            {
+                objGame.name = NameObject;
+            }
+
+            //?????
+            //isUpdateStyle = true;
+
+            //if (ColorRender != StoragePerson.GetColorsLevel[Level])
+            //{
+            //    ColorRender = StoragePerson.GetColorsLevel[Level];
+            //    isUpdateStyle = true;
+            //    //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
+            //}
+            
+            Sprite spriteMe = Storage.Palette.SpritesWorldPrefabs[NameSprite];  //Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
+            if (spriteMe != null)
+            {
+                objGame.GetComponent<SpriteRenderer>().sprite = spriteMe;
+            }
+            else
+            {
+                Debug.Log("############## NOT Update new Sprite " + NameObject + "   ???????????????");
+                objGame.GetComponent<SpriteRenderer>().color = Color.red;
+            }
+        }
+
+        public override List<string> GetParams
+        {
+            get
+            {
+                return new List<string> {
+                    "Name: " + NameObject,
+                    "Type : " + TagObject,
+                    "Pos : " + Position,
+                    "Target : " + TargetPosition,
+                    "Life: " + Life,
+                    "Speed: " + Speed,
+                    "Individ: " + NameSprite
+                  };
+            }
+        }
+    }
+
+    //Inspector,
+    //Machinetool,
+    //Mecha,
+
+    //Dendroid,
+    //Garry,
+    //Lollipop,
+
+    //Blasarr,
+    //Hydragon,
+    //Pavuk,
+    //Skvid,
+
+    //Fantom,
+    //Mask,
+    //Vhailor,
+    [XmlType("Inspector")]
+    public class GameDataAlienInspector : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                //return base.Life;
+                return 30;
+            }
+            set
+            {
+                //base.Life = value;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 2;
+            }
+
+            set
+            {
+                //base.Level = value;
+            }
+        }
+    }
+
+    [XmlType("Machinetool")]
+    public class GameDataAlienMachinetool : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                //return base.Life;
+                return 50;
+            }
+            set
+            {
+                //base.Life = value;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 6;
+            }
+
+            set
+            {
+                //base.Level = value;
+            }
+        }
+    }
+
+    [XmlType("Mecha")]
+    public class GameDataAlienMecha : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                //return base.Life;
+                return 40;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 3;
+            }
+        }
+    }
+
+    [XmlType("Dendroid")]
+    public class GameDataAlienDendroid : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 80;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 6;
+            }
+        }
+    }
+
+    [XmlType("Garry")]
+    public class GameDataAlienGarry : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 40;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 1;
+            }
+        }
+    }
+
+    [XmlType("Lollipop")]
+    public class GameDataAlienLollipop : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 10;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 3;
+            }
+        }
+    }
+
+    [XmlType("Blasarr")]
+    public class GameDataAlienBlasarr : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 100;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 8;
+            }
+        }
+    }
+
+    [XmlType("Hydragon")]
+    public class GameDataAlienHydragon : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 50;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 6;
+            }
+        }
+    }
+
+    [XmlType("Pavuk")]
+    public class GameDataAlienPavuk : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 80;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 7;
+            }
+        }
+    }
+
+    [XmlType("Skvid")]
+    public class GameDataAlienSkvid : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 4;
+            }
+        }
+    }
+
+    [XmlType("Fantom")]
+    public class GameDataAlienFantom : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 60;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 4;
+            }
+        }
+    }
+
+    [XmlType("Mask")]
+    public class GameDataAlienMask : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 10;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 8;
+            }
+        }
+    }
+
+    [XmlType("Vhailor")]
+    public class GameDataAlienVhailor : GameDataAlien
+    {
+        public override int Life
+        {
+            get
+            {
+                return 100;
+            }
+        }
+
+        public override int Level
+        {
+            get
+            {
+                return 5;
+            }
+        }
+    }
+
     [XmlType("Terra")]
     public class TerraData : ObjectData
     {

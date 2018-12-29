@@ -21,6 +21,9 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabWallWood;
     public GameObject PrefabField;
 
+    public GameObject PrefabFlore;
+    public GameObject PrefabNPC;
+
     ////--- TAILS ---
     //public GameObject BackPalette;
     //public Grid GridTails;
@@ -39,7 +42,9 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
 
-
+    public List<string> NamesPrefabObjects;
+    public List<string> NamesPrefabFloors;
+    public List<string> NamesPrefabNPC;
 
     private IEnumerable<string> _namesPrefabs
     {   get
@@ -63,8 +68,125 @@ public class SaveLoadData : MonoBehaviour {
         PrefabElka,
         PrefabWallRock,
         PrefabWallWood,
+
+        PrefabFlore,
+        PrefabNPC,
+
+        //Boloto,
+        //Chip,
+        //Gecsagon,
+        //Kamish,
+
+        //Berry,
+        //Mashrooms,
+        //Weed,
+        //Weedflower,
+
+        //Kishka,
+        //Nerv,
+        //Orbits,
+        //Shampinion,
+
+        //Corals,
+        //Desert,
+        //Diods,
+        //Parket,
+
+        //Inspector,
+        //Machinetool,
+        //Mecha,
+
+        //Dendroid,
+        //Garry,
+        //Lollipop,
+
+        //Blasarr,
+        //Hydragon,
+        //Pavuk,
+        //Skvid,
+
+        //Fantom,
+        //Mask,
+        //Vhailor,
+
+        //Kolba,
+        //Lantern,
+
+        //Bananas,
+        //Cluben,
+        //Chpok,
+        //Pandora,
+
+        //Nadmozg,
+        //Triffid,
+        //Aracul,
+        //Cloudwood
     }
-    
+
+    public enum TypePrefabFloors
+    {
+        Boloto,
+        Chip,
+        Gecsagon,
+        Kamish,
+
+        Berry,
+        Mashrooms,
+        Weed,
+        Weedflower,
+
+        Kishka,
+        Nerv,
+        Orbits,
+        Shampinion,
+
+        Corals,
+        Desert,
+        Diods,
+        Parket,
+    }
+
+    public enum TypePrefabObjects
+    {
+        Kolba,
+        Lantern,
+
+        Bananas,
+        Cluben,
+        Chpok,
+        Pandora,
+
+        Nadmozg,
+        Triffid,
+
+        Aracul,
+        Cloudwood
+    }
+
+    public enum TypePrefabNPC
+    {
+        Inspector,
+        Machinetool,
+        Mecha,
+
+        Dendroid,
+        Garry,
+        Lollipop,
+
+        Blasarr,
+        Hydragon,
+        Pavuk,
+        Skvid,
+
+        Fantom,
+        Mask,
+        Vhailor,
+    }
+
+    private void Awake()
+    {
+        InitPrefabCollections();
+    }
 
     void Start()
     {
@@ -80,6 +202,32 @@ public class SaveLoadData : MonoBehaviour {
     {
         _scriptGrid = GetComponent<GenerateGridFields>();
     }
+
+    public void InitPrefabCollections()
+    {
+        string[] florrs = Enum.GetNames(typeof(TypePrefabFloors));
+        NamesPrefabFloors = new List<string>();
+        foreach (var item in florrs)
+        {
+            NamesPrefabFloors.Add(item);
+        }
+
+        string[] gameObjects = Enum.GetNames(typeof(TypePrefabObjects));
+        NamesPrefabObjects = new List<string>();
+        foreach (var item in gameObjects)
+        {
+            NamesPrefabObjects.Add(item);
+        }
+
+        string[] gameNPC = Enum.GetNames(typeof(TypePrefabNPC));
+        NamesPrefabNPC = new List<string>();
+        foreach (var item in gameNPC)
+        {
+            NamesPrefabNPC.Add(item);
+        }
+
+    }
+
 
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
@@ -354,81 +502,10 @@ public class SaveLoadData : MonoBehaviour {
 
         //Storage.GamePause = false;
     }
-
-    public void CreateDataGamesObjectsExtremalWorld__()
-    {
-        int coutCreateObjects = 0;
-        TypePrefabs prefabName = TypePrefabs.PrefabField;
-        Debug.Log("# CreateDataGamesObjectsWorld...");
-        Storage.Instance.ClearGridData();
-
-        int countAll = Helper.HeightLevel * 2;
-        int index = 1;
-
-        for (int y = 0; y < Helper.HeightLevel; y++)
-        {
-            for (int x = 0; x < Helper.WidthLevel; x++)
-            {
-                int intRndCount = UnityEngine.Random.Range(0, 5);
-
-                int maxObjectInField = 1;
-
-                if (intRndCount == 0)
-                    maxObjectInField = 2;
-                else
-                    maxObjectInField = 1;
-
-                intRndCount = UnityEngine.Random.Range(0, 3);
-
-                string nameField = Helper.GetNameField(x, y);
-
-                index++;
-                Storage.Events.SetTittle = String.Format("Loading {0} %", (countAll / index).ToString());
-
-                List<GameObject> ListNewObjects = new List<GameObject>();
-                for (int i = 0; i < maxObjectInField; i++)
-                {
-                    //GEN -----
-                    //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
-                    //if (prefabName == TypePrefabs.PrefabField)
-                    //continue;
-                    //-----------
-                    if (i == 0)
-                        prefabName = TypePrefabs.PrefabField;
-                    else
-                        prefabName = TypePrefabs.PrefabBoss;
-
-                    int _y = y * (-1);
-                    Vector3 pos = new Vector3(x, _y, 0) * Spacing;
-                    pos.z = -1;
-                    if (prefabName == TypePrefabs.PrefabUfo)
-                        pos.z = -2;
-
-                    string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
-                    objDataSave.NameObject = nameObject;
-                    objDataSave.TagObject = prefabName.ToString();
-                    objDataSave.Position = pos;
-
-                    coutCreateObjects++;
-
-                    Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
-                }
-            }
-        }
-
-        Storage.Data.SaveGridGameObjectsXml(true);
-
-        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
-
-        Storage.Events.SetTittle = String.Format("World is Loaded");
-
         
-    }
-
 
     //--------------- LINK: public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
-    public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
+    public static ModelNPC.ObjectData CreateObjectData_lagacy(GameObject p_gobject)
     {
         ModelNPC.ObjectData newObject;
         //#PPPP
@@ -481,7 +558,19 @@ public class SaveLoadData : MonoBehaviour {
                 //newObject2.UpdateGameObject(p_gobject);
                 newObject.UpdateGameObject(p_gobject);
                 break;
-
+            case TypePrefabs.PrefabNPC:
+                newObject = new ModelNPC.GameDataAlien()
+                {
+                    NameObject = p_gobject.name,
+                    TagObject = p_gobject.tag,
+                    Position = p_gobject.transform.position
+                };
+                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
+                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "  TYPE: " + newObject.GetType());
+                newObject.UpdateGameObject(p_gobject);
+                break;
+            //case TypePrefabs.PrefabFlore:
+            //    break;
             default:
                 //Debug.Log("_______________________CreateObjectData_____________default " + prefabType);
                 //var newObject3 = new ObjectData()
@@ -550,17 +639,9 @@ public class SaveLoadData : MonoBehaviour {
                 if (index == -1)
                 {
                     Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                    //Storage.Log.GetHistory(p_gobject.name);
-                    //Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
                     return null;
                 }
-                //Debug.Log("FindObjectData ------------ objects[" + index + "] " + objects[index] + " type: " + objects[index].GetType());
-
                 newObject = objects[index] as ModelNPC.GameDataBoss;
-                //var t2 = (GameDataBoss)objects[index];
-                //if(t2==null)
-                //    Debug.Log("t2=null ");
-                //else Debug.Log("t2 type=" + t2.GetType());
 
                 if (newObject == null)
                 {
@@ -568,6 +649,27 @@ public class SaveLoadData : MonoBehaviour {
                     Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
                 }
 
+                break;
+            case TypePrefabs.PrefabNPC:
+                nameField = Helper.GetNameFieldByName(p_gobject.name);
+                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                {
+                    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
+                    return null;
+                }
+                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
+                if (index == -1)
+                {
+                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
+                    return null;
+                }
+                newObject = objects[index] as ModelNPC.GameDataAlien;
+                if (newObject == null)
+                {
+                    Debug.Log("FindObjectData ------------newObject is null ");
+                    Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
+                }
                 break;
             default:
                 newObject = new ModelNPC.ObjectData()

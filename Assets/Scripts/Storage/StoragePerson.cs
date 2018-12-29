@@ -608,6 +608,50 @@ public class StoragePerson : MonoBehaviour {
 
         
     }
+
+    public ModelNPC.GameDataAlien GenTypeAlien()
+    {
+        int maxT = Storage.GridData.NamesPrefabNPC.Count;
+        int indT = UnityEngine.Random.Range(0, maxT);
+        //Level = rng.Next(1, 7);
+
+        ModelNPC.GameDataAlien obj = null;
+
+        //TypeAlien = Storage.Person.GenTypeAlien()
+        string TypeAlien = Storage.GridData.NamesPrefabNPC[indT];
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Inspector.ToString())
+            obj = new ModelNPC.GameDataAlienInspector();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Machinetool.ToString())
+            obj = new ModelNPC.GameDataAlienMachinetool();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Mecha.ToString())
+            obj = new ModelNPC.GameDataAlienMecha();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Dendroid.ToString())
+            obj = new ModelNPC.GameDataAlienDendroid();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Dendroid.ToString())
+            obj = new ModelNPC.GameDataAlienDendroid();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Garry.ToString())
+            obj = new ModelNPC.GameDataAlienGarry();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Lollipop.ToString())
+            obj = new ModelNPC.GameDataAlienLollipop();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Blasarr.ToString())
+            obj = new ModelNPC.GameDataAlienBlasarr();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Hydragon.ToString())
+            obj = new ModelNPC.GameDataAlienHydragon();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Pavuk.ToString())
+            obj = new ModelNPC.GameDataAlienPavuk();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Skvid.ToString())
+            obj = new ModelNPC.GameDataAlienSkvid();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Fantom.ToString())
+            obj = new ModelNPC.GameDataAlienFantom();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Mask.ToString())
+            obj = new ModelNPC.GameDataAlienMask();
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Vhailor.ToString())
+            obj = new ModelNPC.GameDataAlienVhailor();
+        //if (TypeAlien == SaveLoadData.TypePrefabNPC..ToString())
+        //    obj = new ModelNPC.GameDataAlien();
+        obj.TypeAlien = TypeAlien;
+        return obj;
+    }
 }
 
 public static class PersonsExtensions
@@ -813,6 +857,10 @@ public class TypeBoss
         //-----
         //return null;
     }
+
+    
+
+    
 
     //public Texture2D GetNameTextureMapForIndexLevel(int p_level)
     //{

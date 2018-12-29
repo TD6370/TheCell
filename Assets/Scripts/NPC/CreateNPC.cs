@@ -87,7 +87,7 @@ public class CreateNPC : MonoBehaviour {
 
                     newUfo.transform.position = pos;
 
-                    _scriptGrid.ActiveGameObject(newUfo);
+                    _scriptGrid.ActiveGameObject_lagacy(newUfo);
                 }
                 else
                 {
@@ -98,18 +98,18 @@ public class CreateNPC : MonoBehaviour {
         }
     }
 
-    private void TestCreateObjectUfo()
-    {
-        GameObject newUfo = (GameObject)Instantiate(prefabUfo);
+    //private void TestCreateObjectUfo()
+    //{
+    //    GameObject newUfo = (GameObject)Instantiate(prefabUfo);
         
-        string id = System.Guid.NewGuid().ToString().Substring(1, 4);
-        newUfo.name = "PrefabUfo_" + id;
-        Debug.Log("CREATE NEW UFO :" + newUfo.name);
-        var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
-        newUfo.transform.position = pos;
+    //    string id = System.Guid.NewGuid().ToString().Substring(1, 4);
+    //    newUfo.name = "PrefabUfo_" + id;
+    //    Debug.Log("CREATE NEW UFO :" + newUfo.name);
+    //    var pos = new Vector3(prefabUfo.transform.position.x, prefabUfo.transform.position.y - 6, -1);
+    //    newUfo.transform.position = pos;
 
-        _scriptGrid.ActiveGameObject(newUfo);
-    }
+    //    _scriptGrid.ActiveGameObject(newUfo);
+    //}
 	
 
 }

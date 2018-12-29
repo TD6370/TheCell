@@ -1209,7 +1209,8 @@ public class MapWorld : MonoBehaviour {
         //}
         string strTypePref = typePredab.ToString();
 
-        if (Storage.Palette == null || Storage.Palette.TexturesPrefabs == null)
+        //if (Storage.Palette == null || Storage.Palette.TexturesPrefabs == null)
+        if (Storage.Palette == null)
         {
             Debug.Log("############# GetPrefabTexture  Palette Or TexturesPrefabs is Empty !!!");
             return null;
