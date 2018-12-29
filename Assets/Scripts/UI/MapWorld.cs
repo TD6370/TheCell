@@ -113,10 +113,13 @@ public class MapWorld : MonoBehaviour {
         Vector2 posHero = Storage.PlayerController.transform.position;
         //prefabFrameMap.transform.position = new Vector3(posHero.x -12.5f, posHero.y + 5, -2);
         //prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
-        prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, 0);
+        prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
         //prefabFrameMap.transform.localScale = new Vector3(10F, 10f, 0);
         
         prefabFrameMap.transform.SetParent(Storage.PlayerController.transform);
+
+        //prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
+
         Frame.Show(true);
     }
 
