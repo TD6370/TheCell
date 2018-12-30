@@ -14,6 +14,102 @@ public class TEmp : MonoBehaviour {
 
     }
 
+    //public Texture2D GetTextuteMapBoss(int index)
+    //{
+
+    //    try
+    //    {
+    //        //string _textureName = NemesTextureBoss[index];
+    //        //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
+    //        //return _texture;
+    //        //-----
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
+    //    }
+
+    //    return null;
+    //}
+
+    //public Sprite GetSpriteBossTrue(int index)
+    //{
+    //    string indErr = "";
+    //    try
+    //    {
+    //        indErr = "start";
+    //        string spriteName = "";
+    //        Sprite spriteBoss = GetSpriteBoss(index, out spriteName);
+
+    //        if (spriteBoss == null)
+    //        {
+    //            Debug.Log("############ spritesBoss is null");
+    //            return null;
+    //        }
+    //        else
+    //        {
+    //            return spriteBoss;
+    //        }
+
+    //    }catch(Exception x)
+    //    {
+    //        Debug.Log("################# GetSpriteBoss #" + indErr + " [" + index + "] : " + x.Message);
+    //        return null;// GetSpriteBossTrue(index);
+    //    }
+
+    //    return null;
+    //}
+
+    //public Sprite GetSpriteBossTrue(int index)
+    //{
+    //    string indErr = "";
+    //    try
+    //    {
+    //        indErr = "start";
+    //        //if (NemesSpritesBoss.Length <= index)
+    //        //{
+    //        //    Debug.Log("############ NemeSpriteBoss int on range index = " + index + "   sprites count= " + NemesSpritesBoss.Length);
+    //        //    return null;
+    //        //}
+
+    //        indErr = "2";
+    //        //Case 1.
+    //        //string spriteName = NemesSpritesBoss[index];
+    //        //string spriteName = Storage.Person.GetNameSpriteForIndexLevel(index);
+
+    //        //indErr = "3";
+
+    //        //if (!Storage.Person.SpriteCollection.ContainsKey(spriteName))
+    //        //{
+    //        //    Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
+    //        //    return null;
+    //        //}
+    //        //indErr = "4";
+
+    //        //Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
+    //        string spriteName = "";
+    //        Sprite spriteBoss = GetSpriteBoss(index, out spriteName);
+
+    //        if (spriteBoss == null)
+    //        {
+    //            Debug.Log("############ spritesBoss is null");
+    //            return null;
+    //        }
+    //        else
+    //        {
+    //            return spriteBoss;
+    //        }
+
+    //    }
+    //    catch (Exception x)
+    //    {
+    //        Debug.Log("################# GetSpriteBoss #" + indErr + " [" + index + "] : " + x.Message);
+    //        return null;// GetSpriteBossTrue(index);
+    //    }
+
+    //    return null;
+    //}
+
     //public void CreateDataGamesObjectsExtremalWorld__()
     //{
     //    int coutCreateObjects = 0;

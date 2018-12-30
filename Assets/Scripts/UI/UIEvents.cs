@@ -349,7 +349,7 @@ public class UIEvents : MonoBehaviour {
 
     private void ExitGame()
     {
-        Storage.GridData.SaveLevel();
+        Storage.Disk.SaveLevel();
 
         Storage.Player.SavePosition();
 
@@ -443,7 +443,7 @@ public class UIEvents : MonoBehaviour {
                 //m_scriptData.SaveLevel();
                 //#TEST
                 //m_scriptData.SaveLevelParts();
-                m_scriptData.SaveLevelCash();
+                Storage.Disk.SaveLevelCash();
                 SetTittle = "Level saved.";
                 break;
             case "LoadWorld":
@@ -998,7 +998,7 @@ public class UIEvents : MonoBehaviour {
             yield return new WaitForSeconds(0.3f);
 
             SetTittle = "Level saving...";
-            m_scriptData.SaveLevel();
+            Storage.Disk.SaveLevel();
 
             yield return new WaitForSeconds(0.3f);
 

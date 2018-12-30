@@ -125,6 +125,17 @@ public class PoolGameObjects
             indexPool = i;
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabElka.ToString(), false);
         }
+
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabNPC.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabFlore.ToString(), false);
+        }
     }
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)

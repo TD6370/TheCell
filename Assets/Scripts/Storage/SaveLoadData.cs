@@ -33,7 +33,7 @@ public class SaveLoadData : MonoBehaviour {
     public static float Spacing = 2f;
 
     private GenerateGridFields _scriptGrid;
-    private float LoadingWordlTimer = 0f;
+    //private float LoadingWordlTimer = 0f;
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -100,7 +100,7 @@ public class SaveLoadData : MonoBehaviour {
         //Garry,
         //Lollipop,
 
-        //Blasarr,
+        //Blastarr,
         //Hydragon,
         //Pavuk,
         //Skvid,
@@ -173,7 +173,7 @@ public class SaveLoadData : MonoBehaviour {
         Garry,
         Lollipop,
 
-        Blasarr,
+        Blastarr,
         Hydragon,
         Pavuk,
         Skvid,
@@ -717,25 +717,8 @@ public class SaveLoadData : MonoBehaviour {
     {
         if (PoolGameObjects.IsUsePoolObjects && !string.IsNullOrEmpty(nameObject))
         {
-            //GameObject gobj = Storage.Pool.InstantiatePool(prefabField, new Vector3(0, 0, 0), "namePrefab");
-            //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, namePrefab, new Vector3(0, 0, 0));
-            //string typePrefab = GetTypeByName(namePrefab);
-
-            if(namePrefab=="PrefabVood")
-            {
-                var t = "OK";
-            }
-
             //#FIX POOL
             string tagPool = GetTypePool(namePrefab);
-
-            //string tagPool = GetTypeByName(namePrefab);
-
-            //#TEST
-            //Storage.Events.ListLogAdd = "+ pool:";
-            //Storage.Events.ListLogAdd = "--- namePrefab: " + namePrefab;
-            //Storage.Events.ListLogAdd = "--- typePrefab: " + typePrefab;
-            //Storage.Events.ListLogAdd = "--- nameObject: " + nameObject;
 
             //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
             GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, tagPool, new Vector3(0, 0, 0));
@@ -743,7 +726,6 @@ public class SaveLoadData : MonoBehaviour {
         }
         else
         {
-
             //#TEST #PREFABF.1
             //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
             //#TEST #PREFABF.2
@@ -784,6 +766,12 @@ public class SaveLoadData : MonoBehaviour {
             case TypePrefabs.PrefabField:
                 resType = PrefabField.tag;
                 break;
+            case TypePrefabs.PrefabNPC:
+                resType = PrefabField.tag;
+                break;
+            case TypePrefabs.PrefabFlore:
+                resType = PrefabField.tag;
+                break;
             default:
                 Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
                 break;
@@ -813,11 +801,6 @@ public class SaveLoadData : MonoBehaviour {
     {
         try
         {
-            if(namePrefab=="8")
-            {
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@");
-            }
-
             TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
             GameObject resPrefab = null;
 
@@ -847,15 +830,17 @@ public class SaveLoadData : MonoBehaviour {
                 case TypePrefabs.PrefabField:
                     resPrefab = Instantiate(PrefabField);
                     break;
-
+                case TypePrefabs.PrefabNPC:
+                    resPrefab = Instantiate(PrefabNPC);
+                    break;
+                case TypePrefabs.PrefabFlore:
+                    resPrefab = Instantiate(PrefabFlore);
+                    break;
                 default:
                     Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
                     break;
 
             }
-
-
-
             //Debug.Log("FindPrefabHieracly: " + prefabType.ToString());
             return resPrefab;
         }
@@ -868,62 +853,11 @@ public class SaveLoadData : MonoBehaviour {
         return null;
     }
 
-    public Sprite GetSpriteBossTrue(int index)
-    {
-        string indErr = "";
-        try
-        {
-            indErr = "start";
-            //if (NemesSpritesBoss.Length <= index)
-            //{
-            //    Debug.Log("############ NemeSpriteBoss int on range index = " + index + "   sprites count= " + NemesSpritesBoss.Length);
-            //    return null;
-            //}
-
-            indErr = "2";
-            //Case 1.
-            //string spriteName = NemesSpritesBoss[index];
-            //string spriteName = Storage.Person.GetNameSpriteForIndexLevel(index);
-
-            //indErr = "3";
-
-            //if (!Storage.Person.SpriteCollection.ContainsKey(spriteName))
-            //{
-            //    Debug.Log("############ NOT in SpriteCollection name: " + spriteName);
-            //    return null;
-            //}
-            //indErr = "4";
-
-            //Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
-            string spriteName = "";
-            Sprite spriteBoss = GetSpriteBoss(index, out spriteName);
-
-            if (spriteBoss == null)
-            {
-                Debug.Log("############ spritesBoss is null");
-                return null;
-            }
-            else
-            {
-                return spriteBoss;
-            }
-
-        }catch(Exception x)
-        {
-            Debug.Log("################# GetSpriteBoss #" + indErr + " [" + index + "] : " + x.Message);
-            return null;// GetSpriteBossTrue(index);
-        }
-
-        return null;
-    }
-
-    //public Sprite GetSpriteBoss(int index)
     public Sprite GetSpriteBoss(int index, out string spriteName)
     {
         
         try
         {
-            //string spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
             spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
             Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
             
@@ -937,26 +871,6 @@ public class SaveLoadData : MonoBehaviour {
 
         return null;
     }
-
-    public Texture2D GetTextuteMapBoss(int index)
-    {
-
-        try
-        {
-            //string _textureName = NemesTextureBoss[index];
-            //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
-            //return _texture;
-            //-----
-        }
-        catch (Exception x)
-        {
-            Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
-        }
-
-        return null;
-    }
-
-    //
 
     public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType, bool isTerraGen = false)
     {
@@ -974,7 +888,12 @@ public class SaveLoadData : MonoBehaviour {
                 //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
                 objGameBild = new ModelNPC.TerraData(); //$$
                 break;
-
+            case SaveLoadData.TypePrefabs.PrefabNPC:
+                objGameBild = new ModelNPC.GameDataAlien();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabFlore:
+                objGameBild = new ModelNPC.ObjectData();
+                break;
             default:
                 objGameBild = new ModelNPC.ObjectData();
                 break;
@@ -982,54 +901,7 @@ public class SaveLoadData : MonoBehaviour {
         return objGameBild;
     }
 
-    public void SaveLevel()
-    {
-        SaveLevelCash();
-        return;
-
-        _scriptGrid.SaveAllRealGameObjects();
-        if (Storage.Instance.GridDataG == null)
-        {
-            Debug.Log("Error SaveLevel gridData is null !!!");
-            return;
-        }
-
-        //Serializator.SaveGridXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
-        //
-    }
-
-    public void SaveLevelParts()
-    {
-        _scriptGrid.SaveAllRealGameObjects();
-        if (Storage.Instance.GridDataG == null)
-        {
-            Debug.Log("Error SaveLevel gridData is null !!!");
-            return;
-        }
-
-        Serializator.SaveGridPartsXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
-    }
-
-    public void SaveLevelCash()
-    {
-        _scriptGrid.SaveAllRealGameObjects();
-        if (Storage.Instance.GridDataG == null)
-        {
-            Debug.Log("Error SaveLevel gridData is null !!!");
-            return;
-        }
-
-        Serializator.SaveGridCashXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
-    }
-
-
-    //public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false,
-    //    PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
-    //    PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
-    //public void AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField = false, 
-    //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
-    //      PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
-
+       
     public bool AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
     {
         
@@ -1045,14 +917,6 @@ public class SaveLoadData : MonoBehaviour {
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
         string personTextureName = "";
-
-        //public enum TypesStructure
-        //{
-        //    Terra,
-        //    Floor,
-        //    Wall,
-        //    Person
-        //}
 
         if (itemTile == null)
         {
@@ -1136,301 +1000,8 @@ public class SaveLoadData : MonoBehaviour {
 
     private TypePrefabs GetPrefabByTile(string TileName)
     {
-
         return TypePrefabs.PrefabField;
     }
-
-    public void LoadDataBigXML()
-    {
-        //--load parts 
-        //StartCoroutine(StartLoadDataPartsXML());
-        //--load asinc
-        //StartCoroutine(StartLoadDataBigXML());
-
-        //-- Load in thread
-        //StartCoroutine(StartBackgroundLoadDataBigXML());
-
-        //-- load old style
-        //StartCoroutine(StartInGameLoadDataBigXML());
-
-        //-- Load in thread full
-        StartCoroutine(StartThreadLoadDataBigXML());
-    }
-
-    //public void LoadDataBigThreadXML()
-    //{
-    //    StartCoroutine(StartThreadLoadDataBigXML());
-    //}
-
-    IEnumerator StartInGameLoadDataBigXML()
-    {
-        yield return new WaitForSeconds(2f);
-
-        Storage.Events.SetMessage("Подожди говнюк...");
-
-        yield return null;
-
-        LoadingWordlTimer = Time.time;
-        var fieldsD_Temp = Serializator.LoadGridXml(Storage.Data.DataPathBigPart);
-        //yield return null;
-        Storage.Data.SetGridDatatBig = fieldsD_Temp.FieldsD;
-
-        //yield return null;
-        Storage.Data.CompletedLoadWorld();//fieldsD_Temp
-
-        float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetMessage("Ты ждал: " + loadingTime);
-
-        yield return new WaitForSeconds(0.5f);
-
-        Storage.Events.HideMessage();
-
-        yield break;
-    }
-
-    IEnumerator StartBackgroundLoadDataBigXML()
-    {
-        yield return null;
-
-        LoadingWordlTimer = Time.time;
-
-        Storage.Data.LoadBigWorldThread();
-
-        yield return new WaitForSeconds(1f);
-
-        while (!Storage.Data.IsThreadLoadWorldCompleted)
-        {
-
-            yield return new WaitForSeconds(2f);
-        }
-
-        Storage.Data.CompletedLoadWorld();
-
-        float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetTittle = "Loaded:" + loadingTime;
-        Storage.Events.ListLogAdd = "Loaded:" + loadingTime;
-        Debug.Log("*********************** Time loding World: " + loadingTime);
-
-        yield break;
-    }
-
-    IEnumerator StartThreadLoadDataBigXML()
-    {
-        yield return null;
-
-        LoadingWordlTimer = Time.time;
-
-        Storage.Data.LoadBigWorldThread(true);
-
-        //yield return new WaitForSeconds(1f);
-        yield return new WaitForSeconds(0.5f);
-
-        while (!Storage.Data.IsThreadLoadWorldCompleted)
-        {
-
-            yield return new WaitForSeconds(0.2f);
-            //yield return new WaitForSeconds(0.3f);
-        }
-
-        Storage.Data.CompletedLoadWorld();
-
-        float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetTittle = "Loaded:" + loadingTime;
-        Storage.Events.ListLogAdd = "Loaded:" + loadingTime;
-        Debug.Log("*********************** Time loding World: " + loadingTime);
-
-        yield break;
-    }
-
-    IEnumerator StartLoadDataBigXML()
-    {
-        string stepErr = "start";
-        Debug.Log("Loaded Xml GridData start...");
-
-        Dictionary<string, ModelNPC.FieldData> fieldsD_Test = new Dictionary<string, ModelNPC.FieldData>();
-
-        yield return null;
-
-        LoadingWordlTimer = Time.time;
-
-        string nameField = "";
-
-        stepErr = "c.1";
-        string datapathPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
-        if (File.Exists(datapathPart))
-        {
-            
-            int indProgress = 0;
-            int limitUpdate = 20;
-
-            //using (XmlReader xml = XmlReader.Create(stReader))
-            using (XmlReader xml = XmlReader.Create(datapathPart))
-            //using (XmlReader xml = XmlReader.Create(new StreamReader(datapathPart, System.Text.Encoding.UTF8)))
-            {
-                while (xml.Read())
-                {
-                    switch (xml.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            if (xml.Name == "Key")
-                            {
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                nameField = el.Value;
-                                //nameField = xml.Value.Clone().ToString();
-                                break;
-                            }
-                            //if (xml.Name == "Objects")
-                            if (xml.Name == "ObjectData") //WWW
-                            {
-                                indProgress++;
-                                if (indProgress > limitUpdate)
-                                {
-                                    indProgress = 0;
-                                    yield return null;
-                                }
-
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                string inputString = el.ToString();
-
-                                //---------------
-                                //XmlSerializer serializer = new XmlSerializer(typeof(List<ModelNPC.ObjectData>), Serializator.extraTypes);
-                                //WWW
-                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
-                                //--------------
-                                StringReader stringReader = new StringReader(inputString);
-                                //stringReader.Read(); // skip BOM
-                                //--------------
-
-                                //List<KeyValuePair<string, ModelNPC.FieldData>> dataResult = (List<KeyValuePair<string, ModelNPC.FieldData>>)serializer.Deserialize(rdr);
-                                //Debug.Log("! " + inputString);
-                                //List<ModelNPC.ObjectData> dataResult;
-                                ModelNPC.ObjectData dataResult;
-                                try
-                                {
-                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
-                                }
-                                catch (Exception x)
-                                {
-                                    Debug.Log("############# " + x.Message);
-                                    yield break;
-                                }
-                                //-------------------------
-                                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
-                                {
-                                    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
-                                    fieldsD_Test[nameField].Objects.Add(dataResult);
-                                }
-                                else
-                                {
-                                    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
-                                    //{
-                                    //    NameField = nameField,
-                                    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                    //});
-                                    fieldsD_Test.Add(nameField, new ModelNPC.FieldData()
-                                    {
-                                        NameField = nameField,
-                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                    });
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-
-            //xml.Close();
-            //stReader.Close();
-        }
-
-        //------------
-        Storage.Data.SetGridDatatBig = fieldsD_Test;
-
-        yield return null;
-        Storage.Data.CompletedLoadWorld();//fieldsD_Temp
-        //--------------
-
-        float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetMessage("Ты ждал: " + loadingTime);
-
-        yield return new WaitForSeconds(4f);
-
-        Storage.Events.HideMessage();
-    }
-
-
-
-    byte[] StringToUTF8ByteArray(string pXmlString)
-    {
-        System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
-        byte[] byteArray = encoding.GetBytes(pXmlString);
-        return byteArray;
-    }
-
-    IEnumerator StartLoadDataPartsXML()
-    {
-        string datapath;
-        string stepErr = "start";
-        Debug.Log("Loaded Xml GridData start...");
-
-        yield return null;
-
-        for (int partX = 0; partX < Helper.SizePart; partX++)
-        {
-            for (int partY = 0; partY < Helper.SizePart; partY++)
-            {
-                //--- skip first part
-                if (partX == 0 && partY == 0)
-                    continue;
-
-                //yield return null;
-
-                stepErr = "c.1";
-                string nameFileXML = +(partX + 1) + "x" + (partY + 1);
-                string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
-                datapath = datapathPart;
-                if (File.Exists(datapathPart))
-                {
-                    //yield return new WaitForSeconds(0.3f);
-                    yield return null;
-                    yield return StartCoroutine(StartLoadPartXML(datapathPart));
-                }
-
-            }
-        }
-    }
-
-    IEnumerator StartLoadPartXML(string datapathPart)
-    {
-        string stepErr = "start";
-
-        //yield return null;
-        ModelNPC.GridData itemGridData = null;
-        stepErr = ".1";
-        stepErr = ".2";
-        XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), Serializator.extraTypes);
-        stepErr = ".3";
-        using (FileStream fs = new FileStream(datapathPart, FileMode.Open))
-        {
-            stepErr = ".4";
-            itemGridData = (ModelNPC.GridData)serializer.Deserialize(fs);
-            stepErr = ".5";
-            fs.Close();
-        }
-        yield return null;
-        stepErr = ".6";
-        itemGridData.FieldsD = itemGridData.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
-        stepErr = ".7";
-        Debug.Log("Loaded Xml GridData D:" + itemGridData.FieldsD.Count() + "     datapath=" + datapathPart);
-        //## 
-        itemGridData.FieldsXML = null;
-        stepErr = ".8";
-        //yield return null;
-        Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(itemGridData.FieldsD)
-            .ToDictionary(x => x.Key, x => x.Value);
-
-    }
-
 
     public void ClearWorld(bool isReload = true)
     {
@@ -1448,16 +1019,6 @@ public class SaveLoadData : MonoBehaviour {
     {
         Storage.Instance.IsLoadingWorld = true;
 
-        //Storage.Instance.StopGame();
-        //Storage.Pool.Restart();
-        //Storage.Instance.DestroyAllGamesObjects();
-        //DataConstructionTiles dataTiles = Storage.TilesManager.DataMapTiles[SelectedConstruction];
-        //------------------------------
-
-
-        //
-        
-
         if(Storage.PaletteMap.SelectedCell == null)
         { 
             Storage.PaletteMap.GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
@@ -1466,15 +1027,6 @@ public class SaveLoadData : MonoBehaviour {
         {
             Storage.PaletteMap.GenericOnWorld(true); 
         }
-
-
-        //------------------------------
-        //Storage.Pool.Restart();
-        //Storage.Instance.GridDataG.FieldsD.Clear();
-        //if (isReload)
-        //    Storage.Player.LoadPositionHero();
-        //Storage.Instance.GridDataG.FieldsD.Clear();
-
         Storage.Instance.IsLoadingWorld = false;
     }
 

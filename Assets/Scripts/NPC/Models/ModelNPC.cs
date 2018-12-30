@@ -877,8 +877,8 @@ public class ModelNPC
         }
     }
 
-    [XmlType("Blasarr")]
-    public class GameDataAlienBlasarr : GameDataAlien
+    [XmlType("Blastarr")]
+    public class GameDataAlienBlastarr : GameDataAlien
     {
         public override int Life
         {

@@ -1269,7 +1269,7 @@ public class PaletteMapController : MonoBehaviour {
                 if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), spriteName))
                 {
                     typeTilePrefab = TypesStructure.Terra;
-                    Debug.Log("Not Prefab");
+                    Debug.Log("Not Prefab >> " + spriteName);
                 }
             }
             catch (System.ArgumentException)

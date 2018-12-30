@@ -17,6 +17,7 @@ public class DataTilesManager : MonoBehaviour {
     private List<Texture2D> m_listTextursTerra;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
     private List<string> m_listTextursNames;
     private List<Texture2D> m_listTextursPrefabs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
+    private List<Texture2D> m_listTextursWorld;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
 
     private Texture2D[] m_listTexturs;
     public  Texture2D[] ListTexturs
@@ -36,8 +37,11 @@ public class DataTilesManager : MonoBehaviour {
                     }
 
                     m_listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
+                    m_listTextursWorld = Resources.LoadAll<Texture2D>("Textures/World/").ToList();
+
                     listTexturs.AddRange(m_listTextursTerra);
                     listTexturs.AddRange(m_listTextursPrefabs);
+                    listTexturs.AddRange(m_listTextursWorld);
                     m_listTexturs = listTexturs.ToArray();
                 }catch(Exception x)
                 {
@@ -286,7 +290,11 @@ public class DataTilesManager : MonoBehaviour {
 
         var listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/").ToList();
         var listTilesPrefabs = Resources.LoadAll<Tile>("Textures/TilesPrefab/Tiles/").ToList();
+        var listTilesWorld = Resources.LoadAll<Tile>("Tiles/").ToList();
+
         listTiles.AddRange(listTilesPrefabs);
+        listTiles.AddRange(listTilesWorld);
+
         m_listTiles = listTiles.ToArray();
 
         foreach (var tileItem in m_listTiles)

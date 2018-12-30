@@ -75,10 +75,12 @@
     <Compile Include="Assets\Scripts\Player\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
+    <Compile Include="Assets\Scripts\Storage\DiskData.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
+    <Compile Include="Assets\Scripts\Storage\Serializator.cs" />
     <Compile Include="Assets\Scripts\Storage\Storage.cs" />
     <Compile Include="Assets\Scripts\Storage\StorageCorrect.cs" />
     <Compile Include="Assets\Scripts\Storage\StorageLog.cs" />

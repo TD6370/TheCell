@@ -61,6 +61,15 @@ public class Storage : MonoBehaviour {
         IsTartgetPositionAll = !IsTartgetPositionAll;
     }
 
+    private DiskData _DiskData;
+    public static DiskData Disk
+    {
+        get
+        {
+            return Instance._DiskData;
+        }
+    }
+
     private PoolGameObjects _PoolObgects;
     public static PoolGameObjects Pool
     {
@@ -479,8 +488,16 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DrawGeom is Empty");
             return;
         }
-
         _PoolObgects = new PoolGameObjects();
+
+        _DiskData = GetComponent<DiskData>();
+        if (_DiskData == null)
+        {
+            Debug.Log("########## InitComponents _DiskData is Empty");
+            return;
+        }
+        
+
         //_PoolObgects
         //DrawGeometry 
     }
@@ -674,7 +691,7 @@ public class Storage : MonoBehaviour {
 
             //-- load old style
             //StartCoroutine(StartInGameLoadDataBigXML());
-            GridData.LoadDataBigXML(); //<<<
+            _DiskData.LoadDataBigXML(); //<<<
 
             //-- Load Async
             //StartCoroutine(StartBackgroundLoadDataBigXML());
