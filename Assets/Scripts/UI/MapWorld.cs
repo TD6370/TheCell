@@ -44,6 +44,16 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    public Vector3 FramePosition
+    {
+        get {
+            return prefabFrameMap.transform.position;
+        }
+        set {
+            prefabFrameMap.transform.position = value;
+        }
+    }
+
     private FrameMap m_Frame;
     public FrameMap Frame
     {
@@ -56,6 +66,14 @@ public class MapWorld : MonoBehaviour {
                     Debug.Log("########### MapWorld.Frame is empty");
             }
             return m_Frame;
+        }
+    }
+
+    public float ZOrderMap
+    {
+        get
+        {
+            return -2f;
         }
     }
 
@@ -113,7 +131,7 @@ public class MapWorld : MonoBehaviour {
         Vector2 posHero = Storage.PlayerController.transform.position;
         //prefabFrameMap.transform.position = new Vector3(posHero.x -12.5f, posHero.y + 5, -2);
         //prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
-        prefabFrameMap.transform.position = new Vector3(posHero.x, posHero.y, -2);
+        FramePosition = new Vector3(posHero.x, posHero.y, ZOrderMap);
         //prefabFrameMap.transform.localScale = new Vector3(10F, 10f, 0);
         
         prefabFrameMap.transform.SetParent(Storage.PlayerController.transform);
@@ -179,7 +197,7 @@ public class MapWorld : MonoBehaviour {
         {
             Storage.DrawGeom.DrawClear();
             //DrawLocationHero(true);
-            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, FramePosition);
             if (distMap > 50f)
             {
                 Frame.Restart();
@@ -191,7 +209,7 @@ public class MapWorld : MonoBehaviour {
     {
         get
         {
-            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, prefabFrameMap.transform.position);
+            float distMap = Vector2.Distance(Storage.PlayerController.transform.position, FramePosition);
             if (distMap > 35f) //30f
             {
                 return false;
@@ -812,7 +830,7 @@ public class MapWorld : MonoBehaviour {
 
     //Texture2D textureMap = null;
 
-    public Sprite GetSpriteMap(out Texture2D textureMap, int scaleCell = 1, bool isRefresh = false, int offsetMapX =0, int offsetMapY =0)
+    public Sprite GetBildSpriteMap(out Texture2D textureMap, int scaleCell = 1, bool isRefresh = false, int offsetMapX =0, int offsetMapY =0)
     {
         string indErr = "start";
 
@@ -924,7 +942,7 @@ public class MapWorld : MonoBehaviour {
         if (IsOpen || isOpenChange)
         {
             Texture2D textureMap = prefabFrameMap.GetComponent<SpriteRenderer>().sprite.texture;
-            Texture2D textureResult = textureMap;
+            Texture2D textureMapResult = textureMap;
             //Texture2D textureResult = new Texture2D(textureMap.width, textureMap.height);
             //Graphics.CopyTexture(textureMap, 0, 0, 0, 0, textureMap.width, textureMap.height, textureResult, 0, 0, 0, 0);
 
@@ -943,26 +961,31 @@ public class MapWorld : MonoBehaviour {
                             datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
                             {
                                 prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                                break; //@@@+
                             }
                         }
                     }
                     Vector2 posF = Helper.GetPositByField(nameField);
                     int x = (int)posF.x;
                     int y = (int)posF.y;
-                    DrawTextureTo(SizeCellMap, "Restore", SizeCellMap - 1, textureResult, y, x, prefabType);
+                    DrawTextureTo(SizeCellMap, "Restore", SizeCellMap - 1, textureMapResult, y, x, prefabType);
                 }
                 saveHeroPosField = Storage.Instance.SelectFieldPosHero;
             }
             //------
 
-            Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
-            int heroX = (int)posHero.x;
-            int heroY = (int)posHero.y;
+            //@@@+
+            textureMapResult = AddTextureHeroOnMap(textureMapResult);
 
-            DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
+            //@@@-
+            //Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
+            //int heroX = (int)posHero.x;
+            //int heroY = (int)posHero.y;
 
-            textureResult.Apply();
-            Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);
+            //DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
+
+            textureMapResult.Apply();
+            Sprite spriteMe = Sprite.Create(textureMapResult, new Rect(0.0f, 0.0f, textureMapResult.width, textureMapResult.height), new Vector2(0.5f, 0.5f), 100.0f);
             prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
         }
     }
@@ -975,6 +998,7 @@ public class MapWorld : MonoBehaviour {
         //-- Restore ---
         //if (Storage.Instance.SelectFieldPosHero != saveHeroPosField)
         //{
+            //Clear old position Hero
             if (!string.IsNullOrEmpty(saveHeroPosField))
             {
                 SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
@@ -999,27 +1023,31 @@ public class MapWorld : MonoBehaviour {
         //}
         //------
 
-        Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
-        int heroX = (int)posHero.x;
-        int heroY = (int)posHero.y;
+        //@@@+
 
-        DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
-        
+        textureResult = AddTextureHeroOnMap(textureResult);
+        //@@@-
+        //Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
+        //int heroX = (int)posHero.x;
+        //int heroY = (int)posHero.y;
+
+        //DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
+
 
         return textureResult;
     }
 
-    public Texture2D GetTextureHero(Texture2D textureResult)
+    public Texture2D AddTextureHeroOnMap(Texture2D textureMapResult)
     {
         Vector2 posHero = Helper.GetPositByField(Storage.Instance.SelectFieldPosHero);
         int heroX = (int)posHero.x;
         int heroY = (int)posHero.y;
-        DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureResult, heroY, heroX, Storage.Map.textureHero);
-        return textureResult;
+        DrawTextureTo(SizeCellMap, "Hero", SizeCellMap - 1, textureMapResult, heroY, heroX, Storage.Map.textureHero);
+        return textureMapResult;
     }
 
-
-
+    //@@@?
+    /*
     public void DrawMapCell(int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
         Texture2D textureMap = prefabFrameMap.GetComponent<SpriteRenderer>().sprite.texture;
@@ -1031,6 +1059,7 @@ public class MapWorld : MonoBehaviour {
         Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);
         prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
     }
+    */
 
     public void DrawMapCell(int y, int x, Texture2D texturePrefab)
     {
@@ -1132,6 +1161,7 @@ public class MapWorld : MonoBehaviour {
         return SpriteAtlasMapPrefab.GetSprite(nameTexture);// .Find(p=>p.name=="");
     }
 
+    //DrawTextureTo(SizeCellMap, "Restore", SizeCellMap - 1, textureResult, y, x, prefabType);
     public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
         //------------------
@@ -1273,7 +1303,7 @@ public class MapWorld : MonoBehaviour {
         //m_GridMap.constraintCount = countColumnMap;
         //ResizeScaleGrid(countColumnMap, 1.1f);
 
-        string field = Helper.GetNameField(1, 1);
+        //string field = Helper.GetNameField(1, 1);
         GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("MapGridCell");
         for (int i = 0; i < gobjCells.Length; i++)
         {
@@ -1292,26 +1322,6 @@ public class MapWorld : MonoBehaviour {
             for (int y = 1; y < maxCellGridMap + 1; y++)
             {
 
-                ///-------------------
-                //var cellMap = (GameObject)Instantiate(PrefabSpriteCellMap);
-                ////cellMap.transform.SetParent(this.gameObject.transform);
-                //cellMap.transform.SetParent(m_GridMap.transform);
-                ////Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
-                ////Sprite spriteTile = cellMap.GetComponent<SpriteRenderer>().sprite;
-
-                ////field = Helper.GetNameField(x, y);
-                //field = Helper.GetNameField(y, x); //FIX
-
-                //cellMap.name = "MapGridCell" + field;
-                //cellMap.tag = "MapGridCell";
-
-                ////cellMap.GetComponent<SpriteRenderer>().sprite = spriteTile;
-                ////cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
-                ////cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag = typeTilePrefab.ToString() };
-                //cellMap.SetActive(true);
-
-                //m_listCellsGridMap.Add(cellMap);
-                //--------------------------------------
                 CreateCell(x, y);
 
                 index++;

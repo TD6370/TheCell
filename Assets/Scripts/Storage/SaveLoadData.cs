@@ -912,8 +912,8 @@ public class SaveLoadData : MonoBehaviour {
     }
 
     public bool AddConstructInGridData(string nameField, DataTile itemTile,
-    PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
-    PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
+        PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
+        PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
     {
         TypePrefabs prefabName = TypePrefabs.PrefabField;
         string personTextureName = "";

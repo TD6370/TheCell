@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 {
 
-    public GameObject MapCellFrame;
+    public GameObject MapIcon;
     public GameObject MapCellBorder;
 
     public float KoofPosCell = 1f;
@@ -135,6 +135,11 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     private float diffDragX = 0;
     private float diffDragY = 0;
     private float corrZoom = 1.7f;
+    private Vector3 PositionMap
+    {
+        set { transform.position = value; }
+        get { return transform.position; }
+    }
 
     // Use this for initialization
     void Start()
@@ -316,7 +321,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 if (SizeZoom < limitZoomMin)
                     SizeZoom = limitZoomMin;
             }
-            Zooming(SizeZoom);
+            //Zooming(SizeZoom);//@@@?
+            Zooming();//@@@+
         }
     }
 
@@ -327,7 +333,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             return;
 
         RunTeleportHero();
-        MapDragOn(true);
+        //@@@-
+        //MapDragOn(true);
     }
     private void MouseUpSpecOnChange()
     {
@@ -341,7 +348,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             //PosStartCursorW = cameraMap.ScreenToWorldPoint(Input.mousePosition);
             //PosStartCursor = Input.mousePosition;
-            m_distanceDrag = Vector3.Distance(transform.position, cameraMap.transform.position);
+            m_distanceDrag = Vector3.Distance(PositionMap, cameraMap.transform.position);
 
 
             var center = Helper.HeightLevel / 2;
@@ -367,15 +374,9 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     {
         if (IsMapDragOn)
         {
-            //Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
-            //Vector3 rayPoint = ray.GetPoint(m_distanceDrag);
-            //transform.position = rayPoint / SizeZoom;
-            
             Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(m_distanceDrag);
 
-            //var newPosW = PosStartCursorW - cameraMap.ScreenToWorldPoint(Input.mousePosition);
-            //var newPos = PosStartCursor - Input.mousePosition;
             //------------
             rayPoint.x -= diffDragX;
             rayPoint.y += diffDragY;
@@ -384,22 +385,17 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
             if(Storage.Map.IsValid)
             {
-                //transform.position = rayPoint / SizeZoom;
                 Vector3 resPoint = rayPoint;
 
                 //---- ZOOM
-                //float _zoom = SizeZoom > 1 ? SizeZoom * corrZoom : SizeZoom;
-                //float _zoom = SizeZoom > 1 ? SizeZoom / corrZoom : SizeZoom;
-                //resPoint /= _zoom;
                 resPoint /= SizeZoom;
 
-                transform.position = resPoint;
+                PositionMap = new Vector3( resPoint.x, resPoint.y, Storage.Map.ZOrderMap);
             }
             else
             {
                 IsMapDragOn = false;
                 //Restart();
-
                 BackFrameMoving();
             }
             
@@ -410,12 +406,12 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     {
         Storage.Map.StartPositFrameMap = new Vector3();
         Vector3 posHero = Storage.PlayerController.transform.position;
-        //transform.position = new Vector3(posHero.x, posHero.y, 0);
-
-        Vector3 newPos = posHero - transform.position;
+        Vector3 newPos = posHero - PositionMap;
         newPos /= 20;
-        transform.position += newPos;
+        newPos += PositionMap;
+        PositionMap = new Vector3(newPos.x, newPos.y, Storage.Map.ZOrderMap);
     }
+       
 
     private void RunTeleportHero()
     {
@@ -441,7 +437,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     {
         Storage.Map.StartPositFrameMap = new Vector3();
         Vector2 posHero = Storage.PlayerController.transform.position;
-        transform.position = new Vector3(posHero.x, posHero.y, 0);
+        PositionMap = new Vector3(posHero.x, posHero.y, Storage.Map.ZOrderMap);
     }
 
     private bool IsActive
@@ -621,7 +617,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             }
 
             SelectPointField = new Vector2(mapX, mapY);
-            SelectFieldPos = new Vector2((int)mapX, (int)mapY);
+            SelectFieldPos = new Vector2((int)mapX, (int)mapY);//@@@?
 
             posMapField = new Vector2(posMapField.x + 100 + offsetField, posMapField.y + 100 + offsetField);
             posMapField /= SizeZoom;
@@ -663,7 +659,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
 
         //widthMap *= Helper.SpeedWorld;
-        float offSerX = (hit1.x - transform.position.x);
+        float offSerX = (hit1.x - PositionMap.x);
         float radiusX = widthMap / 2;
         mapX = offSerX + radiusX;
         float heightMap = colliderMap.size.y;
@@ -675,7 +671,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
 
         //heightMap *= Helper.SpeedWorld;
-        float offSerY = (hit1.y - transform.position.y);
+        float offSerY = (hit1.y - PositionMap.y);
         float radiusY = heightMap / 2;
         mapY = offSerY + radiusY;
         mapY = widthCellPexel - mapY;
@@ -743,10 +739,11 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         return offsetCenter;
     }
 
-    
-    private void Zooming(float zoom = 1f)
+
+    //private void Zooming(float zoom = 1f)
+    private void Zooming()
     {
-        Storage.Map.ZoomMap = SizeZoom;
+        float zoom = Storage.Map.ZoomMap = SizeZoom;
 
         //this.gameObject.transform.localScale = new Vector3(zoom, zoom, 0);
         this.gameObject.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(zoom, zoom, 0);
@@ -797,7 +794,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         //Draw Icon on Cell Map
         DrawIconCell(nameField);
 
-        MapCellFrame.GetComponent<RectTransform>().position = SetLocationCell();
+        MapIcon.GetComponent<RectTransform>().position = SetLocationCell();
     }
 
     //Draw Icon on Cell Map
@@ -861,7 +858,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             Storage.Map.DrawMapCell(cellX, cellY, texturePerson);
 
             Sprite spriteCell = Sprite.Create(texturePerson, new Rect(0.0f, 0.0f, texturePerson.width, texturePerson.height), new Vector2(0.5f, 0.5f), 100.0f);
-            MapCellFrame.GetComponent<SpriteRenderer>().sprite = spriteCell;
+            MapIcon.GetComponent<SpriteRenderer>().sprite = spriteCell;
             _isPerson = true;
             //MapCellFrame.GetComponent<SpriteRenderer>().sprite.texture = texturePerson;
             break;
@@ -878,7 +875,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             else
             {
                 Sprite spriteCell = Sprite.Create(texturePrefab, new Rect(0.0f, 0.0f, texturePrefab.width, texturePrefab.height), new Vector2(0.5f, 0.5f), 100.0f);
-                MapCellFrame.GetComponent<SpriteRenderer>().sprite = spriteCell;
+                MapIcon.GetComponent<SpriteRenderer>().sprite = spriteCell;
             }
 
         }
@@ -942,7 +939,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         //!!!!!!!!!!!!!!!
 
         if (posOld == new Vector3())
-            posOld = MapCellFrame.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
+            posOld = MapIcon.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
 
         int _koofPosCell = 2;
 

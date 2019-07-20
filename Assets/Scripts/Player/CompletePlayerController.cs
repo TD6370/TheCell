@@ -42,6 +42,10 @@ public class CompletePlayerController : MonoBehaviour {
         {
             return rb2d;
         }
+        private set
+        {
+            rb2d = value;
+        }
     }
 
     //[SerializeField]
@@ -54,8 +58,14 @@ public class CompletePlayerController : MonoBehaviour {
 
     private Vector2 _MousePositionClick;
     private Vector2 _MousePosition;
-    private Vector2 _PosHeroToField;
-    private string _fieldHero;
+    //private Vector2 _PosHeroToField;
+    private string FieldHero
+    {
+        get
+        {
+            return Storage.Instance.SelectFieldPosHero;
+        }
+    }
 
     private Rect _positionLastTarget = new Rect(0, 0, 100, 100);
     private Rect _rectCursor = new Rect(-1, -1, 100, 100);
@@ -81,7 +91,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     void Start()
     {
-        rb2d = GetComponent<Rigidbody2D>();
+        RigidbodyHero = GetComponent<Rigidbody2D>();
 
         InitData();
         _count = 0;
@@ -90,7 +100,7 @@ public class CompletePlayerController : MonoBehaviour {
         SetCountText();
 
         //Set Start Position
-        rb2d.MovePosition(new Vector2(40, -40));
+        RigidbodyHero.MovePosition(new Vector2(40, -40));
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
 
         //Storage.PaletteMap.Show();
@@ -110,57 +120,24 @@ public class CompletePlayerController : MonoBehaviour {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return;
         }
-
-        //if(this.gameObject.transform.position != m_lastPos)
-        //{
-        //    m_lastPos = this.gameObject.transform.position;
-        //    Storage.Events.ListLogAdd = "----------------------";
-        //    Storage.Events.ListLogAdd = "hero new position = " + m_lastPos;
-        //    Storage.Events.ListLogAdd = "enabled = " + this.enabled;
-        //    Storage.Events.ListLogAdd = "CapsuleCollider2D = " + GetComponent<CapsuleCollider2D>().enabled;
-        //    Storage.Events.ListLogAdd = "Rb2D.IsSleeping = " + this.Rb2D.IsSleeping();
-        //    Storage.Events.ListLogAdd = "MainCamera.enabled = " + this.MainCamera.enabled;
-
-        //}
-
+              
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
         _movement = new Vector2(moveHorizontal, moveVertical);
-
-        //if (Input.GetKey("m"))
-        //{
-        //    Storage.Map.Create();
-        //}
+   
 
         if (CameraMap.enabled)
         {
             MovementMap(moveHorizontal, moveVertical);
-            //if (Storage.Map.StartPositFrameMap == new Vector3())
-            //    Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
-
-            //float slow = 0.1f;
-
-            //float speed = 1f;
-            //if (Storage.Map.ZoomMap > 1.4)
-            //    speed = (Storage.Map.ZoomMap - 0.4f) * 2f;
-
-
-            //Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0f);
-            ////CameraMap.transform.position += movementCam;
-
-            //Storage.Map.prefabFrameMap.transform.position += movementCam;
-            //Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
-            //Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
-            //---
             return;
         }
         else
         {
             //---Move Hero
             //if(!RigidbodyHero.IsSleeping())
-                rb2d.MovePosition(rb2d.position + _movement * Speed * Time.deltaTime);
+            RigidbodyHero.MovePosition(RigidbodyHero.position + _movement * Speed * Time.deltaTime);
             //--------------
         }
 
@@ -206,14 +183,6 @@ public class CompletePlayerController : MonoBehaviour {
         //}
     }
 
-    public Rigidbody2D Rb2D
-    {
-        get
-        {
-            return rb2d;
-        }
-    }
-
     void Update()
     {
         //if (Input.GetKey("m") && Time.time > DelayTimer)
@@ -255,8 +224,8 @@ public class CompletePlayerController : MonoBehaviour {
     {
 
         //#TEST
-        var t1= this.GetComponent<CapsuleCollider2D>().enabled; 
-        var t2= this.Rb2D.IsSleeping();
+        //var t1= this.GetComponent<CapsuleCollider2D>().enabled; 
+        //var t2= this.RigidbodyHero.IsSleeping();
 
 
         if (!CameraMap.enabled)
@@ -288,13 +257,13 @@ public class CompletePlayerController : MonoBehaviour {
     public void Disable()
     {
         GetComponent<CapsuleCollider2D>().enabled = false;
-        Rb2D.Sleep();
+        RigidbodyHero.Sleep();
     }
 
     public void Enable()
     {
         GetComponent<CapsuleCollider2D>().enabled = true;
-        Rb2D.WakeUp();
+        RigidbodyHero.WakeUp();
     }
 
     public void GhostOn()
@@ -325,16 +294,6 @@ public class CompletePlayerController : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.5f);
 
-        //if (m_scriptGrid == null)
-        //{
-        //    Debug.Log("scriptGrid null");
-        //    yield break;
-        //}
-        //m_scriptGrid.DestroyRealObject(gObj);
-        //@DESTROY@
-        //if (gObj != null)
-        //    Debug.Log("HERO DESTROY NPC " + gObj.name);
-
         Storage.Instance.DestroyFullObject(gObj);
 
         BeforeDestroyUfo();
@@ -352,7 +311,7 @@ public class CompletePlayerController : MonoBehaviour {
             return;
 
         if (Storage.Map.StartPositFrameMap == new Vector3())
-            Storage.Map.StartPositFrameMap = Storage.Map.prefabFrameMap.transform.position;
+            Storage.Map.StartPositFrameMap = Storage.Map.FramePosition; //@@@+
 
         float slow = 0.1f;
 
@@ -366,53 +325,20 @@ public class CompletePlayerController : MonoBehaviour {
             speed *= Helper.SpeedWorld;
         }
 
-        Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0f);
+        Vector3 movementCam = new Vector3(moveHorizontal * slow * speed * -1, moveVertical * slow * speed * -1, 0);
         //CameraMap.transform.position += movementCam;
 
-        Storage.Map.prefabFrameMap.transform.position += movementCam;
+        Vector3 newPos = Storage.Map.FramePosition + movementCam;
+        Storage.Map.FramePosition = new Vector3(newPos.x, newPos.y, -1);
         Storage.Map.DistMoveCameraMap = Storage.Map.StartPositFrameMap - Storage.Map.prefabFrameMap.transform.position;
         Storage.Map.DistMoveCameraMapXY = Vector3.Distance(Storage.Map.StartPositFrameMap, Storage.Map.prefabFrameMap.transform.position);
     }
-
-    //public void CameraMapOn(bool isOpenMap)
-    //{
-    //    if (isOpenMap)
-    //    {
-    //        rb2d.Sleep();
-    //        enabled = true;
-    //        CameraMap.transform.position = MainCamera.transform.position;
-    //        CameraMap.enabled = true;
-    //        MainCamera.enabled = false;
-
-    //        int LayerUI = LayerMask.NameToLayer("LayerUI");
-    //        int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-    //        Debug.Log("_________IgnoreLayerCollision: " + LayerUI + " > " + LayerObjects);
-    //        Physics.IgnoreLayerCollision(LayerUI, LayerObjects, true);
-
-    //        //Physics.IgnoreLayerCollision(LayerObjects, LayerUI, true);
-    //        //CameraMap.cullingMask = LayerObjects;
-    //    }
-    //    else
-    //    {
-    //        rb2d.WakeUp();
-    //        enabled = false;
-    //        MainCamera.enabled = true;
-    //        CameraMap.enabled = false;
-    //        int LayerUI = LayerMask.NameToLayer("LayerUI");
-    //        int LayerObjects = LayerMask.NameToLayer("LayerObjects");
-    //        Debug.Log("_________IgnoreLayerCollision No: " + LayerUI + " > " + LayerObjects);
-    //        Physics.IgnoreLayerCollision(LayerUI, LayerObjects, false);
-    //    }
-    //}
 
     public void Move(Vector2 posMove)
     {
         int Speed = 10;
         Debug.Log("posMove: " + posMove);
-        //rb2d.MovePosition(posMove);
-        //rb2d.MovePosition((rb2d.position + posMove) * Speed * Time.deltaTime);
-        //rb2d.MovePosition((rb2d.position + posMove) * Speed);
-        rb2d.MovePosition(posMove * Speed);
+        RigidbodyHero.MovePosition(posMove * Speed);
     }
 
     public GameObject FindFieldCurrent(bool isNotLoadLook = false)
@@ -432,9 +358,9 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastX = posX;
         _posLastY = posY;
 
-        _fieldHero = Helper.GetNameField(posX, posY);
-        Storage.Instance.SelectFieldPosHero = _fieldHero;
-        _PosHeroToField = new Vector2(posX, posY);
+        //_fieldHero = Helper.GetNameField(posX, posY);
+        //Storage.Instance.SelectFieldPosHero = _fieldHero;
+        //_PosHeroToField = new Vector2(posX, posY);
 
         var camera = MainCamera;
         if (camera == null)
@@ -462,10 +388,10 @@ public class CompletePlayerController : MonoBehaviour {
         }
         m_isFindFieldCurrent = true;
 
-        if (!Storage.Instance.Fields.ContainsKey(_fieldHero))
+        if (!Storage.Instance.Fields.ContainsKey(FieldHero))
             return null;
 
-        GameObject prefabFind = Storage.Instance.Fields[_fieldHero];
+        GameObject prefabFind = Storage.Instance.Fields[FieldHero];
 
         //--- Check refresh map
         if (stepsRefresfMap > limitStepsRefreshMap)
@@ -481,7 +407,9 @@ public class CompletePlayerController : MonoBehaviour {
     public void LoadObjects(int posX = 0, int posY = 0)
     {
         //GEN LOOK
-        m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
+        //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
+        //@@@
+        Storage.GenGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
 
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
 

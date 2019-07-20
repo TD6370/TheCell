@@ -18998,7 +18998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953668e1d89bf984caf7589cc9c538da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapCellFrame: {fileID: 1665423905}
+  MapIcon: {fileID: 1665423905}
   MapCellBorder: {fileID: 1122555394}
   KoofPosCell: 1
   SizeZoom: 1
@@ -21669,6 +21669,10 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1342688931821168, guid: be07b425b4f03f54db98d75688613cfd, type: 2}
+      propertyPath: m_Name
+      value: PrefabMapIcon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be07b425b4f03f54db98d75688613cfd, type: 2}

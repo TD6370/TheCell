@@ -475,6 +475,9 @@ public class GenerateGridFields : MonoBehaviour {
                     {
                         //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate UpdateData " + newField.name);
                         movement.UpdateData("Activate");
+                        //@@@<
+                        newField.SetActive(true);
+                        movement.InitNPC();
                     }
                     else
                     {
@@ -491,12 +494,15 @@ public class GenerateGridFields : MonoBehaviour {
                     //  newField.GetComponent<SpriteRenderer>().color = Color.white;
                     //newField.SetActive(true);
 
+                    //@@@>
+                    /*
                     if (movement != null)
                     {
                         //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate InitNPC " + newField.name);
                         newField.SetActive(true);
                         movement.InitNPC();
                     }
+                    */
                 }
                 //------------
 

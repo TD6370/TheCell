@@ -296,6 +296,7 @@ public class ModelNPC
             return newName;
         }
 
+        [XmlIgnore] //@@@
         public virtual List<string> GetParams
         {
             get
@@ -394,6 +395,7 @@ public class ModelNPC
 
         }
 
+        [XmlIgnore] //@@@
         public override List<string> GetParams
         {
             get
