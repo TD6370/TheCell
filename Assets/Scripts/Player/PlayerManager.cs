@@ -18,8 +18,31 @@ public class PlayerManager : MonoBehaviour {
         }
     }
 
+    private int _limitHorizontalLook = 22;
+    public int LimitHorizontalLook
+    {
+        get { return _limitHorizontalLook; }
+    }
+    private int _limitVerticalLook = 18;
+    public int LimitVerticalLook
+    {
+        get { return _limitVerticalLook; }
+    }
+
     public Color ColorCurrentField = Color.yellow;
     PlayerData m_playerDataGame;
+
+    private int _heroPositionX = 0;
+    public int HeroPositionX
+    {
+        get { return _heroPositionX; }
+    }
+    private int _heroPositionY = 0;
+    public int HeroPositionY
+    {
+        get { return _heroPositionY; }
+    }
+
 
     private void Awake()
     {
@@ -116,7 +139,7 @@ public class PlayerManager : MonoBehaviour {
 
         if (x != -1 && y != -1)
         {
-            m_playerDataGame.SavePosition = new Vector3(x, y, m_playerDataGame.SavePosition.y);
+            m_playerDataGame.SavePosition = new Vector3(x, y, Storage.PlayerController.transform.position.z);
         } else
         { 
             m_playerDataGame.SavePosition = Storage.PlayerController.transform.position;
@@ -125,6 +148,16 @@ public class PlayerManager : MonoBehaviour {
         SavePlayerXML();
         Debug.Log("Save Position HERO : " + Storage.PlayerController.transform.position);
     }
+
+    public void TeleportHero()
+    {
+        Storage.Map.Create();
+        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+        posTransferHeroY *= -1;
+        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+    }
+
 
     public void TeleportHero(int x , int y)
     {
@@ -141,68 +174,79 @@ public class PlayerManager : MonoBehaviour {
 
         Debug.Log("Teleporting Hero....");
 
-
-        //foreach(var fieldItem in Storage.Instance.Fields.Values)
-        //{
-        //    Destroy(fieldItem);
-        //}
-        //Storage.Instance.Fields.Clear();
-
-        //Destroy Old Objects
-        //Storage.Instance.DestroyAllGamesObjects();
-        //Storage.Instance.Fields.Clear();
         Storage.Instance.StopGame();
-
         Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
-        //Storage.PlayerController.Move(m_playerDataGame.SavePosition);
-
-        //-------------
-        //Storage.GenGrid.StartGenGrigField(true);
         Storage.PlayerController.FindFieldCurrent();
-            //RestructGrid();
-        //Storage.GenGrid.LoadObjectsNearHero();
-        //------------
-
-
-        //---------------------------
         Storage.GenGrid.StartGenGrigField(true);
-
-                ////Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
-                ////Storage.Instance.SelectFieldPosHero = saveHeroPosField;
-
-                ////Storage.GenGrid.StartGenGrigField(true);
-                ////Storage.PlayerController.FindFieldCurrent();
-        //RestructGrid();
-
         Storage.GenGrid.LoadObjectsNearHero();
-        //---------------------
 
         Debug.Log("Teleported Hero ))");
     }
 
-    //public void RestructGrid(bool isMouseClick = false)
     public void RestructGrid()
     {
         var prefabFind =  Storage.PlayerController.FindFieldCurrent();
         if (prefabFind != null)
         {
-            Storage.Events.ListLogAdd = prefabFind.name.ToString();
+            Storage.EventsUI.ListLogAdd = prefabFind.name.ToString();
             Helper.GetNameFieldPosit(prefabFind.transform.position.x, prefabFind.transform.position.y);
-            //Storage.Person.ColorFindCursorObject  Curent  Helper.GetNameFieldObject(prefabFind);
-            //Storage.PlayerController.Cur
             //>>>>>> SetTextLog(prefabFind.name.ToString());
             Storage.Instance.SelectFieldPosHero = Helper.GetNameFieldObject(prefabFind);
             prefabFind.gameObject.GetComponent<SpriteRenderer>().color = ColorCurrentField;
-
             Storage.Map.DrawLocationHero();
-
-            //if(Storage.PaletteMap.IsPaintsOn)
-            //{
-            //    Storage.PaletteMap.PaintAction();
-            //}
-
         }
     }
 
+    public void SetHeroPosition(int x, int y, float xH, float yH)
+    {
+        //Debug.Log("SetHeroPosition...");
 
+        int scale = 2;
+        _heroPositionX = x;
+        _heroPositionY = y;
+
+        int _limitX = _limitHorizontalLook / 2;
+        int _limitY = _limitVerticalLook / 2;
+        {
+            int fX = x - _limitX;
+            int fY = y - _limitY;
+
+            if (fX < 0) fX = 0;
+            if (fY < 0) fY = 0;
+            int fX2 = x + _limitX;
+            int fY2 = y + _limitY;
+
+            Storage.Instance.SetZonaField(fX, fY, fX2, fY2);
+           
+        }
+        {
+            float limitH = _limitHorizontalLook / 2;
+            float limitV = _limitVerticalLook / 2;
+
+            float rX = xH - (_limitX * scale);
+            float rY = yH + (_limitY * scale);
+            float margin = 0.1f;
+            if (rX < 0)
+            {
+                rX = 0.1f;
+                limitH -= margin;
+            }
+            if (rY > 0)
+            {
+                rY = -0.1f;
+                limitV -= margin;
+            }
+            int LevelX = Helper.WidthLevel * scale;
+            int LevelY = Helper.HeightLevel * scale;
+
+            float rX2 = xH + (limitH * scale);
+            float rY2 = yH - (limitV * scale);
+            if (rX2 > LevelX) rX2 = LevelX;
+            if (rY2 > LevelY) rY2 = LevelY;
+
+            Storage.Instance.SetZonaRealLook(rX, rY, rX2, rY2);
+            //if(DrawGeom!=null)
+            //    DrawGeom.DrawRect(rX, rY, rX2, rY2);
+        }
+    }
 }
