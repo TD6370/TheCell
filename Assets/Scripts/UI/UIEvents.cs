@@ -10,9 +10,8 @@ using UnityEngine.UI;
 
 
 //[RequireComponent(System.Type type)]
-
 //Attributes:
-//Header("_text")]
+//[Header("_text")]
 //    public Vector2 range = new Vector2(0.1f, 1);
 //[Tooltip(_text")]
 //[ContextMenuItem("Reset", "resetTheValue")]
@@ -30,7 +29,29 @@ public class UIEvents : MonoBehaviour {
     public bool IsTrackPointsVisible = false;
     public int LimitLogView = 10;
 
-    public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
+    public Text txtMessage;         //Store a reference to the UI Text component which will display the 'You win' message.
+   
+    public string SetTittle
+    {
+        get
+        {
+            return txtMessage.text;
+        }
+        set
+        {
+            txtMessage.text = value;
+        }
+    }
+    public string SetMessageBox
+    {
+        set
+        {
+            PanelMessage.SetActive(true);
+            MessageBox.text = value;
+        }
+    }
+
+
     public Text txtLog;
     public Button btnExit;
     public Button btnTest;
@@ -65,9 +86,6 @@ public class UIEvents : MonoBehaviour {
     [Header("Menu Command")]
     public Dropdown dpnMenuCommandTest;
 
-    public Camera MainCamera;
-
-    private SaveLoadData m_scriptData;
     //private List<string> m_CommandLogList = new List<string>();
     private List<string> m_ListLog = new List<string>();
 
@@ -75,21 +93,14 @@ public class UIEvents : MonoBehaviour {
     private float DelayTimer = 0F;
     private int _CounterRealObj = 0;
 
+    int allFPS = 0;
+    int countFPS = 0;
+    int itogFPS = 0;
+    int itogPool = 0;
+    int itogPoolObject = 0;
+
     void Awake()
     {
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("UIEvents: Error MainCamera null");
-            return;
-        }
-        m_scriptData = MainCamera.GetComponent<SaveLoadData>();
-        if (m_scriptData == null)
-        {
-            Debug.Log("UIEvents: Error scriptData is null !!!");
-            return;
-        }
-
         btnExit.onClick.AddListener(delegate
         {
 
@@ -136,16 +147,6 @@ public class UIEvents : MonoBehaviour {
         });
 
         btnTest.onClick.AddListener(TestClick);
-
-
-        //string typePrefub = this.gameObject.tag.ToString();
-
-        //SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
-        //if (Helper.IsTerra(typePrefab))
-        //{
-
-        //}
-
     }
 
     // Use this for initialization
@@ -235,61 +236,7 @@ public class UIEvents : MonoBehaviour {
 
     int m_savecountInPool = 0;
 
-
-    IEnumerator CalculateTagsInPool()
-    {
-        yield break;
-
-        while(true)
-        {
-            yield return new WaitForSeconds(5f);
-            if (PoolGameObjects.IsStack)
-            {
-
-                int countInPool = Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value).Count();
-                if (m_savecountInPool != countInPool)
-                {
-                    Debug.Log("-------------------- all pools Key:------------------------");
-                    m_savecountInPool = countInPool;
-
-                    var respools = Storage.Pool.PoolGamesObjectsStack;
-                    foreach (var itemP in respools)
-                    {
-                        Debug.Log("-------------------- Key: " + itemP.Key + "   = " + itemP.Value.Count);
-                    }
-                }
-            }
-        }
-    }
-
-    //public bool IsMeTerra = false;
-
-    //private void AlphaTerra()
-    //{
-
-
-    //    string typePrefub = this.gameObject.tag.ToString();
-
-    //    SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
-    //    if(Helper.IsTerra(typePrefab))
-    //    {
-    //        float posHeroY = Storage.PlayerController.transform.position.y;
-    //        float gobjY = this.transform.position.y;
-    //        float dist = Math.Abs(gobjY) - Math.Abs(posHeroY);
-    //        bool isNear = false;
-    //        if (dist < 5)
-    //            isNear = true;
-
-    //        if (gobjY > posHeroY && isNear)
-    //        {
-    //            Single _alpha = 0.5f;
-
-    //            //this.gameObject.GetComponent<SpriteRenderer>().color;
-    //            this.gameObject.SetAlpha(_alpha);
-    //        }
-    //    }
-    //}
-
+    
     public string ListLogToString
     {
         get
@@ -347,17 +294,39 @@ public class UIEvents : MonoBehaviour {
     }
 
 
+    public void PlayerPressEscape()
+    {
+        ExitProgramm();
+    }
+
+    private void ExitProgramm()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public void SetCountText(int count)
+    {
+        int limitEndGame = 150;
+        SetTittle = "Count: " + count.ToString() + " / " + limitEndGame;
+
+        if (count >= limitEndGame)
+        {
+            SetTittle = "You win! :" + count;
+            Storage.PlayerController.EndGame();
+        }
+    }
+
     private void ExitGame()
     {
         Storage.Disk.SaveLevel();
 
         Storage.Player.SavePosition();
 
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        ExitProgramm();
     }
 
     public string GetSelectCommandName
@@ -408,10 +377,6 @@ public class UIEvents : MonoBehaviour {
         Storage.Instance.SelectGameObjectID = tbxTest.text;
     }
 
-    public void ReloadWorld()
-    {
-        StartCoroutine(StartReloadWorld());
-    }
 
     public void CommandExecute(string selectCommand)
     {
@@ -424,19 +389,9 @@ public class UIEvents : MonoBehaviour {
                 Sprite[] _sprites = Storage.Map.GetSpritesAtlasMapPrefab();
                 foreach (var item in _sprites)
                 {
-                    //Storage.Map.CreateCell(item);
-                    //Storage.PaletteMap.CreateCellPalette(item);
-                    
-                    Storage.PaletteMap.CreateCellPalette2(item);
+                    Storage.PaletteMap.CreateCellPalette(item);
                 }
-                //Texture2D texturePrefab = Storage.Map.GetPrefabTexture(SaveLoadData.TypePrefabs.PrefabField);
-                //Storage.PaletteMap.CreateCellPalette(texturePrefab);
-                //foreach (var item in Storage.Palette.TexturesMaps)
-                //{
-                //    Storage.PaletteMap.CreateCellPalette(item.Value);
-                //}
-
-                
+               
                 break;
             case "SaveWorld":
                 SetTittle = "Level saving...";
@@ -460,7 +415,7 @@ public class UIEvents : MonoBehaviour {
                 //SetTittle = "Level loading...";
                 //Storage.Instance.LoadLevels();
                 //SetTittle = "Level loaded.";
-                ReloadWorld();
+                Storage.Instance.ReloadWorld();
                 break;
             case "CreateWorld":
                 SetTittle = "Create Level...";
@@ -536,14 +491,7 @@ public class UIEvents : MonoBehaviour {
                 Storage.GamePause = true;
                 Storage.Instance.StopGame();
                 Storage.GridData.CreateDataGamesObjectsExtremalWorld();
-                //Storage.GridData.CreateDataGamesObjectsExtremalTerraWorldProgress();
-                //Storage.GamePause = false;
-                //Storage.Instance.IsLoadingWorld = true;
-                //Storage.Instance.LoadGameObjects(true);
-                //Storage.Instance.LoadData();
-                //Storage.GenGrid.LoadObjectsNearHero();
-                //Storage.Instance.IsLoadingWorld = false;
-                ReloadWorld();
+                Storage.Instance.ReloadWorld();
                 Storage.GenGrid.LoadObjectsNearHero();
                 break;
             case "LoadPrefabsOnPalette":
@@ -557,7 +505,7 @@ public class UIEvents : MonoBehaviour {
                 IsProfilerUI = !IsProfilerUI;
                 //Storage.Events.ListLogAdd = "Profiler.usedHeapSize: " + Profiler.usedHeapSize.ToString();
                 string str = IsProfilerUI ? "On" : "Off";
-                Storage.Events.ListLogAdd = "ProfilerUI is " + str;
+                Storage.EventsUI.ListLogAdd = "ProfilerUI is " + str;
                 if (IsProfilerUI)
                 {
                     
@@ -577,20 +525,10 @@ public class UIEvents : MonoBehaviour {
         }
 
         ListLogAdd = "CALL >> " + selectCommand;
-
-        //m_CommandLogList.Add(selectCommand);
-
     }
 
-
-
-    public void CommandExecutePerson(string selectCommand, GameObject gobjObservable, ModelNPC.GameDataNPC dataNPC, string _gobjID = "")
+    public void CommandExecutePerson(string selectCommand, GameObject gobjObservable, ModelNPC.GameDataNPC dataNPC)
     {
-        //if(gobjObservable == null)
-        //{
-        //    Debug.Log("############ CommandExecuteParson(" + selectCommand  + ") : gobjObservable is Empty");
-        //    return;
-        //}
         MovementNPC movem = null;
         if (gobjObservable != null)
             movem = gobjObservable.GetComponent<MovementNPC>();
@@ -613,13 +551,6 @@ public class UIEvents : MonoBehaviour {
                 movem.Pause();
                 break;
             case "Kill":
-                //EventsObject scriptEvents = gobjObservable.GetComponent<EventsObject>();
-                //if (scriptEvents == null)
-                //{
-                //    Debug.Log("############ CommandExecuteParson(" + selectCommand + ") : " + gobjObservable.name + " scriptEvents is Empty");
-                //    return;
-                //}
-                //scriptEvents.Kill();
                 if (gobjObservable != null)
                     Storage.Instance.AddDestroyGameObject(gobjObservable);
                 break;
@@ -634,7 +565,6 @@ public class UIEvents : MonoBehaviour {
                 movem.TrackOn();
                 break;
             case "GoTo":
-                //Storage.Instance.HeroObject
                 Vector2 posTeleport = new Vector2();
                 if (gobjObservable != null)
                 {
@@ -649,9 +579,7 @@ public class UIEvents : MonoBehaviour {
                     }
                     posTeleport = dataNPC.Position;
                 }
-                //Storage.PlayerController.transform.position  =
                 Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
-                //Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
                 break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
@@ -688,43 +616,20 @@ public class UIEvents : MonoBehaviour {
 
     public void CreateCommandLogText(string p_text, Color color, Transform p_parent)
     {
-        
-
-        //string nameGO = "text" + p_text.Replace(" ", "-");
         Vector3 pos = new Vector3(0, 0, 0);
         Text resGO = (Text)Instantiate(prefabText, pos, Quaternion.identity);
-        //resGO.name = nameGO;
         resGO.text = p_text;
         resGO.transform.SetParent(p_parent);
-
         //Debug.Log("CreateCommandLogText : " + p_text);
     }
 
-    //public void CreateListButtton(string p_text, Color color, Transform p_parent, Delegate action)
-    //{
-    //    //string nameGO = "text" + p_text.Replace(" ", "-");
-    //    Vector3 pos = new Vector3(0, 0, 0);
-    //    Button resGO = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
-    //    //resGO.name = nameGO;
-    //    resGO.GetComponent<Text>().text = p_text;
-    //    resGO.transform.SetParent(p_parent);
-    //    resGO.onClick.AddListener(delegate {
-    //        action()
-    //    });
-
-    //    //Debug.Log("CreateCommandLogText : " + p_text);
-    //}
     public void CreateListButtton(string p_text, Transform p_parent, out Button resGO, out Button btnSubCommand)
     {
-        //string nameGO = "text" + p_text.Replace(" ", "-");
         Vector3 pos = new Vector3(0, 0, 0);
         resGO = (Button)Instantiate(prefabButtonCommand, pos, Quaternion.identity);
-        //resGO.name = nameGO;
-        //resGO.GetComponent<Text>().text = p_text;
         resGO.GetComponentInChildren<Text>().text = p_text;
         resGO.transform.SetParent(p_parent);
 
-        //btnSubCommand = (Button)resGO.GetComponentInChildren<Button>();//btnSubCommand.name!= "btnSubCommand"
         Button btnSub = null;
         foreach (Transform itemSub in resGO.transform)
         {
@@ -737,16 +642,9 @@ public class UIEvents : MonoBehaviour {
         btnSubCommand = btnSub as Button;
 
         if (btnSubCommand != null)
-        {
-            //btnSubCommand
             btnSubCommand.gameObject.SetActive(true);
-        }
         else
-        {
-            Storage.Events.ListLogAdd = "#### btnSubCommand is null";
-        }
-
-        //Debug.Log("CreateCommandLogText : " + p_text);
+            Storage.EventsUI.ListLogAdd = "#### btnSubCommand is null";
     }
 
     public void CreateCommandLogButton(string p_text, Color color, Transform p_parent, GameObject gobjObservable = null, bool isValidExistCommand = false, ExpandControl expControl = null)
@@ -861,7 +759,7 @@ public class UIEvents : MonoBehaviour {
                         dataObs = gobjObservable.GetDataNPC();
                     
 
-                    CommandExecutePerson(textBtn, gobjObservable, dataObs, _gobjID);
+                    CommandExecutePerson(textBtn, gobjObservable, dataObs);
                 }
                 else
                 {
@@ -899,11 +797,8 @@ public class UIEvents : MonoBehaviour {
 
     }
 
-    int allFPS = 0;
-    int countFPS = 0;
-    int itogFPS = 0;
-    int itogPool = 0;
-    int itogPoolObject = 0;
+   
+
     IEnumerator CalculateProfiler()
     {
         while (true)
@@ -933,80 +828,6 @@ public class UIEvents : MonoBehaviour {
             }
         }
 
-    }
-
-
-    //public void CreateMessage(string text, Color color)
-    //{
-    //    if (color == null)
-    //    {
-    //        color = Color.green;
-    //    }
-    //    if (text == null)
-    //    {
-    //        text = "";
-    //    }
-
-    //    GameObject UItextGO = new GameObject(text.Replace(" ", "-"), typeof(RectTransform));
-    //    var newTextComp = UItextGO.AddComponent<Text>();
-    //    var canvas = UItextGO.AddComponent<CanvasRenderer>();
-    //    var transf = UItextGO.AddComponent<Transform>();
-    //    //canvas.transform
-
-    //    //Text newText = transform.gameObject.AddComponent<Text>();
-    //    newTextComp.text = text;
-    //    //newTextComp.font = fontMessage;
-    //    newTextComp.color = color;
-    //    newTextComp.alignment = TextAnchor.MiddleCenter;
-    //    newTextComp.fontSize = 10;
-
-    //    UItextGO.transform.SetParent(contentList.transform);
-    //}
-
-    //GameObject CreateText(string text, Color text_color)
-    //{
-    //    float x = 10;
-    //    float y = 10;
-    //    int font_size = 13;
-
-    //    GameObject UItextGO = new GameObject(text.Replace(" ", "-"));
-    //    UItextGO.transform.SetParent(contentList.transform);
-    //    UItextGO.transform.SetParent(textListLogs.transform);
-
-
-    //    RectTransform trans = UItextGO.AddComponent<RectTransform>();
-    //    trans.anchoredPosition = new Vector2(x, y);
-    //    trans.sizeDelta = new Vector2(50, 200);
-
-    //    Text newTextComp = UItextGO.AddComponent<Text>();
-    //    newTextComp.text = text;
-    //    newTextComp.fontSize = font_size;
-    //    newTextComp.color = text_color;
-
-    //    UItextGO.SetActive(true);
-
-    //    return UItextGO;
-    //}
-
-    IEnumerator StartReloadWorld()
-    {
-        bool isSave = false;
-        while(!isSave)
-        {
-            yield return null;
-
-            yield return new WaitForSeconds(0.3f);
-
-            SetTittle = "Level saving...";
-            Storage.Disk.SaveLevel();
-
-            yield return new WaitForSeconds(0.3f);
-
-            isSave = true;
-        }
-        SetTittle = "Level loading...";
-        Storage.Instance.LoadLevels();
-        SetTittle = "Level loaded.";
     }
 
     public void SetTestText(string text)
@@ -1045,16 +866,8 @@ public class UIEvents : MonoBehaviour {
 
             //Debug.Log("ME " + newNameExpand + "  FIND: " + nameExp);
             scriptExp.ExpandPanelOn(true, p_isOpen: false);
-            //Debug.Log("ME " + newNameExpand + "  IsOpen=" + scriptExp.IsOpen);
-            //else
-            //    scriptExp.SetColorText("#FFFA00");
-
         }
-        //ExpandControl scriptExpand = resultFind.GetExpandControl();
-        //scriptExpand.SetColorText("#FFFA00");
-        //scriptExpand.ExpandPanelOn(p_isOpen: true);
-        //}
-
+   
         if (resultFind != null)
         {
             ExpandControl scriptExpand = resultFind.GetExpandControl();
@@ -1094,8 +907,6 @@ public class UIEvents : MonoBehaviour {
         scriptEvents.SetColorText(ColorExpOpen);
         scriptEvents.ExpandPanelOn(p_isOpen: true);
 
-        //var scroll = ScrollListBoxPerson;
-        //var scrollbar = expandGO.GetComponentInChildren<Scrollbar>();
         var scrollbar = ListBoxExpandPerson.GetComponentInChildren<Scrollbar>();
         
         if (scrollbar==null)
@@ -1209,65 +1020,56 @@ public class UIEvents : MonoBehaviour {
 
         float x = -1f;
         float y = -1f;
-        foreach (var posStr in positInput)
-        {
-            float posInt = -1f;
-            if(x==-1f)
-            {
-                if(!float.TryParse(posStr, out x))
-                {
-                    Debug.Log("######## GetPositTeleport posStr X not valid: [" + posStr + "]");
-                    break;
-                }
-            }
-            else
-            {
-                if (!float.TryParse(posStr, out y))
-                {
-                    Debug.Log("######## GetPositTeleport posStr Y not valid: [" + posStr + "]");
-                    break;
-                }
-            }
-        }
-        if(x!=-1f && y!=-1f)
-        {
+        if (positInput.Count() > 1) {
+            float.TryParse(positInput[0], out x);
+            float.TryParse(positInput[1], out y);
+        }else
+            Debug.Log("######## GetPositTeleport posStr X or Y not valid: [" + tbxTest.text + "]");
+
+        if(x!=-1f && y!=-1f) 
             posTeleport = new Vector2(x, y);
-        }
-        else
-        {
+        else  
             Debug.Log("######## GetPositTeleport NOT teleporting !!!");
-        }
         return posTeleport;
     }
 
     public void AddMenuPerson(ModelNPC.GameDataNPC _dataNPC, GameObject gobj)
     {
-        Storage.Events.AddExpandPerson(_dataNPC.NameObject,
+        AddExpandPerson(_dataNPC.NameObject,
             _dataNPC.GetParams,
             new List<string> { "GoTo", "Kill", "Pause", "StartTrack" },
             gobjObservable: gobj);
     }
 
-    public string SetTittle
-    {
-        get
-        {
-            return txtMessage.text;
-        }
-        set
-        {
-            txtMessage.text = value;
-        }
-    }
-
-    public void SetMessage(string message)
-    {
-        PanelMessage.SetActive(true);
-        MessageBox.text = message;
-    }
     public void HideMessage()
     {
         PanelMessage.SetActive(false);
+    }
+
+    IEnumerator CalculateTagsInPool()
+    {
+        yield break;
+
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+            if (PoolGameObjects.IsStack)
+            {
+
+                int countInPool = Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value).Count();
+                if (m_savecountInPool != countInPool)
+                {
+                    Debug.Log("-------------------- all pools Key:------------------------");
+                    m_savecountInPool = countInPool;
+
+                    var respools = Storage.Pool.PoolGamesObjectsStack;
+                    foreach (var itemP in respools)
+                    {
+                        Debug.Log("-------------------- Key: " + itemP.Key + "   = " + itemP.Value.Count);
+                    }
+                }
+            }
+        }
     }
 
 }
@@ -1277,9 +1079,6 @@ public class CommandStore
     public List<string> CommadsTemplate { get; set; }
 }
 
-
-
-
 public static class EventsExtensions
 {
     public static ExpandControl GetExpandControl(this GameObject exp)
@@ -1288,3 +1087,54 @@ public static class EventsExtensions
     }
 }
 
+//public void CreateMessage(string text, Color color)
+//{
+//    if (color == null)
+//    {
+//        color = Color.green;
+//    }
+//    if (text == null)
+//    {
+//        text = "";
+//    }
+
+//    GameObject UItextGO = new GameObject(text.Replace(" ", "-"), typeof(RectTransform));
+//    var newTextComp = UItextGO.AddComponent<Text>();
+//    var canvas = UItextGO.AddComponent<CanvasRenderer>();
+//    var transf = UItextGO.AddComponent<Transform>();
+//    //canvas.transform
+
+//    //Text newText = transform.gameObject.AddComponent<Text>();
+//    newTextComp.text = text;
+//    //newTextComp.font = fontMessage;
+//    newTextComp.color = color;
+//    newTextComp.alignment = TextAnchor.MiddleCenter;
+//    newTextComp.fontSize = 10;
+
+//    UItextGO.transform.SetParent(contentList.transform);
+//}
+
+//GameObject CreateText(string text, Color text_color)
+//{
+//    float x = 10;
+//    float y = 10;
+//    int font_size = 13;
+
+//    GameObject UItextGO = new GameObject(text.Replace(" ", "-"));
+//    UItextGO.transform.SetParent(contentList.transform);
+//    UItextGO.transform.SetParent(textListLogs.transform);
+
+
+//    RectTransform trans = UItextGO.AddComponent<RectTransform>();
+//    trans.anchoredPosition = new Vector2(x, y);
+//    trans.sizeDelta = new Vector2(50, 200);
+
+//    Text newTextComp = UItextGO.AddComponent<Text>();
+//    newTextComp.text = text;
+//    newTextComp.fontSize = font_size;
+//    newTextComp.color = text_color;
+
+//    UItextGO.SetActive(true);
+
+//    return UItextGO;
+//}

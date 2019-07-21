@@ -166,3 +166,10 @@ F:\Projects\TheCell\Temp\bin\Debug\System.Xml.Linq.dll
 F:\Projects\TheCell\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
 F:\Projects\TheCell\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
 F:\Projects\TheCell\obj\Debug\Assembly-CSharp.csproj.CopyComplete
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Animation.Editor.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Animation.Runtime.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Common.Editor.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Common.Runtime.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Triangle.Runtime.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.InternalAPIEditorBridge.001.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.InternalAPIEngineBridge.001.dll

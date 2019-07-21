@@ -221,6 +221,29 @@ public class DrawGeometry : MonoBehaviour
     //============================
     #endregion
 
+    IEnumerator AminateAlphaColor(GameObject obj)
+    {
+        while (true)
+        {
+            var color = obj.GetComponent<Renderer>().material.color;
+            for (float i = 1; i >= 0; i -= 0.1f)
+            {
+                color.a = i;
+                obj.GetComponent<Renderer>().material.color = color;
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
+            for (float i = 0; i < 1; i += 0.1f)
+            {
+                color.a = i;
+                obj.GetComponent<Renderer>().material.color = color;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 
     public void ParallaxOn()
     {
@@ -306,6 +329,75 @@ public class DrawGeometry : MonoBehaviour
                     //}
                 }
             }
+        }
+    }
+
+    //public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
+    //{
+    //    foreach(var point in trackPoints)
+    //    {
+    //        Debug.Log("DrawPolyLine Point : " + point);
+    //    }
+    //    Handles.DrawPolyLine(trackPoints.ToArray());
+    //}
+
+    //public static Vector3 PositionHandle(Vector3 position, Quaternion rotation)
+    //{
+    //    float handleSize = HandleUtility.GetHandleSize(position);
+    //    Color color = Handles.color;
+    //    Handles.color = Handles.xAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.right, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.x);
+    //    Handles.color = Handles.yAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.up, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.y);
+    //    Handles.color = Handles.zAxisColor;
+    //    position = Handles.Slider(position, rotation * Vector3.forward, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.z);
+    //    Handles.color = Handles.centerColor;
+    //    position = Handles.FreeMoveHandle(position, rotation, handleSize * 0.15f, SnapSettings.move, new Handles.DrawCapFunction(Handles.RectangleCap));
+    //    Handles.color = color;
+    //    return position;
+    //}
+
+    private void DrawRect(float x, float y, float x2, float y2)
+    {
+        //return;
+        //LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        //lineRenderer.SetColors(c1, c2);
+        lineRenderer.SetColors(Color.green, Color.green);
+        lineRenderer.SetWidth(0.2F, 0.2F);
+        int size = 5;
+        lineRenderer.SetVertexCount(size);
+
+        Vector3 pos1 = new Vector3(x, y, -2);
+        lineRenderer.SetPosition(0, pos1);
+        Vector3 pos2 = new Vector3(x2, y, -2);
+        lineRenderer.SetPosition(1, pos2);
+        Vector3 pos3 = new Vector3(x2, y2, -2);
+        lineRenderer.SetPosition(2, pos3);
+        Vector3 pos4 = new Vector3(x, y2, -2);
+        lineRenderer.SetPosition(3, pos4);
+        Vector3 pos5 = new Vector3(x, y, -2);
+        lineRenderer.SetPosition(4, pos5);
+    }
+
+    void StartGenCircle(GameObject prefabCompas, int numberOfObjects = 10, float radius = 0.1f)
+    {
+        for (int i = 0; i < numberOfObjects; i++)
+        {
+            float angle = i * Mathf.PI * 2 / numberOfObjects;
+
+            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+
+            pos += new Vector3(10, -5, 0);
+
+            Instantiate(prefabCompas, pos, Quaternion.identity);
         }
     }
 

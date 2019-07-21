@@ -177,8 +177,6 @@ public class ExpandControl : MonoBehaviour {
 		
 	}
 
-
-
     private void ButtonExpandOnClick()
     {
         SelectedObserver();
@@ -238,38 +236,25 @@ public class ExpandControl : MonoBehaviour {
             Debug.Log("############# ExpandPanelOn scriptExpand is empty " + gobjExpandLast.name);
             yield break;
         }
-        else
-        {
-            //var tittle = scriptExpand.TittleExpand;
-        }
-
         yield return new WaitForEndOfFrame();
 
         scriptExpand.ExpandPanelOn(true);
         gobjExpandLast.transform.SetAsLastSibling();
 
-        //yield return new WaitForEndOfFrame();
-
         scriptExpand.ExpandPanelOn(true);
         gobjExpandLast.transform.SetAsLastSibling();
-
-        //Debug.Log("############# ExpandPanelOn scriptExpand is empty " + gobjExpandLast.name);
     }
 
-    public void SetGameObject(GameObject gobjObservable, string maneTittle)
+    public void SetGameObject(GameObject gobjObservable, string nameTittle)
     {
         if(gobjObservable==null)
         {
-            Debug.Log("...... ExpandControl: SetGameObject is Empty : " + maneTittle);
+            Debug.Log("...... ExpandControl: SetGameObject is Empty : " + nameTittle);
             return;
         }
 
         string nameObservable = gobjObservable.name;
-        //Debug.Log("ExpandControl: SetGameObject : " + nameObservable);
-
-        //m_gobjObservable = gobjObservable;
-
-        ID = Helper.GetID(gobjObservable.name);
+         ID = Helper.GetID(gobjObservable.name);
     }
 
 
@@ -297,13 +282,13 @@ public class ExpandControl : MonoBehaviour {
         foreach (string selectCommand in listCommand)
         {
             //Debug.Log("AddList CreateCommandLogButton : " + selectCommand);
-            Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, false, this);
+            Storage.EventsUI.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, false, this);
             //Storage.Events.CreateCommandLogButton(selectCommand, Color.white, ContentExpandList.transform, m_gobjObservable, true);
         }
         foreach (string text in listText)
         {
             //Debug.Log("AddList CreateCommandLogText : " + text);
-            Storage.Events.CreateCommandLogText(text, Color.white, ContentExpandList.transform);
+            Storage.EventsUI.CreateCommandLogText(text, Color.white, ContentExpandList.transform);
         }
     }
 
@@ -342,7 +327,7 @@ public class ExpandControl : MonoBehaviour {
         if (m_gobjObservable == null)
         {
             //Storage.Events.ListLogAdd = "SelectedObserver EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
-            Storage.Events.ListLogAdd = "EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
+            Storage.EventsUI.ListLogAdd = "EMPTY(" + this.gameObject.name + ") : " + m_storeNameObservable;
             SetColorText(UIEvents.ColorAlert);
             return null;
         }

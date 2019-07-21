@@ -12,8 +12,9 @@ using System.Xml.Linq;
 
 public class Storage : MonoBehaviour {
 
-
-    
+    private CompletePlayerController _screiptHero;
+    private CreateNPC _scriptNPC;
+    private UIEvents _scriptUIEvents;
 
     public static string FieldKey
     {
@@ -44,11 +45,14 @@ public class Storage : MonoBehaviour {
     public GameObject UIController;
     public GameObject FramePaletteMap;
     public GameObject ContentGridPaletteMap;
-    
+    private GameObject DataStorage {
+        get { return gameObject; }
+    }
+
     //_scriptEvents = UIController.GetComponent<UIEvents>();
 
-    public ZonaFieldLook ZonaField { get; set; }
-    public ZonaRealLook ZonaReal { get; set; }
+    public ZonaFieldLook ZonaField { get; private set; }
+    public ZonaRealLook ZonaReal { get; private set; }
     public List<string> KillObject = new List<string>();
     public List<GameObject> DestroyObjectList;
     public bool IsCorrectData = false;
@@ -158,7 +162,7 @@ public class Storage : MonoBehaviour {
         get { return Instance._scriptData; }
     }
 
-    public static UIEvents Events
+    public static UIEvents EventsUI
     {
         get { return Instance._scriptUIEvents; }
     }
@@ -191,44 +195,7 @@ public class Storage : MonoBehaviour {
 
     public static Storage Instance { get; private set; }
 
-    private int _limitHorizontalLook = 22;
-    public int LimitHorizontalLook
-    {
-        get { return _limitHorizontalLook; }
-    }
-    private int _limitVerticalLook = 18;
-    public int LimitVerticalLook
-    {
-        get { return _limitVerticalLook; }
-    }
-
-    private int _heroPositionX = 0;
-    public int HeroPositionX
-    {
-        get { return _heroPositionX; }
-    }
-    private int _heroPositionY = 0;
-    public int HeroPositionY
-    {
-        get { return _heroPositionY; }
-    }
-
-    //private SaveLoadData.LevelData _personsData;
-    //public SaveLoadData.LevelData PersonsData
-    //{
-    //    get { return _personsData; }
-    //}
-
     public Dictionary<string, GameObject> Fields;
-
-    //private Dictionary<string, List<SaveLoadData.ObjectData>> _GamesObjectsPersonalData;
-    //public Dictionary<string, List<SaveLoadData.ObjectData>> GamesObjectsPersonalData
-    //{
-    //    get
-    //    {
-    //        return _GamesObjectsPersonalData;
-    //    }
-    //}
 
     private Dictionary<string, List<GameObject>> _GamesObjectsReal = null;
     public Dictionary<string, List<GameObject>> GamesObjectsReal
@@ -265,7 +232,7 @@ public class Storage : MonoBehaviour {
     {
         get { return _datapathTiles; }
     }
-    
+
 
     private string _datapathUserData = null;
     public string DataPathUserData
@@ -314,22 +281,11 @@ public class Storage : MonoBehaviour {
         }
     }
 
-
-
-    private CompletePlayerController _screiptHero;
-    //public CompletePlayerController PlayerController
-    //{
-    //    get
-    //    {
-    //        return _screiptHero;
-    //    }
-    //}
-
-
-    private CreateNPC _scriptNPC;
-    private UIEvents _scriptUIEvents;
-
-
+    public static bool IsGridDataFieldExist(string field)
+    {
+        return Instance._GridDataG.FieldsD.ContainsKey(field);
+    }
+    
     //public static Storage Instance { get; private set; }
     public void Awake()
     {
@@ -422,27 +378,19 @@ public class Storage : MonoBehaviour {
         }
 
         //Reinit Component
-        _StorageCorrect = gameObject.GetComponent<StorageCorrect>();
+        _StorageCorrect = DataStorage.GetComponent<StorageCorrect>();
         if (_StorageCorrect != null)
         {
             //Debug.Log("InitObjectsGrid Destroy(_StorageCorrect) __________________________");
             Destroy(_StorageCorrect);
         }
-        _StorageCorrect = gameObject.AddComponent<StorageCorrect>();
-
+        _StorageCorrect = DataStorage.AddComponent<StorageCorrect>();
 
         //Reinit Component
-        //_StoragePerson = gameObject.GetComponent<StoragePerson>();
         _StoragePerson = MainCamera.GetComponent<StoragePerson>();
-        //#fix atlas
-        //if (_StoragePerson != null)
-        //{
-        //    Destroy(_StoragePerson);
-        //}
-        //_StoragePerson = gameObject.AddComponent<StoragePerson>();
         _StoragePerson.PersonsDataInit();
 
-        _Palette = gameObject.GetComponent<ManagerPalette>();
+        _Palette = DataStorage.GetComponent<ManagerPalette>();
         if (_Palette == null)
         {
             Debug.Log("########## InitComponents _Palette is Empty");
@@ -467,7 +415,7 @@ public class Storage : MonoBehaviour {
         //    return;
         //}
 
-        _TilesManager = gameObject.GetComponent<DataTilesManager>();
+        _TilesManager = DataStorage.GetComponent<DataTilesManager>();
         if (_TilesManager == null)
         {
             Debug.Log("########## InitComponents _TilesManager is Empty");
@@ -496,7 +444,6 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DiskData is Empty");
             return;
         }
-        
 
         //_PoolObgects
         //DrawGeometry 
@@ -507,13 +454,10 @@ public class Storage : MonoBehaviour {
         //Debug.Log("III InitObjectsGrid_______________");
         Fields = new Dictionary<string, GameObject>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
-        //_GridDataG = new SaveLoadData.GridData();
-
 
         _StorageLog = new StorageLog();
         _StorageLog.Init();
         _UpdateData = new UpdateData();
-        //_StorageCorrect = new StorageCorrect();
 
         DestroyObjectList = new List<GameObject>();
     }
@@ -546,8 +490,6 @@ public class Storage : MonoBehaviour {
         Storage.Pool.Restart();
 
         InitObjectsGrid();
-
-        
     }
 
     public void CreateWorld(bool isGenNewWorld = false)
@@ -560,23 +502,11 @@ public class Storage : MonoBehaviour {
     {
         Debug.Log("III LoadGameObjects ::::_______________");
 
-        //TTTT
-        //_screiptHero.FindFieldCurrent();
-        //Storage.Player.RestructGrid();
-
-        //_scriptGrid.StartGenGrigField(isLoadRealtime);
-
-        //--------------------- OLD -------------------
-        //_screiptHero.FindFieldCurrent();
-        //_scriptGrid.StartGenGrigField(true);
-        //------------------------------
-
         //--------------------- NEW -------------------
         _screiptHero.FindFieldCurrent(true);
         _scriptGrid.StartGenGrigField(true);
         _screiptHero.FindFieldCurrent();
         //------------------------------
-
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         if (isGenNewWorld)
@@ -587,15 +517,6 @@ public class Storage : MonoBehaviour {
         {
             _scriptData.CreateDataGamesObjectsWorld(isCreate);
         }
-
-        //Debug.Log("III ....Init Position HERO......");
-        //_screiptHero.FindFieldCurrent();
-
-        //if (!isLoadRealtime)
-        //{
-        //    Debug.Log("....................._scriptGrid.StartGenGrigField(true)");
-        //    _scriptGrid.StartGenGrigField(true);
-        //}
 
         if (isLoadRealtime)
             StartCoroutine(StartFindLookObjects());
@@ -640,40 +561,7 @@ public class Storage : MonoBehaviour {
         //Debug.Log("III ....Sart Crate NPC......");
         _scriptNPC.SartCrateNPC();
     }
-
-    // Update is called once per frame
-
-    //public static void SetGridData(SaveLoadData.GridData p_GridData)
-    //{
-    //    _GridData = p_GridData;
-    //}
-    //public static void SetGamesObjectsReal(Dictionary<string, List<GameObject>> p_GamesObjectsReal)
-    //{
-    //    _GamesObjectsReal = p_GamesObjectsReal;
-    //}
-
-    //public void LoadData()
-    //{
-    //    if (File.Exists(_datapathLevel))
-    //    {
-    //        _GridDataG = Serializator.LoadGridXml(_datapathLevel);
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("# LoadPathData not exist: " + _datapathLevel);
-    //    }
-
-    //    _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
-    //    if (File.Exists(_datapathPerson))
-    //    {
-    //        var _personsData = Serializator.LoadPersonXml(_datapathPerson);
-    //        _StoragePerson.PersonsDataInit(_personsData);
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("# LoadPathData not exist: " + _datapathPerson);
-    //    }
-    //}
+       
 
     public void LoadData()
     {
@@ -717,77 +605,54 @@ public class Storage : MonoBehaviour {
         }
     }
 
-    //return LoadGridPartsXml();
-
-    public void SetHeroPosition(int x, int y, float xH, float yH)
+    public void ReloadWorld()
     {
-        //Debug.Log("SetHeroPosition...");
-
-        int scale = 2;
-        _heroPositionX = x;
-        _heroPositionY = y;
-
-        int _limitX = _limitHorizontalLook / 2;
-        int _limitY = _limitVerticalLook / 2;
-        {
-            int fX = x - _limitX;
-            int fY = y - _limitY;
-
-            if (fX < 0) fX = 0;
-            if (fY < 0) fY = 0;
-            int fX2 = x + _limitX;
-            int fY2 = y + _limitY;
-
-            ZonaField = new ZonaFieldLook()
-            {
-                X = fX,
-                Y = fY,
-                X2 = fX2,
-                Y2 = fY2
-            };
-            //Debug.Log("ZonaField: X:" + ZonaField.X + " Y:" + ZonaField.Y + " X2:" + ZonaField.X2 + " Y2:" + ZonaField.Y2);
-        }
-        {
-            float limitH = _limitHorizontalLook / 2;
-            float limitV = _limitVerticalLook / 2;
-
-            float rX = xH - (_limitX * scale);
-            float rY = yH + (_limitY * scale);
-            float margin = 0.1f;
-            if (rX < 0)
-            {
-                rX = 0.1f;
-                limitH -= margin;
-            }
-            if (rY > 0)
-            {
-                rY = -0.1f;
-                limitV -= margin;
-            }
-            int LevelX = Helper.WidthLevel * scale;
-            int LevelY = Helper.HeightLevel * scale;
-
-            float rX2 = xH + (limitH * scale);
-            float rY2 = yH - (limitV * scale);
-            if (rX2 > LevelX) rX2 = LevelX;
-            if (rY2 > LevelY) rY2 = LevelY;
-
-            ZonaReal = new ZonaRealLook()
-            {
-                X = rX,
-                Y = rY,
-                X2 = rX2,
-                Y2 = rY2
-            };
-            //Debug.Log("ZonaReal: X:" + ZonaReal.X + " Y:" + ZonaReal.Y + " X2:" + ZonaReal.X2 + " Y2:" + ZonaReal.Y2);
-            //Draw result
-            //DrawRect(rX,rY,rX2,rY2);
-
-            //if(DrawGeom!=null)
-            //    DrawGeom.DrawRect(rX, rY, rX2, rY2);
-        }
+        StartCoroutine(StartReloadWorld());
     }
 
+    IEnumerator StartReloadWorld()
+    {
+        bool isSave = false;
+        while (!isSave)
+        {
+            yield return null;
+
+            yield return new WaitForSeconds(0.3f);
+
+            EventsUI.SetTittle = "Level saving...";
+            Storage.Disk.SaveLevel();
+
+            yield return new WaitForSeconds(0.3f);
+
+            isSave = true;
+        }
+        EventsUI.SetTittle = "Level loading...";
+        LoadLevels();
+        EventsUI.SetTittle = "Level loaded.";
+    }
+
+    public void SetZonaField(int X, int Y, int X2, int Y2)
+    {
+        ZonaField = new ZonaFieldLook()
+        {
+            X = X,
+            Y = Y,
+            X2 = X2,
+            Y2 = Y2
+        };
+    }
+
+    public void SetZonaRealLook(float X, float Y, float X2, float Y2)
+    {
+        ZonaReal = new ZonaRealLook()
+        {
+            X = X,
+            Y = Y,
+            X2 = X2,
+            Y2 = Y2
+        };
+    }
+ 
     public bool TestExistField(string field)
     {
         if (!_GridDataG.FieldsD.ContainsKey(field))
@@ -798,303 +663,10 @@ public class Storage : MonoBehaviour {
         return true;
     }
 
-
-    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
-    {
-        if (Storage.Instance.IsLoadingWorld && !NotValid)
-        {
-            Debug.Log("_______________ LOADING WORLD ....._______________");
-            return "";
-        }
-
-        if (Storage.Data.IsUpdatingLocationPersonGlobal)
-        {
-            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
-            return "";
-        }
-
-        if (Storage.Instance.IsCorrectData && !NotValid)
-        {
-            Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
-            return "Error";
-        }
-
-        if (_GamesObjectsReal == null || _GamesObjectsReal.Count == 0)
-        {
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("^^^^ UpdatePosition      GamesObjectsReal is EMPTY");
-            return "";
-        }
-        if (_GridDataG == null || _GridDataG.FieldsD == null || _GridDataG.FieldsD.Count == 0)
-        {
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("^^^^ UpdatePosition      GridData is EMPTY");
-            return "";
-        }
-
-        if (!_GamesObjectsReal.ContainsKey(p_OldField))
-        {
-            Debug.Log("********** (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** UpdatePosition      GamesObjectsReal not found OldField = " + p_OldField);
-            if (p_NameObject != null)
-                Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
-
-            Storage.Log.GetHistory(p_NameObject);
-
-            //@@CORRECT
-            //Destroy(thisGameObject, 1f);
-            //return "Error";
-            return "";
-        }
-        if (!_GridDataG.FieldsD.ContainsKey(p_OldField))
-        {
-            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** UpdatePosition      GridData not found OldField = " + p_OldField);
-            return "";
-        }
-
-        List<GameObject> realObjectsOldField = _GamesObjectsReal[p_OldField];
-        List<ModelNPC.ObjectData> dataObjectsOldField = _GridDataG.FieldsD[p_OldField].Objects;
-
-        if (realObjectsOldField == null)
-        {
-            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** UpdatePosition     realObjectsOldField is Null !!!!");
-            if (!_GamesObjectsReal.ContainsKey(p_OldField))
-            {
-                Debug.Log("********** UpdatePosition     in GamesObjectsReal not found OldField = " + p_OldField);
-                return "";
-            }
-            else
-            {
-                _GamesObjectsReal[p_OldField] = new List<GameObject>();
-            }
-            return "";
-        }
-
-        //#TEST -----
-        for (int i = realObjectsOldField.Count - 1; i >= 0; i--)
-        {
-            if (realObjectsOldField[i] == null)
-            {
-                Debug.Log("UGP: (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                Debug.Log("^^^^ UpfatePosition  -- remove destroy realObjects");
-                realObjectsOldField.RemoveAt(i);
-            }
-        }
-        //--------------
-
-        int indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
-        if (indReal == -1)
-        {
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("######## UpfatePosition Not Real object (" + p_NameObject + ") in field: " + p_OldField);
-            if (p_NameObject != null)
-                Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
-
-            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition Not Real");
-
-
-            //return "Error";
-            //var DataObj = Storage.Person.GetFindPersonsDataForName(p_NameObject);
-            //if (DataObj != null)
-            //{
-            //Debug.Log("::::::::::::::::::::::::: Find Pesron DATA: " + p_NameObject + " :::::");
-            //Debug.Log("))))))))) :  [" + DataObj.Field + "][" + DataObj.Index + "] " + DataObj.DataObj);
-
-            Debug.Log("+++++++ Add New Real Object " + thisGameObject + "   in field: "  + p_NewField);
-            Storage.Data.AddRealObject(thisGameObject, p_NewField, "UpdateGamePosition");
-            realObjectsOldField = _GamesObjectsReal[p_NewField];
-            indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
-            if (indReal == -1)
-            {
-                Storage.Log.GetHistory(p_NameObject);
-                return "";
-            }
-        }
-        int indData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
-        if (indData == -1)
-        {
-            //--------------------
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            var posI = thisGameObject.transform.position;
-            string info = " >>>>>> thisGameOobject : " + thisGameObject.name + "       pos = " + Helper.GetNameFieldPosit(posI.x, posI.y);
-
-            Debug.Log("^^^^ UpfatePosition Not DATA object (" + p_NameObject + ") in field: " + p_OldField + "     " + info);
-            foreach (var itemObj in dataObjectsOldField)
-            {
-                Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- object : " + itemObj.NameObject);
-            }
-            if (dataObjectsOldField.Count == 0)
-                Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- objects ZERO !!!!!");
-            //--------------------
-
-            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition IN DATA");
-
-
-            return "Error";
-        }
-        GameObject gobj = realObjectsOldField[indReal];
-        if (gobj == null)
-        {
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("^^^^ UpdatePosition      gobj is Destroy");
-            return "";
-        }
-
-        if (!gobj.Equals(thisGameObject))
-        {
-            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("################ ERROR Not Equals thisGameOobject (" + thisGameObject + ")  and RealObject (" + gobj + ")");
-            Storage.Instance.SelectGameObjectID = Helper.GetID(gobj.name);
-            //@CD@
-            //_StorageCorrect.CorrectData(gobj, thisGameObject, "UpdateGamePosition");
-            //return "Error";
-            return "";
-        }
-
-        //add to new Field
-        if (!_GridDataG.FieldsD.ContainsKey(p_NewField))
-        {
-            //#!!!!  Debug.Log("SaveListObjectsToData GridData ADD new FIELD : " + posFieldReal);
-            _GridDataG.FieldsD.Add(p_NewField, new ModelNPC.FieldData());
-        }
-
-        if (p_newPosition != gobj.transform.position)
-        {
-            Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("############### ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Helper.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
-            return "";
-        }
-
-        if (Storage.Data.IsUpdatingLocationPersonGlobal)
-        {
-            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
-            return "";
-        }
-
-        //VALID ==============================================================
-        string nameObjectTest = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
-        if (Storage.Instance.GridDataG.FieldsD.ContainsKey(p_NewField))
-        {
-            var indT1 = Storage.Instance.GridDataG.FieldsD[p_NewField].Objects.FindIndex(p => p.NameObject == nameObjectTest);
-            if (indT1 != -1)
-            {
-                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
-                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE DATA: " + nameObjectTest + "      in " + p_NewField);
-                //Storage.Log.GetHistory(objDataSave.NameObject);
-
-                //<< fix: >>
-                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
-                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
-                Storage.Data.RemoveDataObjectInGrid(p_NewField, indT1, "UpdatePosition");
-                //return "";
-            }
-        }
-        if (Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
-        {
-            var indT2 = Storage.Instance.GamesObjectsReal[p_NewField].FindIndex(p => p != null && p.name == nameObjectTest); ;
-            if (indT2 != -1)
-            {
-                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
-                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE REAL: " + nameObjectTest + "      in " + p_NewField);
-                //Storage.Log.GetHistory(objDataSave.NameObject);
-
-                //<< fix: >>
-                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p != null && p.name == nameObjectTest).ToList())
-                {
-                    if(!findGobj.Equals(thisGameObject))
-                    {
-                        Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
-                        //if (findGobj != null)
-                        //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  UpdateGamePosition " + findGobj.name);
-                        if (PoolGameObjects.IsUsePoolObjects)
-                        {
-                            Storage.Pool.DestroyPoolGameObject(findGobj);
-                        }
-                        else
-                        {
-                            Destroy(findGobj);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("*** find for Destroy Real obj --- is ME : " + findGobj.name);
-                    }
-                }
-                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
-                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
-                Storage.Data.RemoveRealObject(indT2, p_NewField, "UpdatePosition");
-                //return "";
-            }
-        }
-        //==============================================================
-
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        Storage.Data.UpdatingLocationPersonLocal++;
-
-        objData.NameObject = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
-        gobj.name = objData.NameObject;
-
-        if (p_newPosition != gobj.transform.position)
-        {
-            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Debug.Log("********** ERROR UpdatePosition 2.   ERROR POSITOIN :  GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position);
-            return "";
-        }
-        objData.Position = gobj.transform.position;
-
-        if (isDestroy)
-            objData.IsReality = false;
-
-        if (!_GamesObjectsReal.ContainsKey(p_NewField))
-        {
-            _GamesObjectsReal.Add(p_NewField, new List<GameObject>());
-        }
-
-        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
-        if (!resAddData)
-        {
-            Storage.Data.UpdatingLocationPersonLocal--;
-            return "";
-        }
-
-        //add
-        if (!isDestroy)
-        {
-            //_GamesObjectsReal[p_NewField].Add(gobj);
-            bool resAddReal = Storage.Data.AddRealObject(gobj, p_NewField, "UpdateGamePosition from: " + p_OldField);
-            if (!resAddReal)
-            {
-                Storage.Data.UpdatingLocationPersonLocal--;
-                return "";
-            }
-        }
-
-        //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
-
-        //remove
-        dataObjectsOldField.RemoveAt(indData);
-        realObjectsOldField.RemoveAt(indReal);
-
-        Storage.Data.UpdatingLocationPersonLocal--;
-
-        return gobj.name;
-    }
-
-    public GameObject CreatePrefab(ModelNPC.ObjectData objDataSave)
-    {
-        return _scriptGrid.CreatePrefabByName(objDataSave);
-    }
-
     public void ClearGridData()
     {
         _GridDataG = new ModelNPC.GridData();
     }
-
-    
-
-
 
     #region Destroy
 
@@ -1308,115 +880,6 @@ public class Storage : MonoBehaviour {
 
     #endregion
 
-    //public void StartCor(string nameObj, string _info)
-    //{
-    //    StartCoroutine(Fix.StartCreateNewCorrectObject(nameObj, _info));
-    //}
-
-    #region Graphic
-
-    //public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
-    //{
-    //    foreach(var point in trackPoints)
-    //    {
-    //        Debug.Log("DrawPolyLine Point : " + point);
-    //    }
-    //    Handles.DrawPolyLine(trackPoints.ToArray());
-    //}
-
-    //public static Vector3 PositionHandle(Vector3 position, Quaternion rotation)
-    //{
-    //    float handleSize = HandleUtility.GetHandleSize(position);
-    //    Color color = Handles.color;
-    //    Handles.color = Handles.xAxisColor;
-    //    position = Handles.Slider(position, rotation * Vector3.right, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.x);
-    //    Handles.color = Handles.yAxisColor;
-    //    position = Handles.Slider(position, rotation * Vector3.up, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.y);
-    //    Handles.color = Handles.zAxisColor;
-    //    position = Handles.Slider(position, rotation * Vector3.forward, handleSize, new Handles.DrawCapFunction(Handles.ArrowCap), SnapSettings.move.z);
-    //    Handles.color = Handles.centerColor;
-    //    position = Handles.FreeMoveHandle(position, rotation, handleSize * 0.15f, SnapSettings.move, new Handles.DrawCapFunction(Handles.RectangleCap));
-    //    Handles.color = color;
-    //    return position;
-    //}
-
-
-
-    IEnumerator AminateAlphaColor(GameObject obj)
-    {
-        while (true)
-        {
-            var color = obj.GetComponent<Renderer>().material.color;
-            for (float i = 1; i >= 0; i -= 0.1f)
-            {
-                color.a = i;
-                obj.GetComponent<Renderer>().material.color = color;
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(0.5f);
-
-            for (float i = 0; i < 1; i += 0.1f)
-            {
-                color.a = i;
-                obj.GetComponent<Renderer>().material.color = color;
-                yield return null;
-            }
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
-
-    private void DrawRect(float x, float y, float x2, float y2)
-    {
-        //return;
-        //LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-        {
-            Debug.Log("LineRenderer is null !!!!");
-            return;
-        }
-
-        //lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        //lineRenderer.SetColors(c1, c2);
-        lineRenderer.SetColors(Color.green, Color.green);
-        lineRenderer.SetWidth(0.2F, 0.2F);
-        int size = 5;
-        lineRenderer.SetVertexCount(size);
-
-        Vector3 pos1 = new Vector3(x, y, -2);
-        lineRenderer.SetPosition(0, pos1);
-        Vector3 pos2 = new Vector3(x2, y, -2);
-        lineRenderer.SetPosition(1, pos2);
-        Vector3 pos3 = new Vector3(x2, y2, -2);
-        lineRenderer.SetPosition(2, pos3);
-        Vector3 pos4 = new Vector3(x, y2, -2);
-        lineRenderer.SetPosition(3, pos4);
-        Vector3 pos5 = new Vector3(x, y, -2);
-        lineRenderer.SetPosition(4, pos5);
-    }
-
-    //---------------------
-    public GameObject prefabCompas;
-    public int numberOfObjects = 10;
-    public float radius = 0.1f;
-
-    void StartGenCircle()
-    {
-        for (int i = 0; i < numberOfObjects; i++)
-        {
-            float angle = i * Mathf.PI * 2 / numberOfObjects;
-
-            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
-
-            pos += new Vector3(10, -5, 0);
-
-            Instantiate(prefabCompas, pos, Quaternion.identity);
-        }
-    }
-
-    #endregion
-
     #region class
 
     public class ZonaFieldLook
@@ -1436,8 +899,6 @@ public class Storage : MonoBehaviour {
         public float Y2 { get; set; }
         public ZonaRealLook() { }
     }
-
-
 
     #endregion
     

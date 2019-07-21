@@ -756,7 +756,7 @@ public class TEmp : MonoBehaviour {
     //                indErr = "6";
     //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
     //                indErr = "7";
-    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                if (!IsGridDataFieldExist(nameField))
     //                {
     //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
     //                    continue;
@@ -902,7 +902,7 @@ public class TEmp : MonoBehaviour {
     //        {
     //            string nameField = Helper.GetNameField(x, y);
     //            SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-    //            if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //            if (!IsGridDataFieldExist(nameField))
     //                continue;
 
     //            foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
@@ -971,7 +971,7 @@ public class TEmp : MonoBehaviour {
     //            //---------
     //            string nameField = Helper.GetNameField(x, y);
     //            SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-    //            if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //            if (!IsGridDataFieldExist(nameField))
     //                continue;
 
     //            foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
@@ -1079,7 +1079,7 @@ public class TEmp : MonoBehaviour {
     //            //---------
     //            string nameField = Helper.GetNameField(x, y);
     //            SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-    //            if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //            if (!IsGridDataFieldExist(nameField))
     //                continue;
 
     //            foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
@@ -1192,11 +1192,11 @@ public class TEmp : MonoBehaviour {
     //                SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
     //                indErr = "9.";
 
-    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                if (!IsGridDataFieldExist(nameField))
     //                    continue;
 
     //                //Storage.Instance.GridDataG.FieldsD[nameField]
-    //                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                if (IsGridDataFieldExist(nameField))
     //                {
 
     //                    foreach (SaveLoadData.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
@@ -1690,7 +1690,7 @@ public class TEmp : MonoBehaviour {
     //        Storage.Instance.Fields.Remove(nameField);
     //    }
 
-    //    //if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //    //if (IsGridDataFieldExist(nameField))
     //    //{
     //    //    foreach (var item in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
     //    //    {
@@ -4709,7 +4709,7 @@ public class TEmp : MonoBehaviour {
                     //-----------------------FIND In DATA
 
                     SaveLoadData.ObjectData dataObjRealName = null;
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldName))
+                    if (IsGridDataFieldExist(posFieldName))
                     {
                         dataObjRealName = Storage.Instance.GridDataG.FieldsD[posFieldName].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
                         if (dataObjRealName != null)
@@ -4718,7 +4718,7 @@ public class TEmp : MonoBehaviour {
                     else
                         Debug.Log("****** NextPosition (" + gobj.name + ")  RealName Not DATA Field : " + posFieldName);
                     SaveLoadData.ObjectData dataObjOldPos = null;
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldOld))
+                    if (IsGridDataFieldExist(posFieldOld))
                     {
                         dataObjOldPos = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.Find(p => { return p.NameObject.IndexOf(idObj) != -1; });
                         if (dataObjOldPos != null)

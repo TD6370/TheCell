@@ -49,6 +49,7 @@ public class DiskData : MonoBehaviour
         SaveLevelCash();
     }
 
+    /*
     public void SaveLevelParts()
     {
 
@@ -60,6 +61,7 @@ public class DiskData : MonoBehaviour
         }
         Serializator.SaveGridPartsXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
+    */
 
     public void SaveLevelCash()
     {
@@ -72,6 +74,7 @@ public class DiskData : MonoBehaviour
         Serializator.SaveGridCashXml(Storage.Instance.GridDataG, Storage.Instance.DataPathLevel, true);
     }
 
+    /*
     IEnumerator StartInGameLoadDataBigXML()
     {
         yield return new WaitForSeconds(2f);
@@ -97,7 +100,9 @@ public class DiskData : MonoBehaviour
 
         yield break;
     }
+    */
 
+    /*
     IEnumerator StartBackgroundLoadDataBigXML()
     {
         yield return null;
@@ -123,6 +128,7 @@ public class DiskData : MonoBehaviour
 
         yield break;
     }
+    */
 
     IEnumerator StartThreadLoadDataBigXML()
     {
@@ -145,8 +151,8 @@ public class DiskData : MonoBehaviour
         Storage.Data.CompletedLoadWorld();
 
         float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetTittle = "Loaded:" + loadingTime;
-        Storage.Events.ListLogAdd = "Loaded:" + loadingTime;
+        Storage.EventsUI.SetTittle = "Loaded:" + loadingTime;
+        Storage.EventsUI.ListLogAdd = "Loaded:" + loadingTime;
         Debug.Log("*********************** Time loding World: " + loadingTime);
 
         yield break;
@@ -225,7 +231,7 @@ public class DiskData : MonoBehaviour
                                     yield break;
                                 }
                                 //-------------------------
-                                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                                if (Storage.IsGridDataFieldExist(nameField))
                                 {
                                     //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
                                     fieldsD_Test[nameField].Objects.Add(dataResult);
@@ -261,11 +267,11 @@ public class DiskData : MonoBehaviour
         //--------------
 
         float loadingTime = Time.time - LoadingWordlTimer;
-        Storage.Events.SetMessage("Ты ждал: " + loadingTime);
+        Storage.EventsUI.SetMessageBox = "Ты ждал: " + loadingTime;
 
         yield return new WaitForSeconds(4f);
 
-        Storage.Events.HideMessage();
+        Storage.EventsUI.HideMessage();
     }
 
     IEnumerator StartLoadDataPartsXML()

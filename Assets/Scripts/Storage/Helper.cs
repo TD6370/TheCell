@@ -461,8 +461,8 @@ public static class Helper { //: MonoBehaviour {
         //int corrY = Storage.Instance.LimitVerticalLook / 2;
         int corrX = 20;
         int corrY = 20;
-        int hx = Storage.Instance.HeroPositionX;
-        int hy = Storage.Instance.HeroPositionY;
+        int hx = Storage.Player.HeroPositionX;
+        int hy = Storage.Player.HeroPositionY;
         int limitX1 = hx - corrX;
         int limitX2 = hx + corrX;
         int limitY1 = hy - corrY;
@@ -618,7 +618,7 @@ public static class Helper { //: MonoBehaviour {
 
     public static void StopControlTime(string info)
     {
-        Storage.Events.ListLogAdd = info + (Time.time - Helper.SpeedTimer);
+        Storage.EventsUI.ListLogAdd = info + (Time.time - Helper.SpeedTimer);
     }
 
     #endregion

@@ -180,12 +180,12 @@ public class EventsObject : MonoBehaviour {
             string objID = Helper.GetID(this.gameObject.name);
             Storage.Instance.SelectGameObjectID = objID;
             //Debug.Log("&&&& EventsObject Select " + objID + "   " + this.gameObject.name);
-            Storage.Events.SetTestText(objID);
+            Storage.EventsUI.SetTestText(objID);
         }
         else
         {
             //Debug.Log("&&&& EventsObject Select " + gobj.tag.ToString() + "     " + this.gameObject.name);
-            Storage.Events.SetTestText(gobj.tag.ToString());
+            Storage.EventsUI.SetTestText(gobj.tag.ToString());
         }
     }
 }

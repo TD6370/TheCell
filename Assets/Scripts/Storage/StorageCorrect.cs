@@ -340,8 +340,8 @@ public class StorageCorrect : MonoBehaviour {
         }
 
         //ADD IN REAL
-        GameObject newField = Storage.Instance.CreatePrefab(objDataSave);
-        //GameObject newField = CreatePrefabByName(objDataSave);
+        //GameObject newField = Storage.Instance.CreatePrefab(objDataSave);
+        GameObject newField = Storage.GenGrid.CreatePrefabByName(objDataSave);
         listGameObjectReal.Add(newField);
 
         Debug.Log("+++++++ CreateNewCorrectObject  Real +: " + newField.name);

@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 //using UnityEditor.Sprites;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class PaletteMapController : MonoBehaviour {
@@ -775,7 +776,7 @@ public class PaletteMapController : MonoBehaviour {
         //yield return new WaitForSeconds(0.3f);
 
         yield return null;
-        Storage.Events.SetTittle = "Start generic...";
+        Storage.EventsUI.SetTittle = "Start generic...";
         yield return null;
         Storage.GridData.ClearWorld();
         yield return null;
@@ -784,7 +785,7 @@ public class PaletteMapController : MonoBehaviour {
         foreach (var itemGenOpt in m_ListGenOptionsVersionForContainer)
         {
 
-            Storage.Events.SetTittle = ".." + itemGenOpt.NameVersion;
+            Storage.EventsUI.SetTittle = ".." + itemGenOpt.NameVersion;
             yield return null;
             SelectionVersionOptInContainer(itemGenOpt.NameVersion);
             //VersionGenWorldValueChanged(dpnListVersionGenWorld);
@@ -803,7 +804,7 @@ public class PaletteMapController : MonoBehaviour {
         //Storage.Map.RefreshFull();
         Storage.Player.LoadPositionHero();
         yield return null;
-        Storage.Events.SetTittle = "End generic";
+        Storage.EventsUI.SetTittle = "End generic";
     }
 
     IEnumerator StartGenericOnWorld()
@@ -846,17 +847,9 @@ public class PaletteMapController : MonoBehaviour {
                 Clear();
                 break;
             case ToolBarPaletteMapAction.Teleport:
-                break;
-            case ToolBarPaletteMapAction.Transfer:
-                TeleportHero();
+                Storage.Player.TeleportHero();
                 break;
             case ToolBarPaletteMapAction.Brush:
-                //if (SelectedTypeBrush == TypesBrushGrid.Prefabs) {
-                //    Paste();
-                //}
-                //else {
-                //    BrushCells();
-                //}
                 BrushCells();
                 break;
             case ToolBarPaletteMapAction.Cursor:
@@ -900,10 +893,7 @@ public class PaletteMapController : MonoBehaviour {
             FramePaletteMap.SetActive(false);
         }
         Storage.DrawGeom.DrawClear();
-        //ContentGridPaletteMap
 
-        //----------
-        //IsPaintsOn = btnOnPaint.isOn;
         IsPaintsOn = FramePaletteMap.activeSelf;
         if (IsPaintsOn)
         {
@@ -1269,7 +1259,7 @@ public class PaletteMapController : MonoBehaviour {
                 if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), spriteName))
                 {
                     typeTilePrefab = TypesStructure.Terra;
-                    Debug.Log("Not Prefab >> " + spriteName);
+                    Debug.Log("Load Prefabs On Palette Not Prefab in SaveLoadData.TypePrefabs >> " + spriteName);
                 }
             }
             catch (System.ArgumentException)
@@ -1288,34 +1278,17 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
+    //public void CreateCellPalette(Sprite spriteTile)
+    //{
+    //    var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+    //    cellMap.transform.SetParent(this.gameObject.transform);
+    //    cellMap.GetComponent<Image>().sprite = spriteTile;
+    //    cellMap.SetActive(true);
+    //}
+
     public void CreateCellPalette(Sprite spriteTile)
     {
-        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-        cellMap.transform.SetParent(this.gameObject.transform);
-        cellMap.GetComponent<Image>().sprite = spriteTile;
-        cellMap.SetActive(true);
-    }
-
-    public void CreateCellPalette2(Sprite spriteTile)
-    {
-        //Rect rectTexture = spriteTile.textureRect;
-        //Vector2 textureRectOffset = spriteTile.textureRectOffset;
-
-        Texture2D textureAtlas; // = spriteTile.texture;
-        string nameS = "";
-        //Packer.GetAtlasDataForSprite(spriteTile, out nameS, out textureAtlas);
-        UnityEngine.U2D.SpriteAtlas atlas = Storage.Map.SpriteAtlasMapPrefab;
-        textureAtlas = spriteTile.texture;
-        //textureAtlas = SpriteUtility.GetSpriteTexture(spriteTile, false /* getAtlasData */);//#UnityEditor
-        //--------------
-        //textureAtlas = new Texture2D((int)spriteTile.rect.width, (int)spriteTile.rect.height);
-        //var pixels = spriteTile.texture.GetPixels((int)spriteTile.textureRect.x,
-        //                                        (int)spriteTile.textureRect.y,
-        //                                        (int)spriteTile.textureRect.width,
-        //                                        (int)spriteTile.textureRect.height);
-        //textureAtlas.SetPixels(pixels);
-        //textureAtlas.Apply();
-        //-----------------
+        Texture2D textureAtlas = spriteTile.texture;
         Sprite spriteTileRes = Sprite.Create(textureAtlas, new Rect(0.0f, 0.0f, textureAtlas.width, textureAtlas.height), new Vector2(0.5f, 0.5f), 100.0f);
         var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
         cellMap.transform.SetParent(this.gameObject.transform);
@@ -1460,13 +1433,14 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    private void TeleportHero()
-    {
-        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
-        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
-        posTransferHeroY *= -1;
-        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
-    }
+    //private void TeleportHero()
+    //{
+    //    Storage.Map.Create();
+    //    int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+    //    int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+    //    posTransferHeroY *= -1;
+    //    Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+    //}
 
 
     private void ResizeScaleGrid(int column, float ratio = 0.9f)
@@ -1624,7 +1598,7 @@ public class PaletteMapController : MonoBehaviour {
 
         if (IsGenericContruct && string.IsNullOrEmpty(SelectedConstruction))
         {
-            Storage.Events.ListLogAdd = "#### Not selected construction !!!";
+            Storage.EventsUI.ListLogAdd = "#### Not selected construction !!!";
             return;
         }
 
@@ -1651,7 +1625,7 @@ public class PaletteMapController : MonoBehaviour {
 
         //selectGeneticObject = selDataTile;
         SelectedCell = selDataTile;
-        Storage.Events.ListLogAdd = "Generic prefab: " + SelectedCell.Name + @" \ " + SelectedCell.Tag;
+        Storage.EventsUI.ListLogAdd = "Generic prefab: " + SelectedCell.Name + @" \ " + SelectedCell.Tag;
 
         string fieldStart = Storage.Instance.SelectFieldCursor;
         if (isOnFullMap)
@@ -1744,7 +1718,7 @@ public class PaletteMapController : MonoBehaviour {
                 //int SpawnPointRadius
                 //int SpawnPointScope
                 if (isLog)
-                    Storage.Events.ListLogAdd = "standart generation 1.";
+                    Storage.EventsUI.ListLogAdd = "standart generation 1.";
 
                 int startX = Random.Range((int)posStructFieldNew.x, sizeX);
                 int startY = Random.Range((int)posStructFieldNew.y, sizeY);
@@ -1798,7 +1772,7 @@ public class PaletteMapController : MonoBehaviour {
             else if (OptionGenSegments < 2)
             {
                 if (isLog)
-                    Storage.Events.ListLogAdd = "standart generation 1.";
+                    Storage.EventsUI.ListLogAdd = "standart generation 1.";
                 //------ standart 1.
                 for (int i = 0; i < CountObjects; i++)
                 {
@@ -1829,7 +1803,7 @@ public class PaletteMapController : MonoBehaviour {
             //------ Segment
             {
                 if (isLog)
-                    Storage.Events.ListLogAdd = "Segments generation.";
+                    Storage.EventsUI.ListLogAdd = "Segments generation.";
                 //Step
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
 
@@ -1890,7 +1864,7 @@ public class PaletteMapController : MonoBehaviour {
                 //------------- # Segmnt Next Point Gen
 
                 if (isLog)
-                    Storage.Events.ListLogAdd = "Segments next Point generation.";
+                    Storage.EventsUI.ListLogAdd = "Segments next Point generation.";
                 //bool isSteps = checkStepGen.isOn;
                 //bool isSteps = true;
                 //Step
@@ -1963,7 +1937,7 @@ public class PaletteMapController : MonoBehaviour {
                                 {
                                     info += " < " + startSegmentX + "x" + startSegmentY + " >";
                                     if (isLog)
-                                        Storage.Events.ListLogAdd = info;
+                                        Storage.EventsUI.ListLogAdd = info;
                                     //Debug.Log(info);
                                 }
                             }
@@ -2009,7 +1983,7 @@ public class PaletteMapController : MonoBehaviour {
                                 {
                                     info += " < " + startSegmentX + "x" + startSegmentY + " >";
                                     if (isLog)
-                                        Storage.Events.ListLogAdd = info;
+                                        Storage.EventsUI.ListLogAdd = info;
                                     //Debug.Log(info);
                                 }
                             }
@@ -2088,7 +2062,7 @@ public class PaletteMapController : MonoBehaviour {
 
     private bool IsTestFieldFilled(string nameField, DataTile itemTile, bool isTestFilledField = false, bool isTestExistMeType = false)
     {
-        if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+        if (Storage.IsGridDataFieldExist(nameField))
         {
             if (isTestFilledField)
                 return true;
@@ -2166,13 +2140,13 @@ public class PaletteMapController : MonoBehaviour {
     {
         if (string.IsNullOrEmpty(SelectedConstruction))
         {
-            Storage.Events.SetTittle = "No selected construction";
+            Storage.EventsUI.SetTittle = "No selected construction";
             return;
         }
 
         if (!Storage.TilesManager.DataMapTiles.ContainsKey(SelectedConstruction))
         {
-            Storage.Events.SetTittle = "Not exist : " + SelectedConstruction;
+            Storage.EventsUI.SetTittle = "Not exist : " + SelectedConstruction;
             Debug.Log("#######  SaveConstructTileInGridData : Not exist SelectedConstruction: " + SelectedConstruction);
             return;
         }
@@ -2295,7 +2269,7 @@ public class PaletteMapController : MonoBehaviour {
                 Storage.Map.CheckSector(field);
 
             //Destroy All DATA Objects
-            if (Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
+            if (Storage.IsGridDataFieldExist(field))
             {
                 Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
             }
@@ -2518,7 +2492,7 @@ public class PaletteMapController : MonoBehaviour {
     {
         if (SelectedVersionWorld == null)
         {
-            Storage.Events.ListLogAdd = "### Not selected World version";
+            Storage.EventsUI.ListLogAdd = "### Not selected World version";
             return;
         }
 
@@ -2538,7 +2512,7 @@ public class PaletteMapController : MonoBehaviour {
             }
             else
             {
-                Storage.Events.ListLogAdd = ">> Exist World version name: " + SelectedGenericOptionsWorld.NameVersion + " !!!!";
+                Storage.EventsUI.ListLogAdd = ">> Exist World version name: " + SelectedGenericOptionsWorld.NameVersion + " !!!!";
             }
         }
     }
@@ -2774,7 +2748,7 @@ public class PaletteMapController : MonoBehaviour {
         //}
 
 
-        Storage.Events.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
+        Storage.EventsUI.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
         //NameSelectedGenObject = selVers.NameObject + @" \ " + selVers.TagObject; 
         var t = NameSelectedGenObject;
 
@@ -2882,20 +2856,20 @@ public class PaletteMapController : MonoBehaviour {
             //Storage.Events.CreateCommandLogText(itemOpt.NameVersion, Color.white, ContentListVersionsGenericWorld.transform);
             Button buttonVersOpt;
             Button btnSubCommand;
-            Storage.Events.CreateListButtton(itemOpt.NameVersion, ContentListVersionsGenericWorld.transform, out buttonVersOpt, out btnSubCommand);
+            Storage.EventsUI.CreateListButtton(itemOpt.NameVersion, ContentListVersionsGenericWorld.transform, out buttonVersOpt, out btnSubCommand);
             buttonVersOpt.onClick.AddListener(delegate () {
                 //Selected item version in World
                 
                 //string nameVersOpt = buttonVersOpt.GetComponent<Text>().text;
                 string nameVersOpt = buttonVersOpt.GetComponentInChildren<Text>().text;
-                Storage.Events.ListLogAdd = ">> Selected " + nameVersOpt + " in " + SelectedVersionWorld.NameVersion;
+                Storage.EventsUI.ListLogAdd = ">> Selected " + nameVersOpt + " in " + SelectedVersionWorld.NameVersion;
                 SelectionVersionOptInContainer(nameVersOpt);
             });
 
             //#TEST
             if(btnSubCommand.name!= "btnSubCommand")
             {
-                Storage.Events.ListLogAdd = "#######  btnSubCommand.name!= btnSubCommand    " + btnSubCommand.name ;
+                Storage.EventsUI.ListLogAdd = "#######  btnSubCommand.name!= btnSubCommand    " + btnSubCommand.name ;
             }
 
             btnSubCommand.onClick.AddListener(delegate () {
@@ -2904,7 +2878,7 @@ public class PaletteMapController : MonoBehaviour {
                 GenericOptionsWorld genOpt = m_ListGenOptionsVersionForContainer.Find(p => p.NameVersion == nameVersOpt);
                 if (genOpt != null)
                 {
-                    Storage.Events.ListLogAdd = ">> Remove " + genOpt + " in " + SelectedVersionWorld.NameVersion;
+                    Storage.EventsUI.ListLogAdd = ">> Remove " + genOpt + " in " + SelectedVersionWorld.NameVersion;
                     m_ListGenOptionsVersionForContainer.Remove(genOpt);
                     ///----
                     if (dpnListGenOptionsVersion.options.Count > 0)
@@ -2954,7 +2928,7 @@ public class PaletteMapController : MonoBehaviour {
         }
         else
         {
-            Storage.Events.ListLogAdd = "#### Not find version in ListGenOptionsVersionForContainer: " + genOpt.NameVersion;
+            Storage.EventsUI.ListLogAdd = "#### Not find version in ListGenOptionsVersionForContainer: " + genOpt.NameVersion;
         }
     }
 
@@ -2964,7 +2938,7 @@ public class PaletteMapController : MonoBehaviour {
 
         if(SelectedCell == null)
         {
-            Storage.Events.ListLogAdd = "##### Not Selected Genetic Object !!!!!!";
+            Storage.EventsUI.ListLogAdd = "##### Not Selected Genetic Object !!!!!!";
             Debug.Log("###### Not Selected Genetic Object");
             return;
         }
@@ -3022,7 +2996,7 @@ public class PaletteMapController : MonoBehaviour {
             if (indUpdate != -1)
                 m_ListGenOptionsVersion[indUpdate] = saveOptions;
             else
-                Storage.Events.ListLogAdd = "#### Not find option gen : " + saveOptions;
+                Storage.EventsUI.ListLogAdd = "#### Not find option gen : " + saveOptions;
             //SelectedGenericOptionsWorld
         }
         //SaveVersionsGenericOptions();
@@ -3066,7 +3040,6 @@ public enum ToolBarPaletteMapAction
     Clear,
     Cursor,
     Teleport,
-    Transfer,
     Brush
 }
 

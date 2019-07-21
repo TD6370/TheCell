@@ -268,7 +268,7 @@ public class SaveLoadData : MonoBehaviour {
                     //-----------
 
                     index++;
-                    Storage.Events.SetTittle = String.Format("Loading {0} %", (countAll / index).ToString());
+                    Storage.EventsUI.SetTittle = String.Format("Loading {0} %", (countAll / index).ToString());
 
                     int _y = y * (-1);
                     Vector3 pos = new Vector3(x, _y, 0) * Spacing;
@@ -295,7 +295,7 @@ public class SaveLoadData : MonoBehaviour {
 
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
 
-        Storage.Events.SetTittle = String.Format("World is Loaded");
+        Storage.EventsUI.SetTittle = String.Format("World is Loaded");
     }
 
 
@@ -368,7 +368,7 @@ public class SaveLoadData : MonoBehaviour {
                 index++;
 
                 
-                Storage.Events.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
+                Storage.EventsUI.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
@@ -403,7 +403,7 @@ public class SaveLoadData : MonoBehaviour {
             yield return null;
         }
 
-        Storage.Events.SetTittle = String.Format("World Loaded");
+        Storage.EventsUI.SetTittle = String.Format("World Loaded");
 
         Storage.Data.SaveGridGameObjectsXml(true);
 
@@ -442,7 +442,7 @@ public class SaveLoadData : MonoBehaviour {
                 index++;
 
 
-                Storage.Events.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
+                Storage.EventsUI.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
 
                 List<GameObject> ListNewObjects = new List<GameObject>();
                 for (int i = 0; i < maxObjectInField; i++)
@@ -482,7 +482,7 @@ public class SaveLoadData : MonoBehaviour {
             yield return null;
         }
 
-        Storage.Events.SetTittle = String.Format("World Loaded");
+        Storage.EventsUI.SetTittle = String.Format("World Loaded");
 
         Storage.Data.SaveGridGameObjectsXml(true);
 
@@ -607,7 +607,7 @@ public class SaveLoadData : MonoBehaviour {
             case TypePrefabs.PrefabUfo:
                 newObject = new ModelNPC.GameDataUfo();
                 nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                if (!Storage.IsGridDataFieldExist(nameField))
                 {
                     Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
                     return null;
@@ -628,7 +628,7 @@ public class SaveLoadData : MonoBehaviour {
                 nameField = Helper.GetNameFieldByName(p_gobject.name);
                 //Debug.Log("FindObjectData ------------ nameField :" + nameField);
 
-                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                if (!Storage.IsGridDataFieldExist(nameField))
                 {
                     Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
                     return null;
@@ -652,7 +652,7 @@ public class SaveLoadData : MonoBehaviour {
                 break;
             case TypePrefabs.PrefabNPC:
                 nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                if (!Storage.IsGridDataFieldExist(nameField))
                 {
                     Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
                     return null;
@@ -679,7 +679,7 @@ public class SaveLoadData : MonoBehaviour {
                     Position = p_gobject.transform.position
                 };
                 nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                if (Storage.IsGridDataFieldExist(nameField))
                 {
                     objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
                     index = objects.FindIndex(p => p.NameObject == p_gobject.name);
@@ -1015,7 +1015,7 @@ public class SaveLoadData : MonoBehaviour {
         //Storage.Instance.GridDataG.FieldsD.Clear();
     }
 
-    public void GenWorld(bool isReload = true)
+    public void GenWorld()
     {
         Storage.Instance.IsLoadingWorld = true;
 

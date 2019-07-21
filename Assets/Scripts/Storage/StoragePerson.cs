@@ -207,125 +207,7 @@ public class StoragePerson : MonoBehaviour {
             Debug.Log("########### SpriteAtlasNPCis empty");
             return;
         }
-
-        //if (m_SpriteCollection == null || m_SpriteCollection.Count == 0)
-        //{
-        //    m_SpriteCollection = new Dictionary<string, Sprite>();
-
-        //    Sprite[] spritesPrefabsAtlas = GetSpritesAtlasNPC();
-        //    foreach (var sprt in spritesPrefabsAtlas)
-        //    {
-        //        string namePrefab = sprt.name;
-        //        namePrefab = namePrefab.Replace("(Clone)", "");
-        //        m_SpriteCollection.Add(namePrefab, sprt);
-        //    }
-        //}
-        //--------------------------
-
-        //SpriteCollection = new Dictionary<string, Sprite>();
-
-        //Sprite[] spritesPrefabsAtlas = GetSpritesAtlasNPC();
-        //foreach (var sprt in spritesPrefabsAtlas)
-        //{
-        //    string namePrefab = sprt.name;//.GetNamePrefabByTextureMap();
-        //    namePrefab = namePrefab.Replace("(Clone)", "");
-        //    //Texture2D _texture = sprt.texture;
-        //    //Texture2D _texture = SpriteUtility.GetSpriteTexture(sprt, false /* getAtlasData */);
-        //    //_texture.Apply();
-        //    SpriteCollection.Add(namePrefab, sprt);
-        //}
-
-        //--------------------------
-
-        //SpriteCollection = 
-
-        //string indErr = "";
-        //try
-        //{
-        //    indErr = "start";
-        //    string pathSprites = "Textures/NPC/";
-        //    int colSprites = 0;
-
-        //    Debug.Log("Loading Sprites from Resources...");
-
-        //    SpriteCollection = new Dictionary<string, Sprite>();
-
-        //    foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
-        //    {
-        //        Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-
-        //        if (_texturesBoss == null || _texturesBoss.Length == 0)
-        //        {
-        //            Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
-        //            continue;
-        //        }
-        //        Texture2D _texture = _texturesBoss[0];
-        //        //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
-        //        Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-
-        //        if (!SpriteCollection.ContainsKey(nameStrite))
-        //        {
-        //            indErr = "6.";
-        //            SpriteCollection.Add(nameStrite, spriteBoss);
-        //            colSprites++;
-        //        }
-        //        else
-        //        {
-        //            Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
-        //        }
-        //    }
-        //    Debug.Log("Loaded Sprites Boss : " + colSprites);
-        //}
-        //catch (Exception x)
-        //{
-        //    Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
-        //}
     }
-
-    //private void LoadSprites()
-    //{
-    //    string indErr = "";
-    //    try
-    //    {
-    //        indErr = "start";
-    //        string pathSprites = "Textures/NPC/";
-    //        int colSprites = 0;
-
-    //        Debug.Log("Loading Sprites from Resources...");
-
-    //        SpriteCollection = new Dictionary<string, Sprite>();
-    //        foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
-    //        {
-    //            Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-
-    //            if (_texturesBoss == null || _texturesBoss.Length == 0)
-    //            {
-    //                Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
-    //                continue;
-    //            }
-    //            Texture2D _texture = _texturesBoss[0];
-    //            //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
-    //            Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-
-    //            if (!SpriteCollection.ContainsKey(nameStrite))
-    //            {
-    //                indErr = "6.";
-    //                SpriteCollection.Add(nameStrite, spriteBoss);
-    //                colSprites++;
-    //            }
-    //            else
-    //            {
-    //                Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
-    //            }
-    //        }
-    //        Debug.Log("Loaded Sprites Boss : " + colSprites);
-    //    }
-    //    catch (Exception x)
-    //    {
-    //        Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
-    //    }
-    //}
-
 
     public IEnumerable<GameObject> GetAllRealPersons()
     {
@@ -466,7 +348,7 @@ public class StoragePerson : MonoBehaviour {
                 return;
 
             Storage.Instance.SelectFieldCursor = _fieldCursor;
-            Storage.Events.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
+            Storage.EventsUI.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
             //Storage.Events.ListLogClear();
             GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
 
@@ -490,18 +372,18 @@ public class StoragePerson : MonoBehaviour {
                 var objData = SaveLoadData.FindObjectData(gobj);
                 if (findData != objData)
                 {
-                    Storage.Events.ListLogAdd = "#### " + gobj.name + " conflict DATA";
+                    Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " conflict DATA";
                     Debug.Log("#### " + gobj.name + " conflict DATA");
                 }
 
                 var dataNPC = findData as ModelNPC.GameDataNPC;
                 if (dataNPC != null)
                 {
-                    Storage.Events.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
+                    Storage.EventsUI.ListLogAdd = "VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString;
                     Debug.Log("VeiwCursorGameObjectData: " + gobj.name + " NPC Params: " + dataNPC.GetParamsString);
 
                     //#EXPAND
-                    Storage.Events.AddExpandPerson(dataNPC.NameObject,
+                    Storage.EventsUI.AddExpandPerson(dataNPC.NameObject,
                         dataNPC.GetParams,
                         new List<string> { "Pause", "Kill", "StartTrack" },
                         gobjObservable: gobj);
@@ -516,12 +398,12 @@ public class StoragePerson : MonoBehaviour {
                 var dataBoss = findData as ModelNPC.GameDataBoss;
                 if (dataBoss != null)
                 {
-                    Storage.Events.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                    Storage.EventsUI.ListLogAdd = "YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
                     Debug.Log("YES GameDataBoss " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
                     dataBoss.ColorRender = Color.magenta;
 
                     //#EXPAND
-                    Storage.Events.AddExpandPerson(dataBoss.NameObject,
+                    Storage.EventsUI.AddExpandPerson(dataBoss.NameObject,
                         dataBoss.GetParams,
                         new List<string> { "Pause", "Kill", "StartTrack" },
                         gobjObservable: gobj);
@@ -530,7 +412,7 @@ public class StoragePerson : MonoBehaviour {
                 {
                     if (gobj.tag == _Boss)
                     {
-                        Storage.Events.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                        Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
                         Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
                     }
                 }
@@ -588,7 +470,7 @@ public class StoragePerson : MonoBehaviour {
 
     public void ModifObject(GameObject gobj)
     {
-        Storage.Events.ListLogAdd = "Modif : " + ModificatorPerson + " > " + gobj.name;
+        Storage.EventsUI.ListLogAdd = "Modif : " + ModificatorPerson + " > " + gobj.name;
         switch(ModificatorPerson)
         {
             case TypeModifPerson.Alpha:
@@ -599,10 +481,10 @@ public class StoragePerson : MonoBehaviour {
                 break;
 
             case TypeModifPerson.PointPos:
-                Storage.Events.PointGO.transform.position = gobj.transform.position;
+                Storage.EventsUI.PointGO.transform.position = gobj.transform.position;
                 break;
             default:
-                Storage.Events.ListLogAdd = "Empty modificator > " + ModificatorPerson.ToString();
+                Storage.EventsUI.ListLogAdd = "Empty modificator > " + ModificatorPerson.ToString();
                 break;
         }
 
@@ -652,6 +534,297 @@ public class StoragePerson : MonoBehaviour {
         obj.TypeAlien = TypeAlien;
         return obj;
     }
+
+    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
+    {
+        
+        if (Storage.Instance.IsLoadingWorld && !NotValid)
+        {
+            Debug.Log("_______________ LOADING WORLD ....._______________");
+            return "";
+        }
+
+        if (Storage.Data.IsUpdatingLocationPersonGlobal)
+        {
+            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
+            return "";
+        }
+
+        if (Storage.Instance.IsCorrectData && !NotValid)
+        {
+            Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
+            return "Error";
+        }
+
+        if (Storage.Instance.GamesObjectsReal == null || Storage.Instance.GamesObjectsReal.Count == 0)
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("^^^^ UpdatePosition      GamesObjectsReal is EMPTY");
+            return "";
+        }
+        if (Storage.Instance.GridDataG == null || Storage.Instance.GridDataG.FieldsD == null || Storage.Instance.GridDataG.FieldsD.Count == 0)
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("^^^^ UpdatePosition      GridData is EMPTY");
+            return "";
+        }
+
+        if (!Storage.Instance.GamesObjectsReal.ContainsKey(p_OldField))
+        {
+            Debug.Log("********** (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** UpdatePosition      GamesObjectsReal not found OldField = " + p_OldField);
+            if (p_NameObject != null)
+                Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
+
+            Storage.Log.GetHistory(p_NameObject);
+
+            //@@CORRECT
+            //Destroy(thisGameObject, 1f);
+            //return "Error";
+            return "";
+        }
+        if (!Storage.IsGridDataFieldExist(p_OldField))
+        {
+            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** UpdatePosition      GridData not found OldField = " + p_OldField);
+            return "";
+        }
+
+        List<GameObject> realObjectsOldField = Storage.Instance.GamesObjectsReal[p_OldField];
+        List<ModelNPC.ObjectData> dataObjectsOldField = Storage.Instance.GridDataG.FieldsD[p_OldField].Objects;
+
+        if (realObjectsOldField == null)
+        {
+            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** UpdatePosition     realObjectsOldField is Null !!!!");
+            if (!Storage.Instance.GamesObjectsReal.ContainsKey(p_OldField))
+            {
+                Debug.Log("********** UpdatePosition     in GamesObjectsReal not found OldField = " + p_OldField);
+                return "";
+            }
+            else
+            {
+                Storage.Instance.GamesObjectsReal[p_OldField] = new List<GameObject>();
+            }
+            return "";
+        }
+
+        //#TEST -----
+        for (int i = realObjectsOldField.Count - 1; i >= 0; i--)
+        {
+            if (realObjectsOldField[i] == null)
+            {
+                Debug.Log("UGP: (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                Debug.Log("^^^^ UpfatePosition  -- remove destroy realObjects");
+                realObjectsOldField.RemoveAt(i);
+            }
+        }
+        //--------------
+
+        int indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
+        if (indReal == -1)
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("######## UpfatePosition Not Real object (" + p_NameObject + ") in field: " + p_OldField);
+            if (p_NameObject != null)
+                Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
+
+            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition Not Real");
+
+
+            //return "Error";
+            //var DataObj = Storage.Person.GetFindPersonsDataForName(p_NameObject);
+            //if (DataObj != null)
+            //{
+            //Debug.Log("::::::::::::::::::::::::: Find Pesron DATA: " + p_NameObject + " :::::");
+            //Debug.Log("))))))))) :  [" + DataObj.Field + "][" + DataObj.Index + "] " + DataObj.DataObj);
+
+            Debug.Log("+++++++ Add New Real Object " + thisGameObject + "   in field: " + p_NewField);
+            Storage.Data.AddRealObject(thisGameObject, p_NewField, "UpdateGamePosition");
+            realObjectsOldField = Storage.Instance.GamesObjectsReal[p_NewField];
+            indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
+            if (indReal == -1)
+            {
+                Storage.Log.GetHistory(p_NameObject);
+                return "";
+            }
+        }
+        int indData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
+        if (indData == -1)
+        {
+            //--------------------
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            var posI = thisGameObject.transform.position;
+            string info = " >>>>>> thisGameOobject : " + thisGameObject.name + "       pos = " + Helper.GetNameFieldPosit(posI.x, posI.y);
+
+            Debug.Log("^^^^ UpfatePosition Not DATA object (" + p_NameObject + ") in field: " + p_OldField + "     " + info);
+            foreach (var itemObj in dataObjectsOldField)
+            {
+                Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- object : " + itemObj.NameObject);
+            }
+            if (dataObjectsOldField.Count == 0)
+                Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- objects ZERO !!!!!");
+            //--------------------
+
+            //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition IN DATA");
+
+
+            return "Error";
+        }
+        GameObject gobj = realObjectsOldField[indReal];
+        if (gobj == null)
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("^^^^ UpdatePosition      gobj is Destroy");
+            return "";
+        }
+
+        if (!gobj.Equals(thisGameObject))
+        {
+            Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("################ ERROR Not Equals thisGameOobject (" + thisGameObject + ")  and RealObject (" + gobj + ")");
+            Storage.Instance.SelectGameObjectID = Helper.GetID(gobj.name);
+            //@CD@
+            //_StorageCorrect.CorrectData(gobj, thisGameObject, "UpdateGamePosition");
+            //return "Error";
+            return "";
+        }
+
+        //add to new Field
+        if (!Storage.IsGridDataFieldExist(p_NewField))
+        {
+            //#!!!!  Debug.Log("SaveListObjectsToData GridData ADD new FIELD : " + posFieldReal);
+            Storage.Instance.GridDataG.FieldsD.Add(p_NewField, new ModelNPC.FieldData());
+        }
+
+        if (p_newPosition != gobj.transform.position)
+        {
+            Debug.Log("********** (" + gobj.name + ")^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("############### ERROR UpdatePosition 1.  ERROR POSITOIN : GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position + "  REAL FIELD: " + Helper.GetNameFieldPosit(gobj.transform.position.x, gobj.transform.position.y));
+            return "";
+        }
+
+        if (Storage.Data.IsUpdatingLocationPersonGlobal)
+        {
+            Debug.Log("_______________UpdateGamePosition  RETURN IsUpdatingLocationPerson_______________");
+            return "";
+        }
+
+        //VALID ==============================================================
+        string nameObjectTest = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        //if (IsGridDataFieldExist(p_NewField))
+        if (Storage.IsGridDataFieldExist(p_NewField))
+        {
+            var indT1 = Storage.Instance.GridDataG.FieldsD[p_NewField].Objects.FindIndex(p => p.NameObject == nameObjectTest);
+            if (indT1 != -1)
+            {
+                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
+                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE DATA: " + nameObjectTest + "      in " + p_NewField);
+                //Storage.Log.GetHistory(objDataSave.NameObject);
+
+                //<< fix: >>
+                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
+                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
+                Storage.Data.RemoveDataObjectInGrid(p_NewField, indT1, "UpdatePosition");
+                //return "";
+            }
+        }
+        if (Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
+        {
+            var indT2 = Storage.Instance.GamesObjectsReal[p_NewField].FindIndex(p => p != null && p.name == nameObjectTest); ;
+            if (indT2 != -1)
+            {
+                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
+                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE REAL: " + nameObjectTest + "      in " + p_NewField);
+                //Storage.Log.GetHistory(objDataSave.NameObject);
+
+                //<< fix: >>
+                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p != null && p.name == nameObjectTest).ToList())
+                {
+                    if (!findGobj.Equals(thisGameObject))
+                    {
+                        Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
+                        //@@@@
+                        Storage.EventsUI.AddMenuPerson(objData as ModelNPC.GameDataNPC, thisGameObject);
+                        Storage.GamePause = true;
+                        return "Error";
+                        //@@@@
+                        //if (findGobj != null)
+                        //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  UpdateGamePosition " + findGobj.name);
+                        if (PoolGameObjects.IsUsePoolObjects)
+                        {
+                            Storage.Pool.DestroyPoolGameObject(findGobj);
+                        }
+                        else
+                        {
+                            Destroy(findGobj);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("*** find for Destroy Real obj --- is ME : " + findGobj.name);
+                    }
+                }
+                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
+                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
+                Storage.Data.RemoveRealObject(indT2, p_NewField, "UpdatePosition");
+                //return "";
+            }
+        }
+        //==============================================================
+
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        Storage.Data.UpdatingLocationPersonLocal++;
+
+        objData.NameObject = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        gobj.name = objData.NameObject;
+
+        if (p_newPosition != gobj.transform.position)
+        {
+            Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Debug.Log("********** ERROR UpdatePosition 2.   ERROR POSITOIN :  GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position);
+            return "";
+        }
+        objData.Position = gobj.transform.position;
+
+        if (isDestroy)
+            objData.IsReality = false;
+
+        if (!Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
+        {
+            Storage.Instance.GamesObjectsReal.Add(p_NewField, new List<GameObject>());
+        }
+
+        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
+        if (!resAddData)
+        {
+            Storage.Data.UpdatingLocationPersonLocal--;
+            return "";
+        }
+
+        //add
+        if (!isDestroy)
+        {
+            //_GamesObjectsReal[p_NewField].Add(gobj);
+            bool resAddReal = Storage.Data.AddRealObject(gobj, p_NewField, "UpdateGamePosition from: " + p_OldField);
+            if (!resAddReal)
+            {
+                Storage.Data.UpdatingLocationPersonLocal--;
+                return "";
+            }
+        }
+
+        //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
+
+        //remove
+        dataObjectsOldField.RemoveAt(indData);
+        realObjectsOldField.RemoveAt(indReal);
+
+        Storage.Data.UpdatingLocationPersonLocal--;
+
+        return gobj.name;
+    }
+
 }
 
 public static class PersonsExtensions
@@ -775,14 +948,6 @@ public class TypeBoss
         {
             if (_instance == null)
             {
-                //TextureBossLizardMap = TextureBossLizard;
-                //TextureBossBandosMap = TextureBossBandos;
-                //TextureBossBoobleMap = TextureBossBooble;
-                //TextureBossAlienMap = TextureAlienBoss;
-                //TextureBossDroidMap = TextureBossDroid;
-                //TextureBossArmMap = TextureBossArm;
-                //TextureBossMap =
-
                         _instance = new TypeBoss();
                 _instance._TypesBoss = new List<TypeBoss>()
                     {
@@ -814,8 +979,6 @@ public class TypeBoss
 
     public string GetNameSpriteForIndexLevel(int p_level)
     {
-        //string spriteName =  NemesSpritesBoss[index];
-        //string spriteName = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.NameTextura2D).FirstOrDefault();
         if(!GetNamesSpritesNPC.ContainsKey(p_level))
         {
             Debug.Log("######### GetNameSpriteForIndexLevel not level " + p_level);
@@ -843,33 +1006,13 @@ public class TypeBoss
         }
     }
 
-    public Texture2D GetNameTextureMapForIndexLevel(int p_level)
+    public Texture2D GetTextureMapForIndexLevel(int p_level)
     {
-        //string _textureName = NemesTextureBoss[index];
         Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
         if(_texture==null)
         {
             Debug.Log("########### GetNameTextureMapForIndexLevel Not Texture in TypesBoss level = " + p_level);
         }
-
-        //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
         return _texture;
-        //-----
-        //return null;
     }
-
-    
-
-    
-
-    //public Texture2D GetNameTextureMapForIndexLevel(int p_level)
-    //{
-    //    //string _textureName = NemesTextureBoss[index];
-    //    //Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
-    //    //Texture2D _texture = Storage.Person.SpriteCollection[_textureName];
-    //    //return _texture;
-    //    //-----
-    //    return null;
-    //}
-
 }

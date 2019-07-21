@@ -111,7 +111,6 @@ public class ModelNPC
         [XmlIgnore]
         public int Speed { get; set; }
 
-        //-----------------------------------for Ufo
         private Vector3 m_Position = new Vector3(0, 0, 0);
         public override Vector3 Position
         {
@@ -155,34 +154,12 @@ public class ModelNPC
 
             int distX = UnityEngine.Random.Range(-15, 15);
             int distY = UnityEngine.Random.Range(-15, 15);
-            //System.Random rng = new System.Random();
-            //int distX = rng.Next(-15, 15); 
-            //int distY = rng.Next(-15, 15);
-
             float xT = _position.x + distX;
             float yT = _position.y + distY;
 
-            //validate
-            //if (yT > -1)
-            //    yT = _position.y - distY;
-            //if (xT < 1)
-            //    xT = _position.x - distX;
-
-            //----------------------------- valid Limit look hero
-            //Storage.ZonaRealLook zona = Storage.Instance.ZonaReal;
-            //if (zona != null)
-            //ValidPiontInZona(ref xT, ref yT, distX);z
             Helper.ValidPiontInZonaWorld(ref xT, ref yT, distX);
-
             TargetPosition = new Vector3(xT, yT, -1);
         }
-
-        //public virtual string TestNextPosition(GameObject gobj, string lastNewName) //, Vector3 p_newPosition)
-        //{
-        //    Debug.Log("***** lastNewName: " + lastNewName);
-        //    var res = NextPosition(gobj);
-        //    return res;
-        //}
 
         [XmlIgnore]
         private bool _isError = false;
@@ -250,7 +227,7 @@ public class ModelNPC
 
                 //newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
                 //@CD@ 
-                newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+                newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
                 //
 
                 //@?????@
@@ -267,9 +244,6 @@ public class ModelNPC
 
         public virtual string Update(GameObject gobj)
         {
-
-          
-
             Vector3 _newPosition = gobj.transform.position;
             Vector3 _oldPosition = Position;
             string nameObject = gobj.name;
@@ -285,7 +259,7 @@ public class ModelNPC
                 isInZona = false;
             }
 
-            newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
+            newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
             if (!isInZona && !string.IsNullOrEmpty(newName))
             {
                 //Destroy(gobj);
@@ -314,6 +288,7 @@ public class ModelNPC
             }
         }
 
+        [XmlIgnore]
         public string GetParamsString
         {
             get
@@ -591,6 +566,7 @@ public class ModelNPC
             //    movement.UpdateData("UpdateGameObject");
         }
 
+        [XmlIgnore]
         public override List<string> GetParams
         {
             get

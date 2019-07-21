@@ -348,7 +348,7 @@ public class MapWorld : MonoBehaviour {
     //                indErr = "6";
     //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
     //                indErr = "7";
-    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                if (!IsGridDataFieldExist(nameField))
     //                {
     //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
     //                    continue;
@@ -565,7 +565,7 @@ public class MapWorld : MonoBehaviour {
     //                indErr = "6";
     //                SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
     //                indErr = "7";
-    //                if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+    //                if (!IsGridDataFieldExist(nameField))
     //                {
     //                    DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
     //                    continue;
@@ -749,7 +749,7 @@ public class MapWorld : MonoBehaviour {
                     indErr = "6";
                     SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
                     indErr = "7";
-                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                    if (!Storage.IsGridDataFieldExist(nameField))
                     {
                         DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
                         continue;
@@ -873,7 +873,7 @@ public class MapWorld : MonoBehaviour {
                     }
                     //--------------
                     indErr = "7";
-                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                    if (!Storage.IsGridDataFieldExist(nameField))
                     {
                         DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
                         continue;
@@ -953,7 +953,7 @@ public class MapWorld : MonoBehaviour {
                 {
                     SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
                     string nameField = saveHeroPosField;
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                    if (Storage.IsGridDataFieldExist(nameField))
                     {
                         foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                         {
@@ -1003,7 +1003,7 @@ public class MapWorld : MonoBehaviour {
             {
                 SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
                 string nameField = saveHeroPosField;
-                if (Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+                if (Storage.IsGridDataFieldExist(nameField))
                 {
                     foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                     {

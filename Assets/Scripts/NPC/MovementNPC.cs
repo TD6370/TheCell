@@ -82,14 +82,14 @@ public class MovementNPC : MonoBehaviour {
         //_scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
         //if (_scriptUIEvents == null)
         //    Debug.Log("########### MovementUfo scriptUIEvents is Empty");
-        if (Storage.Events == null)
+        if (Storage.EventsUI == null)
         {
             Debug.Log("############ Storage.Events == null");
             return;
         }
 
 
-        m_isTrack = Storage.Events.IsTrackPointsVisible;
+        m_isTrack = Storage.EventsUI.IsTrackPointsVisible;
     }
 
     protected virtual void StartMoving()
@@ -697,7 +697,7 @@ public class MovementNPC : MonoBehaviour {
         
 
         //_scriptUIEvents.SetTestText(objID);
-        Storage.Events.SetTestText(objID);
+        Storage.EventsUI.SetTestText(objID);
 
         FindPersonData person = Storage.Person.GetFindPersonsDataForName(this.gameObject.name);
         if(person == null)
@@ -717,7 +717,7 @@ public class MovementNPC : MonoBehaviour {
         }
 
         //#EXPAND
-        Storage.Events.AddMenuPerson(_dataNPC, this.gameObject);
+        Storage.EventsUI.AddMenuPerson(_dataNPC, this.gameObject);
 
         //Storage.Log.GetHistory(_dataNPC.NameObject);
         //Debug.Log("Select: Game " + this.gameObject.name + "  OLD D: " + _dataNPC.NameObject);
@@ -774,7 +774,7 @@ public class MovementNPC : MonoBehaviour {
 
     private void SelectedMe()
     {
-        Storage.Events.ListLogAdd = "Me: " + this.gameObject.name;
+        Storage.EventsUI.ListLogAdd = "Me: " + this.gameObject.name;
     }
 
     public void SaveData()

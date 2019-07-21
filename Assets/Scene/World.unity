@@ -8420,7 +8420,7 @@ Prefab:
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 143.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
@@ -10531,7 +10531,7 @@ Prefab:
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 143.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224756099159754342, guid: b2069cca3deb24c47967ba82aa7e87c9,
         type: 2}
@@ -26586,9 +26586,6 @@ MonoBehaviour:
   MainCamera: {fileID: 580250719}
   SelectFieldPosHero: 
   SelectFieldCursor: 
-  prefabCompas: {fileID: 0}
-  numberOfObjects: 10
-  radius: 0.1
 --- !u!114 &1577116429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30359,7 +30356,6 @@ MonoBehaviour:
   CameraMap: {fileID: 1356392527}
   ObjectCursor: {fileID: 816106695}
   Speed: 20
-  txtMessage: {fileID: 1171611291}
 --- !u!114 &1798573870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33437,7 +33433,6 @@ MonoBehaviour:
   prefabText: {fileID: 624773371}
   prefabButtonCommand: {fileID: 1895253646}
   dpnMenuCommandTest: {fileID: 1819239862}
-  MainCamera: {fileID: 580250719}
   ActionRate: 0.5
 --- !u!1 &1942301120
 GameObject:

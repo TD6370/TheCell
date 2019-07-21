@@ -332,7 +332,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (IsMapDragOn)
             return;
 
-        RunTeleportHero();
+        RunCommandTeleportHero();
         //@@@-
         //MapDragOn(true);
     }
@@ -380,7 +380,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             //------------
             rayPoint.x -= diffDragX;
             rayPoint.y += diffDragY;
-            Storage.Events.ListLogAdd = "Diff: " + diffDragX + " x " + diffDragY;
+            Storage.EventsUI.ListLogAdd = "Diff: " + diffDragX + " x " + diffDragY;
             //------------
 
             if(Storage.Map.IsValid)
@@ -413,19 +413,13 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     }
        
 
-    private void RunTeleportHero()
+    private void RunCommandTeleportHero()
     {
-        if (Storage.Events.IsCommandTeleport || Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Teleport)
+        if (Storage.EventsUI.IsCommandTeleport || Storage.PaletteMap.ModePaint == ToolBarPaletteMapAction.Teleport)
         {
-            Storage.Map.Create();
-            int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
-            int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
-            posTransferHeroY *= -1;
-            Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+            Storage.Player.TeleportHero();
         }
     }
-
-   
 
     public void Show(bool isShow = true)
     {
@@ -511,7 +505,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             NormalizedMapPoint(posClick, colliderMap, out mapX, out mapY);
 
             if (isLog)
-                Storage.Events.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
+                Storage.EventsUI.ListLogAdd = "MAP ORIGINAL: pos = " + mapX + "x" + mapY + "  Zoom: " + SizeZoom;
 
             if (SizeZoom == 1)
             {
@@ -522,7 +516,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 if (isLog)
                 {
                     //----------------------
-                    Storage.Events.ListLogAdd = "ZOOM:" + SizeZoom;
+                    Storage.EventsUI.ListLogAdd = "ZOOM:" + SizeZoom;
                     Debug.Log("mapX = " + mapX);
                     Debug.Log("mapY = " + mapY);
                 }
@@ -575,7 +569,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 float offsetCenter = OffsetZoomDown(_zoom);
 
                 if (isLog)
-                    Storage.Events.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
+                    Storage.EventsUI.ListLogAdd = "Corrr zoom:  " + (int)mapX + "x" + (int)mapY + "  offsetCenter= " + offsetCenter;
 
                 mapX += offsetCenter;
                 mapY += offsetCenter;
@@ -587,7 +581,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             //isLog = true;
 
             if (isLog)
-                Storage.Events.ListLogAdd = "--- MAP pos = " + mapX + "x" + mapY;
+                Storage.EventsUI.ListLogAdd = "--- MAP pos = " + mapX + "x" + mapY;
 
             if (SizeZoom > 1f && Helper.IsBigWorld) // ------ Step 3.
             {
@@ -623,7 +617,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             posMapField /= SizeZoom;
 
             if (isLog)
-                Storage.Events.ListLogAdd = "SelectPointField pos = " + mapX + "x" + mapY;
+                Storage.EventsUI.ListLogAdd = "SelectPointField pos = " + mapX + "x" + mapY;
 
             Storage.Map.SelectPointField = posMapField;
         }
@@ -752,7 +746,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     private void SelectCellAction(string nameField)
     {
         Storage.Instance.SelectFieldCursor = nameField;
-        Storage.Events.CursorClickAction(nameField);
+        Storage.EventsUI.CursorClickAction(nameField);
 
         //Storage.Person.VeiwCursorGameObjectData(nameField);
         //if (Storage.PaletteMap.IsPaintsOn)
@@ -773,7 +767,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         //nameField = "Field20x50";
 
-        if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(nameField))
+        if (!Storage.IsGridDataFieldExist(nameField))
         {
             //if(!Storage.Instance.TestExistField(nameField))
             //{
@@ -826,7 +820,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                     fieldListPrefbs.Add(prefabType);
 
                     ////+++DRAW PERSON ---------------------------------
-                    Texture2D personMapTexture = TypeBoss.Instance.GetNameTextureMapForIndexLevel(bossObj.Level);
+                    Texture2D personMapTexture = TypeBoss.Instance.GetTextureMapForIndexLevel(bossObj.Level);
                     if (personMapTexture == null)
                     {
                         Debug.Log("####### ShowSelectorCell Textute is Empty  TypeBoss.Instance.GetNameTextureMapForIndexLevel(" + bossObj.Level + ") ");
@@ -984,9 +978,9 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 koofOnCenterY += 1;
 
             if(isLog)
-                Storage.Events.ListLogAdd = "New pos Cell: " + newPos.x + "x" + newPos.y;
+                Storage.EventsUI.ListLogAdd = "New pos Cell: " + newPos.x + "x" + newPos.y;
             if (isLog)
-                Storage.Events.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
+                Storage.EventsUI.ListLogAdd = "-- Cell koof: " + koofOnCenterX + "x" + koofOnCenterY;
 
             //float korrCellX = offSetOnCenterX / 100;
             //float korrCellY = offSetOnCenterY / 100;
@@ -998,7 +992,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             OffsetCell = GetOffsetCell(correctZomm);
 
             if (isLog)
-                Storage.Events.ListLogAdd = ":: OffsetCell corr: % " + OffsetCell;
+                Storage.EventsUI.ListLogAdd = ":: OffsetCell corr: % " + OffsetCell;
 
             korrCellX *= OffsetCell;
             korrCellY *= OffsetCell;
@@ -1007,12 +1001,12 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             newPos.y += korrCellY;
 
             if (isLog)
-                Storage.Events.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
+                Storage.EventsUI.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
         }
 
 
         if (isLog)
-            Storage.Events.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
+            Storage.EventsUI.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
         //<<< @
         //MapCellFrame.transform.SetParent(this.gameObject.transform);
         //----------------------------

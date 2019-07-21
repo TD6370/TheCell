@@ -801,7 +801,7 @@ public class GenerateGridFields : MonoBehaviour {
                     indErr = "10. posFieldReal=" + posFieldReal + " <> posFieldOld=" + posFieldOld + "  " + gobj.name;
 
 
-                    if (!Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldReal))
+                    if (!Storage.IsGridDataFieldExist(posFieldReal))
                     {
                         Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
                         Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData");
@@ -827,7 +827,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                     // #????# ????????????????
                     //Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
-                    if (Storage.Instance.GridDataG.FieldsD.ContainsKey(posFieldOld))
+                    if (Storage.IsGridDataFieldExist(posFieldOld))
                     {
                         int indLast = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.FindIndex(p => p.NameObject == gobj.name);
                         if (indLast == -1)
@@ -1075,32 +1075,12 @@ public class GenerateGridFields : MonoBehaviour {
         string typePrefab = objData.TagObject;
         string namePrefab = objData.NameObject;
         Vector3 pos = objData.Position;
-        
-
-        //#TEST #PREFABF
-        //---------------- 1.
-        //GameObject newPrefab = FindPrefab(typePrefab);
-        //GameObject newObjGame = (GameObject)Instantiate(newPrefab, pos, Quaternion.identity);
-        //----------------2.
-        //GameObject newObjGame = new GameObject("CreatePrefab");
-        //newObjGame.name = "CreatePrefab00000000000000000000000000000001";
+     
         GameObject newObjGame = null;// = new GameObject();
         try
         {
             strErr = "1";
             newObjGame = FindPrefab(typePrefab, objData.NameObject);
-
-            //if (PoolGameObjects.IsUsePoolObjects)
-            //{
-            //    ModelNPC.TerraData terrD = new ModelNPC.TerraData()
-            //    {
-            //        TileName = "Tundra"
-            //    };
-            //    terrD.UpdateGameObject(resGO);
-            //}
-
-            //#TEST
-            //newObjGame.name = namePrefab;
 
             newObjGame.transform.position = pos; //@!@.1
 

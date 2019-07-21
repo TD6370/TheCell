@@ -9,32 +9,12 @@ using System.Xml.Serialization;
 using UnityEngine;
 using System.Threading;
 
-public class UpdateData { //: MonoBehaviour {
+public class UpdateData {
 
     bool isTestSlow = false;// true;
 
     public bool IsUpdatingLocationPersonGlobal { get; set; }
     public int UpdatingLocationPersonLocal { get; set; }
-
-
-    //public UpdateData()
-    //{
-
-    //}
-
-    //private static UpdateData _instance;
-    //public static UpdateData Instance
-    //{
-    //    get
-    //    {
-    //        if (_instance == null)
-    //        {
-    //            _instance = new UpdateData();
-    //        }
-    //        return _instance;
-    //    }
-    //}
-
 
     private Dictionary<string, List<GameObject>> _GamesObjectsReal
     {
@@ -216,7 +196,7 @@ public class UpdateData { //: MonoBehaviour {
 
         if (isLog)
         {
-            Storage.Events.ListLogAdd = "Add IN GRID: d: " + p_TypeModeOptStartDelete + " c: " + p_TypeModeOptStartCheck;  
+            Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_TypeModeOptStartDelete + " c: " + p_TypeModeOptStartCheck;  
         }
 
         ModelNPC.FieldData fieldData;
@@ -245,7 +225,7 @@ public class UpdateData { //: MonoBehaviour {
                     if (indTM != -1)
                     {
                         if(isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Type";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "Check Type";
                         return false;
                     }
                 }
@@ -257,7 +237,7 @@ public class UpdateData { //: MonoBehaviour {
                     if (indTM != -1)
                     {
                         if (isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Prefab";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "Check Prefab";
                         return false;
                     }
                 }
@@ -269,7 +249,7 @@ public class UpdateData { //: MonoBehaviour {
                     if (indTM != -1)
                     {
                         if (isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "Check Terra";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "Check Terra";
                         return false;
                     }
                 }
@@ -282,7 +262,7 @@ public class UpdateData { //: MonoBehaviour {
                     for(int i=ListRemove.Count -1; i>=0;i--)
                     {
                         if (isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR type";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR type";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                     }
@@ -293,7 +273,7 @@ public class UpdateData { //: MonoBehaviour {
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                     }
@@ -304,7 +284,7 @@ public class UpdateData { //: MonoBehaviour {
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
-                            Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
+                            Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                     }
@@ -316,7 +296,7 @@ public class UpdateData { //: MonoBehaviour {
         if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelFull)
         {
             if (isLog)
-                Storage.Events.ListLogAdd = "Add IN GRID: " + "CLEAR FULL ";
+                Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR FULL ";
             fieldData.Objects.Clear();
         }
 
@@ -552,9 +532,9 @@ public class UpdateData { //: MonoBehaviour {
         {
             threadLoadWorld = new Thread(() =>
             {
-                if(!isFull)
-                    BackgroundLoadDataBigXML();
-                else
+                //if(!isFull)
+                //    BackgroundLoadDataBigXML();
+                //else
                     ThreadLoadDataBigXML();
             });
         }
@@ -588,7 +568,7 @@ public class UpdateData { //: MonoBehaviour {
         //v.2
         //foreach (var itemObj in fieldsD_Temp)
         //{
-        //    if(Storage.Instance.GridDataG.FieldsD.ContainsKey(itemObj.Key))
+        //    if(IsGridDataFieldExist(itemObj.Key))
         //    {
         //        Storage.Instance.GridDataG.FieldsD[itemObj.Key].Objects.AddRange(itemObj.Value.Objects);
         //    }
@@ -603,8 +583,8 @@ public class UpdateData { //: MonoBehaviour {
         //}
         
 
-        Storage.Events.SetTittle = "World is loaded";
-        Storage.Events.ListLogAdd = "************** World is loaded **************";
+        Storage.EventsUI.SetTittle = "World is loaded";
+        Storage.EventsUI.ListLogAdd = "************** World is loaded **************";
     }
 
     Dictionary<string, ModelNPC.FieldData> fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
@@ -628,6 +608,7 @@ public class UpdateData { //: MonoBehaviour {
         }
     }
 
+    /*
     public void BackgroundLoadDataBigXML()
     {
         string stepErr = "start";
@@ -701,25 +682,6 @@ public class UpdateData { //: MonoBehaviour {
                                         Objects = new List<ModelNPC.ObjectData>() { dataResult }
                                     });
                                 }
-                                //-------------------------
-                                //if (_GridDataG.FieldsD.ContainsKey(nameField))
-                                //{
-                                //    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
-                                //    fieldsD_Temp[nameField].Objects.Add(dataResult);
-                                //}
-                                //else
-                                //{
-                                //    //_GridDataG.FieldsD.Add(nameField, new ModelNPC.FieldData()
-                                //    //{
-                                //    //    NameField = nameField,
-                                //    //    Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                //    //});
-                                //    fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
-                                //    {
-                                //        NameField = nameField,
-                                //        Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                //    });
-                                //}
                             }
                             break;
                         }
@@ -727,7 +689,8 @@ public class UpdateData { //: MonoBehaviour {
                 }
             }
         }
-
+        */
         #endregion
 
     }
+    

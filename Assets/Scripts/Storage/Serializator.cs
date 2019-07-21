@@ -88,7 +88,7 @@ public class Serializator
         }
     }
 
-
+    /*
     static public void SaveGridPartsXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
 
@@ -207,6 +207,7 @@ public class Serializator
             Debug.Log("######### SaveGridXml: " + x.Message + "     to :" + datapath + "    #" + indErr);
         }
     }
+    */
 
     static public void SaveGridCashXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)
     {
@@ -357,6 +358,7 @@ public class Serializator
         //swFromFileTrueUTF8.Close();
     }
 
+    /*
     static public ModelNPC.GridData LoadGridPartsXml()
     {
         string datapath;
@@ -421,6 +423,7 @@ public class Serializator
 
         return result;
     }
+    */
 
     static public ModelNPC.GridData LoadGridXml(string datapath)
     {

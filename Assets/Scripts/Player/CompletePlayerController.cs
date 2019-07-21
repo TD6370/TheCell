@@ -27,8 +27,8 @@ public class CompletePlayerController : MonoBehaviour {
 
     [Header("Speed move hero")]
     public float Speed;             //Floating point variable to store the player's movement speed.
-    [Space]
-    public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
+    //[Space]
+    //public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
     //public Text txtLog;
     //public Color ColorCurrentField = Color.yellow;
     //public Color ColorSelectedCursorObject = Color.cyan;
@@ -75,7 +75,7 @@ public class CompletePlayerController : MonoBehaviour {
     private int _offsetLabelY = 10;
     float _diffCenterX = 0;
     float _diffCenterY = 0;
-    private bool _RotateMenu = false;
+    //private bool _RotateMenu = false;
     private CutsorPositionBilder _bilderCursorPosition;
     private GUIStyle styleLabel = new GUIStyle();
     private bool m_isFindFieldCurrent = false;
@@ -95,9 +95,8 @@ public class CompletePlayerController : MonoBehaviour {
 
         InitData();
         _count = 0;
-        SetTextMessage = "";
-
-        SetCountText();
+        Storage.EventsUI.SetTittle = "";
+        Storage.EventsUI.SetCountText(_count);
 
         //Set Start Position
         RigidbodyHero.MovePosition(new Vector2(40, -40));
@@ -120,14 +119,11 @@ public class CompletePlayerController : MonoBehaviour {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return;
         }
-              
 
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
         _movement = new Vector2(moveHorizontal, moveVertical);
-   
-
         if (CameraMap.enabled)
         {
             MovementMap(moveHorizontal, moveVertical);
@@ -136,7 +132,6 @@ public class CompletePlayerController : MonoBehaviour {
         else
         {
             //---Move Hero
-            //if(!RigidbodyHero.IsSleeping())
             RigidbodyHero.MovePosition(RigidbodyHero.position + _movement * Speed * Time.deltaTime);
             //--------------
         }
@@ -156,47 +151,21 @@ public class CompletePlayerController : MonoBehaviour {
             }
         }
 
-        //CalculateDiffCenterHero();
         if (Input.GetKey("escape"))
         {
-            Application.Quit();
+            Storage.EventsUI.PlayerPressEscape();
         }
 
         if (Input.GetMouseButtonDown(0) && m_IsCursorSelection)
         {
-            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition");
             _MousePositionClick = Input.mousePosition;
-            //Debug.Log("&&&&&& GetMousePositionOnScene.....Input.GetMouseButtonDown  &  Input.mousePosition " + _MousePositionClick);
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            _RotateMenu = true;
-        }
-        if (Storage.Events.IsCursorVisible)
+        if (Storage.EventsUI.IsCursorVisible)
             _MousePosition = Input.mousePosition;
-
-        //if (Input.GetKey("m"))
-        //{
-        //    Storage.Map.Create();
-
-        //    //DelayTimer = Time.time + ActionRate;
-        //}
     }
 
     void Update()
     {
-        //if (Input.GetKey("m") && Time.time > DelayTimer)
-        //{
-        //    Storage.Map.Create();
-
-        //    DelayTimer = Time.time + ActionRate;
-        //}
-
-        //if (Input.GetKey("p") && Time.time > DelayTimer)
-        //{
-        //    Storage.PaletteMap.Show();
-        //    DelayTimer = Time.time + ActionRate/2;
-        //}
     }
 
     void OnMouseDown()
@@ -216,28 +185,16 @@ public class CompletePlayerController : MonoBehaviour {
             nextSize = 8.0f;
 
         //Debug.Log("SIZE CAMERA HERO:" + nextSize);
-
         MainCamera.orthographicSize = nextSize;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-
-        //#TEST
-        //var t1= this.GetComponent<CapsuleCollider2D>().enabled; 
-        //var t2= this.RigidbodyHero.IsSleeping();
-
-
         if (!CameraMap.enabled)
         {
             //Debug.Log("OnTriggerEnter2D.............................................");
-
-            //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-            //if (other.gameObject.CompareTag("PrefabUfo"))
-            //if (other.gameObject.CompareTag(StoragePerson._Ufo))
             if (other.gameObject.IsUFO())
             {
-                //DestroyObject(other.gameObject);  //        var gObj = other.gameObject;
                 StartCoroutine(DestroyObjectC(other.gameObject));
             }
         }
@@ -279,12 +236,13 @@ public class CompletePlayerController : MonoBehaviour {
 
     #region Coroutine
 
-    IEnumerator EndGame()
+    IEnumerator EndGameCoroutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(5);
-            SetTextMessage = "END GAME";
+            Storage.EventsUI.SetTittle = "END GAME";
+            Storage.EventsUI.SetMessageBox = "END GAME";
             Application.Quit();
         }
     }
@@ -374,8 +332,13 @@ public class CompletePlayerController : MonoBehaviour {
             Debug.Log("scriptStorage null");
             return null;
         }
+        if (Storage.Player == null)
+        {
+            Debug.Log("scriptPlayer null");
+            return null;
+        }
 
-        Storage.Instance.SetHeroPosition(posX, posY, transform.position.x, transform.position.y);
+        Storage.Player.SetHeroPosition(posX, posY, transform.position.x, transform.position.y);
 
         if (m_scriptGrid == null)
         {
@@ -409,7 +372,7 @@ public class CompletePlayerController : MonoBehaviour {
         //GEN LOOK
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
         //@@@
-        Storage.GenGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
+        Storage.GenGrid.GenGridLook(_movement, posX, Storage.Player.LimitHorizontalLook, posY, Storage.Player.LimitVerticalLook, Storage.GenGrid.IsLoadOnlyField);
 
         //m_scriptGrid.GenGridLook(_movement, posX, Storage.Instance.LimitHorizontalLook, posY, Storage.Instance.LimitVerticalLook, isOnlyField: true);
 
@@ -541,41 +504,20 @@ public class CompletePlayerController : MonoBehaviour {
     private void BeforeDestroyUfo()
     {
         _count = _count + 1;
-        SetCountText();
+        Storage.EventsUI.SetCountText(_count);
     }
-
-
-    
-
     
     private Vector2 m_lastMousePosition;
     private void CursorEvents()
     {
-
         _rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
-
-        //CURSOR VIEW 
-        //StartCoroutine(SetPositionCursorView());
 
         //Debug.Log("Storage.Events.IsCursorVisible = " + Storage.Events.IsCursorVisible);
 
-        if (Storage.Events.IsCursorVisible &&  _MousePosition != m_lastMousePosition)
+        if (Storage.EventsUI.IsCursorVisible &&  _MousePosition != m_lastMousePosition)
         {
             StartCoroutine(SetPositionCursorView());
             m_lastMousePosition = _MousePosition;
-
-            //posCursorToField = CalculatePosCutsorToGrid();
-            //posCursorToField = _bilderCursorPosition.CalculatePosCutsorToGrid(_MousePosition, this.transform.position);
-
-            //if (ObjectCursor != null)
-            //{
-            //    //Debug.Log("Cursor pos: " + posCursorToField);
-            //    ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
-            //}
-            //else
-            //{
-            //    Debug.Log("######### ObjectCursor is null");
-            //}
         }
 
         //MOUSE ON CLICK
@@ -584,33 +526,12 @@ public class CompletePlayerController : MonoBehaviour {
             _fieldCursor = Helper.GetNameFieldPosit(PosCursorToField.x, PosCursorToField.y);
             Storage.Instance.SelectFieldCursor = _fieldCursor;
 
-            Storage.Events.CursorClickAction(PosCursorToField, _fieldCursor);
+            Storage.EventsUI.CursorClickAction(PosCursorToField, _fieldCursor);
 
             _positionLastTarget = _rectCursor;
         }
 
-        if (_RotateMenu == true)
-        {
-            _RotateMenu = false;
-            if (_offsetLabelX == 10 && _offsetLabelY == 10)
-            {
-                _offsetLabelX = -150;
-            }
-            else if (_offsetLabelX == -150 && _offsetLabelY == 10)
-            {
-                _offsetLabelY = -130;
-            }
-            else if (_offsetLabelX == -150 && _offsetLabelY == -130)
-            {
-                _offsetLabelX = 10;
-            }
-            else if (_offsetLabelX == 10 && _offsetLabelY == -130)
-            {
-                _offsetLabelY = 10;
-            }
-        }
-
-        if (Storage.Events.IsCursorVisible)
+        if (Storage.EventsUI.IsCursorVisible)
         {
             //var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
             //Rect rectPosLabel = new Rect(_rectCursorReal.x + _offsetLabelX, _rectCursorReal.y + _offsetLabelY, _rectCursorReal.width, _rectCursorReal.height);
@@ -620,6 +541,7 @@ public class CompletePlayerController : MonoBehaviour {
         
     }
 
+    /*
     private void SetLabelCursor(Rect position, string text)
     {
         if (styleLabel == null)
@@ -630,38 +552,25 @@ public class CompletePlayerController : MonoBehaviour {
             styleLabel.normal.textColor = Color.black;
             styleLabel.fontStyle = FontStyle.Bold;
         }
-        //shadow.alignment = TextAnchor.MiddleCenter;
-
         GUI.Label(position, text, styleLabel);
     }
+    */
 
-    //private string SetTextLog
+    //void SetCountText()
     //{
-    //    set
+    //    int limitEndGame = 150;
+    //    Storage.Events.SetTextMessage = "Count: " + _count.ToString() + " / " + limitEndGame;
+
+    //    if (_count >= limitEndGame)
     //    {
-    //        txtLog.text = value;
+    //        Storage.Events.SetTextMessage = "You win! :" + _count;
+            
     //    }
     //}
 
-    private string SetTextMessage
+    public void EndGame()
     {
-        set
-        {
-            txtMessage.text = value;
-        }
-    }
-    
-
-    void SetCountText()
-    {
-        int limitEndGame = 150;
-        SetTextMessage = "Count: " + _count.ToString() + " / " + limitEndGame;
-
-        if (_count >= limitEndGame)
-        {
-            SetTextMessage = "You win! :" + _count;
-            StartCoroutine(EndGame());
-        }
+        StartCoroutine(EndGameCoroutine());
     }
 
     public void CursorSelectionOn(bool? isOn = null)
@@ -688,26 +597,18 @@ public class CompletePlayerController : MonoBehaviour {
         if (ObjectCursor != null)
         {
             //Debug.Log("Cursor pos: " + posCursorToField);
-            //ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
+           
             if (offsetCursorX == 0 && offsetCursorY == 0)
             {
                 offsetCursorX = 0.75f;
                 offsetCursorY = 0.85f;
-                //RectTransform rt = (RectTransform)ObjectCursor.transform;
-                //float widthCursor = rt.rect.width;
-                //float heightCursor = rt.rect.height;
+                
 
                 float widthCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.x; 
                 float heightCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.y;
-                //float widthCursor = ObjectCursor.GetComponent<SpriteRenderer>()
-                //float heightCursor = ObjectCursor.GetComponent<SpriteRenderer>().bounds.size.y;
-
-
-                //offsetCursorX = widthCursor / 2;
-                //offsetCursorY = (heightCursor / 2);// * (-1);
+               
                 Debug.Log("_______________CURSOR OffSet = " + offsetCursorX + "x" + offsetCursorY   + "     SpriteRenderer.bounds: " + widthCursor  + "x" + heightCursor);
             }
-            //ObjectCursor.transform.position = new Vector3(posCursorToField.x, posCursorToField.y, -5);
             ObjectCursor.transform.position = new Vector3(
                 PosCursorToField.x - offsetCursorX, 
                 PosCursorToField.y + offsetCursorY, 
@@ -721,77 +622,12 @@ public class CompletePlayerController : MonoBehaviour {
 
     }
 
-    /*
-    public Vector2 CalculatePosCutsorToGrid_Old()
-    {
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(_MousePosition);
-
-        //_rectCursor = new Rect(_MousePositionClick.x, Screen.height - _MousePositionClick.y, 300, 800);
-        var _rectCursorReal = new Rect(_MousePosition.x, Screen.height - _MousePosition.y, 300, 800);
-
-        float zoom = MainCamera.orthographicSize / 10;
-
-        //Vector2 posHero = transform.position;
-        Vector2 posHero = transform.position;
-        Vector2 posCursorToField = new Vector2(0, 0);
-        Vector2 posHeroStartInCentre = new Vector2(17, -9);
-        Vector2 posCursorNormalize = new Vector2(0, 0);
-        float offsetUI_World_lenToCenterScreenX = 0;
-        float offsetUI_World_lenToCenterScreenY = 0;
-        float normalX = 1;
-        float normalY = 1;
-        string testCalc = "";
-        float cameraWidth = 35.5f;// 35;
-        float cameraHeight = 20;// 19;
-                                //float cameraWidth = 35;
-                                //float cameraHeight = 19;
-
-        //MainCamera.orthographicSize
-        var wCam = MainCamera.rect.width;
-        var hCam = MainCamera.rect.height;
-        Debug.Log("SIZE MainCamera :" + wCam + "x" + hCam + "   orthographicSize=" + MainCamera.orthographicSize);
-
-        offsetUI_World_lenToCenterScreenX = Screen.width / cameraWidth;
-        offsetUI_World_lenToCenterScreenY = Screen.height / cameraHeight;
-        testCalc += "\n *ffsetY(" + offsetUI_World_lenToCenterScreenY + ") = Screen.height(" + Screen.height + ") / 19;";
-
-        normalX = _rectCursorReal.x / offsetUI_World_lenToCenterScreenX;
-        normalY = _rectCursorReal.y / offsetUI_World_lenToCenterScreenY;
-        testCalc += "\n *posCursorToField.Y(" + normalY + ") = _rectCursorReal.y(" + _rectCursorReal.y + ") / offsetY(" + offsetUI_World_lenToCenterScreenY + ")";
-        posCursorToField = new Vector2(normalX, normalY);
-
-        float addPosHeroX =posHero.x - posHeroStartInCentre.x + posCursorToField.x;
-        //float addPosHeroY = posHero.y - posHeroStartInCentre.y + posCursorToField.y; ///!!!!!!!!!!!!!!!
-        float addPosHeroY = Math.Abs(posHero.y) - Math.Abs(posHeroStartInCentre.y) + Math.Abs(posCursorToField.y); ///!!!!!!!!!!!!!!!
-        addPosHeroY *= -1;
-
-        testCalc += "\naddPosHeroY(" + addPosHeroY + ") = posHero.y(" + posHero.y + ") - posHeroStartInCentre.y(" + posHeroStartInCentre.y + ") + *posCursorToField.y(" + posCursorToField.y + ")";
-        posCursorToField = new Vector2(addPosHeroX, addPosHeroY);
-
-
-        //var posGridX = (int)((posCursorToField.x / Storage.ScaleWorld));
-        //var posGridY = (int)(((posCursorToField.y) / Storage.ScaleWorld));
-
-        //_infoPoint =
-        //    "\nMouse X=" + _rectCursorReal.x + " Y=" + _rectCursorReal.y +
-        //    "\nSize: " + Screen.width + "x" + Screen.height +
-        //    "\nHero: " + transform.position.x + "x" + transform.position.y +
-        //    "\nZoom=" + zoom +
-        //    "\nField: " + _fieldCursor +
-        //    "\nOffset: " + offsetUI_World_lenToCenterScreenX + " : " + offsetUI_World_lenToCenterScreenY +
-        //    "\nNormali : " + normalX + " x " + normalY +
-        //    "\nAdd pos Hero: " + addPosHeroX + " x " + addPosHeroY
-        //    + testCalc;
-
-        return posCursorToField;
-    }
-    */
+    
 
     public class CutsorPositionBilder
     {
         Vector2 m_MousePosition;
         Camera m_MainCamera;
-        //Vector2 m_posHero;
 
         Vector2 posCursorToField = new Vector2(0, 0);
         Vector2 posHeroStartInCentre = new Vector2(17, -9);
@@ -842,13 +678,6 @@ public class CompletePlayerController : MonoBehaviour {
             offsetUI_World_lenToCenterScreenX = Screen.width / lookGridWidth;
             offsetUI_World_lenToCenterScreenY = Screen.height / lookGridHeight;
         }
-
-        //public void Update(Vector2 p_MousePosition, Vector2 p_posHero)
-        //{
-        //    m_MousePosition = p_MousePosition;
-        //    m_posHero = p_posHero;
-        //}
-
 
         public Vector2 CalculatePosCutsorToGrid(Vector2 p_MousePosition, Vector2 m_posHero)
         {
