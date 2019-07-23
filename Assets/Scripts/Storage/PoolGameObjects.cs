@@ -65,8 +65,19 @@ public class PoolGameObjects
         //================
         public int LimitField = 400;
         public int LimitBoss = 230;
+        public int LimitPerson = 230;
         public int LimitVood = 100;
+        public int LimitWall = 100;
         public int LimitOthers = 100;
+    }
+
+    public enum TypePoolPrefabs
+    {
+        TerraFloor,
+        TerraFlore,
+        TerraWall,
+        Person,
+        PersonUFO
     }
 
     void LoadPoolGameObjects()
@@ -158,8 +169,9 @@ public class PoolGameObjects
             {
                 ModelNPC.TerraData terrD = new ModelNPC.TerraData()
                 {
-                    TileName = "Tundra"
+                    ModelView = "Tundra"
                 };
+                //Update texture Object pool Field default
                 terrD.UpdateGameObject(newGO);
             }
         }

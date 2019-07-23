@@ -11,21 +11,75 @@ using System.Xml.Serialization;
 public class Serializator
 {
     public static Type[] extraTypes = {
-            typeof(ModelNPC.FieldData),
-            typeof(ModelNPC.ObjectData),
+        typeof(ModelNPC.FieldData),
+        typeof(ModelNPC.ObjectData),
 
-            typeof(ModelNPC.GameDataUfo),
+        typeof(ModelNPC.GameDataUfo),
 
-            typeof(ModelNPC.GameDataNPC),
-            typeof(ModelNPC.PersonData),
+        typeof(ModelNPC.GameDataNPC),
+        typeof(ModelNPC.PersonData),
 
-            typeof(ModelNPC.PersonDataBoss),
-            typeof(ModelNPC.GameDataBoss),
-            typeof(TilesData),
-            typeof(DataTile),
-            typeof(DataConstructionTiles),
-            typeof(ModelNPC.WallData),
-            typeof(ModelNPC.TerraData)
+        typeof(ModelNPC.PersonDataBoss),
+        typeof(ModelNPC.GameDataBoss),
+        typeof(TilesData),
+        typeof(DataTile),
+        typeof(DataConstructionTiles),
+        typeof(ModelNPC.WallData),
+        typeof(ModelNPC.TerraData),
+        typeof(ModelNPC.FloorData),
+        typeof(ModelNPC.FloreData),
+            
+
+        typeof(ModelNPC.Boloto),
+        typeof(ModelNPC.Chip),
+        typeof(ModelNPC.Gecsagon),
+        typeof(ModelNPC.Kamish),
+
+        typeof(ModelNPC.Berry),
+        typeof(ModelNPC.Mashrooms),
+        typeof(ModelNPC.Weed),
+        typeof(ModelNPC.Weedflower),
+
+        typeof(ModelNPC.Kishka),
+        typeof(ModelNPC.Nerv),
+        typeof(ModelNPC.Orbits),
+        typeof(ModelNPC.Shampinion),
+
+        typeof(ModelNPC.Corals),
+        typeof(ModelNPC.Desert),
+        typeof(ModelNPC.Diods),
+        typeof(ModelNPC.Parket),
+
+        typeof(ModelNPC.GameDataAlienInspector),
+        typeof(ModelNPC.GameDataAlienMachinetool),
+        typeof(ModelNPC.GameDataAlienMecha),
+
+        typeof(ModelNPC.GameDataAlienDendroid),
+        typeof(ModelNPC.GameDataAlienGarry),
+        typeof(ModelNPC.GameDataAlienLollipop),
+
+        typeof(ModelNPC.GameDataAlienBlastarr),
+        typeof(ModelNPC.GameDataAlienHydragon),
+        typeof(ModelNPC.GameDataAlienPavuk),
+        typeof(ModelNPC.GameDataAlienSkvid),
+
+        typeof(ModelNPC.GameDataAlienFantom),
+        typeof(ModelNPC.GameDataAlienMask),
+        typeof(ModelNPC.GameDataAlienVhailor),
+
+        typeof(ModelNPC.Kolba),
+        typeof(ModelNPC.Lantern),
+
+        typeof(ModelNPC.Bananas),
+        typeof(ModelNPC.Cluben),
+
+        typeof(ModelNPC.Chpok),
+        typeof(ModelNPC.Pandora),
+
+        typeof(ModelNPC.Nadmozg),
+        typeof(ModelNPC.Triffid),
+        typeof(ModelNPC.Aracul),
+        typeof(ModelNPC.Cloudwood)
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)

@@ -28,12 +28,6 @@ public class CompletePlayerController : MonoBehaviour {
     [Header("Speed move hero")]
     public float Speed;             //Floating point variable to store the player's movement speed.
     //[Space]
-    //public Text txtMessage;			//Store a reference to the UI Text component which will display the 'You win' message.
-    //public Text txtLog;
-    //public Color ColorCurrentField = Color.yellow;
-    //public Color ColorSelectedCursorObject = Color.cyan;
-    //public Color ColorFindCursorObject = Color.magenta;
-    //List<string> listLog = new List<string>();
 
     private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
     public Rigidbody2D RigidbodyHero

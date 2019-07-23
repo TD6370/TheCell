@@ -1263,7 +1263,7 @@ public class GenerateGridFields : MonoBehaviour {
             {
                 ModelNPC.TerraData terrD = new ModelNPC.TerraData()
                 {
-                    TileName = "Tundra"
+                    ModelView = "Tundra"
                 };
                 terrD.UpdateGameObject(resGO);
             }

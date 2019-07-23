@@ -321,7 +321,7 @@ public class StorageCorrect : MonoBehaviour {
         Debug.Log("+++++++ CreateNewCorrectObject  create Name Object : " + nameObject);
 
         //CREATE DATA
-        ModelNPC.ObjectData objDataSave = SaveLoadData.BildObjectData(prefabType);
+        ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabType);
         objDataSave.NameObject = nameObject;
         objDataSave.TagObject = prefabName.ToString();
         objDataSave.Position = pos;

@@ -20,11 +20,11 @@ public class MovementBoss : MovementNPC
         _dataNPC = FindObjectData<ModelNPC.GameDataBoss>(callFunc);// as SaveLoadData.GameDataNPC;
     }
 
-    public virtual ModelNPC.GameDataBoss GetUpdateData(string callFunc)
-    {
-        var _dataBoss = FindObjectData<ModelNPC.GameDataBoss>(callFunc);// as SaveLoadData.GameDataNPC;
-        return _dataBoss;
-    }
+    //public virtual ModelNPC.GameDataBoss GetUpdateData(string callFunc)
+    //{
+    //    var _dataBoss = FindObjectData<ModelNPC.GameDataBoss>(callFunc);// as SaveLoadData.GameDataNPC;
+    //    return _dataBoss;
+    //}
 
     protected override void StartMoving()
     {

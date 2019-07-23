@@ -251,49 +251,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     }
 
 
-    private void EventsUI()
-    {
-        //Check if the left Mouse button is clicked
-        //if (Input.GetKey(KeyCode.Mouse0))
-        //{
-        //Set up the new Pointer Event
-        //var  m_Raycaster = GetComponent<Physics2DRaycaster>();
-        if (m_Raycaster == null || m_EventSystem == null)
-        {
-            Debug.Log("####### EventsU MAP ### m_Raycaster==null");
-            return;
-        }
-
-        m_PointerEventData = new PointerEventData(m_EventSystem);
-        if (m_PointerEventData == null)
-        {
-            Debug.Log("####### EventsU MAP ### PointerEventData==null");
-            return;
-        }
-
-        //Set the Pointer Event Position to that of the mouse position
-        //m_PointerEventData.position = Input.mousePosition;
-
-        //cameraMap = Storage.PlayerController.CameraMap;
-        //m_PointerEventData.position = cameraMap.ScreenToWorldPoint(Input.mousePosition);
-
-        //Create a list of Raycast Results
-        List<RaycastResult> results = new List<RaycastResult>();
-
-        //Raycast using the Graphics Raycaster and mouse click position
-        m_Raycaster.Raycast(m_PointerEventData, results);
-
-        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-        foreach (RaycastResult result in results)
-        {
-            //Storage.Events.ListLogAdd = "Event 4. MAP Raycaster event";
-            Debug.Log(">>>>>>>>>> Hit MAP Raycaster event ### " + result.gameObject.name);
-        }
-
-        //Debug.Log(">>>>>>>>>> Hit MAP ### Not result....");
-        //}
-
-    }
+    
 
     private void MouseDownOnChange()
     {
@@ -1079,6 +1037,50 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             posOld = new Vector3(9.4f, 5.7f, posOld.z);
             Debug.Log("############ Incorrect start position Map Cell Offset");
         }
+    }
+
+    private void EventsUI_()
+    {
+        //Check if the left Mouse button is clicked
+        //if (Input.GetKey(KeyCode.Mouse0))
+        //{
+        //Set up the new Pointer Event
+        //var  m_Raycaster = GetComponent<Physics2DRaycaster>();
+        if (m_Raycaster == null || m_EventSystem == null)
+        {
+            Debug.Log("####### EventsU MAP ### m_Raycaster==null");
+            return;
+        }
+
+        m_PointerEventData = new PointerEventData(m_EventSystem);
+        if (m_PointerEventData == null)
+        {
+            Debug.Log("####### EventsU MAP ### PointerEventData==null");
+            return;
+        }
+
+        //Set the Pointer Event Position to that of the mouse position
+        //m_PointerEventData.position = Input.mousePosition;
+
+        //cameraMap = Storage.PlayerController.CameraMap;
+        //m_PointerEventData.position = cameraMap.ScreenToWorldPoint(Input.mousePosition);
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+        foreach (RaycastResult result in results)
+        {
+            //Storage.Events.ListLogAdd = "Event 4. MAP Raycaster event";
+            Debug.Log(">>>>>>>>>> Hit MAP Raycaster event ### " + result.gameObject.name);
+        }
+
+        //Debug.Log(">>>>>>>>>> Hit MAP ### Not result....");
+        //}
+
     }
 
     #region Rest Hit point

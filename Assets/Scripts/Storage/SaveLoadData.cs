@@ -71,56 +71,59 @@ public class SaveLoadData : MonoBehaviour {
 
         PrefabFlore,
         PrefabNPC,
+        //--------------
 
-        //Boloto,
-        //Chip,
-        //Gecsagon,
-        //Kamish,
+        Boloto,
+        Chip,
+        Gecsagon,
+        Kamish,
 
-        //Berry,
-        //Mashrooms,
-        //Weed,
-        //Weedflower,
+        Berry,
+        Mashrooms,
+        Weed,
+        Weedflower,
 
-        //Kishka,
-        //Nerv,
-        //Orbits,
-        //Shampinion,
+        Kishka,
+        Nerv,
+        Orbits,
+        Shampinion,
 
-        //Corals,
-        //Desert,
-        //Diods,
-        //Parket,
+        Corals,
+        Desert,
+        Diods,
+        Parket,
 
-        //Inspector,
-        //Machinetool,
-        //Mecha,
+        Inspector,
+        Machinetool,
+        Mecha,
 
-        //Dendroid,
-        //Garry,
-        //Lollipop,
+        Dendroid,
+        Garry,
+        Lollipop,
 
-        //Blastarr,
-        //Hydragon,
-        //Pavuk,
-        //Skvid,
+        Blastarr,
+        Hydragon,
+        Pavuk,
+        Skvid,
 
-        //Fantom,
-        //Mask,
-        //Vhailor,
+        Fantom,
+        Mask,
+        Vhailor,
 
-        //Kolba,
-        //Lantern,
+        Kolba,
+        Lantern,
 
-        //Bananas,
-        //Cluben,
-        //Chpok,
-        //Pandora,
+        Bananas,
+        Cluben,
 
-        //Nadmozg,
-        //Triffid,
-        //Aracul,
-        //Cloudwood
+        Chpok,
+        Pandora,
+
+        Nadmozg,
+        Triffid,
+
+        Aracul,
+        Cloudwood
     }
 
     public enum TypePrefabFloors
@@ -205,9 +208,9 @@ public class SaveLoadData : MonoBehaviour {
 
     public void InitPrefabCollections()
     {
-        string[] florrs = Enum.GetNames(typeof(TypePrefabFloors));
+        string[] floors = Enum.GetNames(typeof(TypePrefabFloors));
         NamesPrefabFloors = new List<string>();
-        foreach (var item in florrs)
+        foreach (var item in floors)
         {
             NamesPrefabFloors.Add(item);
         }
@@ -279,7 +282,7 @@ public class SaveLoadData : MonoBehaviour {
                     //Debug.Log("CreateGamesObjectsWorld  " + nameFiled + "  prefabName=" + prefabName + " pos =" + pos + "    Spacing=" + Spacing + "   x=" + "   y=" + y);
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
+                    ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
@@ -390,7 +393,7 @@ public class SaveLoadData : MonoBehaviour {
                         pos.z = -2;
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
+                    ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
@@ -469,7 +472,7 @@ public class SaveLoadData : MonoBehaviour {
                         pos.z = -2;
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, true);
+                    ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     objDataSave.TagObject = prefabName.ToString();
                     objDataSave.Position = pos;
@@ -872,36 +875,36 @@ public class SaveLoadData : MonoBehaviour {
         return null;
     }
 
-    public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType, bool isTerraGen = false)
-    {
-        ModelNPC.ObjectData objGameBild;
+    //public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType, bool isTerraGen = false)
+    //{
+    //    ModelNPC.ObjectData objGameBild;
 
-        switch (prefabType)
-        {
-            case SaveLoadData.TypePrefabs.PrefabUfo:
-                objGameBild = new ModelNPC.GameDataUfo();
-                break;
-            case SaveLoadData.TypePrefabs.PrefabBoss:
-                objGameBild = new ModelNPC.GameDataBoss(); //$$
-                break;
-            case SaveLoadData.TypePrefabs.PrefabField:
-                //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
-                objGameBild = new ModelNPC.TerraData(); //$$
-                break;
-            case SaveLoadData.TypePrefabs.PrefabNPC:
-                objGameBild = new ModelNPC.GameDataAlien();
-                break;
-            case SaveLoadData.TypePrefabs.PrefabFlore:
-                objGameBild = new ModelNPC.ObjectData();
-                break;
-            default:
-                objGameBild = new ModelNPC.ObjectData();
-                break;
-        }
-        return objGameBild;
-    }
+    //    switch (prefabType)
+    //    {
+    //        case SaveLoadData.TypePrefabs.PrefabUfo:
+    //            objGameBild = new ModelNPC.GameDataUfo();
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabBoss:
+    //            objGameBild = new ModelNPC.GameDataBoss(); //$$
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabField:
+    //            //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
+    //            objGameBild = new ModelNPC.TerraData(); //$$
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabNPC:
+    //            objGameBild = new ModelNPC.GameDataAlien();
+    //            break;
+    //        case SaveLoadData.TypePrefabs.PrefabFlore:
+    //            objGameBild = new ModelNPC.ObjectData();
+    //            break;
+    //        default:
+    //            objGameBild = new ModelNPC.ObjectData();
+    //            break;
+    //    }
+    //    return objGameBild;
+    //}
 
-       
+
     public bool AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
     {
         
@@ -958,7 +961,7 @@ public class SaveLoadData : MonoBehaviour {
             pos.z = -2;
 
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-        ModelNPC.ObjectData objDataSave = BildObjectData(prefabName, false);
+        ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, false);
         objDataSave.NameObject = nameObject;
         objDataSave.TagObject = prefabName.ToString();
         objDataSave.Position = pos;
@@ -970,8 +973,19 @@ public class SaveLoadData : MonoBehaviour {
                 Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
                 return false;
             }
-            objTerra.TileName = itemTile.Name;
+            objTerra.ModelView = itemTile.Name;
         }
+        if (structType == TypesStructure.TerraPrefab)
+        {
+            var objTerraPrefab = objDataSave as ModelNPC.WallData;
+            if (objTerraPrefab == null)
+            {
+                Debug.Log("####### AddConstructInGridData: structType is TypesStructure.TerraPrefab   objDataSave Not is ModelNPC.TerraData !!!!");
+                return false;
+            }
+            objTerraPrefab.ModelView = itemTile.Name;
+        }
+        
         if (structType == TypesStructure.Person)
         {
             var objPerson = objDataSave as ModelNPC.GameDataBoss;

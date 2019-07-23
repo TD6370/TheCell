@@ -102,8 +102,8 @@ public class MovementNPC : MonoBehaviour {
     // Update is called once per frame
     public virtual void Update()
     {
-        if(PoolGameObjects.IsUsePoolObjects)
-            Refresh();
+        //if(PoolGameObjects.IsUsePoolObjects)
+        //    Refresh();
     }
 
     private void LateUpdate()
