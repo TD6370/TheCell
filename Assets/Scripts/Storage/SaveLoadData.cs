@@ -71,7 +71,7 @@ public class SaveLoadData : MonoBehaviour {
 
         PrefabFlore,
         PrefabNPC,
-        //--------------
+        //-------------- Floor and Flore
 
         Boloto,
         Chip,
@@ -92,7 +92,7 @@ public class SaveLoadData : MonoBehaviour {
         Desert,
         Diods,
         Parket,
-
+        //----- NPC
         Inspector,
         Machinetool,
         Mecha,
@@ -109,7 +109,7 @@ public class SaveLoadData : MonoBehaviour {
         Fantom,
         Mask,
         Vhailor,
-
+        //--------- Wall
         Kolba,
         Lantern,
 

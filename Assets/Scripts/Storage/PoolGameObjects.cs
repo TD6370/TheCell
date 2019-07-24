@@ -210,7 +210,50 @@ public class PoolGameObjects
         return poolObj;
     }
 
-    
+    public PoolGameObject AddPoolNewTypeObject2(SaveLoadData.TypePrefabs prefabType, bool isLog = false)
+    {
+        string prefabTag = prefabType.ToString();
+        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
+        PoolGameObject poolObj = new PoolGameObject();
+        poolObj.Name = "GameObjectPool " + indexPool++;
+        poolObj.Tag = prefabTag;
+        poolObj.Init(newGO);
+        poolObj.Deactivate("Add " + poolObj.Name, true);
+
+        if (PoolGameObjects.IsUsePoolObjects)
+        {
+            var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
+            if (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString())
+            {
+                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+                {
+                    ModelView = "Tundra"
+                };
+                //Update texture Object pool Field default
+                terrD.UpdateGameObject(newGO);
+            }
+        }
+
+        if (IsStack)
+        {
+            var stackPool = new Stack<PoolGameObject>();
+            if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
+                PoolGamesObjectsStack.Add(prefabTag, stackPool);
+            else
+                stackPool = PoolGamesObjectsStack[prefabTag];
+
+            //#test
+            int countInPool = PoolGamesObjectsStack[prefabTag].Count;
+
+            stackPool.Push(poolObj);
+        }
+        else
+        {
+            PoolGamesObjects.Add(poolObj);
+        }
+        return poolObj;
+    }
+
 
     public GameObject GetPoolGameObject(string nameObject, string tagPool, Vector3 pos)
     {

@@ -509,8 +509,6 @@ public class StoragePerson : MonoBehaviour {
             obj = new ModelNPC.GameDataAlienMecha();
         if (TypeAlien == SaveLoadData.TypePrefabNPC.Dendroid.ToString())
             obj = new ModelNPC.GameDataAlienDendroid();
-        if (TypeAlien == SaveLoadData.TypePrefabNPC.Dendroid.ToString())
-            obj = new ModelNPC.GameDataAlienDendroid();
         if (TypeAlien == SaveLoadData.TypePrefabNPC.Garry.ToString())
             obj = new ModelNPC.GameDataAlienGarry();
         if (TypeAlien == SaveLoadData.TypePrefabNPC.Lollipop.ToString())
@@ -531,7 +529,6 @@ public class StoragePerson : MonoBehaviour {
             obj = new ModelNPC.GameDataAlienVhailor();
         //if (TypeAlien == SaveLoadData.TypePrefabNPC..ToString())
         //    obj = new ModelNPC.GameDataAlien();
-        obj.TypeAlien = TypeAlien;
         return obj;
     }
 
