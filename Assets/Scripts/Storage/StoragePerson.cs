@@ -529,6 +529,7 @@ public class StoragePerson : MonoBehaviour {
             obj = new ModelNPC.GameDataAlienVhailor();
         //if (TypeAlien == SaveLoadData.TypePrefabNPC..ToString())
         //    obj = new ModelNPC.GameDataAlien();
+        //obj.TypePrefabName = TypeAlien;
         return obj;
     }
 

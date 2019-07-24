@@ -293,10 +293,14 @@ public class ModelNPC
             {
                 return new List<string> {
                     "Name: " + NameObject,
+                    "Pool: " + TypePoolPrefabName,
+                    "Prefab: " + TypePrefabName,
+                    "View: " + ModelView,
                     "Type : " + TagObject,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
-                    "IsReality: " + IsReality
+                    "IsReality: " + IsReality,
+                    
                     //"Life: " + Life,
                     //"Speed: " + Speed,
                     //"Color : " + ColorLevel
@@ -396,6 +400,9 @@ public class ModelNPC
             {
                 return new List<string> {
                     "Name: " + NameObject,
+                    "Pool: " + TypePoolPrefabName,
+                    "Prefab: " + TypePrefabName,
+                    "View: " + ModelView,
                     "Type : " + TagObject,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
@@ -592,6 +599,9 @@ public class ModelNPC
             {
                 return new List<string> {
                     "Name: " + NameObject,
+                    "Pool: " + TypePoolPrefabName,
+                    "Prefab: " + TypePrefabName,
+                    "View: " + ModelView,
                     "Type : " + TagObject,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
@@ -607,9 +617,6 @@ public class ModelNPC
     [XmlType("PersonAlien")]
     public class PersonDataAlien : PersonData
     {
-        public string TypeAlien { get; set; }
-
-        
         public PersonDataAlien()
             : base()
         {
@@ -622,8 +629,8 @@ public class ModelNPC
     {
         public virtual int Life { get; set; }
 
-        [XmlIgnore]
-        public string NameSprite { get; private set; }
+        //[XmlIgnore]
+        //public string NameSprite { get; private set; }
 
         [XmlIgnore]
         public virtual int Level { get; set; }
@@ -637,7 +644,7 @@ public class ModelNPC
             //--- init person boss data
             //System.Random rng = new System.Random();
 
-            if (string.IsNullOrEmpty(TypeAlien))
+            if (string.IsNullOrEmpty(TypePrefabName))
             {
                 //int maxT = Storage.GridData.NamesPrefabNPC.Count;
                 //int indT = UnityEngine.Random.Range(0, maxT);
@@ -648,8 +655,8 @@ public class ModelNPC
                 //NameSprite = TypeAlien;
                 //GameDataAlien obj = new GameDataAlienInspector();
                 GameDataAlien obj = Storage.Person.GenTypeAlien();
-                TypeAlien = obj.TypeAlien;// Storage.Person.GenTypeAlien()
-                NameSprite = obj.NameSprite;
+                TypePrefabName = obj.TypePrefabName;// Storage.Person.GenTypeAlien()
+                ModelView = obj.ModelView;
                 Level = obj.Level;
                 Life = obj.Life;
                 Speed = Level * 10;
@@ -688,7 +695,7 @@ public class ModelNPC
             //    //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
             //}
             
-            Sprite spriteMe = Storage.Palette.SpritesWorldPrefabs[NameSprite];  //Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
+            Sprite spriteMe = Storage.Palette.SpritesWorldPrefabs[ModelView];  //Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
             if (spriteMe != null)
             {
                 objGame.GetComponent<SpriteRenderer>().sprite = spriteMe;
@@ -707,12 +714,15 @@ public class ModelNPC
             {
                 return new List<string> {
                     "Name: " + NameObject,
+                    "Pool: " + TypePoolPrefabName,
+                    "Prefab: " + TypePrefabName,
+                    "View: " + ModelView,
                     "Type : " + TagObject,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "Life: " + Life,
                     "Speed: " + Speed,
-                    "Individ: " + NameSprite
+                    "Individ: " + ModelView
                   };
             }
         }
