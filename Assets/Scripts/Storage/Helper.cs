@@ -229,16 +229,19 @@ public static class Helper { //: MonoBehaviour {
 
     public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
     {
-        switch(typePrefab)
-        {
-            case SaveLoadData.TypePrefabs.PrefabRock:
-            case SaveLoadData.TypePrefabs.PrefabVood:
-            case SaveLoadData.TypePrefabs.PrefabElka:
-            case SaveLoadData.TypePrefabs.PrefabWallRock:
-            case SaveLoadData.TypePrefabs.PrefabWallWood:
-                return true;
-        }
-        return false;
+        bool isTerra = Enum.IsDefined(typeof(SaveLoadData.TypePrefabObjects), typePrefab.ToString());
+        return isTerra;
+
+        //switch(typePrefab)
+        //{
+        //    case SaveLoadData.TypePrefabs.PrefabRock:
+        //    case SaveLoadData.TypePrefabs.PrefabVood:
+        //    case SaveLoadData.TypePrefabs.PrefabElka:
+        //    case SaveLoadData.TypePrefabs.PrefabWallRock:
+        //    case SaveLoadData.TypePrefabs.PrefabWallWood:
+        //        return true;
+        //}
+        //return false;
     }
 
     public static bool IsTerra(this string typePrefabStr)
@@ -673,7 +676,12 @@ public static class HelperExtension
         result = result.Replace("(Clone)", "");
         return result;
     }
-    
+
+    public static int GetOrderPositFromStep(this int number, int step)
+    {
+        return number - ((((int)(number/step)) - 1)*step);
+    }
+
     //"PrefabVood", TexturesMapsTemp["VoodMap"]
 }
 

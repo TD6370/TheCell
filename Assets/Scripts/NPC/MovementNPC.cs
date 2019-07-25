@@ -687,6 +687,7 @@ public class MovementNPC : MonoBehaviour {
             //Vector3 setV = Storage.Person.PersonsTargetPosition;
             //_dataNPC.SetTargetPosition(setV);
             _dataNPC.SetTargetPosition(Storage.Person.PersonsTargetPosition);
+            
         }
     }
 

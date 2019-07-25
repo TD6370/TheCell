@@ -151,6 +151,12 @@ public class SaveLoadData : MonoBehaviour {
 
     public enum TypePrefabObjects
     {
+        PrefabRock,
+        PrefabVood,
+        PrefabElka,
+        PrefabWallRock,
+        PrefabWallWood,
+
         Kolba,
         Lantern,
 
@@ -168,6 +174,9 @@ public class SaveLoadData : MonoBehaviour {
 
     public enum TypePrefabNPC
     {
+        PrefabUfo,
+        PrefabBoss,
+
         Inspector,
         Machinetool,
         Mecha,

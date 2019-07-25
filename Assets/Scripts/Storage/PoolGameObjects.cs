@@ -159,7 +159,8 @@ public class PoolGameObjects
         //poolObj.GameObjectNext = newGO;
         poolObj.Init(newGO);
 
-        poolObj.Deactivate("Add " + poolObj.Name, true);
+        //poolObj.Deactivate("Add " + poolObj.Name, true);
+        poolObj.Deactivate();
 
         //Fix Tile field 
         if (PoolGameObjects.IsUsePoolObjects)
@@ -218,7 +219,8 @@ public class PoolGameObjects
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
         poolObj.Init(newGO);
-        poolObj.Deactivate("Add " + poolObj.Name, true);
+        //poolObj.Deactivate("Add " + poolObj.Name, true);
+        poolObj.Deactivate();
 
         if (PoolGameObjects.IsUsePoolObjects)
         {
@@ -453,7 +455,8 @@ public class PoolGameObjects
         PoolGameObject itemPool = evenObj.PoolCase;
         if (itemPool != null)
         {
-            itemPool.Deactivate(delGO.name);
+            //itemPool.Deactivate(delGO.name);
+            itemPool.Deactivate();
             //return true;
         }
         else
@@ -681,7 +684,8 @@ public class PoolGameObject
     }
 
 
-    public void Deactivate(string gobjName="", bool isCreatedNew = false, GameObject gobj =null)
+    //public void Deactivate(string gobjName="", bool isCreatedNew = false, GameObject gobj =null)
+    public void Deactivate()
     {
         if (GameObjectNext == null)
         {

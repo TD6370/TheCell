@@ -820,7 +820,10 @@ public class Storage : MonoBehaviour {
                     isDestroyOnBild = true;
                 }
             }
-            Destroy(gObj);
+            //@@@-
+            //Destroy(gObj);
+            //@@@+
+            gObj.GetEvent().PoolCase.Deactivate();// .IsDesrtoy = true;
         }
         else
         {

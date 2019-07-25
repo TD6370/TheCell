@@ -2712,7 +2712,8 @@ public class PaletteMapController : MonoBehaviour {
             //isPaletteBrushOn = true;
             //ModePaint = ToolBarPaletteMapAction.Paste;
             btnBrush.isOn = true;
-            if(selVers.NameObject.IsSpritePerson())
+            //if(selVers.NameObject.IsSpritePerson())
+            if (selVers.NameObject.IsPerson()) //@@@+
                 LoadTypeBrushOnPalette(TypesBrushGrid.Persons);
             else
                 LoadTypeBrushOnPalette(TypesBrushGrid.Prefabs);

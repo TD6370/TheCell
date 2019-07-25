@@ -829,14 +829,18 @@ public static class PersonsExtensions
 {
     public static bool IsPerson(this string typePrefab)
     {
+        
+        bool isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), typePrefab);
+        return isNPC;
+
         return Storage.Person.NamesPersons.Contains(typePrefab);
     }
-    public static bool IsSpritePerson(this string typePrefab)
-    {
-        return typePrefab.IndexOf("Boss") != -1 ||
-            typePrefab.IndexOf("Ufo") != -1; 
-        //return Storage.Person.NamesPersons.Contains(typePrefab);
-    }
+    //public static bool IsSpritePerson(this string typePrefab)
+    //{
+    //    return typePrefab.IndexOf("Boss") != -1 ||
+    //        typePrefab.IndexOf("Ufo") != -1; 
+    //    //return Storage.Person.NamesPersons.Contains(typePrefab);
+    //}
 
     public static MovementUfo GetMoveUfo(this GameObject gobj)
     {
