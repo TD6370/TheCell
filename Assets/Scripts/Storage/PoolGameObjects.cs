@@ -18,68 +18,47 @@ public class PoolGameObjects
     }
 
     #region Pool
-
     [NonSerialized]
     public static bool IsUsePoolField = true;
     public static bool IsUsePoolObjects = true; //34e-39e   46e
-    //public static bool IsUsePoolObjects = false; //
-    //public static bool IsUsePoolField = false;
-
     public static bool IsTestingDestroy = false;//true; // 
     public static bool IsStack = true; //false;// 
 
-    //int limitPoolOnRemoved = 450;
-    int limitPoolOnRemovedBoss = 550;
-    int limitPoolOnRemoved = 1500;
-    //int limitPoolOnRemoved = 800;
-    //int limitPoolOnRemoved = 1000;
-    //int limitPoolOnRemoved = 1450;
-    int indexPool = 0;
+    private int limitPoolOnRemovedBoss = 550;
+    private int limitPoolOnRemoved = 1500;
+    private int indexPool = 0;
+
     public List<PoolGameObject> PoolGamesObjects;
-
-
     public Dictionary<string, Stack<PoolGameObject>> PoolGamesObjectsStack;
-
 
     //[CreateAssetMenu(fileName = "PoolConfig", menuName = "Pool Config", order = 51)]
     class PoolConfig : ScriptableObject
     {
-        //List<string> Limits { get; set; }
-        //private List<string> Limits;
-        //private int LimitField = 550;
-        //private int LimitBoss = 550;
-        //private int LimitVood = 200;
-        //private int LimitOthers = 100;
-        //================
-        //public List<string> Limits;
-        ////public int LimitField = 550;
-        //public int LimitField = 1000;
-        //public int LimitBoss = 550;
-        //public int LimitVood = 200;
-        //public int LimitOthers = 100;
-        //================
-        //public int LimitField = 1550;
-        //public int LimitBoss = 1550;
-        //public int LimitVood = 1200;
-        //public int LimitOthers = 1100;
-        //================
         public int LimitField = 400;
         public int LimitBoss = 230;
         public int LimitPerson = 230;
         public int LimitVood = 100;
-        public int LimitWall = 100;
+        
         public int LimitOthers = 100;
+
+        public int LimitFloor = 250;
+        public int LimitFlore = 100;
+        public int LimitWood = 100;
+        public int LimitWall = 100;
+        public int LimitNPC = 250;
     }
 
     public enum TypePoolPrefabs
     {
         TerraFloor,
         TerraFlore,
-        TerraWall,
+        TerraWood,
+        Wall,
         Person,
         PersonUFO
     }
 
+   
     void LoadPoolGameObjects()
     {
         PoolConfig poolConfig = new PoolConfig();
@@ -149,6 +128,53 @@ public class PoolGameObjects
         }
     }
 
+    /*
+    void LoadPoolGameObjects()
+    {
+        PoolConfig poolConfig = new PoolConfig();
+
+        if (IsStack)
+        {
+            PoolGamesObjectsStack = new Dictionary<string, Stack<PoolGameObject>>();
+        }
+        else
+        {
+            PoolGamesObjects = new List<PoolGameObject>();
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitFloor))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.TerraFloor.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitFlore))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.TerraFlore.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitWood))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.TerraWood.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitWall))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.Wall.ToString(), false);
+        }
+        //-------------
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitNPC))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.Person.ToString(), false);
+        }
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.PersonUFO.ToString(), false);
+        }
+    }
+    */
+
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
         GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag, ""); // "" - new object instaint
@@ -197,17 +223,13 @@ public class PoolGameObjects
             PoolGamesObjects.Add(poolObj);
         }
 
-
-
         //Debug.Log("pool +++++ " + newGO.name);
-
         //if (PoolGamesObjects.Count > limitPoolOnRemoved)
         //{
         //    if (isLog)
         //        Debug.Log("[" + DateTime.Now.ToShortTimeString() + "] Add Pool !!!! limitPoolOnRemoved " + limitPoolOnRemoved + " / " + PoolGamesObjects.Count);
         //    //TestFields(isLog);
         //}
-
         return poolObj;
     }
 
@@ -322,8 +344,6 @@ public class PoolGameObjects
 
         }
 
-
-
         if (findPoolGO == null)
         {
             //---------------------------- TEST UNLOCk
@@ -390,31 +410,6 @@ public class PoolGameObjects
         {
             Debug.Log("#######  GetPoolGameObject   NOT EventsObject " + findGO.name);
         }
-        //--------------- Update Tile Prefab // Elka, Vood .. Terra
-        //if (PoolGameObjects.IsUsePoolObjects)
-        //{
-        //    
-        //    var prefType = Helper.ParsePrefab(findPoolGO.GameObjectNext.tag);
-        //    if (Helper.IsUpdateTexture(prefType))
-        //    {
-        //        ModelNPC.TerraData terrD = new ModelNPC.TerraData()
-        //        {
-        //            TileName = findPoolGO.GameObjectNext.tag
-        //        };
-        //        terrD.UpdateGameObject(findPoolGO.GameObjectNext);
-        //    }
-        //}
-        //---------------
-
-        //ModelNPC.GameDataNPC dataNPC = findGO.GetDataNPC();
-        //if(dataNPC!=null)
-        //{
-        //    ModelNPC.TerraData terraData = (ModelNPC.TerraData)dataNPC;
-
-        //    //dataNPC.Update()
-        //}
-
-        //---------------
 
         if (IsTestingDestroy)
         {
@@ -478,47 +473,6 @@ public class PoolGameObjects
         return true;
     }
 
-    //private void CleanerPool(GameObject gobj, bool isLog = false)
-    //{
-    //    PoolGameObject[] poolsTesting;
-
-    //    string nameField = Helper.GetNameFieldObject(gobj);
-    //    if (Storage.Instance.Fields.ContainsKey(nameField))
-    //    {
-    //        if (isLog)
-    //            Debug.Log("///// 1. CleanerPool: Fields list  --  Removed: " + nameField);
-    //        Storage.Instance.Fields.Remove(nameField);
-    //    }
-    //    //if (Storage.Instance.GamesObjectsReal.ContainsKey(nameField))
-    //    //{
-    //    //    foreach (var item in Storage.Instance.GamesObjectsReal[nameField])
-    //    //    {
-    //    //        if (isLog)
-    //    //            Debug.Log("///// 66. CleanerPool: Destroy real object: " + item.name);
-    //    //        Storage.Instance.AddDestroyGameObject(item);
-    //    //        //Storage.Instance.DestroyObject(item);
-    //    //    }
-    //    //}
-    //    Storage.GenGrid.RemoveRealObjects(nameField);
-
-    //    if (isLog)
-    //        Debug.Log("///// 2. CleanerPool: Destroy (not pool): " + gobj.name);
-    //    if(gobj!=null)
-    //        Storage.Instance.DestroyObject(gobj);
-
-    //    if (!IsStack)
-    //    {
-    //        poolsTesting = PoolGamesObjects.Where(p => p.NameObject == gobj.name).ToArray();
-    //        for (int i = poolsTesting.Count() - 1; i >= 0; i--)
-    //        {
-    //            var pool = poolsTesting[i];
-    //            if (isLog)
-    //                Debug.Log("///// 3. CleanerPool: Removed Pool null: " + pool.Name + "   " + pool.NameObject);
-    //            PoolGamesObjects.Remove(pool);
-    //        }
-    //    }
-    //}
-
 
     private void TestRealGO()
     {
@@ -569,10 +523,7 @@ public class PoolGameObjects
         //    }
         //}
     }
-
-   
     #endregion
-
 }
 
 public class PoolGameObject
@@ -651,20 +602,12 @@ public class PoolGameObject
         GameObjectNext.transform.SetParent(null);
         
         //#FIX TAG
-        //GameObjectNext.tag = tag;
         if(GameObjectNext.tag == "Field")
             GameObjectNext.tag = tag;
 
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
-
         GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
-
-        //if (GameObjectNext.IsUFO()){
-        //    ModelNPC.GameDataUfo ufoData = (ModelNPC.GameDataUfo)GameObjectNext.GetDataNPC();
-        //    if(ufoData!=null)
-        //        ufoData.UpdateGameObject(GameObjectNext);
-        //}
 
         var movement = GameObjectNext.GetComponent<MovementBoss>();
         if (movement == null)

@@ -5,31 +5,30 @@ using UnityEngine;
 public class MovementNPC : MonoBehaviour {
 
     public GameObject PrefabStarTrackPoint;
-
     public string MarkerDebug = "";
 
     protected Coroutine moveObject;
     protected ModelNPC.GameDataNPC _dataNPC;
+    protected string objID;
 
     private Material m_material;
     private SpriteRenderer m_spriteRenderer;
     private Rigidbody2D _rb2d;
-    private string objID;
-    //private UIEvents _scriptUIEvents;
     private bool m_isPause = false;
     private bool m_isTrack = false;
-    //private bool m_isTrack = true;
     private List<Vector3> m_TrackPoints = new List<Vector3>();
     private GameObject m_TrackPointsNavigator = null;
+    private GameObjecDataController m_dataController;
 
-    string testId;
-    string _resName = "";
-
-    
+    private string testId;
+    private string _resName = "";
+    private int countUpdate = 0;
+    private float realtimeMoving = 0f;
     public bool isRunning = false;
 
     void Awake()
     {
+        m_dataController = gameObject.GetComponent<GameObjecDataController>();
     }
 
     // Use this for initialization
@@ -48,10 +47,8 @@ public class MovementNPC : MonoBehaviour {
         if (string.IsNullOrEmpty(objID))
         {
             objID = "Empty";
-            //this.gameObject.SetActive(false);
             return;
         }
-
         InitData();
 
         isRunning = false;
@@ -60,35 +57,13 @@ public class MovementNPC : MonoBehaviour {
             isRunning = false;
             StopCoroutine(moveObject);
         }
-
-        //----------------------------
-        //if (_dataNPC == null)
-        //{
-        //    _dataNPC = FindObjectData<T>(info);
-        //    if (_dataNPC == null)
-        //    {
-        //        Debug.Log("########################## UFO Start MoveObjectToPosition dataUfo is EMPTY");
-        //        UpdateData("MoveObjectToPosition");
-        //    }
-            
-        //}
-        //----------------------------
-
         StartMoving();
 
-        //GameObject UIcontroller = GameObject.FindWithTag("UI");
-        //if (UIcontroller == null)
-        //    Debug.Log("########### MovementUfo UIcontroller is Empty");
-        //_scriptUIEvents = UIcontroller.GetComponent<UIEvents>();
-        //if (_scriptUIEvents == null)
-        //    Debug.Log("########### MovementUfo scriptUIEvents is Empty");
         if (Storage.EventsUI == null)
         {
             Debug.Log("############ Storage.Events == null");
             return;
         }
-
-
         m_isTrack = Storage.EventsUI.IsTrackPointsVisible;
     }
 
@@ -97,18 +72,13 @@ public class MovementNPC : MonoBehaviour {
         moveObject = StartCoroutine(MoveObjectToPosition<ModelNPC.GameDataNPC>());
     }
 
-    bool isInfoStop = false;
-
     // Update is called once per frame
     public virtual void Update()
     {
-        //if(PoolGameObjects.IsUsePoolObjects)
-        //    Refresh();
     }
 
     private void LateUpdate()
     {
-        //Refresh();
     }
 
     private void OnMouseDown()
@@ -152,74 +122,10 @@ public class MovementNPC : MonoBehaviour {
 
     void OnEnable()
     {
-        //InitNPC();
-
-        //if (PoolGameObjects.IsUsePoolObjects)
-        //{
-        //    if (Helper.IsDataInit(this.gameObject))
-        //        UpdateData("Update");
-        //}
-
-        //StartMoving();
-        //Debug.Log("*********************** MovementNPC  is OnEnable " + this.gameObject.name);
     }
 
     void OnDisable()
     {
-        //isRunning = false;
-        //StopCoroutine(moveObject);
-
-        //Debug.Log("*********************** MovementNPC  is OnDisable " + this.gameObject.name);
-    }
-
-    private int countUpdate = 0;
-
-    public void Refresh()
-    {
-        return;
-
-        //if (!isInfoStop)
-        //{
-        //------------------------
-        if (Time.time > realtimeMoving)
-        {
-            //bool isStartPrefab = this.gameObject.name.IndexOf("Field") == -1;
-            bool IsDataInit = Helper.IsDataInit(this.gameObject);
-            
-
-            //isInfoStop = true;
-            //Debug.Log("######## ME STOP : " + this.gameObject.name + @" isStartPrefab \\\");
-            if (IsDataInit)
-            {
-                //UpdateData("Update");
-                Debug.Log("######## ME STOP : " + this.gameObject.name + "  isRunning=" + isRunning);
-                //if (!isRunning)
-                //{
-                //UpdateData("Update");
-
-                isRunning = false;
-                if (moveObject != null)
-                {
-                    isRunning = false;
-                    //StopCoroutine(moveObject);
-                }
-
-                //UpdateData("Update");
-
-                countUpdate = 10;
-
-                //StartMoving();
-            }
-        }
-        //}
-        //-----------------
-        //if (!isRunning)
-        //{
-        //    if (moveObject!=null)
-        //        StopCoroutine(moveObject);
-
-        //    StartMoving();
-        //}
     }
 
     private void InitData()
@@ -244,48 +150,9 @@ public class MovementNPC : MonoBehaviour {
         m_spriteRenderer.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
     }
 
-    //IEnumerator MoveObject()
-    //{
-    //    int distantion = 0;
-    //    float x = transform.position.x;
-    //    int compas = 1;
-
-    //    while (true)
-    //    {
-    //        distantion++;
-    //        if (distantion > 200)
-    //        {
-    //            distantion = 0;
-    //            compas *= -1;
-    //        }
-
-    //        transform.Translate(compas * Time.deltaTime, 0, 0);
-    //        yield return null;
-    //    }
-    //}
-
-
-    private float realtimeMoving = 0f;
-
-    //if (Input.GetKey("m") && Time.time > DelayTimer)
-    //    {
-    //        Storage.Map.Create();
-
-    //        DelayTimer = Time.time + ActionRate;
-    //    }
-
+    
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
-       
-
-        //if(isRunning)
-        //{
-        //    Debug.Log("######### MoveObjectToPosition IS PROGRESS......");
-        //    yield break;
-        //}
-
-        //isRunning = true;
-
         Vector3 lastPositionForLock = transform.position;
         Vector3 lastPositionForMoveField = transform.position;
         string lastFieldForLock = Storage.Instance.SelectFieldPosHero;
@@ -310,12 +177,10 @@ public class MovementNPC : MonoBehaviour {
         }
 
         string info = "MoveObjectToPosition Init";
-        //_dataNPC = FindObjectData(info) as SaveLoadData.GameDataNPC;
-        _dataNPC = FindObjectData<T>(info);
+        _dataNPC = GetUpdateData();
         if (_dataNPC != null)
         {
             speed = _dataNPC.Speed;
-            //Debug.Log("Speed (" + this.name + ") : " + speed);
         }
         else
         {
@@ -327,34 +192,7 @@ public class MovementNPC : MonoBehaviour {
         while (true)
         {
             realtimeMoving = Time.time + 0.5f;
-            //#TEST
-            //if (!isRunning && PoolGameObjects.IsUsePoolObjects)
-            //{
-            //    Debug.Log("-------------- Update isRunning : : : " + this.gameObject.name + ", " + _dataNPC.NameObject);
-            //    UpdateData("Update");
-            //}
-
-            //if (PoolGameObjects.IsUsePoolObjects)
-            //{
-            //    if(this.gameObject.name != _dataNPC.NameObject)
-            //    {
-            //        Debug.Log("-------------- Update >>>>> " + this.gameObject.name + " <> " + _dataNPC.NameObject);
-            //        UpdateData("Update");
-            //    }
-            //if (PoolGameObjects.IsUsePoolObjects)
-            //{
-            //    if (countUpdate > 0)
-            //    {
-            //        countUpdate--;
-            //        objID = Helper.GetID(this.name);
-            //        UpdateData("MoveObjectToPosition");
-            //    }
-            //}
-            //}
             isRunning = true;
-
-            //realtimeMoving = Time.time + 2f;
-            //realtimeMoving = Time.time + 0.2f;
 
             if (this.name == MarkerDebug)
             {
@@ -496,7 +334,7 @@ public class MovementNPC : MonoBehaviour {
             if (oldName != _resName)
             {
                 string callInfo = "ResavePositionData >> oldName(" + oldName + ") != _resName(" + _resName + ")";
-                _dataNPC = FindObjectData<T>(callInfo);// as SaveLoadData.GameDataUfo;
+                _dataNPC = GetUpdateData(callInfo);
                 if (_dataNPC == null)
                 {
                     Debug.Log("################## ERROR MoveObjectToPosition dataNPC is Empty   GO:" + this.gameObject.name);
@@ -521,47 +359,12 @@ public class MovementNPC : MonoBehaviour {
         //+++++++++++++++++++++++
     }
 
-
-
-    protected T FindObjectData<T>(string callFunc) where T : ModelNPC.GameDataNPC
-    {
-        //Debug.Log("***************  FindObjectData GO: " + gameObject.name + "  " + gameObject.tag + "    T: " + typeof(T) + "      GO Type: " + this.gameObject.GetType());
-
-        T _dataNPC = SaveLoadData.FindObjectData(this.gameObject) as T;
-
-
-        if (_dataNPC == null)
-        {
-            Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo is Empty !!!!    :" + callFunc);
-            return null;
-        }
-
-        _dataNPC.Init();
-
-        if (_dataNPC.NameObject != this.name)
-        {
-            Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + _dataNPC.NameObject + "  GO: " + this.name + "   :" + callFunc);
-            return null;
-        }
-
-        if (_dataNPC.TargetPosition == new Vector3(0, 0, 0))
-        {
-            Debug.Log("#################### Error UFO dataUfo.TargetPosition is zero !!!!   :" + callFunc);
-            return null;
-        }
-
-        return _dataNPC;
-    }
-
     //#POLYLINE TRACK
     private void CrateNavigatorTrackPoints()
     {
-        // Debug.Log("CrateNavigatorTrackPoints................");
-
         if (m_TrackPointsNavigator == null)
         {
             //Debug.Log("------------------ StartCoroutine -- CreateTrackPolyline " + this.name);
-
             StartCoroutine(CreateTrackPolyline());
         }
         else
@@ -602,8 +405,6 @@ public class MovementNPC : MonoBehaviour {
     //#POLYLINE TRACK
     IEnumerator CreateTrackPolyline()
     {
-        //PrefabStarTrackPointT
-
         if (PrefabStarTrackPoint==null)
         {
             PrefabStarTrackPoint = (GameObject)GameObject.Find("PrefabStarTrackPointT");
@@ -612,19 +413,12 @@ public class MovementNPC : MonoBehaviour {
                 Debug.Log("############ PrefabStarTrackPoint Find(PrefabStarTrackPointT) Not Found !!! " + this.gameObject.name);
                 yield break;
             }
-
-            //Debug.Log("############ PrefabStarTrackPoint is Empty" + this.gameObject.name);
-            //yield break;
         }
         yield return new WaitForSeconds(0.1f);
 
-        //m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, transform.position, Quaternion.identity);
-        //m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint, new Vector3(0, 0, -10), Quaternion.identity);
         m_TrackPointsNavigator = Instantiate(PrefabStarTrackPoint);
         m_TrackPointsNavigator.name = "NavigatorTrackPoints_" + this.gameObject.name;
-        //m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform, true);
         m_TrackPointsNavigator.transform.SetParent(this.gameObject.transform);
-        //m_TrackPointsNavigator.transform.position = new Vector3(0, 0, -10);
         m_TrackPointsNavigator.SetActive(true);
 
         yield return new WaitForSeconds(0.1f);
@@ -636,47 +430,13 @@ public class MovementNPC : MonoBehaviour {
             yield break;
         }
         scriptTrackPoints.TrackPoints = m_TrackPoints;
-
         //Debug.Log("************ TrackPointsNavigator Created : " + m_TrackPointsNavigator.name);
-
     }
-
-    //private SaveLoadData.GameDataUfo FindObjectData(string callFunc)
-    //{
-    //    var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as SaveLoadData.GameDataUfo;
-
-
-    //    if (dataUfo == null)
-    //    {
-    //        Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo is Empty !!!!    :" + callFunc);
-    //        return null;
-    //    }
-
-    //    if (dataUfo.NameObject != this.name)
-    //    {
-    //        Debug.Log("#################### Error UFO MoveObjectToPosition dataUfo: " + dataUfo.NameObject + "  GO: " + this.name + "   :" + callFunc);
-    //        return null;
-    //    }
-
-    //    if (dataUfo.TargetPosition == new Vector3(0, 0, 0))
-    //    {
-    //        Debug.Log("#################### Error UFO dataUfo.TargetPosition is zero !!!!   :" + callFunc);
-    //        return null;
-    //    }
-
-    //    return dataUfo;
-    //}
 
     public virtual void UpdateData(string callFunc)
     {
-        _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
+        _dataNPC = GetUpdateData(callFunc);
         objID = Helper.GetID(this.name);
-    }
-
-    public virtual ModelNPC.GameDataNPC GetUpdateData(string callFunc)
-    {
-        _dataNPC = FindObjectData<ModelNPC.GameDataNPC>(callFunc);// as SaveLoadData.GameDataNPC;
-        return _dataNPC;
     }
 
     public void SetTarget()
@@ -691,13 +451,8 @@ public class MovementNPC : MonoBehaviour {
         }
     }
 
-  
-
     private void SelectedGameObject()
     {
-        
-
-        //_scriptUIEvents.SetTestText(objID);
         Storage.EventsUI.SetTestText(objID);
 
         FindPersonData person = Storage.Person.GetFindPersonsDataForName(this.gameObject.name);
@@ -709,12 +464,6 @@ public class MovementNPC : MonoBehaviour {
         if (res == null)
         {
             Debug.Log("#### GetUpdateData: " + res.NameObject);
-        }
-
-        if (Storage.Player.HeroExtremal == true)
-        {
-            //Debug.Log("*********** INIT NPC **************");
-            //InitNPC();
         }
 
         //#EXPAND
@@ -778,23 +527,6 @@ public class MovementNPC : MonoBehaviour {
         Storage.EventsUI.ListLogAdd = "Me: " + this.gameObject.name;
     }
 
-    public void SaveData()
-    {
-        //string _nameField = Helper.GetNameFieldByName(_dataNPC.NameObject);
-        _dataNPC.Update(this.gameObject);
-
-        if (this.gameObject == null)
-        {
-            Debug.Log("############# SaveData ++ This GameObject is null");
-            return;
-        }
-    }
-
-    public ModelNPC.GameDataNPC GetData()
-    {
-        return _dataNPC;
-    }
-
     public void Pause()
     {
         m_isPause = !m_isPause;
@@ -806,11 +538,10 @@ public class MovementNPC : MonoBehaviour {
         m_isTrack = !m_isTrack;
     }
 
-   
-
-    //public void DrawTrack(Vector2 posTrack)
-    //{
-
-    //}
+    protected virtual ModelNPC.GameDataNPC GetUpdateData(string callInfo = "GetInitData")
+    {
+        var dataNPC = m_dataController.UpdateData(callInfo) as ModelNPC.GameDataNPC;
+        return dataNPC;
+    }
 
 }

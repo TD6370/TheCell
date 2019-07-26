@@ -1246,7 +1246,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
 
         //public WallData(bool isGen) : base(isGen) { }
         public WallData() : base() { }
@@ -1260,7 +1260,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
 
         //public WallData(bool isGen) : base(isGen) { }
         public FloorData() : base() { }
@@ -1274,7 +1274,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
 
         public FloreData() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1289,7 +1289,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Kolba; } }
         public Kolba() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1303,7 +1303,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Lantern; } }
         public Lantern() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1317,7 +1317,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Bananas; } }
         public Bananas() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1331,7 +1331,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cluben; } }
         public Cluben() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1345,7 +1345,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Chpok; } }
         public Chpok() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1359,7 +1359,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Pandora; } }
         public Pandora() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1373,7 +1373,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Nadmozg; } }
         public Nadmozg() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1387,7 +1387,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Triffid; } }
         public Triffid() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1401,7 +1401,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Aracul; } }
         public Aracul() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1415,7 +1415,7 @@ public class ModelNPC
         public int HP { get; set; }
         public string ParentId { get; set; }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWall; } }
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.TerraWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cloudwood; } }
         public Cloudwood() : base() { TypePrefabName = TypePrefab.ToString(); }

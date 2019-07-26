@@ -87,7 +87,7 @@ public class CreateNPC : MonoBehaviour {
 
                     newUfo.transform.position = pos;
 
-                    _scriptGrid.ActiveGameObject_lagacy(newUfo);
+                    //*** _scriptGrid.ActiveGameObject_lagacy(newUfo); ***
                 }
                 else
                 {

@@ -19,10 +19,12 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabElka;
     public GameObject PrefabWallRock;
     public GameObject PrefabWallWood;
+
     public GameObject PrefabField;
 
     public GameObject PrefabFlore;
     public GameObject PrefabNPC;
+    public GameObject PrefabWall;
 
     ////--- TAILS ---
     //public GameObject BackPalette;
@@ -514,225 +516,40 @@ public class SaveLoadData : MonoBehaviour {
 
         //Storage.GamePause = false;
     }
-        
-
-    //--------------- LINK: public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
-    public static ModelNPC.ObjectData CreateObjectData_lagacy(GameObject p_gobject)
-    {
-        ModelNPC.ObjectData newObject;
-        //#PPPP
-        TypePrefabs prefabType = TypePrefabs.PrefabField;
-
-        if (!String.IsNullOrEmpty(p_gobject.tag))
-            prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), p_gobject.tag.ToString()); ;
-
-        switch (prefabType)
-        {
-            case TypePrefabs.PrefabUfo:
-                //var newObject1 = new GameDataUfo()
-                newObject = new ModelNPC.GameDataUfo()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position
-                };
-                //Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-                //newObject1.UpdateGameObject(p_gobject);
-                newObject.UpdateGameObject(p_gobject);
-                break;
-            case TypePrefabs.PrefabBoss:
-                //var newObject2 = new GameDataBoss()
-                newObject = new ModelNPC.GameDataBoss()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position
-                };
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "  TYPE: " + newObject.GetType());
-                //newObject2.UpdateGameObject(p_gobject);
-                newObject.UpdateGameObject(p_gobject);
-                break;
-            case TypePrefabs.PrefabField:
-                //newObject = new ModelNPC.TerraData(isGen: true)
-                newObject = new ModelNPC.TerraData()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position,
-                    Index = 0,
-                    BlockResources = 100,
-                    //TileName = Storage.TilesManager.GenNameTileTerra(),
-                    IsGen = false
-                };
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "  TYPE: " + newObject.GetType());
-                //newObject2.UpdateGameObject(p_gobject);
-                newObject.UpdateGameObject(p_gobject);
-                break;
-            case TypePrefabs.PrefabNPC:
-                newObject = new ModelNPC.GameDataAlien()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position
-                };
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "   newObject=" + newObject + "             ~~~~~ DO: pos=" + newObject.Position + "  GO:  pos=" + p_gobject.transform.position);
-                Debug.Log("CREATE NEW DATA OBJECT: " + p_gobject.name + "  TYPE: " + newObject.GetType());
-                newObject.UpdateGameObject(p_gobject);
-                break;
-            //case TypePrefabs.PrefabFlore:
-            //    break;
-            default:
-                //Debug.Log("_______________________CreateObjectData_____________default " + prefabType);
-                //var newObject3 = new ObjectData()
-                newObject = new ModelNPC.ObjectData()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position
-                };
-                //newObject3.UpdateGameObject(p_gobject);
-                newObject.UpdateGameObject(p_gobject);
-                break;
-        }
-        return newObject;
-    }
-
+       
     public static ModelNPC.ObjectData FindObjectData(GameObject p_gobject)
     {
         ModelNPC.ObjectData newObject;
-        //#PPPP
-        TypePrefabs prefabType = TypePrefabs.PrefabField;
-
-        if (!String.IsNullOrEmpty(p_gobject.tag))
-            prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), p_gobject.tag.ToString()); ;
-
-        string nameField = "";
-        int index = -1;
-        List<ModelNPC.ObjectData> objects;
-
-        //Debug.Log("FindObjectData -------- prefabType: " + prefabType);
-
-        switch (prefabType)
-        {
-            case TypePrefabs.PrefabUfo:
-                newObject = new ModelNPC.GameDataUfo();
-                nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (!Storage.IsGridDataFieldExist(nameField))
-                {
-                    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
-                    return null;
-                }
-                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
-                if (index == -1)
-                {
-                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                    //Storage.Instance.DebugKill(p_gobject.name);
-                    //Storage.Log.GetHistory(p_gobject.name);
-                    //Storage.Fix.CorrectData(null, p_gobject, "FindObjectData");
-                    return null;
-                }
-                newObject = objects[index] as ModelNPC.GameDataUfo;
-                break;
-            case TypePrefabs.PrefabBoss:
-                nameField = Helper.GetNameFieldByName(p_gobject.name);
-                //Debug.Log("FindObjectData ------------ nameField :" + nameField);
-
-                if (!Storage.IsGridDataFieldExist(nameField))
-                {
-                    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
-                    return null;
-                }
-                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-                //Debug.Log("FindObjectData ------------ objects in " + nameField + ":" + objects.Count());
-                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
-                if (index == -1)
-                {
-                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                    return null;
-                }
-                newObject = objects[index] as ModelNPC.GameDataBoss;
-
-                if (newObject == null)
-                {
-                    Debug.Log("FindObjectData ------------newObject is null ");
-                    Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
-                }
-
-                break;
-            case TypePrefabs.PrefabNPC:
-                nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (!Storage.IsGridDataFieldExist(nameField))
-                {
-                    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
-                    return null;
-                }
-                objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-                index = objects.FindIndex(p => p.NameObject == p_gobject.name);
-                if (index == -1)
-                {
-                    Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                    return null;
-                }
-                newObject = objects[index] as ModelNPC.GameDataAlien;
-                if (newObject == null)
-                {
-                    Debug.Log("FindObjectData ------------newObject is null ");
-                    Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
-                }
-                break;
-            default:
-                newObject = new ModelNPC.ObjectData()
-                {
-                    NameObject = p_gobject.name,
-                    TagObject = p_gobject.tag,
-                    Position = p_gobject.transform.position
-                };
-                nameField = Helper.GetNameFieldByName(p_gobject.name);
-                if (Storage.IsGridDataFieldExist(nameField))
-                {
-                    objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-                    index = objects.FindIndex(p => p.NameObject == p_gobject.name);
-                    if (index == -1)
-                    {
-                        Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + p_gobject.name + "   in Field: " + nameField);
-                        return null;
-                    }
-                    newObject = objects[index] as ModelNPC.GameDataBoss;
-                    if (newObject == null)
-                    {
-                        Debug.Log("FindObjectData ------------newObject is null ");
-                        Debug.Log("FindObjectData ------------newObject is null , Type:" + objects[index].GetType());
-                    }
-                }
-                break;
-            //default:
-            //    newObject = new ModelNPC.ObjectData()
-            //    {
-            //        NameObject = p_gobject.name,
-            //        TagObject = p_gobject.tag,
-            //        Position = p_gobject.transform.position
-            //    };
-            //    break;
-        }
-
-        //Debug.Log("FindObjectData -------- newObject: " + newObject);
-        //Debug.Log("FindObjectData -------- newObject: " + newObject.NameObject);
-
+        string nameGameObject = p_gobject.name;
+        string typePrefab = p_gobject.tag.ToString();
+        string nameField = Helper.GetNameFieldByName(nameGameObject);
+        newObject = GetObjectDataFromGrid(nameGameObject, nameField);
         return newObject;
     }
 
-    //public GameObject FindPrefab(string namePrefab)
+    public static ModelNPC.ObjectData GetObjectDataFromGrid(string nameGameObject, string nameField)
+    {
+        if (!Storage.IsGridDataFieldExist(nameField))
+        {
+            Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
+            return null;
+        }
+        List<ModelNPC.ObjectData> objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+        int index = objects.FindIndex(p => p.NameObject == nameGameObject);
+        if (index == -1)
+        {
+            Debug.Log("################# Error FindObjectData DATA OBJECT NOT FOUND : " + nameGameObject + "   in Field: " + nameField);
+            return null;
+        }
+        return objects[index];
+    }
+
     public GameObject FindPrefab(string namePrefab, string nameObject)
     {
         if (PoolGameObjects.IsUsePoolObjects && !string.IsNullOrEmpty(nameObject))
         {
             //#FIX POOL
             string tagPool = GetTypePool(namePrefab);
-
-            //GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, typePrefab, new Vector3(0, 0, 0));
             GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, tagPool, new Vector3(0, 0, 0));
             return gobj;
         }
@@ -947,17 +764,12 @@ public class SaveLoadData : MonoBehaviour {
         if (structType == TypesStructure.Person)
         {
             personTextureName = itemTile.Name.ClearClone();
-            //prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
             prefabName = TypePrefabs.PrefabBoss;
         }
-        //if (structType == TypesStructure.Person || structType == TypesStructure.Prefab)
         if (structType == TypesStructure.Prefab)
         {
             //ArgumentException: The requested value 'SpriteBossAlien(Clone)' was not found.
-
             prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), itemTile.Name);
-            //prefabName = GetPrefabByTile(itemTile.Name);
-            //GameObject prefab = Storage.GridData.FindPrefab(itemTile.Name);
         }
 
         Vector2 posStruct = Helper.GetPositByField(nameField);
@@ -1021,10 +833,10 @@ public class SaveLoadData : MonoBehaviour {
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
     }
 
-    private TypePrefabs GetPrefabByTile(string TileName)
-    {
-        return TypePrefabs.PrefabField;
-    }
+    //private TypePrefabs GetPrefabByTile(string TileName)
+    //{
+    //    return TypePrefabs.PrefabField;
+    //}
 
     public void ClearWorld(bool isReload = true)
     {

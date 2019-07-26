@@ -367,8 +367,9 @@ public class StoragePerson : MonoBehaviour {
 
                 gobj.GetComponent<SpriteRenderer>().color = ColorFindCursorObject;
 
-                MovementNPC movement = gobj.GetComponent<MovementNPC>();
-                ModelNPC.ObjectData findData = movement.GetData();
+                //MovementNPC movement = gobj.GetComponent<MovementNPC>();
+                GameObjecDataController dataObj = gobj.GetComponent<GameObjecDataController>();
+                ModelNPC.ObjectData findData = dataObj.GetData();
                 var objData = SaveLoadData.FindObjectData(gobj);
                 if (findData != objData)
                 {
@@ -833,7 +834,7 @@ public static class PersonsExtensions
         bool isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), typePrefab);
         return isNPC;
 
-        return Storage.Person.NamesPersons.Contains(typePrefab);
+        //return Storage.Person.NamesPersons.Contains(typePrefab);
     }
     //public static bool IsSpritePerson(this string typePrefab)
     //{
@@ -868,12 +869,25 @@ public static class PersonsExtensions
         return null;
     }
 
+    public static GameObjecDataController GetDataController(this GameObject gobj)
+    {
+        if (gobj == null)
+            return null;
+        var dataObjControl = gobj.GetComponent<GameObjecDataController>();
+        if (dataObjControl != null)
+            return dataObjControl;
+        return null;
+    }
+
     //public ModelNPC.GameDataNPC GetData()
     public static ModelNPC.GameDataNPC GetDataNPC(this GameObject gobj)
     {
-        var movNPC = gobj.GetMoveNPC();
-        if (movNPC != null)
-            return movNPC.GetData();
+        //var movNPC = gobj.GetMoveNPC();
+        //if (movNPC != null)
+        //    return movNPC.GetData();
+        var dataControl = gobj.GetDataController();
+        if (dataControl != null)
+            return dataControl.GetData() as ModelNPC.GameDataNPC;
         return null;
     }
 
@@ -887,17 +901,23 @@ public static class PersonsExtensions
 
     public static bool IsNPC(this GameObject gobj)
     {
-        if (gobj = null)
-            return false;
-        var movNPC = gobj.GetMoveNPC();
-        if (movNPC == null)
-            return false;
+        bool isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), gobj.tag.ToString());
+        return isNPC;
 
-        var dataNPC = movNPC.GetData();
-        if (dataNPC == null)
-            return false;
+        //if (gobj = null)
+        //    return false;
+        //var movNPC = gobj.GetMoveNPC();
+        //if (movNPC == null)
+        //    return false;
 
-        return true;
+        //var dataNPC = movNPC.GetData();
+        //if (dataNPC == null)
+        //    return false;
+        //var dataObj = gobj.GetComponent<GameObjecDataController>();
+        //if (dataObj != null && dataObj.GetData() != null)
+        //    dataObj.GetData().IsReality = false;
+
+        //return true;
     }
 
     public static bool IsUFO(this GameObject gobj)
@@ -913,11 +933,11 @@ public static class PersonsExtensions
 
         var movObj = gobj.GetComponent<MovementNPC>();
         if (movObj != null)
-        {
             movObj.Pause();
-            if(movObj.GetData()!=null)
-                movObj.GetData().IsReality = false;
-        }
+
+        var dataObj = gobj.GetComponent<GameObjecDataController>();
+        if (dataObj != null && dataObj.GetData() != null)
+            dataObj.GetData().IsReality = false;
     }
 }
 
