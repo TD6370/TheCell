@@ -245,6 +245,20 @@ public class DrawGeometry : MonoBehaviour
         }
     }
 
+    private bool IsNotFloorAndFlore(GameObject gobj)
+    {
+        bool isTrue;
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            isTrue = gobj.IsPoolFloor() || gobj.IsPoolFlore();
+        }
+        else
+        {
+            isTrue = gobj.tag == SaveLoadData.TypePrefabs.PrefabField.ToString();
+        }
+        return isTrue == false;
+    }
+
     public void ParallaxOn()
     {
         Camera cam = Storage.Instance.MainCamera;
@@ -271,18 +285,21 @@ public class DrawGeometry : MonoBehaviour
             Storage.GridData.PrefabWallWood.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
             foreach(GameObject itemObj in Storage.Instance.GamesObjectsReal.SelectMany(p=>p.Value))
             {
-                if (itemObj.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+
+                bool isNotFloorAndFlore = IsNotFloorAndFlore(itemObj);
+                if (isNotFloorAndFlore)
                 {
                     itemObj.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
                 }
             }
-            foreach (PoolGameObject itemObj in Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value))
+            foreach (PoolGameObject itemPoolObj in Storage.Pool.PoolGamesObjectsStack.SelectMany(p => p.Value))
             {
-                if (itemObj.GameObjectNext != null)
+                if (itemPoolObj.GameObjectNext != null)
                 {
-                    if (itemObj.GameObjectNext.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                    bool isNotFloorAndFlore = IsNotFloorAndFlore(itemPoolObj.GameObjectNext);
+                    if (isNotFloorAndFlore)
                     {
-                        itemObj.GameObjectNext.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
+                        itemPoolObj.GameObjectNext.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
                     }
                 }
             }
@@ -306,7 +323,8 @@ public class DrawGeometry : MonoBehaviour
 
             foreach (GameObject itemObj in Storage.Instance.GamesObjectsReal.SelectMany(p => p.Value))
             {
-                if (itemObj.tag != SaveLoadData.TypePrefabs.PrefabField.ToString())
+                bool isNotFloorAndFlore = IsNotFloorAndFlore(itemObj);
+                if (isNotFloorAndFlore)
                 {
                     itemObj.transform.rotation = Quaternion.Euler(anglePrlx, 0f, 0f);
                 }

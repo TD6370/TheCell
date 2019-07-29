@@ -132,7 +132,6 @@ public class DataTilesManager : MonoBehaviour {
         //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom1", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
         //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom2", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
 
-        //m_CollectionDataMapTiles = new Dictionary<string, List<DataTile>>();
         m_CollectionDataMapTiles = new Dictionary<string, DataConstructionTiles>();
 
         List<DataTile> listDataTiles = new List<DataTile>();
@@ -155,16 +154,16 @@ public class DataTilesManager : MonoBehaviour {
         int index = 0;
         //int offsetX = 0;
         int startX = 0;// offsetX + itemTile.Size;
-        foreach (var itemTile in ListTilesMapLocations)
+        foreach (var itemContruction in ListTilesMapLocations)
         {
-            int startY = itemTile.Row * HeightRow;
-            itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
-            var listDataTilesRes = CreateStructDataTile(itemTile.Name, itemTile.Position, allTilesTerra, boundsMapTerra, itemTile.TypeTile);
-            listDataMapTilesTerra.Add(itemTile.Name, listDataTilesRes);
+            int startY = itemContruction.Row * HeightRow;
+            itemContruction.Position = new Rect(startX, startY, itemContruction.Size, itemContruction.Size);
+            var listDataTilesRes = CreateStructDataTile(itemContruction.Name, itemContruction.Position, allTilesTerra, boundsMapTerra, itemContruction.TypeTile);
+            listDataMapTilesTerra.Add(itemContruction.Name, listDataTilesRes);
 
             index++;
-            startX += itemTile.Size;
-            itemTile.Index = index;
+            startX += itemContruction.Size;
+            itemContruction.Index = index;
         }
         //-----------------------
 
@@ -172,9 +171,9 @@ public class DataTilesManager : MonoBehaviour {
         List<TypesStructure> prefabValid = new List<TypesStructure>()
         {
             TypesStructure.Prefab,
-             TypesStructure.FloorPrefab,
-             TypesStructure.TerraPrefab,
-             TypesStructure.TerraFloorPrefab
+            TypesStructure.FloorPrefab,
+            TypesStructure.TerraPrefab,
+            TypesStructure.TerraFloorPrefab
         };
 
         if(TilesMapPrefabLayer==null)
@@ -193,34 +192,33 @@ public class DataTilesManager : MonoBehaviour {
         index = 0;
         startX = 0;
 
-        //foreach (var itemTile in ListTilesMapLocations.Where(p => prefabValid.Contains(p.TypeTile)))
-        foreach (var itemTile in ListTilesMapLocations) //Where Exist Prefab strucrure
+        foreach (var itemContruction in ListTilesMapLocations) //Where Exist Prefab strucrure
         {
-            int startY = itemTile.Row * HeightRow;
-            if (prefabValid.Contains(itemTile.TypeTile))
+            int startY = itemContruction.Row * HeightRow;
+            if (prefabValid.Contains(itemContruction.TypeTile))
             {
-                itemTile.Position = new Rect(startX, startY, itemTile.Size, itemTile.Size);
-                var listDataTilesRes = CreateStructDataTile(itemTile.Name, itemTile.Position, allTilesPrefab, boundsMapPrefab, TypesStructure.Prefab);
-                listDataMapTilesPrefabs.Add(itemTile.Name, listDataTilesRes);
+                itemContruction.Position = new Rect(startX, startY, itemContruction.Size, itemContruction.Size);
+                var listDataTilesRes = CreateStructDataTile(itemContruction.Name, itemContruction.Position, allTilesPrefab, boundsMapPrefab, TypesStructure.Prefab);
+                listDataMapTilesPrefabs.Add(itemContruction.Name, listDataTilesRes);
             }
             index++;
-            startX += itemTile.Size;
-            itemTile.Index = index;
+            startX += itemContruction.Size;
+            itemContruction.Index = index;
         }
         //-----------------------
       
-        foreach (var itemTile in ListTilesMapLocations)
+        foreach (var itemContruction in ListTilesMapLocations)
         {
             DataConstructionTiles newDataConstr = new DataConstructionTiles();
-            newDataConstr.Name = itemTile.Name;
-            newDataConstr.Height = itemTile.Size;
-            newDataConstr.Wight = itemTile.Size;
-            if(listDataMapTilesTerra.ContainsKey(itemTile.Name))
-                newDataConstr.ListDataTileTerra = listDataMapTilesTerra[itemTile.Name];
-            if (listDataMapTilesPrefabs.ContainsKey(itemTile.Name))
-                newDataConstr.ListDataTilePrefabs = listDataMapTilesPrefabs[itemTile.Name];
+            newDataConstr.Name = itemContruction.Name;
+            newDataConstr.Height = itemContruction.Size;
+            newDataConstr.Wight = itemContruction.Size;
+            if(listDataMapTilesTerra.ContainsKey(itemContruction.Name))
+                newDataConstr.ListDataTileTerra = listDataMapTilesTerra[itemContruction.Name]; //add tiles from TilesMapBackLayer
+            if (listDataMapTilesPrefabs.ContainsKey(itemContruction.Name))
+                newDataConstr.ListDataTilePrefabs = listDataMapTilesPrefabs[itemContruction.Name]; //add tiles from TilesMapPrefabLayer
 
-            m_CollectionDataMapTiles.Add(itemTile.Name, newDataConstr);
+            m_CollectionDataMapTiles.Add(itemContruction.Name, newDataConstr);
         }
 
         //-------- Report
@@ -342,41 +340,7 @@ public class DataTilesManager : MonoBehaviour {
     }
 
     private string[] m_listNameTiles;
-
-
-    //public string GenNameTileTerra()
-    //{
-    //    string nameTile = "TileNone";
-
-    //    if(ListTexturs == null || ListTexturs.Length ==0)
-    //    {
-    //        Debug.Log("###### GenNameTileTerra listTexturs is Empty");
-    //        return nameTile;
-    //    }
-
-    //    //int ind = 0;
-    //    //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
-    //    int selectedInd = UnityEngine.Random.Range(0, ListTexturs.Length - 1);
-
-    //    //foreach(var tileItem in CollectionTiles)
-    //    //{
-    //    //    if (ind == selectedInd)
-    //    //    {
-    //    //        TileBase tile = CollectionTiles[tileItem.Key];
-    //    //        nameTile = tile.name;
-    //    //    }
-    //    //    ind++;
-    //    //}
-    //    if (selectedInd> ListTexturs.Length -1)
-    //    {
-    //        Debug.Log("###### GenNameTileTerra selectedInd[" + selectedInd + "] > ListTexturs.Lengt[" + ListTexturs.Length + "]");
-    //        return nameTile;
-    //    }
-
-    //    nameTile = ListTexturs[selectedInd].name;
-    //    return nameTile;
-    //}
-
+          
     public string GenNameTileTerra()
     {
         string nameTile = "TileNone";
@@ -392,24 +356,9 @@ public class DataTilesManager : MonoBehaviour {
             }
         }
 
-        //int ind = 0;
-        //int selectedInd = UnityEngine.Random.Range(0, CollectionTiles.Values.Count-1);
-        //int selectedInd = UnityEngine.Random.Range(0, m_listTextursTerra.Count - 1);
         System.Random rng = new System.Random();
         int selectedInd = rng.Next(0, m_listTextursNames.Count - 1);
 
-
-        //foreach(var tileItem in CollectionTiles)
-        //{
-        //    if (ind == selectedInd)
-        //    {
-        //        TileBase tile = CollectionTiles[tileItem.Key];
-        //        nameTile = tile.name;
-        //    }
-        //    ind++;
-        //}
-
-        //if (selectedInd > ListTexturs.Length - 1)
         if (selectedInd > m_listTextursNames.Count - 1)
             
         {
@@ -417,12 +366,9 @@ public class DataTilesManager : MonoBehaviour {
             return nameTile;
         }
 
-        //nameTile = m_listTextursTerra[selectedInd].name;
         nameTile = m_listTextursNames[selectedInd];
-
         return nameTile;
     }
-    
 }
 
 public static class TilemapExtensions
@@ -446,31 +392,6 @@ public static class TilemapExtensions
     }
 }
 
-
-//[XmlRoot("Level")]
-//[XmlInclude(typeof(PersonData))]
-//public class LevelData
-//{
-//    public List<KeyValuePair<string, PersonData>> PersonsXML = new List<KeyValuePair<string, PersonData>>();
-
-//    [XmlIgnore]
-//    public Dictionary<string, PersonData> Persons = new Dictionary<string, PersonData>();
-
-//    public LevelData() { }
-//}
-
-////#D-
-//[XmlRoot("Grid")]
-//[XmlInclude(typeof(FieldData))]
-//public class GridData
-//{
-//    [XmlArray("Fields")]
-//    [XmlArrayItem("Field")]
-//    public List<KeyValuePair<string, FieldData>> FieldsXML = new List<KeyValuePair<string, FieldData>>();
-//    [XmlIgnore]
-//    public Dictionary<string, FieldData> FieldsD = new Dictionary<string, FieldData>();
-//    public GridData() { }
-//}
 
 public enum TypesStructure
 {

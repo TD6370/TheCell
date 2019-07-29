@@ -92,16 +92,10 @@ public class GenerateGridFields : MonoBehaviour {
                 pos.z = 0;
 
                 GameObject newField;
-                if (!PoolGameObjects.IsUsePoolField)
-                {
-                    newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-                }
-                else
-                {
 
-                    string nameFieldNew = Helper.GetNameField(x, y);
-                    newField = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
-                }
+                string nameFieldNew = Helper.GetNameField(x, y);
+                newField = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
+
                 newField.tag = "Field";
                 string nameField = Helper.GetNameField(x, y);
                 newField.name = nameField;
@@ -973,6 +967,14 @@ public class GenerateGridFields : MonoBehaviour {
     //+++ CreateObjectData +++ LoadObjectForLook
     public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     {
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
+            objData.UpdateGameObject(newGO);
+            return newGO;
+        }
+        
+        //LEGACY CODE
         string strErr = "start";
 
         string typePrefab = objData.TagObject;

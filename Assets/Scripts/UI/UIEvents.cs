@@ -712,7 +712,7 @@ public class UIEvents : MonoBehaviour {
 
             string gobjID = "";
             ModelNPC.GameDataNPC dataObs = null;
-            if (gobjObservable.IsNPC())
+            if (gobjObservable !=null && gobjObservable.IsNPC())
             {
                 dataObs = gobjObservable.GetDataNPC();
             }

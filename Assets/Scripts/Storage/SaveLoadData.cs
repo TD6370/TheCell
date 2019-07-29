@@ -23,8 +23,10 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabField;
 
     public GameObject PrefabFlore;
-    public GameObject PrefabNPC;
+    public GameObject PrefabPerson;
     public GameObject PrefabWall;
+    public GameObject PrefabFloor;
+
 
     ////--- TAILS ---
     //public GameObject BackPalette;
@@ -72,7 +74,8 @@ public class SaveLoadData : MonoBehaviour {
         PrefabWallWood,
 
         PrefabFlore,
-        PrefabNPC,
+        PrefabPerson,
+        PrefabFloor,
         //-------------- Floor and Flore
 
         Boloto,
@@ -566,7 +569,14 @@ public class SaveLoadData : MonoBehaviour {
     {
         string resType="";
 
-        TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+        TypePrefabs prefabType = TypePrefabs.PrefabField;
+        try
+        {
+            prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+        }catch(Exception x)
+        {
+            Debug.Log("######## (SaveLoadData.GetTypeByName) ERROR TYPE POOL TO TYPE PREFAB : " + x.Message);
+        }
 
         switch (prefabType)
         {
@@ -595,7 +605,7 @@ public class SaveLoadData : MonoBehaviour {
             case TypePrefabs.PrefabField:
                 resType = PrefabField.tag;
                 break;
-            case TypePrefabs.PrefabNPC:
+            case TypePrefabs.PrefabPerson:
                 resType = PrefabField.tag;
                 break;
             case TypePrefabs.PrefabFlore:
@@ -610,6 +620,11 @@ public class SaveLoadData : MonoBehaviour {
 
     public string GetTypePool(string namePrefab)
     {
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            return namePrefab;
+        }
+
         string resType = "";
         if (namePrefab == TypePrefabs.PrefabElka.ToString())
         {
@@ -621,6 +636,15 @@ public class SaveLoadData : MonoBehaviour {
         }
         else
         {
+            if (PoolGameObjects.IsUseTypePoolPrefabs == false)
+            {
+                //fix legacy code
+                if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())
+                {
+                    string oldType = TypePrefabs.PrefabPerson.ToString();
+                    namePrefab = oldType;
+                }
+            }
             return GetTypeByName(namePrefab);
         }
         return resType;
@@ -659,8 +683,11 @@ public class SaveLoadData : MonoBehaviour {
                 case TypePrefabs.PrefabField:
                     resPrefab = Instantiate(PrefabField);
                     break;
-                case TypePrefabs.PrefabNPC:
-                    resPrefab = Instantiate(PrefabNPC);
+                case TypePrefabs.PrefabPerson:
+                    resPrefab = Instantiate(PrefabPerson);
+                    //fix legacy code
+                    //string oldType = TypePrefabs.PrefabPerson.ToString();
+                    //resPrefab.tag = oldType;
                     break;
                 case TypePrefabs.PrefabFlore:
                     resPrefab = Instantiate(PrefabFlore);
@@ -783,30 +810,40 @@ public class SaveLoadData : MonoBehaviour {
 
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
         ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, false);
+        string typePool = objDataSave.TypePoolPrefabName; //test
+
         objDataSave.NameObject = nameObject;
         objDataSave.TagObject = prefabName.ToString();
         objDataSave.Position = pos;
-        if(structType == TypesStructure.Terra)
+
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
         {
-            var objTerra = objDataSave as ModelNPC.TerraData;
-            if(objTerra==null)
-            {
-                Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
-                return false;
-            }
-            objTerra.ModelView = itemTile.Name;
+            objDataSave.ModelView = itemTile.Name;
         }
-        if (structType == TypesStructure.TerraPrefab)
+        else
         {
-            var objTerraPrefab = objDataSave as ModelNPC.WallData;
-            if (objTerraPrefab == null)
+            if (structType == TypesStructure.Terra)
             {
-                Debug.Log("####### AddConstructInGridData: structType is TypesStructure.TerraPrefab   objDataSave Not is ModelNPC.TerraData !!!!");
-                return false;
+                var objTerra = objDataSave as ModelNPC.TerraData;
+                if (objTerra == null)
+                {
+                    Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
+                    return false;
+                }
+                objTerra.ModelView = itemTile.Name;
             }
-            objTerraPrefab.ModelView = itemTile.Name;
+            if (structType == TypesStructure.TerraPrefab)
+            {
+                var objTerraPrefab = objDataSave as ModelNPC.WallData;
+                if (objTerraPrefab == null)
+                {
+                    Debug.Log("####### AddConstructInGridData: structType is TypesStructure.TerraPrefab   objDataSave Not is ModelNPC.TerraData !!!!");
+                    return false;
+                }
+                objTerraPrefab.ModelView = itemTile.Name;
+            }
         }
-        
+
         if (structType == TypesStructure.Person)
         {
             var objPerson = objDataSave as ModelNPC.GameDataBoss;
@@ -822,21 +859,10 @@ public class SaveLoadData : MonoBehaviour {
                 //objPerson.Init();
             }
         }
-        
-        //Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld", isClaerField, isTestFilledField, isTestExistMeType,
-        //    p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
-
-        //if (isClaerField)
-        //    p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.DelFull;
 
         return Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
     }
-
-    //private TypePrefabs GetPrefabByTile(string TileName)
-    //{
-    //    return TypePrefabs.PrefabField;
-    //}
 
     public void ClearWorld(bool isReload = true)
     {

@@ -901,7 +901,15 @@ public static class PersonsExtensions
 
     public static bool IsNPC(this GameObject gobj)
     {
-        bool isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), gobj.tag.ToString());
+        bool isNPC = false;
+        try
+        {
+            isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), gobj.tag.ToString());
+        }catch(Exception x)
+        {
+            Debug.Log(x.Message);
+        }
+
         return isNPC;
 
         //if (gobj = null)

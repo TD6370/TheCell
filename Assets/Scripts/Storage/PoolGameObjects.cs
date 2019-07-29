@@ -14,7 +14,10 @@ public class PoolGameObjects
 
     public PoolGameObjects()
     {
-        LoadPoolGameObjects();
+        if (IsUseTypePoolPrefabs)
+            LoadPoolGamePrefabs(); //new
+        else
+            LoadPoolGameObjects();
     }
 
     #region Pool
@@ -23,6 +26,7 @@ public class PoolGameObjects
     public static bool IsUsePoolObjects = true; //34e-39e   46e
     public static bool IsTestingDestroy = false;//true; // 
     public static bool IsStack = true; //false;// 
+    public static bool IsUseTypePoolPrefabs = false;
 
     private int limitPoolOnRemovedBoss = 550;
     private int limitPoolOnRemoved = 1500;
@@ -48,14 +52,28 @@ public class PoolGameObjects
         public int LimitNPC = 250;
     }
 
+    //public enum TypesStructure
+    //{
+    //    None,
+    //    Terra,
+    //    Floor,
+    //    Prefab,
+    //    Person,
+    //    TerraFloor,
+    //    TerraPrefab,
+    //    FloorPrefab,
+    //    TerraFloorPrefab,
+    //}
+
     public enum TypePoolPrefabs
     {
-        TerraFloor,
-        TerraFlore,
-        TerraWood,
-        Wall,
-        Person,
-        PersonUFO
+        PoolFloor,
+        PoolFlore,
+        PoolWood,
+        PoolWall,
+        PoolPerson,
+        PoolPersonUFO,
+        PoolPersonBoss
     }
 
    
@@ -119,7 +137,7 @@ public class PoolGameObjects
         foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
-            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabNPC.ToString(), false);
+            AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabPerson.ToString(), false);
         }
         foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
@@ -128,8 +146,8 @@ public class PoolGameObjects
         }
     }
 
-    /*
-    void LoadPoolGameObjects()
+  
+    void LoadPoolGamePrefabs()
     {
         PoolConfig poolConfig = new PoolConfig();
 
@@ -144,48 +162,55 @@ public class PoolGameObjects
         foreach (var i in Enumerable.Range(0, poolConfig.LimitFloor))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.TerraFloor.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolFloor.ToString(), false);
         }
         foreach (var i in Enumerable.Range(0, poolConfig.LimitFlore))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.TerraFlore.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolFlore.ToString(), false);
         }
         foreach (var i in Enumerable.Range(0, poolConfig.LimitWood))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.TerraWood.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolWood.ToString(), false);
         }
         foreach (var i in Enumerable.Range(0, poolConfig.LimitWall))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.Wall.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolWall.ToString(), false);
         }
         //-------------
         foreach (var i in Enumerable.Range(0, poolConfig.LimitNPC))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.Person.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolPerson.ToString(), false);
         }
         foreach (var i in Enumerable.Range(0, poolConfig.LimitOthers))
         {
             indexPool = i;
-            AddPoolNewTypeObject(TypePoolPrefabs.PersonUFO.ToString(), false);
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolPersonUFO.ToString(), false);
         }
     }
-    */
+    
 
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
-        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag, ""); // "" - new object instaint
+        GameObject newGO;
+        if (IsUseTypePoolPrefabs)
+            newGO = Storage.Pool.GetPoolGameObject("new", prefabTag, new Vector3(0, 0, 0));
+        else
+        {
+            newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
+            //if (prefabTag == "PrefabPerson")
+            //    newGO.tag = "PrefabPerson";
+        }
+
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
-        //poolObj.Tag = Storage.GridData.GetTypePool(newGO.tag);
-        //poolObj.GameObjectNext = newGO;
+        //if (false == IsUseTypePoolPrefabs && newGO.tag != prefabTag)//fix legacy code
+        //    newGO.tag = prefabTag;
         poolObj.Init(newGO);
-
-        //poolObj.Deactivate("Add " + poolObj.Name, true);
         poolObj.Deactivate();
 
         //Fix Tile field 
@@ -203,7 +228,6 @@ public class PoolGameObjects
             }
         }
 
-        //poolObj.IsLock = false;
         if (IsStack)
         {
             var stackPool = new Stack<PoolGameObject>();
@@ -222,17 +246,10 @@ public class PoolGameObjects
         {
             PoolGamesObjects.Add(poolObj);
         }
-
-        //Debug.Log("pool +++++ " + newGO.name);
-        //if (PoolGamesObjects.Count > limitPoolOnRemoved)
-        //{
-        //    if (isLog)
-        //        Debug.Log("[" + DateTime.Now.ToShortTimeString() + "] Add Pool !!!! limitPoolOnRemoved " + limitPoolOnRemoved + " / " + PoolGamesObjects.Count);
-        //    //TestFields(isLog);
-        //}
         return poolObj;
     }
 
+    /*
     public PoolGameObject AddPoolNewTypeObject2(SaveLoadData.TypePrefabs prefabType, bool isLog = false)
     {
         string prefabTag = prefabType.ToString();
@@ -277,6 +294,7 @@ public class PoolGameObjects
         }
         return poolObj;
     }
+    */
 
 
     public GameObject GetPoolGameObject(string nameObject, string tagPool, Vector3 pos)

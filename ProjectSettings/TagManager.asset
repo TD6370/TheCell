@@ -33,6 +33,11 @@ TagManager:
   - MapGridCell
   - PrefabFlore
   - PrefabNPC
+  - PoolPerson
+  - PoolWood
+  - PoolWall
+  - PoolFlore
+  - PoolFloor
   layers:
   - Default
   - TransparentFX

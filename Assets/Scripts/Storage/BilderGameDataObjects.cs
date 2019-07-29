@@ -32,13 +32,15 @@ public class BilderGameDataObjects //: MonoBehaviour
                 objGameBild = new ModelNPC.GameDataUfo();
                 break;
             case SaveLoadData.TypePrefabs.PrefabBoss:
-                objGameBild = new ModelNPC.GameDataBoss(); //$$
+                objGameBild = new ModelNPC.GameDataBoss();
                 break;
             case SaveLoadData.TypePrefabs.PrefabField:
-                //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
-                objGameBild = new ModelNPC.TerraData(); //$$
+                objGameBild = new ModelNPC.TerraData();
                 break;
-            case SaveLoadData.TypePrefabs.PrefabNPC:
+            case SaveLoadData.TypePrefabs.PrefabFloor:
+                objGameBild = new ModelNPC.TerraData();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabPerson:
                 objGameBild = new ModelNPC.GameDataAlien();
                 break;
             case SaveLoadData.TypePrefabs.PrefabFlore:

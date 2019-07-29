@@ -659,6 +659,32 @@ public static class HelperExtension
         return !string.IsNullOrEmpty(text) && text == SaveLoadData.TypePrefabs.PrefabField.ToString();
     }
 
+    public static bool IsPoolFloor(this GameObject gobj)
+    {
+        bool isTrue = PoolGameObjects.TypePoolPrefabs.PoolFloor.ToString() == gobj.tag.ToString();
+        return isTrue;
+    }
+    public static bool IsPoolFlore(this GameObject gobj)
+    {
+        bool isTrue = PoolGameObjects.TypePoolPrefabs.PoolFlore.ToString() == gobj.tag.ToString();
+        return isTrue;
+    }
+    public static bool IsPoolWood(this GameObject gobj)
+    {
+        bool isTrue = PoolGameObjects.TypePoolPrefabs.PoolWood.ToString() == gobj.tag.ToString();
+        return isTrue;
+    }
+    public static bool IsPoolWall(this GameObject gobj)
+    {
+        bool isTrue = PoolGameObjects.TypePoolPrefabs.PoolWall.ToString() == gobj.tag.ToString();
+        return isTrue;
+    }
+    public static bool IsPoolPerson(this GameObject gobj)
+    {
+        bool isTrue = PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString() == gobj.tag.ToString();
+        return isTrue;
+    }
+
     public static string ClearClone(this string text)
     {
         return text.Replace("(Clone)","");
