@@ -879,15 +879,19 @@ public static class PersonsExtensions
         return null;
     }
 
-    //public ModelNPC.GameDataNPC GetData()
     public static ModelNPC.GameDataNPC GetDataNPC(this GameObject gobj)
     {
-        //var movNPC = gobj.GetMoveNPC();
-        //if (movNPC != null)
-        //    return movNPC.GetData();
         var dataControl = gobj.GetDataController();
         if (dataControl != null)
             return dataControl.GetData() as ModelNPC.GameDataNPC;
+        return null;
+    }
+
+    public static ModelNPC.ObjectData GetData(this GameObject gobj)
+    {
+        var dataControl = gobj.GetDataController();
+        if (dataControl != null)
+            return dataControl.GetData();
         return null;
     }
 

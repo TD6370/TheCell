@@ -11,10 +11,12 @@ public class DrawGeometry : MonoBehaviour
     public bool IsParallaxOn = false;
 
     private LineRenderer m_lineRenderer;
+    //private SpriteRenderer m_SpriteRenderer;
 
     private void Awake()
     {
         m_lineRenderer = GetComponent<LineRenderer>();
+        
     }
 
     // Use this for initialization
@@ -543,6 +545,45 @@ public static class DrawExtensions
     public static void SetAlpha(this GameObject gobj, Single _alpha = .5f)
     {
         gobj.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, _alpha);
+    }
+
+    public static void SetAlpha(this SpriteRenderer spriteRender, Single _alpha = .5f)
+    {
+        spriteRender.color = new Color(1f, 1f, 1f, _alpha);
+        //return;
+
+        Material material = spriteRender.material;
+        if (_alpha == 1f)
+        {
+            //material.SetFloat("_Mode", 4f);
+            Color32 col = material.GetColor("_Color");
+            col.a = 255;
+            spriteRender.material.SetColor("_Color", col);
+        }
+        else
+        {
+            //material.SetFloat("_Mode", 4f);
+            //material = new Material(Shader.Find("Standard"));
+
+            //material.SetFloat("_Mode", 2f);
+            //material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            //material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            //material.SetInt("_ZWrite", 0);
+            //material.DisableKeyword("_ALPHATEST_ON");
+            //material.EnableKeyword("_ALPHABLEND_ON");
+            //material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            //material.renderQueue = 3000;
+
+            Color32 col = material.GetColor("_Color");
+            col.a = (byte)(255 * _alpha);
+            spriteRender.material.SetColor("_Color", col);
+        }
+
+        //0f - opacity
+        //1f - cutout
+        //2f - fade
+        //3f - transparent
+
     }
 
 }

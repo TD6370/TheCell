@@ -9,6 +9,7 @@ public class EventsObject : MonoBehaviour {
     private bool m_isAlpha = false;
     private float m_LevelAlpha = 0;
     private string m_OldFieldHero = "";
+    private SpriteRenderer m_spriteRenderer;
 
     public PoolGameObject PoolCase { get; set; }
 
@@ -27,40 +28,64 @@ public class EventsObject : MonoBehaviour {
         {
             IsMeTerra = true;
         }
+
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
+    void Start() {
+
+    }
+
+    // Update is called once per frame
     void Update()
     {
         AlphaTerra();
+    }
+
+    private void LightingPosition(float posHeroY, float gobjY )
+    //private void LightingPosition()
+    {
+        //float posHeroY = Storage.PlayerController.transform.position.y;
+        //float gobjY = this.transform.position.y;
+        int offsetTopHero = -1;
+
+        if (gobjY < posHeroY + offsetTopHero)
+        {
+            gameObject.layer = Helper.LayerDark;
+        }else
+        {
+            gameObject.layer = Helper.LayerDefault;
+        }
     }
 
     private void AlphaTerra()
     {
         if (IsMeTerra)
         {
+            //LightingPosition();
+
             int offsetTopHero = 0;
 
             if (m_OldFieldHero == Storage.Instance.SelectFieldPosHero)
                 return;
             m_OldFieldHero = Storage.Instance.SelectFieldPosHero;
 
-            var t = this.gameObject.name;
+
+            //var t = this.gameObject.name;
 
             float posHeroY = Storage.PlayerController.transform.position.y + offsetTopHero;
             float gobjY = this.transform.position.y;
+
+            LightingPosition(posHeroY, gobjY);
+
             float posHeroX = Storage.PlayerController.transform.position.x;
             float gobjX = this.transform.position.x;
             float dist = Vector3.Distance(Storage.PlayerController.transform.position, this.transform.position);
             float distX = Math.Abs(Storage.PlayerController.transform.position.x - this.transform.position.x);
             bool isNear = false;
             float maxDist = 10;
-            float maxDistX = 3;
+            float maxDistX = 1; // 3;
             ///if (dist < maxDist)
             if (dist < maxDist && distX < maxDistX)
                 isNear = true;
@@ -79,10 +104,13 @@ public class EventsObject : MonoBehaviour {
                     //Single _alpha = 1 - Math.Abs(_alphaKof) + 0.3f;
                     Single _alpha = _alphaKof;
 
-                    if (_alpha < 0.6f)
-                        _alpha = 0.6f;
+                    //if (_alpha < 0.6f)
+                    //    _alpha = 0.6f;
+                    if (_alpha < 0.8f)
+                        _alpha = 0.75f;
                     if (_alpha > 0.8f)
-                        _alpha = 0.8f;
+                        _alpha = 0.9f;
+                    //_alpha = 0.9f;
 
                     //---------------
                     if (field == Storage.Instance.SelectFieldCursor) // Storage.Instance.SelectFieldPosHero)
@@ -91,7 +119,7 @@ public class EventsObject : MonoBehaviour {
                     }
                     //-----------------
 
-                    this.gameObject.SetAlpha(_alpha);
+                    m_spriteRenderer.SetAlpha(_alpha);
                     m_isAlpha = true;
                 }
             }
@@ -105,8 +133,8 @@ public class EventsObject : MonoBehaviour {
                         Debug.Log("----------" + this.gameObject.name + "--- Dist: " + dist + "    Alpha: reset !! " + this.transform.position + " H> " + Storage.PlayerController.transform.position);
                     }
                     //-----------------
-                    
-                    this.gameObject.SetAlpha(1f);
+
+                    m_spriteRenderer.SetAlpha(1f);
                     m_LevelAlpha = -1;
                     m_isAlpha = false;
                 }

@@ -100,6 +100,10 @@ public class GenerateGridFields : MonoBehaviour {
                 string nameField = Helper.GetNameField(x, y);
                 newField.name = nameField;
                 _nameField = nameField;
+
+                //fix alpha field
+                newField.GetComponent<SpriteRenderer>().sortingLayerName = Helper.LayerTerraName;
+
                 Storage.Instance.Fields.Add(nameField, newField);
                 Counter++;
             }
@@ -438,9 +442,10 @@ public class GenerateGridFields : MonoBehaviour {
                 //TEST -------
                 if (dataObj.IsReality)
                 {
-
+                    indErr = "13.1";
                     //Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already IsReality !!!!");
-                    var realObj = listGameObjectReal.Find(p => p.name == dataObj.NameObject);
+                    var realObj = listGameObjectReal.Find(p => p != null && p.name == dataObj.NameObject);
+                    indErr = "13.2";
                     if (realObj != null) //@??@
                     {
                         //Debug.Log("????????????????? LoadGameObjectDataForLook ****** IsReality DO:" + dataObj + " EXIST in Real == " + realObj.name);
@@ -1157,12 +1162,12 @@ public class GenerateGridFields : MonoBehaviour {
     {
         GameObject resGO;
         //#PRED 
-        if (!PoolGameObjects.IsUsePoolField)
-        {
-            resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-        }
-        else
-        {
+        //if (!PoolGameObjects.IsUsePoolField)
+        //{
+        //    resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
+        //}
+        //else
+        //{
             resGO = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
             if (PoolGameObjects.IsUsePoolObjects)
             {
@@ -1171,8 +1176,10 @@ public class GenerateGridFields : MonoBehaviour {
                     ModelView = "Tundra"
                 };
                 terrD.UpdateGameObject(resGO);
+                //fix alpha field
+                resGO.GetComponent<SpriteRenderer>().sortingLayerName = Helper.LayerTerraName;
             }
-        }
+        //}
 
         return resGO;
     }

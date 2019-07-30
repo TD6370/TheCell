@@ -618,14 +618,23 @@ public class PoolGameObject
 
         //GameObjectNext.SetActive(true);
         GameObjectNext.transform.SetParent(null);
-        
+
+        SpriteRenderer renderer = GameObjectNext.GetComponent<SpriteRenderer>();
+
         //#FIX TAG
-        if(GameObjectNext.tag == "Field")
+        if (GameObjectNext.tag == "Field")
             GameObjectNext.tag = tag;
+        if (GameObjectNext.tag == "PrefabField")
+        {
+            //fix alpha field
+            renderer.sortingLayerName = Helper.LayerFloorName;
+        }
 
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
-        GameObjectNext.GetComponent<SpriteRenderer>().color = Color.white;
+        renderer.color = Color.white;
+        //set default effect alpha
+        renderer.SetAlpha(1f);
 
         var movement = GameObjectNext.GetComponent<MovementBoss>();
         if (movement == null)
@@ -659,7 +668,8 @@ public class PoolGameObject
 
         GameObjectNext.SetActive(false);
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
-
+        //set default effect alpha
+        //GameObjectNext.GetComponent<SpriteRenderer>().SetAlpha(1f);
 
         IsLock = false;
 

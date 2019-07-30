@@ -13,6 +13,13 @@ public static class Helper { //: MonoBehaviour {
 
     //}
 
+    public static int LayerTerra = 4;
+    public static int LayerFloor = 7;
+    public static int LayerDark = 22;
+    public static int LayerDefault = 0;
+    public static string LayerTerraName = "LayerTerra";
+    public static string LayerFloorName = "LayerFloor";
+
     public static bool IsBigWorld = true;// false; //
 
     public static float SpeedTimer = 0f;// Time.time

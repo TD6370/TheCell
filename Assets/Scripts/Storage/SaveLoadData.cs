@@ -644,6 +644,11 @@ public class SaveLoadData : MonoBehaviour {
                     string oldType = TypePrefabs.PrefabPerson.ToString();
                     namePrefab = oldType;
                 }
+                if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolFlore.ToString())
+                {
+                    string oldType = TypePrefabs.PrefabField.ToString();
+                    namePrefab = oldType;
+                }
             }
             return GetTypeByName(namePrefab);
         }
