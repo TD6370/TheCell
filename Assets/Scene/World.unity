@@ -53,7 +53,7 @@ LightmapSettings:
     m_TemporalCoherenceThreshold: 1
     m_EnvironmentLightingMode: 0
     m_EnableBakedLightmaps: 0
-    m_EnableRealtimeLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 10
     m_Resolution: 2
@@ -6026,6 +6026,10 @@ Prefab:
       propertyPath: m_TagString
       value: PoolWall
       objectReference: {fileID: 0}
+    - target: {fileID: 1584952636479378, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
   m_IsPrefabAsset: 0
@@ -6065,7 +6069,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000015258789}
+  m_AnchoredPosition: {x: 8.5, y: 0.00006480879}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -6779,6 +6783,21 @@ Prefab:
     - target: {fileID: 1478567503464466, guid: cddeeedd042ac9b48aad4155d6e88d62, type: 2}
       propertyPath: m_TagString
       value: PaletteCell
+      objectReference: {fileID: 0}
+    - target: {fileID: 114849246463041536, guid: cddeeedd042ac9b48aad4155d6e88d62,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 222740836448929504, guid: cddeeedd042ac9b48aad4155d6e88d62,
+        type: 2}
+      propertyPath: m_CullTransparentMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114849246463041536, guid: cddeeedd042ac9b48aad4155d6e88d62,
+        type: 2}
+      propertyPath: m_Type
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cddeeedd042ac9b48aad4155d6e88d62, type: 2}
@@ -7971,6 +7990,16 @@ MonoBehaviour:
   btnClose: {fileID: 744705040}
   btnCloseToolBarBrushPalette: {fileID: 0}
   dpdListConstructsControl: {fileID: 0}
+  ModePaint: 1
+  SelectedTypeBrush: 0
+  IsPaintsOn: 0
+  sizeCellMap: 10
+  ActionRate: 0.5
+  m_Raycaster: {fileID: 0}
+  m_EventSystem: {fileID: 0}
+  CanvasUI: {fileID: 0}
+  DelayTimerPaletteUse: 0
+  ActionRatePaletteUse: 0.5
   m_IsGenericContruct: 1
   PrefabCellMapPalette: {fileID: 0}
   btnOnPaint: {fileID: 0}
@@ -8021,16 +8050,6 @@ MonoBehaviour:
   FirstLimitRange: 0
   LastLimitMargin: 0
   LastLimitRange: 0
-  ModePaint: 1
-  SelectedTypeBrush: 0
-  IsPaintsOn: 0
-  sizeCellMap: 10
-  ActionRate: 0.5
-  m_Raycaster: {fileID: 0}
-  m_EventSystem: {fileID: 0}
-  CanvasUI: {fileID: 0}
-  DelayTimerPaletteUse: 0
-  ActionRatePaletteUse: 0.5
 --- !u!114 &553312994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12590,8 +12609,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 354061448}
   m_HandleRect: {fileID: 354061447}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -14465,8 +14484,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1384420415}
   m_HandleRect: {fileID: 1384420414}
   m_Direction: 2
-  m_Value: 0.9999996
-  m_Size: 0.6092612
+  m_Value: 0.9999997
+  m_Size: 0.6085251
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25219,6 +25238,20 @@ Prefab:
       propertyPath: m_TagString
       value: PoolFlore
       objectReference: {fileID: 0}
+    - target: {fileID: 1828618149702586, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -878336077
+      objectReference: {fileID: 0}
+    - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
   m_IsPrefabAsset: 0
@@ -25361,7 +25394,7 @@ MonoBehaviour:
   m_CellSize: {x: 50, y: 50}
   m_Spacing: {x: 1, y: 1}
   m_Constraint: 1
-  m_ConstraintCount: 5
+  m_ConstraintCount: 6
 --- !u!114 &1467665707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25414,6 +25447,16 @@ MonoBehaviour:
   btnClose: {fileID: 1609870027}
   btnCloseToolBarBrushPalette: {fileID: 1929260302}
   dpdListConstructsControl: {fileID: 350340569}
+  ModePaint: 1
+  SelectedTypeBrush: 0
+  IsPaintsOn: 0
+  sizeCellMap: 10
+  ActionRate: 0.5
+  m_Raycaster: {fileID: 0}
+  m_EventSystem: {fileID: 1555253504}
+  CanvasUI: {fileID: 1047051826}
+  DelayTimerPaletteUse: 0
+  ActionRatePaletteUse: 0.5
   m_IsGenericContruct: 1
   PrefabCellMapPalette: {fileID: 1296942137}
   btnOnPaint: {fileID: 672927524}
@@ -25464,16 +25507,6 @@ MonoBehaviour:
   FirstLimitRange: 0
   LastLimitMargin: 0
   LastLimitRange: 0
-  ModePaint: 1
-  SelectedTypeBrush: 0
-  IsPaintsOn: 0
-  sizeCellMap: 10
-  ActionRate: 0.5
-  m_Raycaster: {fileID: 0}
-  m_EventSystem: {fileID: 1555253504}
-  CanvasUI: {fileID: 1047051826}
-  DelayTimerPaletteUse: 0
-  ActionRatePaletteUse: 0.5
 --- !u!114 &1467665710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31189,6 +31222,16 @@ Prefab:
       propertyPath: m_Name
       value: PrefabPerson
       objectReference: {fileID: 0}
+    - target: {fileID: 212518968326219808, guid: d0ac89d6ebfbf3543a6c35518cfa2a2b,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -1787493363
+      objectReference: {fileID: 0}
+    - target: {fileID: 212518968326219808, guid: d0ac89d6ebfbf3543a6c35518cfa2a2b,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0ac89d6ebfbf3543a6c35518cfa2a2b, type: 2}
   m_IsPrefabAsset: 0
@@ -31364,6 +31407,20 @@ Prefab:
     - target: {fileID: 1828618149702586, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
       propertyPath: m_TagString
       value: PoolFloor
+      objectReference: {fileID: 0}
+    - target: {fileID: 1828618149702586, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -1152690699
+      objectReference: {fileID: 0}
+    - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 790cf88490d6237408bc490ea8d96100, type: 2}
@@ -32358,7 +32415,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000015258789}
+  m_AnchoredPosition: {x: 8.5, y: -0.000016716685}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -32701,7 +32758,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 89.817116}
+  m_AnchoredPosition: {x: 0.3, y: 89.53653}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -33184,7 +33241,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1804064628}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999976
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -34743,6 +34800,21 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6a70b8b7dc717654094d34f7c5785b44, type: 2}
+    - target: {fileID: 114260430523547058, guid: 5b2bd27fbef486a49842a7c841cc6675,
+        type: 2}
+      propertyPath: ColorOutline.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114260430523547058, guid: 5b2bd27fbef486a49842a7c841cc6675,
+        type: 2}
+      propertyPath: ColorOutline.g
+      value: 0.977733
+      objectReference: {fileID: 0}
+    - target: {fileID: 114260430523547058, guid: 5b2bd27fbef486a49842a7c841cc6675,
+        type: 2}
+      propertyPath: ColorOutline.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b2bd27fbef486a49842a7c841cc6675, type: 2}
   m_IsPrefabAsset: 0
@@ -35024,7 +35096,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

@@ -126,9 +126,16 @@ public class DataTilesManager : MonoBehaviour {
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDvor", Row = 0, Size = 5 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildBoloto", Row = 0, Size = 5 });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildZal", Row = 0, Size = 10 });
+
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPrefab", Row = 0, Size = 5, TypeTile = TypesStructure.TerraPrefab });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildSad", Row = 0, Size = 10, TypeTile = TypesStructure.TerraPrefab });
         ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPolyanka", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
+
+        //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPrefab", Row = 0, Size = 5 });
+        //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildSad", Row = 0, Size = 10 });
+        //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildPolyanka", Row = 0, Size = 11 });
+
+
         //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom1", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
         //ListTilesMapLocations.Add(new TilesMapLocation() { Name = "BildDom2", Row = 0, Size = 11, TypeTile = TypesStructure.TerraPrefab });
 
@@ -195,12 +202,12 @@ public class DataTilesManager : MonoBehaviour {
         foreach (var itemContruction in ListTilesMapLocations) //Where Exist Prefab strucrure
         {
             int startY = itemContruction.Row * HeightRow;
-            if (prefabValid.Contains(itemContruction.TypeTile))
-            {
+            //if (prefabValid.Contains(itemContruction.TypeTile))
+            //{
                 itemContruction.Position = new Rect(startX, startY, itemContruction.Size, itemContruction.Size);
                 var listDataTilesRes = CreateStructDataTile(itemContruction.Name, itemContruction.Position, allTilesPrefab, boundsMapPrefab, TypesStructure.Prefab);
                 listDataMapTilesPrefabs.Add(itemContruction.Name, listDataTilesRes);
-            }
+            //}
             index++;
             startX += itemContruction.Size;
             itemContruction.Index = index;

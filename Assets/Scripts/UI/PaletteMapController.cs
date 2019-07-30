@@ -27,6 +27,47 @@ public class PaletteMapController : MonoBehaviour {
     
     public Dropdown dpdListConstructsControl;
 
+    private List<Toggle> m_listToggleMode;
+
+    public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
+    public TypesBrushGrid SelectedTypeBrush = TypesBrushGrid.Prefabs;
+
+    public bool IsPaintsOn = false;
+    //public bool IsCursorOn = false;
+    private bool m_PasteOnLayer = false;
+
+    private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
+    private List<GameObject> m_listCellsOnPalette;
+    private List<string> m_ListNamesConstructs;
+    private List<TypesBrushGrid> ListTypesBrushes;
+
+    public int sizeCellMap = 20;
+    public float ActionRate = 0.5f;
+    private float DelayTimer = 0F;
+    private bool isPaletteBrushOn = false;
+
+    private GridLayoutGroup m_GridMap;
+
+    private GameObject lastSelectCellPalette;
+    private GameObject lastBorderCellPalette;
+
+    public GraphicRaycaster m_Raycaster;
+    private PointerEventData m_PointerEventData;
+    public EventSystem m_EventSystem;
+    public Canvas CanvasUI;
+
+    public float DelayTimerPaletteUse = 0f;
+    public float ActionRatePaletteUse = 0.1f;
+
+    public enum TypesBrushGrid
+    {
+        Prefabs,
+        Brushes,
+        PaintBrush,
+        Persons,
+        OptionsGeneric
+    }
+
 
     private string m_SelectedConstruction;
     public string SelectedConstruction {
@@ -35,7 +76,7 @@ public class PaletteMapController : MonoBehaviour {
         }
         set {
             m_SelectedConstruction = value;
-            var t = NameSelectedGenObject;
+            var updateViewCellLabel = NameSelectedGenObject;
         }
     }
     public string NameSelectedGenObject
@@ -55,8 +96,6 @@ public class PaletteMapController : MonoBehaviour {
         get
         {
             m_IsGenericContruct = (ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn);
-            //m_IsGenericContruct = (ModePaint == ToolBarPaletteMapAction.Paste && !isPaletteBrushOn) ||
-            //    SelectedGenericOptionsWorld.IsConstruction;
             return m_IsGenericContruct;
         }
     }
@@ -71,10 +110,11 @@ public class PaletteMapController : MonoBehaviour {
         set
         {
             m_selectedCell = value;
-            var t = NameSelectedGenObject;
+            var updateViewCellLabel = NameSelectedGenObject;
         }
     }
     //private DataTile selectGeneticObject { get; set; }
+    [Header("Prefab Cell Palette")]
     public GameObject PrefabCellMapPalette;
 
     //Paint tools
@@ -382,48 +422,7 @@ public class PaletteMapController : MonoBehaviour {
             m_PasteOnLayer = !value;
         }
     }
-
-    private List<Toggle> m_listToggleMode;
-
-    public ToolBarPaletteMapAction ModePaint = ToolBarPaletteMapAction.Paste;
-    public TypesBrushGrid SelectedTypeBrush = TypesBrushGrid.Prefabs;
-
-    public bool IsPaintsOn = false;
-    //public bool IsCursorOn = false;
-    private bool m_PasteOnLayer = false;
-
-    private List<Dropdown.OptionData> m_ListConstructsOptopnsData;
-    private List<GameObject> m_listCallsOnPalette;
-    private List<string> m_ListNamesConstructs;
-    private List<TypesBrushGrid> ListTypesBrushes;
-
-    public int sizeCellMap = 20;
-    public float ActionRate = 0.5f;
-    private float DelayTimer = 0F;
-    private bool isPaletteBrushOn = false;
-
-    private GridLayoutGroup m_GridMap;
-
-    private GameObject lastSelectCellPalette;
-    private GameObject lastBorderCellPalette;
-
-    public GraphicRaycaster m_Raycaster;
-    private PointerEventData m_PointerEventData;
-    public EventSystem m_EventSystem;
-    public Canvas CanvasUI;
-
-    public float DelayTimerPaletteUse = 0f;
-    public float ActionRatePaletteUse = 0.1f;
-
-    public enum TypesBrushGrid
-    {
-        Prefabs,
-        Brushes,
-        PaintBrush,
-        Persons,
-        OptionsGeneric
-    }
-
+      
 
     private int m_SizeBrush = 4;
     public int SizeBrush
@@ -558,7 +557,7 @@ public class PaletteMapController : MonoBehaviour {
 
         InitEventsButtonMenu();
 
-        m_listCallsOnPalette = new List<GameObject>();
+        m_listCellsOnPalette = new List<GameObject>();
 
         m_ListNamesConstructs = new List<string>();
 
@@ -1181,46 +1180,42 @@ public class PaletteMapController : MonoBehaviour {
             Destroy(gobjCells[i]);
         }
 
-        m_listCallsOnPalette.Clear();
+        m_listCellsOnPalette.Clear();
 
         int index = 0;
-        foreach (Sprite item in Storage.Person.SpriteCollection.Values)
+        foreach (Sprite sprite in Storage.Person.SpriteCollection.Values)
         {
-            string spriteName = item.name;
+            string spriteName = sprite.name;
 
-            var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-            cellMap.transform.SetParent(this.gameObject.transform);
-
-            cellMap.GetComponent<Image>().sprite = item;
+            //var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+            //cellMap.transform.SetParent(this.gameObject.transform);
+            //cellMap.GetComponent<Image>().sprite = item;
+            var cellMap = CreateCellMapPalette(sprite);
             cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = TypesStructure.Person.ToString() };
-            cellMap.SetActive(true);
+            //cellMap.SetActive(true);
 
-            m_listCallsOnPalette.Add(cellMap);
+            m_listCellsOnPalette.Add(cellMap);
             index++;
         }
     }
 
+    private GameObject CreateCellMapPalette(Sprite sprite)
+    {
+        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+        cellMap.transform.SetParent(this.gameObject.transform);
+        cellMap.GetComponent<Image>().sprite = sprite;
+        //cellMap.GetComponent<SpriteRenderer>().sprite = sprite;
+        cellMap.SetActive(true);
+        return cellMap;
+    }
+
     public void PrefabsOnPalette()
     {
-        //#fix terra
-        //List<Texture2D> listTextures = Storage.TilesManager.ListTexturs.Where(p => p.name.IndexOf("Prefab") != -1).ToList();
-        //foreach (var item in listTextures)
-        //{
-        //    Debug.Log("TileName :: " + item.name);
-        //}
-        //foreach (Sprite item in Storage.Palette.SpritesPrefabs.Values)
-        //{
-        //    Debug.Log("SpriteName :: " + item.name); 
-        //}
-
-        //int countColumnMap = listTextures[0].width;
         int countColumnMap = 6;
         SizeBrush = 1;
-        //m_GridMap.startCorner = GridLayoutGroup.Corner.UpperLeft;
-        //m_GridMap.startCorner = GridLayoutGroup.Corner.UpperLeft;
         m_GridMap.childAlignment = TextAnchor.UpperLeft;
         m_GridMap.constraintCount = countColumnMap;
-        ResizeScaleGrid(countColumnMap, 1.1f);
+        ResizeScaleGrid(countColumnMap);
 
         GameObject[] gobjCells = GameObject.FindGameObjectsWithTag("PaletteCell");
         for (int i = 0; i < gobjCells.Length; i++)
@@ -1228,34 +1223,18 @@ public class PaletteMapController : MonoBehaviour {
             Destroy(gobjCells[i]);
         }
 
-        m_listCallsOnPalette.Clear();
+        m_listCellsOnPalette.Clear();
 
         int index = 0;
 
         //foreach (var item in listTextures)
         //@FiX terra
-        foreach (Sprite item in Storage.Palette.SpritesPrefabs.Values)
+        foreach (Sprite sprite in Storage.Palette.SpritesPrefabs.Values)
         {
-            //item.name = item.name.ClearClone();
-            //if (item.name.IndexOf("Wall") != -1)
-            //{
-            //    item.name = "Prefab" + item.name;
-            //}
-
-            string spriteName = item.name;
-            
-
-            var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-            cellMap.transform.SetParent(this.gameObject.transform);
-
-            //@FiX terra
-            //----------------
-            //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[item.name];
-            //----------------
+            string spriteName = sprite.name;
             TypesStructure typeTilePrefab = TypesStructure.Prefab;
             try
             {
-                //TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
                 if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), spriteName))
                 {
                     typeTilePrefab = TypesStructure.Terra;
@@ -1267,46 +1246,28 @@ public class PaletteMapController : MonoBehaviour {
                 Debug.Log("############ PrefabsOnPalette ERROR PARSE typeTilePrefab");
             }
 
-
-            cellMap.GetComponent<Image>().sprite = item;
-            //cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = item.name, X = index, Tag= TypesStructure.Prefab.ToString() };
+            var cellMap = CreateCellMapPalette(sprite); 
             cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = typeTilePrefab.ToString() };
-            cellMap.SetActive(true);
-
-            m_listCallsOnPalette.Add(cellMap);
+            m_listCellsOnPalette.Add(cellMap);
             index++;
         }
     }
 
-    //public void CreateCellPalette(Sprite spriteTile)
-    //{
-    //    var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-    //    cellMap.transform.SetParent(this.gameObject.transform);
-    //    cellMap.GetComponent<Image>().sprite = spriteTile;
-    //    cellMap.SetActive(true);
-    //}
-
     public void CreateCellPalette(Sprite spriteTile)
     {
-        Texture2D textureAtlas = spriteTile.texture;
-        Sprite spriteTileRes = Sprite.Create(textureAtlas, new Rect(0.0f, 0.0f, textureAtlas.width, textureAtlas.height), new Vector2(0.5f, 0.5f), 100.0f);
-        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-        cellMap.transform.SetParent(this.gameObject.transform);
-        cellMap.GetComponent<Image>().sprite = spriteTileRes;
-        cellMap.SetActive(true);
-    }
+        //@???
+        //Texture2D textureAtlas = spriteTile.texture;
+        //Sprite spriteTileRes = Sprite.Create(textureAtlas, new Rect(0.0f, 0.0f, textureAtlas.width, textureAtlas.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //CreateCellMapPalette(spriteTileRes);
 
-    public void CreateCellPalette(Texture2D textureTile)
-    {
-        Sprite spriteTile = Sprite.Create(textureTile, new Rect(0.0f, 0.0f, textureTile.width, textureTile.height), new Vector2(0.5f, 0.5f), 100.0f);
-        var cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-        cellMap.transform.SetParent(this.gameObject.transform);
-        cellMap.GetComponent<Image>().sprite = spriteTile;
-        cellMap.SetActive(true);
+        CreateCellMapPalette(spriteTile);
     }
 
     private void LoadTypeBrushOnPalette(TypesBrushGrid selectTypeBrush)
     {
+        if (SelectedTypeBrush == selectTypeBrush)
+            return;
+
         ToolBarBrushPalette.SetActive(false);
         SelectedTypeBrush = selectTypeBrush;
 
@@ -1361,7 +1322,7 @@ public class PaletteMapController : MonoBehaviour {
         //    if(oldCell!=null)
         //        Destroy(oldCell);
         //}
-        m_listCallsOnPalette.Clear();
+        m_listCellsOnPalette.Clear();
 
         ResizeScaleGrid(countColumnMap);
 
@@ -1386,51 +1347,75 @@ public class PaletteMapController : MonoBehaviour {
 
     private void LoadLayerConstrOnPalette(string keyStruct, List<DataTile> listTiles, int size = 1)
     {
-        bool isOnLayer = (m_listCallsOnPalette.Count > 0);
+        bool isOnLayer = (m_listCellsOnPalette.Count > 0);
 
         int index = 0;
         foreach (DataTile itemTileData in listTiles)
         {
             string namePrefab = itemTileData.Name;
             string nameTexture = itemTileData.Name;
-            bool isUpdate = (isOnLayer && m_listCallsOnPalette.Count > index);
+            bool isUpdate = (isOnLayer && m_listCellsOnPalette.Count > index);
+            Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
 
             GameObject cellMap;
             if (isUpdate)
             {
-                int newIndex = 0;
-                for (int i = 0; i < m_listCallsOnPalette.Count; i++)
-                {
-                    GameObject item = m_listCallsOnPalette[i];
-                    var dataCell = item.GetComponent<CellMapControl>().DataTileCell;
-                    if (dataCell.X == itemTileData.X && dataCell.Y == itemTileData.Y)
-                    {
-                        newIndex = i;
-                        break;
-                    }
+                //int newIndex = -1;
+                //for (int i = 0; i < m_listCellsOnPalette.Count; i++)
+                //{
+                //    GameObject item = m_listCellsOnPalette[i];
+                //    var dataCell = item.GetComponent<CellMapControl>().DataTileCell;
+                //    if (dataCell.X == itemTileData.X && dataCell.Y == itemTileData.Y)
+                //    {
+                //        newIndex = i;
+                //        break;
+                //    }
+                //}
+                int newIndex = GetIndexCellByDataTile(itemTileData);
+                if (newIndex == -1)
+                    cellMap = CreateCellMapPalette(spriteTile);
+                else { 
+                    cellMap = m_listCellsOnPalette[newIndex];
+                    cellMap.GetComponent<Image>().sprite = spriteTile;
                 }
-                cellMap = m_listCallsOnPalette[newIndex];
             }
             else
             {
                 //test
                 //itemTileData.Name += " " + index;
-                cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
-                cellMap.transform.SetParent(this.gameObject.transform);
+                cellMap = CreateCellMapPalette(spriteTile);
+                //cellMap = (GameObject)Instantiate(PrefabCellMapPalette);
+                //cellMap.transform.SetParent(this.gameObject.transform);
             }
-            Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
 
-            cellMap.GetComponent<Image>().sprite = spriteTile;
+            //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
+            //cellMap.GetComponent<Image>().sprite = spriteTile; @!!!
             cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
-            cellMap.SetActive(true);
+            //cellMap.SetActive(true);
 
             if (isUpdate)
-                m_listCallsOnPalette[index] = cellMap;
+                m_listCellsOnPalette[index] = cellMap;
             else
-                m_listCallsOnPalette.Add(cellMap);
+                m_listCellsOnPalette.Add(cellMap);
 
             index++;
         }
+    }
+
+    private int GetIndexCellByDataTile(DataTile itemTileData)
+    {
+        int newIndex = -1;
+        for (int i = 0; i < m_listCellsOnPalette.Count; i++)
+        {
+            GameObject item = m_listCellsOnPalette[i];
+            var dataCell = item.GetComponent<CellMapControl>().DataTileCell;
+            if (dataCell.X == itemTileData.X && dataCell.Y == itemTileData.Y)
+            {
+                newIndex = i;
+                break;
+            }
+        }
+        return newIndex;
     }
 
     //private void TeleportHero()
@@ -1519,6 +1504,11 @@ public class PaletteMapController : MonoBehaviour {
 
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette)
     {
+        if (selCellPalette == null)
+            selCellPalette = GetCellPaletteGObjectSelected();
+        if (selCellPalette == null)
+            return;
+
         GameObject borderCellPalette = selCellPalette.GetComponent<CellMapControl>().BorderCellPalette;
         SelectedCellMap(DataTileCell, selCellPalette, borderCellPalette);
     }
@@ -1526,8 +1516,6 @@ public class PaletteMapController : MonoBehaviour {
     public void SelectedCellMap(DataTile DataTileCell, GameObject selCellPalette, GameObject borderCellPalette)
     {
         SelectedCell = DataTileCell;
-        //if (selectGeneticObject == null)
-        //    selectGeneticObject = DataTileCell;
 
         if (lastSelectCellPalette != null)
             lastSelectCellPalette.GetComponent<Image>().color = Color.white;
@@ -1536,7 +1524,6 @@ public class PaletteMapController : MonoBehaviour {
             lastBorderCellPalette.SetActive(false);
 
         selCellPalette.GetComponent<Image>().color = "#FFD600".ToColor();
-
         borderCellPalette.SetActive(true);
 
         lastBorderCellPalette = borderCellPalette;
@@ -2679,6 +2666,17 @@ public class PaletteMapController : MonoBehaviour {
         SelectVersionGenOption(selVers);
     }
 
+    private GameObject GetCellPaletteGObjectSelected()
+    {
+        GameObject objCell = null;
+        foreach (var cellMap in m_listCellsOnPalette)
+        {
+            if (cellMap.GetComponent<CellMapControl>().DataTileCell.Name == SelectedCell.Name)
+                objCell = cellMap;
+        }
+        return objCell;
+    }
+
     private void SelectVersionGenOption(GenericOptionsWorld selVers)
     {
 
@@ -2720,19 +2718,10 @@ public class PaletteMapController : MonoBehaviour {
 
             ToolBarBrushPalette.SetActive(true);
 
-            GameObject objCell = null;
-            foreach (var cellMap in m_listCallsOnPalette)
-            {
-                if (cellMap.GetComponent<CellMapControl>().DataTileCell.Name == SelectedCell.Name)
-                    objCell = cellMap;
-            }
-
+            GameObject objCell = GetCellPaletteGObjectSelected();
             if (objCell != null)
             {
-                //GameObject border = objCell.GetComponent<CellMapControl>().BorderCellPalette;
                 SelectedCellMap(SelectedCell, objCell);
-                //objCell.GetComponent<CellMapControl>().DataTileCell = SelectedCell;
-                //objCell.GetComponent<CellMapControl>().BorderShow();
             }
             else
             {
@@ -2751,7 +2740,7 @@ public class PaletteMapController : MonoBehaviour {
 
         Storage.EventsUI.ListLogAdd = "Secelted Gen prefab: " + selVers.NameObject + @" \ " + selVers.TagObject;
         //NameSelectedGenObject = selVers.NameObject + @" \ " + selVers.TagObject; 
-        var t = NameSelectedGenObject;
+        var updateViewCellLabel = NameSelectedGenObject;
 
         OptionGenCount = selVers.CountObjects;
         OptionGenSegments = selVers.Segment;

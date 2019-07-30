@@ -61,22 +61,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\GameObjecDataController.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\Models\ModelNPC.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\MovementNPC.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\Ufo\MovementUfo.cs" />
     <Compile Include="Assets\Scripts\Graph\DrawGeometry.cs" />
     <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
-    <Compile Include="Assets\Scripts\NPC\Boss\MovementBoss.cs" />
-    <Compile Include="Assets\Scripts\NPC\CreateNPC.cs" />
-    <Compile Include="Assets\Scripts\NPC\EventsObject.cs" />
-    <Compile Include="Assets\Scripts\NPC\Models\ModelNPC.cs" />
-    <Compile Include="Assets\Scripts\NPC\MovementNPC.cs" />
-    <Compile Include="Assets\Scripts\NPC\Ufo\MovementUfo.cs" />
     <Compile Include="Assets\Scripts\Player\CompletePlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Storage\BilderGameDataObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\DiskData.cs" />
-    <Compile Include="Assets\Scripts\Storage\GameObjecDataController.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
@@ -103,6 +103,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\UserConfig\UserData.xml" />
+    <None Include="Assets\ShaderCustom\Sprite-Outline.shader" />
     <None Include="Assets\Levels\LevelDataPart1x1.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Levels\LevelDataPart1x2.xml" />
