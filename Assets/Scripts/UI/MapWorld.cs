@@ -759,11 +759,11 @@ public class MapWorld : MonoBehaviour {
                     {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
-                        if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                        datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                        if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                        datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
                         {
                             indErr = "11";
-                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
                         }
                         else
                         {
@@ -883,11 +883,11 @@ public class MapWorld : MonoBehaviour {
                     {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
-                        if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                        datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                        if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                        datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
                         {
                             indErr = "11";
-                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
                         }
                     }
                     DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
@@ -957,10 +957,10 @@ public class MapWorld : MonoBehaviour {
                     {
                         foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                         {
-                            if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                            datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                            if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                            datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
                             {
-                                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
                                 break; //@@@+
                             }
                         }
@@ -1007,10 +1007,10 @@ public class MapWorld : MonoBehaviour {
                 {
                     foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
                     {
-                        if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                        datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                        if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+                        datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
                         {
-                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                            prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
                         }
                     }
                 }

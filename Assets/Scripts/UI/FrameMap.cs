@@ -763,10 +763,10 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             prefabType = SaveLoadData.TypePrefabs.PrefabField;
             //Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
 
-            if (datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-            datObjItem.TagObject != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+            if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
+            datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
             {
-                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TagObject);
+                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
             }
             else
             {

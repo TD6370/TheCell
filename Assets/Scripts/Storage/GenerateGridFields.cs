@@ -820,7 +820,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                     //!!!!!!!!!!!!!!!!!!
                     ModelNPC.ObjectData dataObjNew = (ModelNPC.ObjectData)dataObj.Clone();
-                    var name = Helper.CreateName(dataObj.TagObject, posFieldReal, "", gobj.name);
+                    var name = Helper.CreateName(dataObj.TypePrefabName, posFieldReal, "", gobj.name);
 
                     indErr = "12.";
 
@@ -982,7 +982,7 @@ public class GenerateGridFields : MonoBehaviour {
         //LEGACY CODE
         string strErr = "start";
 
-        string typePrefab = objData.TagObject;
+        string typePrefab = objData.TypePrefabName;
         string namePrefab = objData.NameObject;
         Vector3 pos = objData.Position;
      

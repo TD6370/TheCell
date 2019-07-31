@@ -360,6 +360,7 @@ public class DrawGeometry : MonoBehaviour
                 }
             }
         }
+               
     }
 
     //public void DrawTrack2(List<Vector3> trackPoints, Color colorTrack)
@@ -431,6 +432,14 @@ public class DrawGeometry : MonoBehaviour
         }
     }
 
+    public Color GetRandomColor()
+    {
+        System.Random rnd = new System.Random();
+        float r = rnd.Next(1, 255);
+        float g = rnd.Next(1, 255);
+        float b = rnd.Next(1, 255);
+        return new Color(r, g, b, 1);
+    }
 }
 
 public static class DrawExtensions

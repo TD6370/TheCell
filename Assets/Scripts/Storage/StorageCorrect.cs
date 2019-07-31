@@ -323,7 +323,7 @@ public class StorageCorrect : MonoBehaviour {
         //CREATE DATA
         ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabType);
         objDataSave.NameObject = nameObject;
-        objDataSave.TagObject = prefabName.ToString();
+        //objDataSave.TagObject = prefabName.ToString(); //@del
         objDataSave.Position = pos;
         Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateNewCorrectObject");
 

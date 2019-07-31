@@ -648,8 +648,8 @@ public class StoragePerson : MonoBehaviour {
                 return "";
             }
         }
-        int indData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
-        if (indData == -1)
+        int testIndData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
+        if (testIndData == -1)
         {
             //--------------------
             Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -664,10 +664,8 @@ public class StoragePerson : MonoBehaviour {
             if (dataObjectsOldField.Count == 0)
                 Debug.Log("^^^^ UpfatePosition IN DATA (" + p_OldField + ") --------- objects ZERO !!!!!");
             //--------------------
-
             //Storage.Fix.CorrectData(p_NameObject, "UpfatePosition IN DATA");
-
-
+            
             return "Error";
         }
         GameObject gobj = realObjectsOldField[indReal];
@@ -710,7 +708,7 @@ public class StoragePerson : MonoBehaviour {
         }
 
         //VALID ==============================================================
-        string nameObjectTest = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        string nameObjectTest = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
         //if (IsGridDataFieldExist(p_NewField))
         if (Storage.IsGridDataFieldExist(p_NewField))
         {
@@ -775,7 +773,7 @@ public class StoragePerson : MonoBehaviour {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         Storage.Data.UpdatingLocationPersonLocal++;
 
-        objData.NameObject = Helper.CreateName(objData.TagObject, p_NewField, "", p_NameObject);
+        objData.NameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
         gobj.name = objData.NameObject;
 
         if (p_newPosition != gobj.transform.position)
@@ -816,7 +814,7 @@ public class StoragePerson : MonoBehaviour {
         //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
 
         //remove
-        dataObjectsOldField.RemoveAt(indData);
+        dataObjectsOldField.RemoveAt(testIndData);
         realObjectsOldField.RemoveAt(indReal);
 
         Storage.Data.UpdatingLocationPersonLocal--;

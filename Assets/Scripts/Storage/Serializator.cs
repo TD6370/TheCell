@@ -79,7 +79,13 @@ public class Serializator
         typeof(ModelNPC.Nadmozg),
         typeof(ModelNPC.Triffid),
         typeof(ModelNPC.Aracul),
-        typeof(ModelNPC.Cloudwood)
+        typeof(ModelNPC.Cloudwood),
+
+        typeof(ModelNPC.Elka),
+        typeof(ModelNPC.Vood),
+        typeof(ModelNPC.Rock),
+        typeof(ModelNPC.WallRock),
+        typeof(ModelNPC.WallWood),
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)

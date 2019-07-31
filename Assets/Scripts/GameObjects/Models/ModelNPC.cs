@@ -43,32 +43,26 @@ public class ModelNPC
         public FieldData() { }
     }
 
-
     //++++
     //[XmlRoot("ObjRoot")]
     //[XmlType("Object")] //++
-    [XmlInclude(typeof(PersonData))]
-    [XmlInclude(typeof(TerraData))]
     //[XmlInclude(typeof(GameDataNPC))] //$$
     //[Serializable, XmlRoot("ObjRoot")]
+    [XmlInclude(typeof(PersonData))]
+    [XmlInclude(typeof(TerraData))]
     [XmlRoot(ElementName = "ObjectData"), XmlType("ObjectData")]
     public class ObjectData : ICloneable
     {
         public string NameObject { get; set; }
-
-        public string TagObject { get; set; }
-
         public string TypePoolPrefabName { get; set; }
+
         [XmlIgnore]
         public virtual PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
-
         public string TypePrefabName { get; set; }
+
         [XmlIgnore]
         public virtual SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabField; } }
-
         public virtual string ModelView { get; set; }
-        
-        //public Vector3 Position { get; set; }
         public virtual Vector3 Position { get; set; }
 
         [XmlIgnore]
@@ -95,11 +89,9 @@ public class ModelNPC
 
         public override string ToString()
         {
-            return NameObject + " " + TagObject + " " + Position;
+            return NameObject + " " + TypePrefabName + " " + Position;
         }
     }
-
-
 
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
@@ -150,7 +142,8 @@ public class ModelNPC
         public GameDataNPC() : base()
         {
             Speed = 1;
-            
+            TypePoolPrefabName = TypePoolPrefab.ToString();
+            TypePrefabName = TypePrefab.ToString();
         }
 
         public void SetTargetPosition(Vector3 p_SetTarget)
@@ -235,20 +228,10 @@ public class ModelNPC
 
                     isInZona = false;
                 }
-
-
-
-                //newName = Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, !isInZona);
-                //@CD@ 
                 newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
-                //
-
-                //@?????@
                 if (!isInZona && !string.IsNullOrEmpty(newName))
                 {
-                    //Storage.Instance.AddDestroyGameObject(gobj);
                     Storage.Instance.DestroyObject(gobj);
-                    //Destroy(gobj);
                 }
 
             }
@@ -275,9 +258,6 @@ public class ModelNPC
             newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
             if (!isInZona && !string.IsNullOrEmpty(newName))
             {
-                //Destroy(gobj);
-                //Storage.Instance.AddDestroyGameObject(gobj);
-                //@???@
                 Storage.Instance.DestroyObject(gobj);
             }
             return newName;
@@ -293,11 +273,10 @@ public class ModelNPC
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TagObject,
+                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "IsReality: " + IsReality,
-                    
                     //"Life: " + Life,
                     //"Speed: " + Speed,
                     //"Color : " + ColorLevel
@@ -330,46 +309,36 @@ public class ModelNPC
         }
     }
 
-    //-----------------
-    [XmlType("Ufo")] //?
-    public class GameDataUfo : GameDataNPC //?
+    [XmlType("Ufo")]
+    public class GameDataUfo : GameDataNPC 
     {
         [XmlIgnore]
         public Color ColorRender = Color.black;
-        //public Color ColorRender = Color.red;
-
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPersonUFO; } }
-         
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabUfo; } }
 
-    public GameDataUfo()
+        public GameDataUfo()
             : base()
         {
+            TypePoolPrefabName = TypePoolPrefab.ToString();
             TypePrefabName = TypePrefab.ToString();
-            //Init();
         }
 
         public override void Init()
         {
             System.Random rnd = new System.Random();
             TypePrefabName = TypePrefab.ToString();
-
-            //float r = rnd.Next(1, 100) / 100;
-            //float g = rnd.Next(1, 100) / 100;
-            //float b = rnd.Next(1, 100) / 100;
             ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
-            //ColorRender = new Color(r, g, b, 1);
             Speed = 3;
             IsLoadad = true;
-
-            //if (IsCanSetTargetPosition && IsReality)
             if (IsCanSetTargetPosition)
                 SetTargetPosition();
         }
 
         public override void UpdateGameObject(GameObject objGame)
         {
-            //#INTI
             if(!IsLoadad && IsReality)
                 Init();
 
@@ -379,17 +348,13 @@ public class ModelNPC
 
                 objGame.name = nameObjData;
             }
-
-            //#fix  Color
-            //Init();
-
             objGame.GetComponent<SpriteRenderer>().color = ColorRender;
         }
 
         public override string ToString()
         {
 
-            return NameObject + " " + TagObject + " " + Position.x + " " + Position.y;
+            return NameObject + " " + TypePrefabName + " " + Position.x + " " + Position.y;
 
         }
 
@@ -403,7 +368,7 @@ public class ModelNPC
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TagObject,
+                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                   };
@@ -421,18 +386,6 @@ public class ModelNPC
         public PersonDataBoss()
             : base()
         {
-            //System.Random rng = new System.Random();
-
-            //if (Level == 0)
-            //{
-            //    //Level = UnityEngine.Random.Range(1, 7);
-            //    Level = rng.Next(1,7);
-            //}
-
-            //if (Life == 0)
-            //    Life = Level * 10;
-
-            //Speed = Level;
         }
     }
 
@@ -444,8 +397,11 @@ public class ModelNPC
         [XmlIgnore]
         Dictionary<int, Color> _colorsPresent = null;
 
+        //[XmlIgnore]
+        //public string NameSprite { get; private set; }
+
         [XmlIgnore]
-        public string NameSprite { get; private set; }
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabBoss; } }
 
         [XmlIgnore]
         private Color m_ColorRender = Color.clear;
@@ -500,9 +456,10 @@ public class ModelNPC
 
         public GameDataBoss() : base()
         {
+            //TypePoolPrefabName = TypePoolPrefab.ToString();
+            TypePrefabName = TypePrefab.ToString();
             //Init();
         }
-
 
         public override void Init()
         {
@@ -515,14 +472,9 @@ public class ModelNPC
                 Level = UnityEngine.Random.Range(1, 7);
                 //Level = rng.Next(1, 7);
             }
-
             if (Life == 0)
                 Life = Level * 10;
-
             Speed = Level;
-            //---------------------
-
-            //Speed = 5;
 
             if (m_ColorRender != Color.clear)
                 return;
@@ -538,10 +490,7 @@ public class ModelNPC
 
         private void InitColor()
         {
-
             ColorRender = StoragePerson.GetColorsLevel[Level];
-            //ColorRender = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1);
-            //Debug.Log(">>>>>>>>> colorStr INIT ==" + ColorRender + "    Level:" + Level);
         }
 
         public override void UpdateGameObject(GameObject objGame)
@@ -564,20 +513,11 @@ public class ModelNPC
                 isUpdateStyle = true;
                 //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
             }
-
-
-            //if (isUpdateStyle)
-            //{
-            //Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level);
             string _nameSprite = "";
             Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
-            //NameSprite = spriteMe.name;
-            NameSprite = _nameSprite;
+            ModelView = _nameSprite;
             if (spriteMe != null)
             {
-                //string _nameSprite = Storage.GridData.GetNameSpriteForIndexLevel(Level);
-                //Debug.Log("____________________Update new Sprite " + NameObject + "  Level=" + Level + "   >> " + _nameSprite);
-
                 objGame.GetComponent<SpriteRenderer>().sprite = spriteMe;
             }
             else
@@ -585,12 +525,6 @@ public class ModelNPC
                 Debug.Log("############## NOT Update new Sprite " + NameObject + "  Level=" + Level + " ???????????????");
                 objGame.GetComponent<SpriteRenderer>().color = ColorRender;
             }
-            //}
-
-            //#pool#
-            //var movement =  objGame.GetComponent<MovementBoss>();
-            //if(PoolGameObjects.IsUsePoolObjects)
-            //    movement.UpdateData("UpdateGameObject");
         }
 
         [XmlIgnore]
@@ -601,15 +535,14 @@ public class ModelNPC
                 return new List<string> {
                     "Name: " + NameObject,
                     "Pool: " + TypePoolPrefabName,
-                    "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TagObject,
+                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "Life: " + Life,
                     "Speed: " + Speed,
                     "Color : " + ColorLevel,
-                    "Individ: " + NameSprite
+                    "Individ: " + ModelView
                   };
             }
         }
@@ -629,10 +562,6 @@ public class ModelNPC
     public class GameDataAlien : PersonDataAlien
     {
         public virtual int Life { get; set; }
-
-        //[XmlIgnore]
-        //public string NameSprite { get; private set; }
-
         [XmlIgnore]
         public virtual int Level { get; set; }
 
@@ -643,20 +572,9 @@ public class ModelNPC
         public override void Init()
         {
             //--- init person boss data
-            //System.Random rng = new System.Random();
-
             if (string.IsNullOrEmpty(TypePrefabName))
             {
-                //int maxT = Storage.GridData.NamesPrefabNPC.Count;
-                //int indT = UnityEngine.Random.Range(0, maxT);
-                //Level = rng.Next(1, 7);
-
-                //TypeAlien = Storage.Person.GenTypeAlien()
-                //TypeAlien = Storage.GridData.NamesPrefabNPC[indT];
-                //NameSprite = TypeAlien;
-                //GameDataAlien obj = new GameDataAlienInspector();
                 GameDataAlien obj = Storage.Person.GenTypeAlien();
-                //TypePrefabName = obj.TypePrefabName;// Storage.Person.GenTypeAlien()
                 ModelView = obj.ModelView;
                 Level = obj.Level;
                 Life = obj.Life;
@@ -669,8 +587,6 @@ public class ModelNPC
 
             IsLoadad = true;
         }
-
-      
 
         public override void UpdateGameObject(GameObject objGame)
         {
@@ -685,17 +601,6 @@ public class ModelNPC
             {
                 objGame.name = NameObject;
             }
-
-            //?????
-            //isUpdateStyle = true;
-
-            //if (ColorRender != StoragePerson.GetColorsLevel[Level])
-            //{
-            //    ColorRender = StoragePerson.GetColorsLevel[Level];
-            //    isUpdateStyle = true;
-            //    //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
-            //}
-            
             Sprite spriteMe = Storage.Palette.SpritesWorldPrefabs[ModelView];  //Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
             if (spriteMe != null)
             {
@@ -718,7 +623,7 @@ public class ModelNPC
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TagObject,
+                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "Life: " + Life,
@@ -750,33 +655,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Inspector; } }
-              
-
-        public override int Life
-        {
-            get
-            {
-                //return base.Life;
-                return 30;
-            }
-            set
-            {
-                //base.Life = value;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 2;
-            }
-
-            set
-            {
-                //base.Level = value;
-            }
-        }
+        public override int Life { get { return 30; } set { } }
+        public override int Level { get { return 2; } set { } }
         public override void Init()
         {
             base.Init();
@@ -789,31 +669,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Machinetool; } }
-        public override int Life
-        {
-            get
-            {
-                //return base.Life;
-                return 50;
-            }
-            set
-            {
-                //base.Life = value;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 6;
-            }
-
-            set
-            {
-                //base.Level = value;
-            }
-        }
+        public override int Life { get { return 50; } set {} }
+        public override int Level { get { return 6; } set {} }
         public override void Init()
         {
             base.Init();
@@ -826,22 +683,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Mecha; } }
-        public override int Life
-        {
-            get
-            {
-                //return base.Life;
-                return 40;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 3;
-            }
-        }
+        public override int Life { get { return 40; } set { } }
+        public override int Level { get { return 3; } set { } }
         public override void Init()
         {
             base.Init();
@@ -854,21 +697,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Dendroid; } }
-        public override int Life
-        {
-            get
-            {
-                return 80;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 6;
-            }
-        }
+        public override int Life { get { return 80; } set { } }
+        public override int Level { get { return 6; } set { } }
         public override void Init()
         {
             base.Init();
@@ -881,21 +711,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Garry; } }
-        public override int Life
-        {
-            get
-            {
-                return 40;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 1;
-            }
-        }
+        public override int Life { get { return 40; } set { } }
+        public override int Level { get { return 1; } set { } }
         public override void Init()
         {
             base.Init();
@@ -908,21 +725,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Lollipop; } }
-        public override int Life
-        {
-            get
-            {
-                return 10;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 3;
-            }
-        }
+        public override int Life { get { return 10; } set { } }
+        public override int Level { get { return 3; } set { } }
         public override void Init()
         {
             base.Init();
@@ -935,21 +739,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Blastarr; } }
-        public override int Life
-        {
-            get
-            {
-                return 100;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 8;
-            }
-        }
+        public override int Life { get { return 100; } set { } }
+        public override int Level { get { return 8; } set { } }
         public override void Init()
         {
             base.Init();
@@ -962,21 +753,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Hydragon; } }
-        public override int Life
-        {
-            get
-            {
-                return 50;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 6;
-            }
-        }
+        public override int Life { get { return 50; } set { } }
+        public override int Level { get { return 6; } set { } }
         public override void Init()
         {
             base.Init();
@@ -989,21 +767,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Pavuk; } }
-        public override int Life
-        {
-            get
-            {
-                return 80;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 7;
-            }
-        }
+        public override int Life { get { return 80; } set { } }
+        public override int Level { get { return 7; } set { } }
         public override void Init()
         {
             base.Init();
@@ -1016,21 +781,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Skvid; } }
-        public override int Life
-        {
-            get
-            {
-                return 30;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 4;
-            }
-        }
+        public override int Life { get { return 30; } set { } }
+        public override int Level { get { return 4; } set { } }
         public override void Init()
         {
             base.Init();
@@ -1043,21 +795,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Fantom; } }
-        public override int Life
-        {
-            get
-            {
-                return 60;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 4;
-            }
-        }
+        public override int Life { get { return 60; } set { } }
+        public override int Level { get { return 4; } set { } }
         public override void Init()
         {
             base.Init();
@@ -1070,21 +809,8 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Mask; } }
-        public override int Life
-        {
-            get
-            {
-                return 10;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 8;
-            }
-        }
+        public override int Life { get { return 10; } set { } }
+        public override int Level { get { return 8; } set { } }
         public override void Init()
         {
             base.Init();
@@ -1097,29 +823,15 @@ public class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Vhailor; } }
-        public override int Life
-        {
-            get
-            {
-                return 100;
-            }
-        }
-
-        public override int Level
-        {
-            get
-            {
-                return 5;
-            }
-        }
+        public override int Life { get { return 100; } set { } }
+        public override int Level { get { return 5; } set { } }
         public override void Init()
         {
             base.Init();
             TypePrefabName = TypePrefab.ToString();
         }
     }
-
-    //---------------------------------------------------
+    //--------------------------------------------------- TERRA ------------------------------
 
     [XmlType("Terra")]
     public class TerraData : ObjectData
@@ -1145,17 +857,13 @@ public class ModelNPC
         [XmlIgnore]
         private bool isUseAtlas = true; //false;//
 
-        //public TerraData(bool isGen) {
         public TerraData() : base()
         {
-            //Init();
         }
 
         public void Init()
         {
-            //if(!IsReality) //#FIX
-                idTerra = Guid.NewGuid().ToString().Substring(0, 4);
-
+            idTerra = Guid.NewGuid().ToString().Substring(0, 4);
             bool isGen = true;
 
             IsLoadad = true;
@@ -1170,9 +878,6 @@ public class ModelNPC
                 Debug.Log("######## Init TerraData: TilesManager.ListTexturs is Empty");
                 return;
             }
-
-            //#FIX
-            //if (!IsLoadad && !IsReality)
             //#FIX null
             if ((!IsLoadad && !IsReality) || ModelView==null)
             {
@@ -1185,57 +890,19 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            if ((!IsLoadad || ModelView == null) && IsReality)
+                Init();
+
+            if (!isUseAtlas)
             {
-                //#INTI
-                //if(!IsLoadad && IsReality)
-                //#FIX null
-                if ((!IsLoadad || ModelView == null) && IsReality)
-                    Init();
-
-                //return;
-                if (!isUseAtlas)
-                {
-                    //if (Storage.TilesManager == null)
-                    //{
-                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager  is Empty");
-                    //    return;
-                    //}
-                    //if (Storage.TilesManager.CollectionSpriteTiles == null)
-                    //{
-                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " TilesManager.CollectionTextureTiles  is Empty");
-                    //    return;
-                    //}
-
-                    //if (!Storage.TilesManager.CollectionSpriteTiles.ContainsKey(TileName))
-                    //{
-                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " not found TileName: " + TileName);
-                    //    return;
-                    //}
-                    //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
-                    //if (spriteTile != null)
-                    //{
-                    //    objGame.GetComponent<SpriteRenderer>().sprite = spriteTile;
-                    //}
-                    //else
-                    //{
-                    //    Debug.Log("############## NOT Update new Sprite " + NameObject + " by TileName L " + TileName);
-                    //}
-
-                    objGame.GetComponent<SpriteRenderer>().sprite = Storage.TilesManager.CollectionSpriteTiles[ModelView];
-                }
-                else
-                //------------------------- Atlas
-                {
-                    //if (!Storage.Palette.SpritesPrefabs.ContainsKey(TileName))
-                    //{
-                    //    Debug.Log("######### TerraData SpritesPrefabs not find TileName: " + TileName);
-                    //    return;
-                    //}
-                    //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[TileName];
-                    objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[ModelView];
-                }
-                //-------------------------
+                objGame.GetComponent<SpriteRenderer>().sprite = Storage.TilesManager.CollectionSpriteTiles[ModelView];
             }
+            else
+            //------------------------- Atlas
+            {
+                objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[ModelView];
+            }
+            //-------------------------
         }
     }
 
@@ -1284,8 +951,7 @@ public class ModelNPC
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
+
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Kolba; } }
         public Kolba() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1297,8 +963,6 @@ public class ModelNPC
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
-        [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Lantern; } }
         public Lantern() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1308,8 +972,6 @@ public class ModelNPC
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Bananas; } }
         public Bananas() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1321,8 +983,6 @@ public class ModelNPC
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
-        [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cluben; } }
         public Cluben() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1332,8 +992,6 @@ public class ModelNPC
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Chpok; } }
         public Chpok() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1345,8 +1003,6 @@ public class ModelNPC
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
-        [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Pandora; } }
         public Pandora() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1356,8 +1012,6 @@ public class ModelNPC
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Nadmozg; } }
         public Nadmozg() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1369,8 +1023,6 @@ public class ModelNPC
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
-        [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Triffid; } }
         public Triffid() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1380,8 +1032,6 @@ public class ModelNPC
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Aracul; } }
         public Aracul() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1393,8 +1043,6 @@ public class ModelNPC
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
-        [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cloudwood; } }
         public Cloudwood() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
@@ -1404,12 +1052,8 @@ public class ModelNPC
     [XmlType("Chip")]
     public class Chip : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Chip; } }
         public Chip() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1418,12 +1062,8 @@ public class ModelNPC
     [XmlType("Gecsagon")]
     public class Gecsagon : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Gecsagon; } }
         public Gecsagon() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1433,12 +1073,8 @@ public class ModelNPC
     [XmlType("Kamish")]
     public class Kamish : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Kamish; } }
         public Kamish() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1447,12 +1083,8 @@ public class ModelNPC
     [XmlType("Boloto")]
     public class Boloto : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Boloto; } }
         public Boloto() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1461,12 +1093,8 @@ public class ModelNPC
     [XmlType("Weed")]
     public class Weed : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Weed; } }
         public Weed() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1475,12 +1103,8 @@ public class ModelNPC
     [XmlType("Weedflower")]
     public class Weedflower : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Weedflower; } }
         public Weedflower() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1489,12 +1113,8 @@ public class ModelNPC
     [XmlType("Berry")]
     public class Berry : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Berry; } }
         public Berry() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1503,12 +1123,8 @@ public class ModelNPC
     [XmlType("Mashrooms")]
     public class Mashrooms : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Mashrooms; } }
         public Mashrooms() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1518,12 +1134,8 @@ public class ModelNPC
     [XmlType("Kishka")]
     public class Kishka : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Kishka; } }
         public Kishka() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1532,12 +1144,8 @@ public class ModelNPC
     [XmlType("Nerv")]
     public class Nerv : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Nerv; } }
         public Nerv() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1546,12 +1154,8 @@ public class ModelNPC
     [XmlType("Orbits")]
     public class Orbits : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Orbits; } }
         public Orbits() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1560,12 +1164,8 @@ public class ModelNPC
     [XmlType("Shampinion")]
     public class Shampinion : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Shampinion; } }
         public Shampinion() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1575,12 +1175,8 @@ public class ModelNPC
     [XmlType("Desert")]
     public class Desert : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Desert; } }
         public Desert() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1589,12 +1185,8 @@ public class ModelNPC
     [XmlType("Parket")]
     public class Parket : FloorData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Parket; } }
         public Parket() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1603,12 +1195,8 @@ public class ModelNPC
     [XmlType("Corals")]
     public class Corals : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Corals; } }
         public Corals() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -1617,19 +1205,45 @@ public class ModelNPC
     [XmlType("Diods")]
     public class Diods : FloreData
     {
-        public int Defence { get; set; }
-        public string Debuff { get; set; }
-        public int HP { get; set; }
-        public string ParentId { get; set; }
-        [XmlIgnore]
-        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFlore; } }
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Diods; } }
         public Diods() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
-    
-        
 
+    //LagcyObjects ---------------------------
+    public class Rock : WoodData
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabRock; } }
+        public Rock() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    public class Vood : WoodData
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabVood; } }
+        public Vood() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    public class Elka : WoodData
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabElka; } }
+        public Elka() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    public class WallRock : WoodData
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabWallRock; } }
+        public WallRock() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    public class WallWood : WoodData
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabWallWood; } }
+        public WallWood() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    //------------------------------------------
 
 }
 

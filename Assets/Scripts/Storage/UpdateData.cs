@@ -221,7 +221,7 @@ public class UpdateData {
                 if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelType && 
                     p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelType)
                 {
-                    var indTM = fieldData.Objects.FindIndex(p => p.TagObject == objDataSave.TagObject);
+                    var indTM = fieldData.Objects.FindIndex(p => p.TypePrefabName == objDataSave.TypePrefabName);
                     if (indTM != -1)
                     {
                         if(isLog)
@@ -233,7 +233,7 @@ public class UpdateData {
                     p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelPrefab)
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => p.TagObject.IsTerra());
-                    var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsField());
+                    var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -245,7 +245,7 @@ public class UpdateData {
                     p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelTerra)
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsTerra());
-                    var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsField());
+                    var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -258,7 +258,7 @@ public class UpdateData {
                 //{
                 if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelType)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => p.TagObject == objDataSave.TagObject).ToList();
+                    var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
                     for(int i=ListRemove.Count -1; i>=0;i--)
                     {
                         if (isLog)
@@ -269,7 +269,7 @@ public class UpdateData {
                 }
                 else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => !p.TagObject.IsField()).ToList();
+                    var ListRemove = fieldData.Objects.Where(p => !p.TypePrefabName.IsField()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
@@ -280,7 +280,7 @@ public class UpdateData {
                 }
                 else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelTerra)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => p.TagObject.IsField()).ToList();
+                    var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName.IsField()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
@@ -538,10 +538,7 @@ public class UpdateData {
                     ThreadLoadDataBigXML();
             });
         }
-
         threadLoadWorld.Start();
-
-        //var isRun = threadLoadWorld.IsAlive;
     }
 
     public bool IsThreadLoadWorldCompleted

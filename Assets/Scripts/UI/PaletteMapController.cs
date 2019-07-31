@@ -2056,7 +2056,7 @@ public class PaletteMapController : MonoBehaviour {
 
             if (isTestExistMeType)
             {
-                var indTM = Storage.Instance.GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.TagObject == itemTile.Tag);
+                var indTM = Storage.Instance.GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.TypePrefabName == itemTile.Tag);
                 if (indTM != -1)
                     return true;
             }

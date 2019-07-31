@@ -28,6 +28,21 @@ public class BilderGameDataObjects //: MonoBehaviour
 
         switch (prefabType)
         {
+            case SaveLoadData.TypePrefabs.PrefabRock:
+                objGameBild = new ModelNPC.Rock();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabVood:
+                objGameBild = new ModelNPC.Vood();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabElka:
+                objGameBild = new ModelNPC.Elka();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabWallRock:
+                objGameBild = new ModelNPC.WallRock();
+                break;
+            case SaveLoadData.TypePrefabs.PrefabWallWood:
+                objGameBild = new ModelNPC.WallWood();
+                break;
             case SaveLoadData.TypePrefabs.PrefabUfo:
                 objGameBild = new ModelNPC.GameDataUfo();
                 break;
