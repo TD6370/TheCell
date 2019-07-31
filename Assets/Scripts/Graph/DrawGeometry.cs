@@ -6,9 +6,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+//[ExecuteInEditMode]
 public class DrawGeometry : MonoBehaviour
 {
     public bool IsParallaxOn = false;
+   
 
     private LineRenderer m_lineRenderer;
     //private SpriteRenderer m_SpriteRenderer;
@@ -28,7 +30,15 @@ public class DrawGeometry : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        LoadGameGraphSetting(); //TEST
+    }
 
+    public void LoadGameGraphSetting()
+    {
+        //RenderSettings.ambientLight = Storage.Palette.SceneSkyColor;
+        RenderSettings.ambientSkyColor = Storage.Palette.SceneSkyColor;
+        RenderSettings.ambientEquatorColor = Storage.Palette.SceneEquatorColor;
+        RenderSettings.ambientGroundColor = Storage.Palette.SceneGroundColor;
     }
 
     //ColorBlock cb = buttonCommand.colors;

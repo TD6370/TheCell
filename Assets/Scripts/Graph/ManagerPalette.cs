@@ -6,6 +6,10 @@ using UnityEngine.U2D;
 
 public class ManagerPalette : MonoBehaviour {
 
+    public Color SceneSkyColor = Color.white;
+    public Color SceneEquatorColor = Color.white;
+    public Color SceneGroundColor = Color.white;
+
     public Color ColorVood;//= Color.clear; //"#379200".ToColor();
     public Color ColorRock;// = Color.clear; //"#77A7C2".ToColor();
     public Color ColorUfo;// = Color.clear; //"#FF527C".ToColor();

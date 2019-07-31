@@ -534,6 +534,7 @@ public class Storage : MonoBehaviour {
     private void LoadDefaultUI()
     {
         PaletteMap.Show();
+        DrawGeom.LoadGameGraphSetting();
     }
 
     IEnumerator StartFindLookObjects()
