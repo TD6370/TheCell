@@ -605,7 +605,8 @@ public class UIEvents : MonoBehaviour {
         {
             if(string.IsNullOrEmpty(_infoPoint))
                 _infoPoint = "Cursor : " + _fieldCursor;
-            Storage.Person.VeiwCursorGameObjectData(_fieldCursor);
+            Storage.Instance.SelectFieldCursor = _fieldCursor;
+            Storage.Person.SelectGameObjectDataByField(_fieldCursor);
         }
 
         if (Storage.PaletteMap.IsPaintsOn)
@@ -834,6 +835,18 @@ public class UIEvents : MonoBehaviour {
     {
         tbxTest.text = text;
     }
+
+    public void ClearListExpandPersons()
+    {
+        var listExpandPersonControls = GameObject.FindGameObjectsWithTag("ExpandPersonControl");
+        foreach (var exp in listExpandPersonControls)
+        {
+            if (exp.name == "PrefabExpandPanel")
+                continue;
+            Destroy(exp);
+        }
+    }
+
 
     public void AddExpandPerson(string tittle, List<string> listText, List<string> listCommand, GameObject gobjObservable)
     {

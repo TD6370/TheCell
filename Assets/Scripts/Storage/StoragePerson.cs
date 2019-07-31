@@ -340,17 +340,17 @@ public class StoragePerson : MonoBehaviour {
 
     }
 
-    public void VeiwCursorGameObjectData(string _fieldCursor)
+    public void SelectGameObjectDataByField(string p_field)
     {
         try
         {
-            if (!Storage.Instance.Fields.ContainsKey(_fieldCursor))
+            if (!Storage.Instance.Fields.ContainsKey(p_field))
                 return;
 
-            Storage.Instance.SelectFieldCursor = _fieldCursor;
+            //Storage.Instance.SelectFieldCursor = p_field;
             Storage.EventsUI.ListLogAdd = "SelectFieldCursor: " + Storage.Instance.SelectFieldCursor;
             //Storage.Events.ListLogClear();
-            GameObject prefabFind = Storage.Instance.Fields[_fieldCursor];
+            GameObject prefabFind = Storage.Instance.Fields[p_field];
 
             if (prefabFind != null)
             {
@@ -361,7 +361,7 @@ public class StoragePerson : MonoBehaviour {
             if (Storage.Map.IsOpen)
                 return;
 
-            foreach (var gobj in Storage.Person.GetAllRealPersons(_fieldCursor, true))
+            foreach (var gobj in Storage.Person.GetAllRealPersons(p_field, true))
             {
                 //Storage.Events.ListLogAdd = "FIND (" + _fieldCursor + "): " + gobj.name;
 
@@ -729,43 +729,23 @@ public class StoragePerson : MonoBehaviour {
         if (Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
         {
             var indT2 = Storage.Instance.GamesObjectsReal[p_NewField].FindIndex(p => p != null && p.name == nameObjectTest); ;
-            if (indT2 != -1)
+            if (indT2 != -1) //@@DUBLICATE
             {
-                Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
-                //Debug.Log("########## UpdatePosition [" + objData.NameObject + "] DUBLICATE REAL: " + nameObjectTest + "      in " + p_NewField);
-                //Storage.Log.GetHistory(objDataSave.NameObject);
-
-                //<< fix: >>
-                foreach (GameObject findGobj in Storage.Instance.GamesObjectsReal[p_NewField].Where(p => p != null && p.name == nameObjectTest).ToList())
+                GameObject findGobjDbl = Storage.Instance.GamesObjectsReal[p_NewField][indT2];
+                if (!findGobjDbl.Equals(thisGameObject))
                 {
-                    if (!findGobj.Equals(thisGameObject))
-                    {
-                        Debug.Log("*** find for Destroy Real obj --- is NOT ME : " + findGobj.name + "      ME: " + thisGameObject.name);
-                        //@@@@
-                        Storage.EventsUI.AddMenuPerson(objData as ModelNPC.GameDataNPC, thisGameObject);
-                        Storage.GamePause = true;
-                        return "Error";
-                        //@@@@
-                        //if (findGobj != null)
-                        //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  UpdateGamePosition " + findGobj.name);
-                        if (PoolGameObjects.IsUsePoolObjects)
-                        {
-                            Storage.Pool.DestroyPoolGameObject(findGobj);
-                        }
-                        else
-                        {
-                            Destroy(findGobj);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("*** find for Destroy Real obj --- is ME : " + findGobj.name);
-                    }
+                    Debug.Log("############################## find dublicate Real obj --- is NOT ME : " + findGobjDbl.name + "      ME: " + thisGameObject.name);
+                    Storage.Pool.DestroyPoolGameObject(findGobjDbl);
                 }
-                //Storage.Data.RemoveAllFindDataObject(nameObjectTest);
-                //Storage.Data.RemoveAllFindRealObject(nameObjectTest);
+                //@@@@
+                //Storage.EventsUI.ClearListExpandPersons();
+                //Storage.EventsUI.AddMenuPerson(objData as ModelNPC.GameDataNPC, thisGameObject);
+                //Storage.EventsUI.AddMenuPerson(dataDbl as ModelNPC.GameDataNPC, findGobjDbl);
+                //Storage.GamePause = true;
+                //return "Error";
+                //@@@@
+                //remove dublicate in real list gobj
                 Storage.Data.RemoveRealObject(indT2, p_NewField, "UpdatePosition");
-                //return "";
             }
         }
         //==============================================================
@@ -828,8 +808,8 @@ public static class PersonsExtensions
 {
     public static bool IsPerson(this string typePrefab)
     {
-        
-        bool isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), typePrefab);
+
+        bool isNPC = Helper.IsTypePrefabNPC(typePrefab);
         return isNPC;
 
         //return Storage.Person.NamesPersons.Contains(typePrefab);
@@ -906,8 +886,9 @@ public static class PersonsExtensions
         bool isNPC = false;
         try
         {
-            isNPC = Enum.IsDefined(typeof(SaveLoadData.TypePrefabNPC), gobj.tag.ToString());
-        }catch(Exception x)
+            isNPC = Helper.IsTypePrefabNPC(gobj.tag.ToString());
+        }
+        catch(Exception x)
         {
             Debug.Log(x.Message);
         }

@@ -16,6 +16,14 @@ public class CompletePlayerController : MonoBehaviour {
     public GameObject ObjectCursor;
 
     public Vector2 PosCursorToField { get; private set; }
+    public Vector2 PosCursor
+    {
+        get
+        {
+            //return new Vector2(_MousePositionClick.x, Screen.height - _MousePositionClick.y);
+            return new Vector2(_MousePositionClick.x, _MousePositionClick.y);
+        }
+    }
     //public Vector3 DistMoveCameraMap = new Vector3();
     //public float DistMoveCameraMapXY = 0;
     //public Vector3 StartPositFrameMap = new Vector3();
@@ -293,7 +301,7 @@ public class CompletePlayerController : MonoBehaviour {
         RigidbodyHero.MovePosition(posMove * Speed);
     }
 
-    public GameObject FindFieldCurrent(bool isNotLoadLook = false)
+    public GameObject FindFieldCurrent(bool isLoadLook = true)
     {
         int scale = 2;
         int posX = 0;
@@ -339,7 +347,7 @@ public class CompletePlayerController : MonoBehaviour {
             m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
         }
 
-        if (!isNotLoadLook)
+        if (isLoadLook)
         {
             LoadObjects(posX, posY);
         }

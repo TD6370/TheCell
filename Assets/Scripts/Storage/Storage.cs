@@ -503,7 +503,7 @@ public class Storage : MonoBehaviour {
         Debug.Log("III LoadGameObjects ::::_______________");
 
         //--------------------- NEW -------------------
-        _screiptHero.FindFieldCurrent(true);
+        _screiptHero.FindFieldCurrent(false);
         _scriptGrid.StartGenGrigField(true);
         _screiptHero.FindFieldCurrent();
         //------------------------------

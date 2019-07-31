@@ -186,9 +186,8 @@ public class GenerateGridFields : MonoBehaviour {
             Storage.Data.IsUpdatingLocationPersonGlobal = false;
             return;
         }
-        {
-            m_onLoadFields = true;
-        }
+        m_onLoadFields = true;
+        
 
         if (_movement.x != 0)
         {
@@ -460,31 +459,31 @@ public class GenerateGridFields : MonoBehaviour {
                 dataObj.IsReality = true;
                 indErr = "15. dataObj = " + dataObj.NameObject + " " + dataObj.ToString();
 
-                GameObject newField = CreatePrefabByName(dataObj);
+                GameObject gobj = CreatePrefabByName(dataObj);
                 indErr = "16.";
 
-                listGameObjectReal.Add(newField);
+                listGameObjectReal.Add(gobj);
 
                 //---------- ACTIVATE
                 if (PoolGameObjects.IsUsePoolObjects)
                 {
-                    var movement = newField.GetComponent<MovementBoss>();
+                    var movement = gobj.GetComponent<MovementBoss>();
                     //var movement = newField.GetComponent<MovementNPC>();
                     if (movement != null)
                     {
                         //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate UpdateData " + newField.name);
                         movement.UpdateData("Activate");
                         //@@@<
-                        newField.SetActive(true);
+                        gobj.SetActive(true);
                         movement.InitNPC();
                     }
                     else
                     {
-                        var movementNPC = newField.GetComponent<MovementNPC>();
+                        var movementNPC = gobj.GetComponent<MovementNPC>();
                         if (movementNPC != null)
                         {
                             movementNPC.UpdateData("Activate");
-                            newField.SetActive(true);
+                            gobj.SetActive(true);
                             movementNPC.InitNPC();
                         }
                     }

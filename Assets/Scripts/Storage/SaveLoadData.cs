@@ -103,7 +103,7 @@ public class SaveLoadData : MonoBehaviour {
         Mecha,
 
         Dendroid,
-        Garry,
+        Gary,
         Lollipop,
 
         Blastarr,
@@ -554,6 +554,8 @@ public class SaveLoadData : MonoBehaviour {
             //#FIX POOL
             string tagPool = GetTypePool(namePrefab);
             GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, tagPool, new Vector3(0, 0, 0));
+            if(gobj==null)
+                Debug.Log("############## Error on FindPrefab gobj is null");
             return gobj;
         }
         else
@@ -702,6 +704,10 @@ public class SaveLoadData : MonoBehaviour {
                     break;
 
             }
+
+            if (resPrefab == null)
+                Debug.Log("############## Error on FindPrefabHieracly gobj is null");
+
             //Debug.Log("FindPrefabHieracly: " + prefabType.ToString());
             return resPrefab;
         }

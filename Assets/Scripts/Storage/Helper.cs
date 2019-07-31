@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public static class Helper { //: MonoBehaviour {
@@ -237,6 +238,7 @@ public static class Helper { //: MonoBehaviour {
     public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
     {
         bool isTerra = Enum.IsDefined(typeof(SaveLoadData.TypePrefabObjects), typePrefab.ToString());
+        //bool isTerra = IsTypeTypePrefabObjectsContains(typePrefab.ToString());
         return isTerra;
 
         //switch(typePrefab)
@@ -276,15 +278,9 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
-    //TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
-    //if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), item.name))
-    //{
-    //    typeTilePrefab = TypesStructure.Terra;
-    //    Debug.Log("Not Prefab"); 
-    //}
     public static SaveLoadData.TypePrefabs ParsePrefab(string strType)
     {
-        if (System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), strType))
+        if (IsTypePrefabs(strType))
         {
             var prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), strType);
             return prefabType;
@@ -315,6 +311,11 @@ public static class Helper { //: MonoBehaviour {
         x = (int)(x / Storage.ScaleWorld);
         y = (int)(y / Storage.ScaleWorld);
         return new Vector2(x, Mathf.Abs((int)y));
+    }
+
+    public static Vector2 NormalizFieldToPos(Vector2 posit)
+    {
+        return NormalizFieldToPos(posit.x, posit.y);
     }
 
     public static Vector2 NormalizFieldToPos(System.Single x, System.Single y)
@@ -632,6 +633,23 @@ public static class Helper { //: MonoBehaviour {
     }
 
     #endregion
+
+    //fixed System.Enum.IsDefined
+    public static bool IsTypePrefabs(string strType)
+    {
+        return Enum.GetNames(typeof(SaveLoadData.TypePrefabs)).Any(x => x.ToLower() == strType.ToLower());
+    }
+
+    public static bool IsTypePrefabNPC(string strType)
+    {
+        return Enum.GetNames(typeof(SaveLoadData.TypePrefabNPC)).Any(x => x.ToLower() == strType.ToLower());
+    }
+
+    public static bool IsTypeTypePrefabObjects(string strType)
+    {
+        return Enum.GetNames(typeof(SaveLoadData.TypePrefabObjects)).Any(x => x.ToLower() == strType.ToLower());
+    }
+
 }
 
 public static class HelperExtension

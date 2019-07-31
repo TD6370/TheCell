@@ -73,7 +73,7 @@ public class BilderGameDataObjects //: MonoBehaviour
             case  SaveLoadData.TypePrefabs.Dendroid:
                 objGameBild = new ModelNPC.GameDataAlienDendroid();
                 break;
-            case SaveLoadData.TypePrefabs.Garry:
+            case SaveLoadData.TypePrefabs.Gary:
                 objGameBild = new ModelNPC.GameDataAlienGarry();
                 break;
             case SaveLoadData.TypePrefabs.Lollipop:

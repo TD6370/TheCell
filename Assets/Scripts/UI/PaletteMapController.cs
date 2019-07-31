@@ -1235,7 +1235,7 @@ public class PaletteMapController : MonoBehaviour {
             TypesStructure typeTilePrefab = TypesStructure.Prefab;
             try
             {
-                if (!System.Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), spriteName))
+                if (!Helper.IsTypePrefabs(spriteName))
                 {
                     typeTilePrefab = TypesStructure.Terra;
                     Debug.Log("Load Prefabs On Palette Not Prefab in SaveLoadData.TypePrefabs >> " + spriteName);
@@ -1618,7 +1618,7 @@ public class PaletteMapController : MonoBehaviour {
         if (isOnFullMap)
             fieldStart = Helper.GetNameField(0, 0);
 
-        Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
+        //Vector2 posStructFieldStart = Helper.GetPositByField(fieldStart);
         Vector2 posStructFieldNew = Helper.GetPositByField(fieldStart);
 
         bool _isClearLayer = IsClearLayer;//!m_PasteOnLayer;

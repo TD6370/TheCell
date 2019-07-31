@@ -151,11 +151,29 @@ public class PlayerManager : MonoBehaviour {
 
     public void TeleportHero()
     {
-        Storage.Map.Create();
-        int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
-        int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
-        posTransferHeroY *= -1;
-        Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+        bool isSelectedFiledPositionTransfer = false;
+        if (Storage.Map.IsOpen)
+        {
+            Storage.Map.Create();
+            int posTransferHeroX = (int)(Storage.Map.SelectPointField.x * Storage.ScaleWorld);
+            int posTransferHeroY = (int)(Storage.Map.SelectPointField.y * Storage.ScaleWorld);
+            posTransferHeroY *= -1;
+            Storage.Player.TeleportHero(posTransferHeroX, posTransferHeroY);
+        }
+        else
+        {
+            if (isSelectedFiledPositionTransfer)
+            {
+                Vector2 posSelField = Helper.GetPositByField(Storage.Instance.SelectFieldCursor);
+                Vector2 posTransferHero = Helper.NormalizFieldToPos(posSelField);
+                Storage.Player.TeleportHero((int)posTransferHero.x, (int)posTransferHero.y);
+            }
+            else
+            {
+                Vector3 mouseWorldPosit = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Storage.Player.TeleportHero((int)mouseWorldPosit.x, (int)mouseWorldPosit.y);
+            }
+        }
     }
 
 
@@ -173,13 +191,17 @@ public class PlayerManager : MonoBehaviour {
         }
 
         Debug.Log("Teleporting Hero....");
-
         Storage.Instance.StopGame();
+        Debug.Log("Teleporting Hero run test....1");
         Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
-        Storage.PlayerController.FindFieldCurrent();
+        Debug.Log("Teleporting Hero run test....2");
+        //Storage.PlayerController.FindFieldCurrent();
+            Storage.PlayerController.FindFieldCurrent(false);
+        Debug.Log("Teleporting Hero run test....3");
         Storage.GenGrid.StartGenGrigField(true);
+        Debug.Log("Teleporting Hero run test....4");
         Storage.GenGrid.LoadObjectsNearHero();
-
+        Debug.Log("Teleporting Hero run test....5");
         Debug.Log("Teleported Hero ))");
     }
 

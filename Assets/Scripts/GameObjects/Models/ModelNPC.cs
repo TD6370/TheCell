@@ -710,7 +710,7 @@ public class ModelNPC
     public class GameDataAlienGarry : GameDataAlien
     {
         [XmlIgnore]
-        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Garry; } }
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Gary; } }
         public override int Life { get { return 40; } set { } }
         public override int Level { get { return 1; } set { } }
         public override void Init()

@@ -451,6 +451,24 @@ public class UpdateData {
                     Storage.Log.GetHistory(p_saveObject.name);
                     return false;
                 }
+                //@@@@+ Test Dublicate  
+                /*
+                ModelNPC.GameDataNPC dataObjSave = p_saveObject.GetDataNPC();
+                string posFieldOld = Helper.GetNameFieldPosit(dataObjSave.Position.x, dataObjSave.Position.y);
+                var indT2 = Storage.Instance.GamesObjectsReal[posFieldOld].FindIndex(p => p != null && p.name == p_saveObject.name);
+                if (indT2 != -1)
+                {
+                    
+                    var gobjDbl = Storage.Instance.GamesObjectsReal[posFieldOld][indT2];
+                    Debug.Log("############################## find dublicate Real obj --- is NOT ME : " + gobjDbl.name + "      ME: " + p_saveObject.name);
+                    ModelNPC.GameDataNPC dataDbl = gobjDbl.GetDataNPC();
+                    Storage.EventsUI.ClearListExpandPersons();
+                    Storage.EventsUI.AddMenuPerson(dataObjSave as ModelNPC.GameDataNPC, p_saveObject);
+                    Storage.EventsUI.AddMenuPerson(dataDbl as ModelNPC.GameDataNPC, gobjDbl);
+                    Storage.GamePause = true;
+                }
+                */
+                //@@@@
             }
             _GamesObjectsReal[nameField].Add(p_saveObject);
 
