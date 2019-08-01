@@ -601,6 +601,10 @@ public class ModelNPC
             {
                 objGame.name = NameObject;
             }
+            //fix legacy pool type
+            if (ModelView == null)
+                ModelView = TypePrefabName;
+
             Sprite spriteMe = Storage.Palette.SpritesWorldPrefabs[ModelView];  //Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
             if (spriteMe != null)
             {
@@ -881,7 +885,10 @@ public class ModelNPC
             //#FIX null
             if ((!IsLoadad && !IsReality) || ModelView==null)
             {
-                if (isGen)
+                //fix legacy pool type
+                if (ModelView == null && TypePrefabName != null)
+                    ModelView = TypePrefabName;
+                else if (isGen)
                     ModelView = Storage.TilesManager.GenNameTileTerra();
                 else
                     ModelView = Storage.TilesManager.ListTexturs[0].name;
@@ -1080,14 +1087,14 @@ public class ModelNPC
         public Kamish() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
 
-    [XmlType("Boloto")]
-    public class Boloto : FloreData
+    [XmlType("Swamp")]
+    public class Swamp : FloreData
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Boloto; } }
-        public Boloto() : base() { TypePrefabName = TypePrefab.ToString(); }
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Swamp; } }
+        public Swamp() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
 
     [XmlType("Weed")]

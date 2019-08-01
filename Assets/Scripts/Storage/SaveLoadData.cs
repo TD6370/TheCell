@@ -62,6 +62,22 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
+    public enum TypePrefabsLegacy
+    {
+        PrefabField,
+        PrefabRock,
+        PrefabVood,
+        PrefabUfo,
+        PrefabBoss,
+        PrefabElka,
+        PrefabWallRock,
+        PrefabWallWood,
+
+        PrefabFlore,
+        PrefabPerson,
+        PrefabFloor
+    }
+
     public enum TypePrefabs
     {
         PrefabField,
@@ -78,7 +94,7 @@ public class SaveLoadData : MonoBehaviour {
         PrefabFloor,
         //-------------- Floor and Flore
 
-        Boloto,
+        Swamp,
         Chip,
         Gecsagon,
         Kamish,
@@ -574,8 +590,14 @@ public class SaveLoadData : MonoBehaviour {
         TypePrefabs prefabType = TypePrefabs.PrefabField;
         try
         {
-            prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
-        }catch(Exception x)
+            //fix new pool prefabs type
+            bool isLegacyType = Enum.IsDefined(typeof(TypePrefabsLegacy), namePrefab);
+            if (isLegacyType)
+                prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
+            else
+                prefabType = TypePrefabs.PrefabField;
+        }
+        catch(Exception x)
         {
             Debug.Log("######## (SaveLoadData.GetTypeByName) ERROR TYPE POOL TO TYPE PREFAB : " + x.Message);
         }
@@ -646,11 +668,24 @@ public class SaveLoadData : MonoBehaviour {
                     string oldType = TypePrefabs.PrefabPerson.ToString();
                     namePrefab = oldType;
                 }
-                if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolFlore.ToString())
+                else if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolFlore.ToString())
                 {
                     string oldType = TypePrefabs.PrefabField.ToString();
                     namePrefab = oldType;
                 }
+                //else if(namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())
+                //{
+                //    var t = "TEST";
+                //}
+                //else if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPersonUFO.ToString())
+                //{
+                //    var t = "TEST";
+                //}
+                //else
+                //{
+                //    string oldType = TypePrefabs.PrefabField.ToString();
+                //    namePrefab = oldType;
+                //}
             }
             return GetTypeByName(namePrefab);
         }

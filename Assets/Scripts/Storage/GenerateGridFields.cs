@@ -1041,7 +1041,12 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is TerraData !!!!");
+                        //---fix new pool type prefab
+                        var objAlien = objData as ModelNPC.GameDataAlien;
+                        if (objAlien != null)
+                            objAlien.UpdateGameObject(newObjGame);
+                        else
+                            Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is TerraData !!!!");
                     }
                     break;
                 default:

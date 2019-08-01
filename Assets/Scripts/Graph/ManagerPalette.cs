@@ -113,7 +113,14 @@ public class ManagerPalette : MonoBehaviour {
         {
             sprt.name = sprt.name.ClearClone();
 
-            SpritesWorldPrefabs.Add(sprt.name, sprt);
+            try
+            {
+                SpritesWorldPrefabs.Add(sprt.name, sprt);
+            }catch(System.Exception x)
+            {
+                Debug.Log("######### LoadSpritePrefabs " + x);
+                Debug.Log("######### LoadSpritePrefabs sprt.name=" + sprt.name);
+            }
 
             if (sprt.name.IndexOf("Wall") != -1)
             {

@@ -9,14 +9,35 @@ using UnityEngine.UI;
 //[ExecuteInEditMode]
 public class DrawGeometry : MonoBehaviour
 {
+    private SceneLighting m_SceneLightingSetting;
+
     public bool IsParallaxOn = false;
-   
+    private bool m_IsSceneGradientColorOn = false;
+    public bool IsSceneGradientColorOn = false;
 
     private LineRenderer m_lineRenderer;
+    public enum FilterTimeOfDay
+    {
+        MorningPre,
+        Morning,
+        MorningPost,
+        DayPre,
+        Day,
+        DayPost,
+        EveningPre,
+        Evening,
+        EveningPost,
+        NightPre,
+        Night,
+        NightPost
+    }
     //private SpriteRenderer m_SpriteRenderer;
 
     private void Awake()
     {
+        m_SceneLightingSetting = GetComponent<SceneLighting>();
+        if (m_SceneLightingSetting == null)
+            Debug.Log("######### Error loading DrawGeometry.SceneLightingSetting");
         m_lineRenderer = GetComponent<LineRenderer>();
         
     }
@@ -30,15 +51,36 @@ public class DrawGeometry : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LoadGameGraphSetting(); //TEST
+        if(m_IsSceneGradientColorOn != IsSceneGradientColorOn)
+            UpadteGameGraphSetting(); //TEST
     }
 
-    public void LoadGameGraphSetting()
+    public void UpadteGameGraphSetting()
     {
-        //RenderSettings.ambientLight = Storage.Palette.SceneSkyColor;
-        RenderSettings.ambientSkyColor = Storage.Palette.SceneSkyColor;
-        RenderSettings.ambientEquatorColor = Storage.Palette.SceneEquatorColor;
-        RenderSettings.ambientGroundColor = Storage.Palette.SceneGroundColor;
+        m_IsSceneGradientColorOn = IsSceneGradientColorOn;
+        if (IsSceneGradientColorOn)
+        {
+            //RenderSettings.ambientLight = Storage.Palette.SceneSkyColor;
+            RenderSettings.ambientSkyColor = Storage.Palette.SceneSkyColor;
+            RenderSettings.ambientEquatorColor = Storage.Palette.SceneEquatorColor;
+            RenderSettings.ambientGroundColor = Storage.Palette.SceneGroundColor;
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+        }
+        else
+        {
+            RenderSettings.ambientSkyColor = Color.white;
+            RenderSettings.ambientEquatorColor = Color.white;
+            RenderSettings.ambientGroundColor = Color.white;
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+        }
+        if (m_SceneLightingSetting != null)
+            m_SceneLightingSetting.IsHeroLight = IsSceneGradientColorOn;
+    }
+
+
+    private void SetFiltersLUT()
+    {
+       
     }
 
     //ColorBlock cb = buttonCommand.colors;

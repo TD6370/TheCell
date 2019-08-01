@@ -73,12 +73,12 @@ public class StorageLog //: MonoBehaviour
 
         string id = Helper.GetID(findObj);
 
-        var res = Storage.Instance.KillObject.Find(p => p == findObj);
+        var res = Storage.Instance.KillObjectHistory.Find(p => p == findObj);
         if (res != null)
             Debug.Log("FIND KILLED : " + findObj);
         else
         {
-            var res2 = Storage.Instance.KillObject.Find(p => { return p.IndexOf(id) != -1; });
+            var res2 = Storage.Instance.KillObjectHistory.Find(p => { return p.IndexOf(id) != -1; });
             if (res2 != null)
                 Debug.Log("FIND KILLED : " + findObj + "    -- " + res2);
         }

@@ -101,8 +101,8 @@ public class BilderGameDataObjects //: MonoBehaviour
                 objGameBild = new ModelNPC.GameDataAlienVhailor();
                 break;
 
-            case SaveLoadData.TypePrefabs.Boloto:
-                objGameBild = new ModelNPC.Boloto();
+            case SaveLoadData.TypePrefabs.Swamp:
+                objGameBild = new ModelNPC.Swamp();
                 break;
             case SaveLoadData.TypePrefabs.Chip:
                 objGameBild = new ModelNPC.Chip();

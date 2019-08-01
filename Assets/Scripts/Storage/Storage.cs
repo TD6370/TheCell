@@ -53,7 +53,7 @@ public class Storage : MonoBehaviour {
 
     public ZonaFieldLook ZonaField { get; private set; }
     public ZonaRealLook ZonaReal { get; private set; }
-    public List<string> KillObject = new List<string>();
+    public List<string> KillObjectHistory = new List<string>();
     public List<GameObject> DestroyObjectList;
     public bool IsCorrectData = false;
 
@@ -534,7 +534,7 @@ public class Storage : MonoBehaviour {
     private void LoadDefaultUI()
     {
         PaletteMap.Show();
-        DrawGeom.LoadGameGraphSetting();
+        DrawGeom.UpadteGameGraphSetting();
     }
 
     IEnumerator StartFindLookObjects()
@@ -757,6 +757,7 @@ public class Storage : MonoBehaviour {
             {
                 //Debug.Log("*** POOL DESTROY GAME OBJECt INCORRECT : " + gObj.name);
                 DestroyFullObject(gObj);
+                DestroyObjectList.RemoveAt(i);
             }
         }
     }
@@ -831,7 +832,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("+++ DestroyFullObject ++++ Destroy ---- object is null");
         }
 
-        KillObject.Add(setName); //++ history
+        KillObjectHistory.Add(setName); //++ history
         //-----------------------------------------------
         bool isRemovedCorrect = false;
         bool isRemReal = false;
@@ -842,7 +843,7 @@ public class Storage : MonoBehaviour {
         }
 
         //Destroy to Data
-        if (!_GridDataG.FieldsD.ContainsKey(nameField))
+        if (false == IsGridDataFieldExist(nameField))
         {
             Debug.Log("+++++ ------- DestroyRealObject ----- !GridData.FieldsD not field=" + nameField);
             return false;

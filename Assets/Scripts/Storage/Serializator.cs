@@ -30,7 +30,7 @@ public class Serializator
         typeof(ModelNPC.FloreData),
             
 
-        typeof(ModelNPC.Boloto),
+        typeof(ModelNPC.Swamp),
         typeof(ModelNPC.Chip),
         typeof(ModelNPC.Gecsagon),
         typeof(ModelNPC.Kamish),
