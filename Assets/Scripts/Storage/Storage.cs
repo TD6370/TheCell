@@ -92,6 +92,15 @@ public class Storage : MonoBehaviour {
         }
     }
 
+    private SceneLighting _SceneLight;
+    public static SceneLighting SceneLight
+    {
+        get
+        {
+            return Instance._SceneLight;
+        }
+    }
+
     private DataTilesManager _TilesManager;
     public static DataTilesManager TilesManager
     {
@@ -436,6 +445,13 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DrawGeom is Empty");
             return;
         }
+        _SceneLight = GetComponent<SceneLighting>();
+        if (_SceneLight == null)
+        {
+            Debug.Log("########## InitComponents _SceneLight is Empty");
+            return;
+        }
+
         _PoolObgects = new PoolGameObjects();
 
         _DiskData = GetComponent<DiskData>();
@@ -534,7 +550,7 @@ public class Storage : MonoBehaviour {
     private void LoadDefaultUI()
     {
         PaletteMap.Show();
-        DrawGeom.UpadteGameGraphSetting();
+        SceneLight.UpadteGameGraphSetting();
     }
 
     IEnumerator StartFindLookObjects()

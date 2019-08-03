@@ -519,6 +519,12 @@ public class UIEvents : MonoBehaviour {
             case "LoadMapGrid":
                 Storage.Map.LoadGrid();
                 break;
+            case "NextDayOfTime":
+                if(Storage.SceneLight.FilterTimeOfDay != SceneLighting.FiltersTimeOfDay.Morning)
+                    Storage.SceneLight.FilterTimeOfDay = SceneLighting.FiltersTimeOfDay.Morning;
+                else
+                    Storage.SceneLight.FilterTimeOfDay = SceneLighting.FiltersTimeOfDay.Day;
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
