@@ -14121,7 +14121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.907488, y: 0.041629486}
   m_AnchorMax: {x: 0.97200006, y: 0.14782567}
-  m_AnchoredPosition: {x: 0.100097656, y: -0.020015717}
+  m_AnchoredPosition: {x: 0.100097656, y: -0.020038605}
   m_SizeDelta: {x: 0.3800001, y: -0.18000007}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &869016369
@@ -25382,7 +25382,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 312, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1467665706
@@ -27288,12 +27288,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DayLUT: {fileID: 2800000, guid: 94a1d57cd61e778439d1d7bb6c830bc4, type: 3}
   MorningLUT: {fileID: 2800000, guid: 21dd6961c7193154d9a8cc59cf0449e8, type: 3}
-  NightLUT: {fileID: 0}
+  EveningLUT: {fileID: 2800000, guid: 2c7ec9ab4a5a4444f91ea8f420c3e59e, type: 3}
+  Night_1_LUT: {fileID: 2800000, guid: 776786bce834ec94e98eb4f972078ccd, type: 3}
+  Night_2_LUT: {fileID: 2800000, guid: c1d50906d0afb554983aa2a5db7d13a2, type: 3}
+  Night_3_LUT: {fileID: 2800000, guid: 8693105f7b4512d4e80e17084e6d761e, type: 3}
+  Night_4_LUT: {fileID: 2800000, guid: 776786bce834ec94e98eb4f972078ccd, type: 3}
   HeroSpotLight: {fileID: 1245745340}
   HeroPointLight: {fileID: 2001258509}
-  IsSceneGradientColorOn: 0
+  IsSceneGradientColorOn: 1
   IsHeroLight: 0
-  FilterTimeOfDay: 4
+  m_delayTOD: 1
+  m_percentTimeListTest: 0
+  FilterTimeOfDay: 1
 --- !u!1 &1583130655
 GameObject:
   m_ObjectHideFlags: 0

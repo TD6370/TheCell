@@ -861,6 +861,11 @@ public class ModelNPC
         [XmlIgnore]
         private bool isUseAtlas = true; //false;//
 
+        //Fix PrefabField
+        //[XmlIgnore]
+        //public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabField; } }
+        //public TerraData() : base() { TypePrefabName = TypePrefab.ToString(); }
+
         public TerraData() : base()
         {
         }
@@ -887,9 +892,17 @@ public class ModelNPC
             {
                 //fix legacy pool type
                 if (ModelView == null && TypePrefabName != null)
-                    ModelView = TypePrefabName;
-                else if (isGen)
-                    ModelView = Storage.TilesManager.GenNameTileTerra();
+                {
+                    if (TypePrefabName == SaveLoadData.TypePrefabs.PrefabField.ToString())
+                    {
+                        //fix legacy pool type on gen World GenObjectWorld()
+                        ModelView = Storage.TilesManager.GenNameTileTerra();
+                    }
+                    else
+                    {
+                        ModelView = TypePrefabName;
+                    }
+                }
                 else
                     ModelView = Storage.TilesManager.ListTexturs[0].name;
             }
@@ -907,7 +920,13 @@ public class ModelNPC
             else
             //------------------------- Atlas
             {
-                objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[ModelView];
+                try
+                {
+                    objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[ModelView];
+                }catch(Exception x)
+                {
+                    Debug.Log("############## TerraData.UpdateGameObject ModelView: " + ModelView + "  " + x.Message);
+                }
             }
             //-------------------------
         }
@@ -943,7 +962,9 @@ public class ModelNPC
     }
 
     [XmlType("Wood")]
-    public class WoodData : WallData
+    //public class WoodData : WallData
+    //FIX
+    public class WoodData : TerraData
     {
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolWood; } }
