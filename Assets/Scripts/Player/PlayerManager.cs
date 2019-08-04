@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
+      
 
     private bool m_HeroExtremal = false;
     public bool HeroExtremal

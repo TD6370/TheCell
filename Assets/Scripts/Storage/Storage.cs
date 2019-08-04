@@ -42,6 +42,7 @@ public class Storage : MonoBehaviour {
     }
 
     public GameObject HeroObject;
+    public GameObject HeroModel;
     public GameObject UIController;
     public GameObject FramePaletteMap;
     public GameObject ContentGridPaletteMap;
@@ -407,8 +408,6 @@ public class Storage : MonoBehaviour {
         }
         _Palette.LoadSpritePrefabs();
 
-        //_PlayerManager = gameObject.AddComponent<PlayerManager>();
-        //_PlayerManager = GetComponentInParent<PlayerManager>();
         _PlayerManager = GetComponent<PlayerManager>();
         if (_PlayerManager==null)
         {
@@ -416,13 +415,6 @@ public class Storage : MonoBehaviour {
             return;
         }
         _PlayerManager.Init();
-
-        //_Palette = gameObject.GetComponent<ManagerPalette>();
-        //if (_Palette == null)
-        //{
-        //    Debug.Log("########## InitComponents _Palette is Empty");
-        //    return;
-        //}
 
         _TilesManager = DataStorage.GetComponent<DataTilesManager>();
         if (_TilesManager == null)

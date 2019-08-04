@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PositionRenderSorting : MonoBehaviour {
 
-
+    public bool IsHero;
     private int SortingBase = 5000;
     private Renderer rendererSort;
     [SerializeField]
@@ -17,7 +17,14 @@ public class PositionRenderSorting : MonoBehaviour {
 
     private void Awake()
     {
-        rendererSort = gameObject.GetComponent<Renderer>();
+        if (IsHero)
+        {
+            rendererSort = Storage.Instance.HeroModel.GetComponent<Renderer>();
+        }
+        else
+        {
+            rendererSort = gameObject.GetComponent<Renderer>();
+        }
         FixedOverlapSprites();
     }
     void FixedOverlapSprites()
@@ -43,9 +50,11 @@ public class PositionRenderSorting : MonoBehaviour {
     //    }
     //}
 
-	
-	// Update is called once per frame
-	void Update () {
+    private void Start()
+    {
+    }
+    // Update is called once per frame
+    void Update () {
         
         //rendererSort.sortingOrder = (int)(SortingBase - gameObject.transform.position.y - Offset);
 
