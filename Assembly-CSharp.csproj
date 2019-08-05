@@ -119,6 +119,7 @@
     <Compile Include="Assets\Scripts\Graph\SceneLighting.cs" />
     <Compile Include="Assets\Scripts\Player\CompletePlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\MovementCamera.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Storage\BilderGameDataObjects.cs" />

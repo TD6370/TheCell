@@ -72,7 +72,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f6473c3a10c04604e9a4acf5c21f13d7, type: 3}
   - {fileID: 21300000, guid: 3677457aa3380ed42b86a950f048e182, type: 3}
   - {fileID: 21300000, guid: 233860aa2a50c0a43991969d4508e7ba, type: 3}
-  - {fileID: 21300000, guid: e7c0533baded3ef43b6aa32a58ff1402, type: 3}
   - {fileID: 21300000, guid: 0933b74b439529144a08f57f8a676244, type: 3}
   - {fileID: 21300000, guid: 6213b7cb147698145a4a4845a1ebed52, type: 3}
   - {fileID: 21300000, guid: 905b5afbb6ca3e340962bedde2072438, type: 3}
@@ -114,7 +113,6 @@ SpriteAtlas:
   - Weedflower
   - Machinetool
   - Diods
-  - Hero 1
   - Mecha
   - Gary
   - Hydragon
