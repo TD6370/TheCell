@@ -195,7 +195,12 @@ public class UIEvents : MonoBehaviour {
             HeroExtremalOn();
             DelayTimer = Time.time + ActionRate / 2;
         }
-        
+
+        if (Input.GetKey("f") && Time.time > DelayTimer)
+        {
+            Storage.PlayerController.Speed = Storage.PlayerController.Speed == 20 ? 5 : 20;
+            DelayTimer = Time.time + ActionRate;
+        }
     }
 
     bool m_isFindedBug = false;

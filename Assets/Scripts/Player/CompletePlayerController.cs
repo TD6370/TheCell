@@ -14,6 +14,8 @@ public class CompletePlayerController : MonoBehaviour {
     public Camera CameraMap;
     //public GameObject UIController;
     public GameObject ObjectCursor;
+    
+    private PlayerAnimation m_PlayerAnimation;
 
     public Vector2 PosCursorToField { get; private set; }
     public Vector2 PosCursor
@@ -57,6 +59,7 @@ public class CompletePlayerController : MonoBehaviour {
 
 
     private Vector2 _movement;
+    private bool m_IsHeroMoving;
 
     private Vector2 _MousePositionClick;
     private Vector2 _MousePosition;
@@ -77,14 +80,12 @@ public class CompletePlayerController : MonoBehaviour {
     private int _offsetLabelY = 10;
     float _diffCenterX = 0;
     float _diffCenterY = 0;
-    //private bool _RotateMenu = false;
     private CutsorPositionBilder _bilderCursorPosition;
     private GUIStyle styleLabel = new GUIStyle();
     private bool m_isFindFieldCurrent = false;
 
     private bool m_isAfterUpdatePosHero = false;
-    //private bool m_isLoadOnlyField = true;// false;
-
+    
     //-- Map
     private int stepsRefresfMap =0;
     private int limitStepsRefreshMap = 10;
@@ -103,12 +104,12 @@ public class CompletePlayerController : MonoBehaviour {
         //Set Start Position
         RigidbodyHero.MovePosition(new Vector2(40, -40));
         _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
-
         //Storage.PaletteMap.Show();
     }
 
     void Awake()
     {
+        m_PlayerAnimation = new PlayerAnimation();
     }
 
     Vector3 m_lastPos = new Vector3();
@@ -125,6 +126,7 @@ public class CompletePlayerController : MonoBehaviour {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
+        m_IsHeroMoving = false;
         _movement = new Vector2(moveHorizontal, moveVertical);
         if (CameraMap.enabled)
         {
@@ -135,8 +137,11 @@ public class CompletePlayerController : MonoBehaviour {
         {
             //---Move Hero
             RigidbodyHero.MovePosition(RigidbodyHero.position + _movement * Speed * Time.deltaTime);
+            if (_movement != new Vector2())
+                m_IsHeroMoving = true;
             //--------------
         }
+        AnimatorMoveHero();
 
         if (_movement.x != 0 || _movement.y != 0 || m_isAfterUpdatePosHero)
         {
@@ -212,6 +217,20 @@ public class CompletePlayerController : MonoBehaviour {
         //Debug.Log("Current detected event: " + Event.current);
         CursorEvents();
     }
+
+    private void AnimatorMoveHero()
+    {
+        if (_movement != new Vector2())
+        {
+            if(_movement.x != 0)
+            {
+                bool isRight = _movement.x > 0;
+                m_PlayerAnimation.HeroLook(isRight); 
+            }
+        }
+        m_PlayerAnimation.HeroMove(m_IsHeroMoving);
+    }
+
 
     public void Disable()
     {

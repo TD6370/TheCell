@@ -173,3 +173,5 @@ F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Common.Runtime.dll
 F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.Triangle.Runtime.dll
 F:\Projects\TheCell\Temp\bin\Debug\Unity.InternalAPIEditorBridge.001.dll
 F:\Projects\TheCell\Temp\bin\Debug\Unity.InternalAPIEngineBridge.001.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.IK.Editor.dll
+F:\Projects\TheCell\Temp\bin\Debug\Unity.2D.IK.Runtime.dll
