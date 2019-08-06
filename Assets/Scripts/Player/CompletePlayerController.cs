@@ -10,7 +10,7 @@ using System.Linq;
 [RequireComponent(typeof(Collider2D))]
 public class CompletePlayerController : MonoBehaviour {
 
-    public Camera MainCamera;
+    //public Camera MainCamera;
     public Camera CameraMap;
     //public GameObject UIController;
     public GameObject ObjectCursor;
@@ -32,7 +32,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     private bool m_IsCursorSelection = false;
 
-    private GenerateGridFields m_scriptGrid;
+    //private GenerateGridFields m_scriptGrid;
     //private UIEvents m_UIEvents;
 
     [Header("Speed move hero")]
@@ -80,7 +80,7 @@ public class CompletePlayerController : MonoBehaviour {
     private int _offsetLabelY = 10;
     float _diffCenterX = 0;
     float _diffCenterY = 0;
-    private CutsorPositionBilder _bilderCursorPosition;
+    private CursorPositionBilder _bilderCursorPosition;
     private GUIStyle styleLabel = new GUIStyle();
     private bool m_isFindFieldCurrent = false;
 
@@ -96,15 +96,13 @@ public class CompletePlayerController : MonoBehaviour {
     {
         RigidbodyHero = GetComponent<Rigidbody2D>();
 
-        InitData();
         _count = 0;
         Storage.EventsUI.SetTittle = "";
         Storage.EventsUI.SetCountText(_count);
 
         //Set Start Position
         RigidbodyHero.MovePosition(new Vector2(40, -40));
-        _bilderCursorPosition = new CutsorPositionBilder(MainCamera);
-        //Storage.PaletteMap.Show();
+        _bilderCursorPosition = new CursorPositionBilder(Storage.Instance.MainCamera);
     }
 
     void Awake()
@@ -177,11 +175,11 @@ public class CompletePlayerController : MonoBehaviour {
 
     void OnMouseDown()
     {
-        if (!MainCamera.enabled)
+        if (!Storage.Instance.MainCamera.enabled)
             return;
 
         float nextSize = 8.0f;
-        float size = MainCamera.orthographicSize;
+        float size = Storage.Instance.MainCamera.orthographicSize;
         if (size == 8.0f)
             nextSize = 22.0f;
         else if (size == 22.0f)
@@ -192,7 +190,7 @@ public class CompletePlayerController : MonoBehaviour {
             nextSize = 8.0f;
 
         //Debug.Log("SIZE CAMERA HERO:" + nextSize);
-        MainCamera.orthographicSize = nextSize;
+        Storage.Instance.MainCamera.orthographicSize = nextSize;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -337,17 +335,6 @@ public class CompletePlayerController : MonoBehaviour {
         _posLastX = posX;
         _posLastY = posY;
 
-        //_fieldHero = Helper.GetNameField(posX, posY);
-        //Storage.Instance.SelectFieldPosHero = _fieldHero;
-        //_PosHeroToField = new Vector2(posX, posY);
-
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("MainCamera null");
-            return null;
-        }
-
         if (Storage.Instance == null)
         {
             Debug.Log("scriptStorage null");
@@ -360,11 +347,6 @@ public class CompletePlayerController : MonoBehaviour {
         }
 
         Storage.Player.SetHeroPosition(posX, posY, transform.position.x, transform.position.y);
-
-        if (m_scriptGrid == null)
-        {
-            m_scriptGrid = MainCamera.GetComponent<GenerateGridFields>();
-        }
 
         if (isLoadLook)
         {
@@ -491,21 +473,7 @@ public class CompletePlayerController : MonoBehaviour {
 
     #endregion
 
-    private void InitData()
-    {
-        var camera = MainCamera;
-        if (camera == null)
-        {
-            Debug.Log("MainCamera null");
-            return;
-        }
-        m_scriptGrid = camera.GetComponent<GenerateGridFields>();
-        if (m_scriptGrid == null)
-        {
-            Debug.Log("Error scriptGrid is null !!!");
-            return;
-        }
-    }
+   
 
     //private void RestructGrid()
     //{
@@ -643,32 +611,29 @@ public class CompletePlayerController : MonoBehaviour {
 
     }
 
-    
-
-    public class CutsorPositionBilder
+    public class CursorPositionBilder
     {
-        Vector2 m_MousePosition;
-        Camera m_MainCamera;
+        private Vector2 m_MousePosition;
+        private Camera m_MainCamera;
 
-        Vector2 posCursorToField = new Vector2(0, 0);
-        Vector2 posHeroStartInCentre = new Vector2(17, -9);
-        Vector2 posCursorNormalize = new Vector2(0, 0);
-        float offsetUI_World_lenToCenterScreenX = 0;
-        float offsetUI_World_lenToCenterScreenY = 0;
-        float normalX = 1;
-        float normalY = 1;
-        string testCalc = "";
-        float lookGridWidth = 35.5f;// 35;
-        float lookGridHeight = 20;// 19;
-                                //float cameraWidth = 35;
-                                //float cameraHeight = 19;
+        private Vector2 posCursorToField = new Vector2(0, 0);
+        private Vector2 posHeroStartInCentre = new Vector2(17, -9);
+        private Vector2 posCursorNormalize = new Vector2(0, 0);
+        private float offsetUI_World_lenToCenterScreenX = 0;
+        private float offsetUI_World_lenToCenterScreenY = 0;
+        private float normalX = 1;
+        private float normalY = 1;
+        private string testCalc = "";
+        private float lookGridWidth = 35.5f;// 35;
+        private float lookGridHeight = 20;// 19;
+                                          //float cameraWidth = 35;
+                                          //float cameraHeight = 19;
 
         //MainCamera.orthographicSize
-        float cameraGridWidth = 0;
-        float cameraGridHeight = 0;
+        private float cameraGridWidth = 0;
+        private float cameraGridHeight = 0;
 
-        //public CutsorPositionBilder(Camera p_MainCamera, Vector2 p_MousePosition, Vector2 p_posHero)
-        public CutsorPositionBilder(Camera p_MainCamera)
+        public CursorPositionBilder(Camera p_MainCamera)
         {
             //m_MousePosition = p_MousePosition;
             m_MainCamera = p_MainCamera;

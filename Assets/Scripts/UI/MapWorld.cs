@@ -239,7 +239,8 @@ public class MapWorld : MonoBehaviour {
 
     public void CameraMapOn(bool isOpenMap, bool isRestartingLocation = true)
     {
-        var hero = Storage.PlayerController;
+        Camera mainCamera = Storage.Instance.MainCamera;
+        Camera mapCamera = Storage.PlayerController.CameraMap;
 
         if (isOpenMap)
         {
@@ -248,11 +249,11 @@ public class MapWorld : MonoBehaviour {
             //prefabFrameMap.transform.SetParent(Storage.PlayerController.transform);
             //CreateFrameMap();
             Frame.ValidateStartPosition();
-            if(oldPosCamMap!= hero.MainCamera.transform.position)
+            if(oldPosCamMap!= mainCamera.transform.position)
             {
-                Vector3 posMove = hero.MainCamera.transform.position - oldPosCamMap;
-                hero.CameraMap.transform.position += posMove;
-                oldPosCamMap = hero.MainCamera.transform.position;
+                Vector3 posMove = mainCamera.transform.position - oldPosCamMap;
+                mapCamera.transform.position += posMove;
+                oldPosCamMap = mainCamera.transform.position;
             }
 
             //hero.GetComponent<Rigidbody2D>().mass = 10000;
@@ -260,10 +261,10 @@ public class MapWorld : MonoBehaviour {
             //hero.Rb2D.Sleep();
             Storage.PlayerController.Disable();
 
-            if (isRestartingLocation) 
-                hero.CameraMap.transform.position = hero.MainCamera.transform.position;
-            hero.CameraMap.enabled = true;
-            hero.MainCamera.enabled = false;
+            if (isRestartingLocation)
+                mapCamera.transform.position = mainCamera.transform.position;
+            mapCamera.enabled = true;
+            mainCamera.enabled = false;
 
             //#TEST
             //int LayerUI = LayerMask.NameToLayer("LayerUI");
@@ -284,8 +285,8 @@ public class MapWorld : MonoBehaviour {
             if (!Storage.Player.HeroExtremal)
                 Storage.Player.HeroExtremal = false;
 
-            hero.MainCamera.enabled = true;
-            hero.CameraMap.enabled = false;
+            mainCamera.enabled = true;
+            mapCamera.enabled = false;
 
             //#TEST
             //int LayerUI = LayerMask.NameToLayer("LayerUI");
@@ -1063,6 +1064,9 @@ public class MapWorld : MonoBehaviour {
 
     public void DrawMapCell(int y, int x, Texture2D texturePrefab)
     {
+        //@@@ Celagcy code , not drawing on FrameMap, true drawing on m_listCellsGridMap
+        return;
+
         Texture2D textureMap = prefabFrameMap.GetComponent<SpriteRenderer>().sprite.texture;
         Texture2D textureResult = textureMap;
 
@@ -1078,14 +1082,14 @@ public class MapWorld : MonoBehaviour {
         {
             //textureResult.alphaIsTransparency = true;
             Graphics.CopyTexture(texturePrefab, 0, 0, 0, 0, addSize, addSize, textureResult, 0, 0, (int)startX1, (int)startY1);
+            textureResult.Apply();
         }
         catch (Exception ex)
         {
-            Debug.Log("######### DrawMapCell [" + texturePrefab.name + "] :" + ex.Message );
+            Debug.Log("######### DrawMapCell [" + texturePrefab.name + "] :" + ex.Message);
             return;
         }
 
-        textureResult.Apply();
         Sprite spriteMe = Sprite.Create(textureResult, new Rect(0.0f, 0.0f, textureResult.width, textureResult.height), new Vector2(0.5f, 0.5f), 100.0f);
         prefabFrameMap.GetComponent<SpriteRenderer>().sprite = spriteMe;
 

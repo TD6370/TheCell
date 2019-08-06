@@ -611,13 +611,17 @@ public class PaletteMapController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
-
         //IsPaintsOn
         EventsUI();
+        PalleteEventsChanged(); //@@@+
     }
 
     private void FixedUpdate()
+    {
+        //PalleteEventsChanged(); //@@@-
+    }
+
+    private void PalleteEventsChanged()
     {
         if (IsPaintsOn)
         {

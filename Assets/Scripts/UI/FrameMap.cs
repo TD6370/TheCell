@@ -170,10 +170,18 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             return;
         }
+
+        EventsUI();
     }
 
     private void FixedUpdate()
     {
+        //EventsUI();
+    }
+
+    private void EventsUI()
+    {
+        
         if (Time.time < Storage.PaletteMap.DelayTimerPaletteUse)
         {
             //Debug.Log("!!!!!!!!! MAP CAST STOP !!!!!! ");
@@ -211,10 +219,9 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             Storage.Map.UpdateMarkerPointCell();
             //Storage.Map.ShowBorderBrush();
         }
-        //EventsUI();
-
 
         OnDragMapLocation();
+       
     }
 
     public void OnPointerClick(PointerEventData data)
@@ -310,7 +317,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
 
             var center = Helper.HeightLevel / 2;
-            float pathX = SelectPointField.x - center;
+            float pathX = SelectPointField.x - center; //!!! SelectPointField - Not valid, use - SetLocationCell
             float pathY = SelectPointField.y - center;
             //float factorX = center / Math.Abs(pathX);
             //float factorY = center / Math.Abs(pathY);
@@ -420,6 +427,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             }
         }
     }
+
+    //private Vector2 test_positOnMap = new Vector2();
 
     private void CalculatePointOnMap(bool isMousePos = false)
     {
@@ -534,9 +543,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             }
 
             Vector2 posMapField = new Vector2(mapX, mapY);
-
-            //# TEST
-            //isLog = true;
+            //test_positOnMap = posMapField;
 
             if (isLog)
                 Storage.EventsUI.ListLogAdd = "--- MAP pos = " + mapX + "x" + mapY;
@@ -560,6 +567,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
                 if (isLog)
                     Debug.Log("KoofTEST ::: " + KoofTEST + "    _koofBorder==" + _koofBorder);
+
                 ///mapX -= (KoofTEST / 100 * factorXBorder);
                 //mapY -= (KoofTEST / 100 * factorYBorder);
                 mapX -= (_koofBorder / 100 * factorXBorder);
@@ -747,6 +755,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         DrawIconCell(nameField);
 
         MapIcon.GetComponent<RectTransform>().position = SetLocationCell();
+        //@ERRPOSIT TEST
+        //Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Error CMapIcon: " + MapIcon.GetComponent<RectTransform>().position.x + "x" + MapIcon.GetComponent<RectTransform>().position.y);
     }
 
     //Draw Icon on Cell Map
@@ -791,8 +801,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             //fieldListPrefbs.Add(prefabType);
         }
 
-        int cellX = (int)SelectPointField.x;
-        int cellY = (int)SelectPointField.y;
+       
         bool _isPerson = false;
 
         for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count; indMap2D++)
@@ -807,6 +816,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             // Draw Texture On Map
             //Storage.Map.DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
 
+            int cellX = (int)SelectPointField.x;
+            int cellY = (int)SelectPointField.y;
             Storage.Map.DrawMapCell(cellX, cellY, texturePerson);
 
             Sprite spriteCell = Sprite.Create(texturePerson, new Rect(0.0f, 0.0f, texturePerson.width, texturePerson.height), new Vector2(0.5f, 0.5f), 100.0f);
@@ -882,13 +893,16 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         bool isLog = false;
 
         //------------ Location cell
-        Vector2 movementCell = new Vector3(-12.4f, 12.4f);
+        //Vector2 movementCell = new Vector3(-12.4f, 12.4f);
 
         //!!!!!!!!!!!!!!!
         //@ >>>
         //MapCellFrame.transform.SetParent(null);
         //MapCellFrame.transform.SetParent(this.gameObject.transform);
         //!!!!!!!!!!!!!!!
+
+        if(isLog)
+            Storage.EventsUI.ListLogAdd = "=== Start log = SelectPointField: " + SelectPointField.x + "x" + SelectPointField.y;
 
         if (posOld == new Vector3())
             posOld = MapIcon.GetComponent<RectTransform>().position;// = new Vector3(-2, -2, 0);
@@ -962,12 +976,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 Storage.EventsUI.ListLogAdd = ":: Cell corr: " + korrCellX + " x " + korrCellY;
         }
 
-
         if (isLog)
             Storage.EventsUI.ListLogAdd = "***** Cell pos: " + newPos.x + "x" + newPos.y;
-        //<<< @
-        //MapCellFrame.transform.SetParent(this.gameObject.transform);
-        //----------------------------
 
         return newPos;
     }
@@ -1115,6 +1125,26 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             int resFind = results.FindIndex(p => p.gameObject.name == gameObject.name);
             if (resFind != -1)
             {
+
+                //NEW @@@ ------------------------------------------
+                //RaycastResult resRay = results[resFind];
+                //Storage.EventsUI.ListLogAdd = "TEST NEW  Ray.screenPosition: " + resRay.screenPosition.x + "x" + resRay.screenPosition.y;
+                //Storage.EventsUI.ListLogAdd = "TEST NEW  Ray.worldPosition: " + resRay.worldPosition.x + "x" + resRay.worldPosition.y;
+                //Vector3 localPoint = this.transform.InverseTransformPoint(resRay.worldPosition);
+                //Storage.EventsUI.ListLogAdd = "TEST NEW  localPoint: " + localPoint.x + "x" + localPoint.y;
+
+                //Ray rayCamMap = cameraMap.ScreenPointToRay(Input.mousePosition);
+                //RaycastHit hitOnFrameMap;
+                //Physics.Raycast(rayCamMap, out hitOnFrameMap);
+                //Vector3 pointT = hitOnFrameMap.point;
+                //if (pointT != new Vector3())
+                //{
+                //    Storage.EventsUI.ListLogAdd = "TEST NEW HIT hitPoint: " + hitOnFrameMap.point.x + "x" + hitOnFrameMap.point.y;
+                //    Vector3 localPointH = this.transform.InverseTransformPoint(hitOnFrameMap.point);
+                //    Storage.EventsUI.ListLogAdd = "TEST NEW HIT LOCAL hitPoint: " + localPointH.x + "x" + localPointH.y;
+                //}
+                //----------------------------------------------------------------------
+
                 //Debug.Log("HitTextMousePointOnEbject is true " + gameObject.name);
                 return true;
             }
@@ -1153,7 +1183,6 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         }
         //----------------
         return false;
-
 
         Ray ray = cameraMap.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
