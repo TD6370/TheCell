@@ -1383,7 +1383,7 @@ Transform:
   m_Children:
   - {fileID: 1739292726}
   m_Father: {fileID: 972312082}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &77109116
 MonoBehaviour:
@@ -1479,7 +1479,7 @@ Animator:
   m_GameObject: {fileID: 77109114}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 880c73baea0dad745b0bca46522b46dd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -19928,10 +19928,10 @@ Transform:
   - {fileID: 1396407803}
   - {fileID: 671729483}
   - {fileID: 1819455351}
-  - {fileID: 1569493975}
   - {fileID: 77109115}
-  - {fileID: 413655701}
   - {fileID: 1026468982}
+  - {fileID: 413655701}
+  - {fileID: 1569493975}
   - {fileID: 552743588}
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -22246,7 +22246,7 @@ Transform:
   m_Children:
   - {fileID: 190792874}
   m_Father: {fileID: 972312082}
-  m_RootOrder: 12
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1026468983
 MonoBehaviour:
@@ -32166,7 +32166,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 312, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1467665706
@@ -33840,7 +33840,7 @@ Transform:
   m_Children:
   - {fileID: 1582679341}
   m_Father: {fileID: 972312082}
-  m_RootOrder: 9
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1569493976
 MonoBehaviour:
