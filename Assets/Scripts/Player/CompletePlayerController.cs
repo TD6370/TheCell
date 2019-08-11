@@ -107,7 +107,9 @@ public class CompletePlayerController : MonoBehaviour {
 
     void Awake()
     {
-        m_PlayerAnimation = new PlayerAnimation();
+        var heroAnimator = Storage.Instance.HeroModel.GetComponent<Animator>();
+        var render = Storage.Instance.HeroModel.GetComponent<SpriteRenderer>();
+        m_PlayerAnimation = new PlayerAnimation(heroAnimator, render);
     }
 
     Vector3 m_lastPos = new Vector3();
@@ -223,10 +225,10 @@ public class CompletePlayerController : MonoBehaviour {
             if(_movement.x != 0)
             {
                 bool isRight = _movement.x > 0;
-                m_PlayerAnimation.HeroLook(isRight); 
+                m_PlayerAnimation.PersonLook(isRight); 
             }
         }
-        m_PlayerAnimation.HeroMove(m_IsHeroMoving);
+        m_PlayerAnimation.PersonMove(m_IsHeroMoving);
     }
 
 

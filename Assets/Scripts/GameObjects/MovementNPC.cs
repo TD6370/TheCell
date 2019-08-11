@@ -65,6 +65,18 @@ public class MovementNPC : MonoBehaviour {
             return;
         }
         m_isTrack = Storage.EventsUI.IsTrackPointsVisible;
+
+        if (GameActionPersonController.IsGameActionPersons)
+        {
+            var actionGame = GetComponent<GameActionPersonController>();
+            if (actionGame == null)
+                Debug.Log("############ InitNPC().GameActionPersonController == null");
+            else
+            {
+                actionGame.IsStartInit = true;
+                //actionGame.InitActions();
+            }
+        }
     }
 
     protected virtual void StartMoving()
@@ -513,6 +525,11 @@ public class MovementNPC : MonoBehaviour {
     {
         var dataNPC = m_dataController.UpdateData(callInfo) as ModelNPC.GameDataNPC;
         return dataNPC;
+    }
+
+    public virtual ModelNPC.GameDataNPC GetData(string callInfo = "GetInitData")
+    {
+        return _dataNPC;
     }
 
 }

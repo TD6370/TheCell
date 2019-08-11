@@ -37,13 +37,15 @@ SpriteAtlas:
       blockOffset: 1
       allowAlphaSplitting: 0
       enableRotation: 0
-      enableTightPacking: 0
+      enableTightPacking: 1
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: d4bee3cdbba420746ab94adbdee7d57f, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 3f7d83206c54d20459dfac53d5bbe166, type: 3}
+  - {fileID: 21300000, guid: 03ebfa201f6a4ca4ca3a3da671cd3af7, type: 3}
   - {fileID: 21300000, guid: a3a54b308736b374989fe3c16c91c670, type: 3}
   - {fileID: 21300000, guid: 80b8b2c0effebb74184497b7bc29b4ed, type: 3}
   - {fileID: 21300000, guid: 6d9ad9e01cfd4524e8fb3955872947a9, type: 3}
@@ -51,9 +53,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 8bd23b515d669b4428f7301d706cb850, type: 3}
   - {fileID: 21300000, guid: 33eaa861f26e37945a85923256d90be9, type: 3}
   - {fileID: 21300000, guid: 928ce732bd93d6947a70363ed5463a52, type: 3}
+  - {fileID: 21300000, guid: 78501ea2c95be6c44a378454a1f031eb, type: 3}
+  - {fileID: 21300000, guid: 741c3bb220588cc428b90a108df90f81, type: 3}
   - {fileID: 21300000, guid: 672f90033263846499f88bd938194436, type: 3}
   - {fileID: 21300000, guid: 7e963543ac31a61459b0ff12757ecd12, type: 3}
   - {fileID: 21300000, guid: 3b614a63d63a2594eb0483d40399e58c, type: 3}
+  - {fileID: 21300000, guid: fc0bb5e3024ee4249b18d65c0139aeb6, type: 3}
   - {fileID: 21300000, guid: 0b1d47e3301fbb541ab9fde8ffa7cf05, type: 3}
   - {fileID: 21300000, guid: 1985e1f34e2088148bfe2d886659afcd, type: 3}
   - {fileID: 21300000, guid: 8364ea36a5e59fa48b1f2da4d51e6bb4, type: 3}
@@ -64,27 +69,39 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7b691ec6d20e4194cb9b328ffde6a3fb, type: 3}
   - {fileID: 21300000, guid: d5a94107de7f6e143ba55eb5137bf06a, type: 3}
   - {fileID: 21300000, guid: b8e661676f7838f4892f899424962984, type: 3}
+  - {fileID: 21300000, guid: fcf9c1875301ac745a6c3c4ecf91312f, type: 3}
   - {fileID: 21300000, guid: 1095b6977d4bf44439ccd734dcd48ee8, type: 3}
   - {fileID: 21300000, guid: eb457997aa4435f458f55314fba24a9e, type: 3}
   - {fileID: 21300000, guid: 6cdcb1c78c0b6a142bd56f48390d6b37, type: 3}
+  - {fileID: 21300000, guid: 056e0858d45d5304aa5fd697ff18bf86, type: 3}
   - {fileID: 21300000, guid: 8b5db5c8f2e389b45a98b7d82ecd75b5, type: 3}
   - {fileID: 21300000, guid: 00bdfc790d9a50e479d9bae70ed8f1cd, type: 3}
   - {fileID: 21300000, guid: f6473c3a10c04604e9a4acf5c21f13d7, type: 3}
   - {fileID: 21300000, guid: 3677457aa3380ed42b86a950f048e182, type: 3}
   - {fileID: 21300000, guid: 233860aa2a50c0a43991969d4508e7ba, type: 3}
+  - {fileID: 21300000, guid: 0a51fe3b5f974b845af48a24de7cc2bd, type: 3}
   - {fileID: 21300000, guid: 0933b74b439529144a08f57f8a676244, type: 3}
+  - {fileID: 21300000, guid: 6715b6bb1caa9774dae52b7ef501b305, type: 3}
   - {fileID: 21300000, guid: 6213b7cb147698145a4a4845a1ebed52, type: 3}
+  - {fileID: 21300000, guid: 07718adba30ab724bbd020a071d53408, type: 3}
   - {fileID: 21300000, guid: 905b5afbb6ca3e340962bedde2072438, type: 3}
   - {fileID: 21300000, guid: f4e9ee0cdcb46f447ba8c47d5173f9bf, type: 3}
   - {fileID: 21300000, guid: 3cd8b21c046920546b40b388ccb0c7f6, type: 3}
+  - {fileID: 21300000, guid: 68a20e1c2fcf3234f98f1c828c86397c, type: 3}
   - {fileID: 21300000, guid: e03b36ac2ec32024e9b702dc8b2c7f9c, type: 3}
+  - {fileID: 21300000, guid: 175b40bcd6eee7a499a058f0a2e814ce, type: 3}
+  - {fileID: 21300000, guid: 7b9f2ebca6babb34b89ac64acf191155, type: 3}
   - {fileID: 21300000, guid: 8f90544dae6d67144a9ce71bb2d0d876, type: 3}
   - {fileID: 21300000, guid: 6e697fbd81c4cfd4cb2c3ab5ff8badc0, type: 3}
+  - {fileID: 21300000, guid: 6ae9efbdba8dc1d409c9808cacae3eb0, type: 3}
   - {fileID: 21300000, guid: a560160ef64d85f47ab93862eb6e5ca4, type: 3}
   - {fileID: 21300000, guid: b7b4204ec1802dc4da555cc93bf2dc04, type: 3}
   - {fileID: 21300000, guid: 6651e24fe9dd8a549b9592aab3252f72, type: 3}
+  - {fileID: 21300000, guid: 13008c6f4202d674a987504176ee1380, type: 3}
   - {fileID: 21300000, guid: 468504af917c4a147a23b6470a63015c, type: 3}
   m_PackedSpriteNamesToIndex:
+  - FantomDetails
+  - MachinetoolDetails
   - Kishka
   - Fantom
   - Chip
@@ -92,9 +109,12 @@ SpriteAtlas:
   - Kamish
   - Vhailor
   - Orbits
+  - HeroAnim
+  - ZergonDetails
   - Triffid
   - Dendroid
   - Mask
+  - HeroDetails
   - Shampinion
   - Inspector
   - Blastarr
@@ -105,25 +125,35 @@ SpriteAtlas:
   - Chpok
   - Pavuk
   - Cloudwood
+  - DendroidDetails
   - Parket
   - Desert
   - Hero
+  - MaskDetails
   - Lantern
   - Cluben
   - Weedflower
   - Machinetool
   - Diods
+  - LolipopDetails
   - Mecha
+  - BlastarrDetails
   - Gary
+  - SkvidDetails
   - Hydragon
   - Swamp
   - Corals
+  - InspectorDetails
   - Weed
+  - GaryDetails
+  - VhailorDetails
   - Aracul
   - Lollipop
+  - PavukDetails
   - Bananas
   - Gecsagon
   - Kolba
+  - MechaDetails
   - Berry
   m_Tag: SpriteAtlasWorld
   m_IsVariant: 0

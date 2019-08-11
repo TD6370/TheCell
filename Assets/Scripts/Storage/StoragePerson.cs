@@ -14,6 +14,8 @@ public class StoragePerson : MonoBehaviour {
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
 
+    public GameObject PanelModelsViewNPC;
+
     public static Texture2D TextureBossRedMap;
     public Texture2D TextureBossRed;
     public static Texture2D TextureBossLizardMap;
@@ -147,6 +149,30 @@ public class StoragePerson : MonoBehaviour {
         TextureBossArmMap = TextureBossArm;
         TextureBossMap = TextureBoss;
     }
+
+
+    //private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
+    //private void LoadModelsView()
+    //{
+    //    if (PanelModelsViewNPC == null)
+    //    {
+    //        Debug.Log("###### LoadModelsView  PanelModelsViewNPC == null");
+    //        return;
+    //    }
+
+    //    m_ListViewModels = new Dictionary<SaveLoadData.TypePrefabs, GameObject>();
+    //    var models = PanelModelsViewNPC.transform.GetChildCount();
+    //    //GameObject modelView = ListViewModels(typePrefabNPC);
+    //    //GameObject modelView = (GameObject)Instantiate(PrefabSpriteCellMap);
+    //    cellMap.transform.SetParent(this.gameObject.transform);
+    //    modelView.transform.SetParent(this.gameObject.transform);
+    //    //m_ListVie
+    //}
+
+    // public GameObject ListViewModels()
+    //{
+    //    return m_ListViewModels[]
+    //}
 
     //private void LoadSprites()
     //{

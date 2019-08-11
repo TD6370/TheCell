@@ -15,6 +15,11 @@ public class PositionRenderSorting : MonoBehaviour {
     private bool m_IsCheckOverlap = false;
     private int m_offsetOverlap = 0;
 
+    //$$$$
+    private GameActionPersonController m_actionNPC;
+    private GameObject m_modelViewNPC;
+    private bool m_IsPerson = false;
+
     private void Awake()
     {
         if (IsHero)
@@ -24,6 +29,12 @@ public class PositionRenderSorting : MonoBehaviour {
         else
         {
             rendererSort = gameObject.GetComponent<Renderer>();
+            //rendererSort = gameObject.GetComponent<Renderer>();
+
+            //$$$$
+            m_actionNPC = gameObject.GetComponent<GameActionPersonController>();
+            if (m_actionNPC != null)
+                m_IsPerson = true;
         }
         FixedOverlapSprites();
     }
@@ -68,6 +79,19 @@ public class PositionRenderSorting : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        //$$$$
+        if (m_IsPerson)
+        {
+            if (m_modelViewNPC == null)
+            {
+                if (m_actionNPC.ModelView != null)
+                {
+                    m_modelViewNPC = m_actionNPC.ModelView;
+                    rendererSort = m_modelViewNPC.GetComponent<Renderer>();
+                }
+            }
+        }
+
         float offsetCalculate = SortingBase - gameObject.transform.position.y; // - Offset; //@@+ fix
         offsetCalculate = (float)System.Math.Round(offsetCalculate, 2);
         offsetCalculate *= 100;

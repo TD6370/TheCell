@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\GameActionPersonController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameObjecDataController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Models\ModelNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\MovementNPC.cs" />

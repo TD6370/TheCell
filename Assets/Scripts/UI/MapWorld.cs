@@ -24,6 +24,15 @@ public class MapWorld : MonoBehaviour {
     public Texture2D textureHero;
     public Texture2D textureTest;
 
+    //--- Grid Map
+    public GameObject PrefabGridMap;
+    public GameObject PrefabSpriteCellMap;
+    public Stack<string> StackSectorsUpdating;
+    public SpriteAtlas SpriteAtlasMapPrefab;
+
+    private GridLayoutGroup m_GridMap;
+    private List<GameObject> m_listCellsGridMap = new List<GameObject>();
+
     public GameObject gobjField;
     public GameObject MarkerMapWorldCell;
 
@@ -94,14 +103,7 @@ public class MapWorld : MonoBehaviour {
     //Texture2D textureMap;//#fix mem
     //Sprite spriteMap; //#fix mem
 
-    //--- Grid Map
-    public GameObject PrefabGridMap;
-    public GameObject PrefabSpriteCellMap;
-    public Stack<string> StackSectorsUpdating;
-    public SpriteAtlas SpriteAtlasMapPrefab;
-
-    private GridLayoutGroup m_GridMap;
-    private List<GameObject> m_listCellsGridMap = new List<GameObject>();
+ 
 
     private void Awake()
     {
