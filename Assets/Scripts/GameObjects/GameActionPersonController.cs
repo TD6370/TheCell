@@ -169,7 +169,27 @@ public class GameActionPersonController : MonoBehaviour
             return;
 
         SaveLoadData.TypePrefabs typeMePrefabNPC = m_dataNPC.TypePrefab;
-        foreach(var itemModel in m_ListViewModels)
+
+        //TEST BOSS ---------------------------
+        Dictionary<int, SaveLoadData.TypePrefabs> collectionGenTypeNPC = new Dictionary<int, SaveLoadData.TypePrefabs>()
+        {
+            {0, SaveLoadData.TypePrefabs.Inspector},
+            {1, SaveLoadData.TypePrefabs.Machinetool},
+            {2, SaveLoadData.TypePrefabs.Mecha},
+            {3, SaveLoadData.TypePrefabs.Dendroid},
+            {4, SaveLoadData.TypePrefabs.Gary},
+            {5, SaveLoadData.TypePrefabs.Lollipop},
+            {6, SaveLoadData.TypePrefabs.Hydragon},
+            {7, SaveLoadData.TypePrefabs.Pavuk},
+            {8, SaveLoadData.TypePrefabs.Skvid},
+            {9, SaveLoadData.TypePrefabs.Fantom},
+            {10, SaveLoadData.TypePrefabs.Mask},
+            {11, SaveLoadData.TypePrefabs.Vhailor}
+        };
+        typeMePrefabNPC = collectionGenTypeNPC[UnityEngine.Random.Range(0, collectionGenTypeNPC.Count)];
+        //----------------------------------
+
+        foreach (var itemModel in m_ListViewModels)
         {
             itemModel.Value.SetActive(itemModel.Key == typeMePrefabNPC);
             if (itemModel.Key == typeMePrefabNPC)
@@ -177,22 +197,33 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //$$$ TEST MODEL VIEW 
-        if (m_MeModelView == null)
+        //if (m_MeModelView == null)
+        //{
+        //    //m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
+        //    foreach (GameObject itemModel in m_ListViewModels.Values)
+        //    {
+        //        m_MeModelView = itemModel; //first item
+        //        break;
+        //    }
+        //    m_MeModelView.SetActive(true);
+        //}
+        if(m_MeModelView == null)
         {
-            //m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
-            foreach (GameObject itemModel in m_ListViewModels.Values)
-            {
-                m_MeModelView = itemModel;
-                break;
-            }
-            m_MeModelView.SetActive(true);
-            var render = GetComponent<SpriteRenderer>();
-            render.enabled = false;
+            Debug.Log("####### UpdateMeModelView m_MeModelView == null");
+            return;
         }
+
+
+        //TEST
+        var render = GetComponent<SpriteRenderer>();
+        render.enabled = false;
 
         m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
         if (m_MeRender == null)
+        {
             Debug.Log("###### GameActionPersonController.UpdateMeModelView  m_MeRender == null");
+            return;
+        }
 
         var meAnimator = m_MeModelView.GetComponent<Animator>();
         m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
