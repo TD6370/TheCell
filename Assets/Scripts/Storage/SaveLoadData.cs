@@ -261,7 +261,6 @@ public class SaveLoadData : MonoBehaviour {
 
     }
 
-
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
     {
@@ -314,7 +313,6 @@ public class SaveLoadData : MonoBehaviour {
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
                     ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
-                    //objDataSave.TagObject = prefabName.ToString();//@del
                     objDataSave.Position = pos;
 
                     coutCreateObjects++;
@@ -335,6 +333,12 @@ public class SaveLoadData : MonoBehaviour {
     //GEN -----
     private TypePrefabs GenObjectWorld()
     {
+
+        var max = Enum.GetValues(typeof(TypePrefabs)).Length - 1;
+        var ind = UnityEngine.Random.Range(12, max);
+        var prefabNameGet = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), ind.ToString()); 
+        return prefabNameGet;
+
         int intGen = UnityEngine.Random.Range(1, 4);
         int intTypePrefab = 0;
         TypePrefabs prefabName = TypePrefabs.PrefabField;
@@ -346,28 +350,11 @@ public class SaveLoadData : MonoBehaviour {
             intTypePrefab = UnityEngine.Random.Range(1, 8);
             prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
         }
-
-        //Type prefab
-        //++ Elka, WallRock, WallWood
-        //int intTypePrefab = UnityEngine.Random.Range(1, 8);
-        //#TT YES BOSS
-        //int intTypePrefab = UnityEngine.Random.Range(1, 5);
-        //#TT YES UFO
-        //int intTypePrefab = UnityEngine.Random.Range(1, 4);
-        //#TT NOT UFO
-        //int intTypePrefab = UnityEngine.Random.Range(1, 3);
-
-        //int rnd1 = UnityEngine.Random.Range(1, 3);
-        //int rnd1 = UnityEngine.Random.Range(1, 2);
         int rnd1 = UnityEngine.Random.Range(1, 3);
         if (rnd1!=1)
         {
             prefabName = TypePrefabs.PrefabField;
         }
-        //TypePrefabs prefabName = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), intTypePrefab.ToString()); ;
-
-
-        //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
         return prefabName;
     }
 

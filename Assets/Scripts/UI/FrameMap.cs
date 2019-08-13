@@ -733,20 +733,9 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
         //nameField = "Field20x50";
 
-        if (!Storage.IsGridDataFieldExist(nameField))
-        {
-            //if(!Storage.Instance.TestExistField(nameField))
-            //{
-            //    Debug.Log("");
-            //}
-
-            //DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, prefabType);
-            //continue;
-            //Debug.Log("Selector Cell Field " + nameField + " is Empty     " + DateTime.Now);
-            //Storage.Events.ListLogAdd = "Selector Cell Field " + nameField + " is Empty [" + DateTime.Now.ToShortTimeString() + "]";
-            //return;
-            Storage.Data.AddNewFieldInGrid(nameField, "ShowSelectorCell");
-        }
+        //$$$LC.1
+        //if (!Storage.IsGridDataFieldExist(nameField))
+        //    Storage.Data.AddNewFieldInGrid(nameField, "ShowSelectorCell");
 
         //Celect Cell on World
         SelectCellAction(nameField);

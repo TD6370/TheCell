@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CellMapControl : MonoBehaviour, IPointerDownHandler {
+public class CellPrefabPaletteMapControl : MonoBehaviour, IPointerDownHandler {
 
     PaletteMapController _scriptMap;
     public GameObject ContentGridMap;

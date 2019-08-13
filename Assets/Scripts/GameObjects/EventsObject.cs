@@ -196,62 +196,14 @@ public class EventsObject : MonoBehaviour {
         }
     }
 
-    //private void AlphaTerra()
-    //{
-    //    if (IsMeTerra)
-    //    {
-    //        if (m_OldFieldHero == Storage.Instance.SelectField)
-    //            return;
-    //        m_OldFieldHero = Storage.Instance.SelectField;
-
-    //        float posHeroY = Storage.PlayerController.transform.position.y;
-    //        float gobjY = this.transform.position.y;
-    //        float posHeroX = Storage.PlayerController.transform.position.x;
-    //        float gobjX = this.transform.position.x;
-    //        float dist = Vector3.Distance(Storage.PlayerController.transform.position, this.transform.position);
-    //        bool isNear = false;
-    //        float maxDist = 10;
-    //        if (dist < maxDist)
-    //            isNear = true;
-
-    //        int offsetTopHero = 0;
-
-    //        //if (gobjY - offsetTopHero < posHeroY && isNear )
-    //        if (gobjY  < posHeroY && isNear)
-    //        {
-    //            float _alphaKof = (dist/ maxDist);
-    //            float LevAlpha = _alphaKof;
-    //            if (LevAlpha != m_LevelAlpha)
-    //            {
-    //                m_LevelAlpha = LevAlpha;
-    //                Single _alpha = 1 - Math.Abs(_alphaKof) + 0.3f;
-    //                this.gameObject.SetAlpha(_alpha);
-    //                m_isAlpha = true;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (m_isAlpha)
-    //            {
-    //                this.gameObject.SetAlpha(1f);
-    //                m_LevelAlpha = -1;
-    //                m_isAlpha = false;
-    //            }
-    //        }
-
-    //    }
-    //}
+    
 
     private void OnMouseDown()
     {
         //Debug.Log("&&&& EventsObject OnMouseDown");
         SelectIdFromTextBox();
     }
-
-    public void Kill()
-    {
-        Storage.Instance.AddDestroyGameObject(this.gameObject);
-    }
+       
 
     private void SelectIdFromTextBox()
     {

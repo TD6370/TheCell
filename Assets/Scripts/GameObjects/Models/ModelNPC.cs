@@ -275,7 +275,6 @@ public class ModelNPC
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "IsReality: " + IsReality,
@@ -311,6 +310,7 @@ public class ModelNPC
         {
             Id = Guid.NewGuid().ToString();
         }
+                
     }
 
     [XmlType("Ufo")]
@@ -555,18 +555,18 @@ public class ModelNPC
         }
     }
 
-    [XmlType("PersonAlien")]
-    public class PersonDataAlien : PersonData
-    {
-        public PersonDataAlien()
-            : base()
-        {
-        }
-    }
+    //[XmlType("PersonAlien")]
+    //public class PersonDataAlien : PersonData
+    //{
+    //    public PersonDataAlien()
+    //        : base()
+    //    {
+    //    }
+    //}
 
 
     [XmlType("Alien")]
-    public class GameDataAlien : PersonDataAlien
+    public class GameDataAlien : PersonData
     {
         public virtual int Life { get; set; }
         [XmlIgnore]
@@ -630,17 +630,18 @@ public class ModelNPC
         {
             get
             {
+                string actions = "Actions:\n" + string.Join("\n", PersonActions);
                 return new List<string> {
                     "Name: " + NameObject,
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
                     "View: " + ModelView,
-                    "Type : " + TypePrefabName,
                     "Pos : " + Position,
                     "Target : " + TargetPosition,
                     "Life: " + Life,
                     "Speed: " + Speed,
-                    "Individ: " + ModelView
+                    "Individ: " + ModelView,
+                    actions
                   };
             }
         }

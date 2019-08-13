@@ -634,7 +634,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 342}
   m_MaxSize: {x: 12008, y: 8042}
   vertical: 0
-  controlID: 25138
+  controlID: 404
 --- !u!114 &27
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -658,7 +658,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 342}
   m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 25139
+  controlID: 405
 --- !u!114 &28
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -682,7 +682,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 25140
+  controlID: 406
 --- !u!114 &29
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1529,10 +1529,10 @@ MonoBehaviour:
     height: 605
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 80}
-    m_SelectedIDs: 04280000
-    m_LastClickedID: 10244
-    m_ExpandedIDs: 1e20c2ff2220c2ff2620c2ff2a20c2ff2e20c2ff3820c2ff3e22c2ffdafbffff0000000006190000c81a00004c210000282c00005c2c0000a22c0000062f0000f82f0000
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: dafbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1582,14 +1582,14 @@ MonoBehaviour:
     height: 605
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 5761.165560809685
+  lastFramingTime: 266.2961623866731
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -27.632576, y: 19.261934, z: -0.9375}
+    m_Target: {x: 571.2585, y: 306.8186, z: -2.5}
     speed: 2
-    m_Value: {x: -27.632576, y: 19.261934, z: -0.9375}
+    m_Value: {x: 571.2585, y: 306.8186, z: -2.5}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1621,9 +1621,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 6.458288
+    m_Target: 472.54434
     speed: 2
-    m_Value: 6.458288
+    m_Value: 472.54434
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1660,8 +1660,8 @@ MonoBehaviour:
     height: 605
   m_PersistentViewDataDictionary: {fileID: 0}
   m_ResetOnNextRepaint: 0
-  m_SelectedAssetPath: Assets/Resources/Textures/World/Prefabs/Violet/Cloudwood.png
-  m_SelectedSpriteRectGUID: b27b7d2f57c463047ad41bb18964006b
+  m_SelectedAssetPath: 
+  m_SelectedSpriteRectGUID: 
 --- !u!114 &58
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1987,20 +1987,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Player
+    - Assets/Scripts/UI
   m_ViewMode: 1
   m_StartGridSize: 68
   m_LastFolders:
-  - Assets/Scripts/Player
+  - Assets/Scripts/UI
   m_LastFoldersGridSize: 68
   m_LastProjectPath: F:\Projects\TheCell
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 836}
-    m_SelectedIDs: 960e0000
-    m_LastClickedID: 3734
-    m_ExpandedIDs: 00000000420c0000c40c0000000d0000ec0d0000dc0e0000520f0000860f0000f6100000c0110000601200006a120000da120000841400004e1500005e15000092150000d6150000561600004c17000000ca9a3b
+    scrollPos: {x: 0, y: 868}
+    m_SelectedIDs: 400e0000
+    m_LastClickedID: 3648
+    m_ExpandedIDs: 00000000420c0000c40c0000000d0000ec0d0000dc0e0000520f0000860f0000f6100000c0110000601200006a120000da120000841400004e1500005e15000092150000d6150000561600004c170000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2028,7 +2028,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 940}
     m_SelectedIDs: ba8df4ff
     m_LastClickedID: -750150
-    m_ExpandedIDs: 00000000420c0000c40c0000000d0000ec0d0000dc0e0000520f0000860f0000f6100000c0110000601200006a120000da120000841400004e1500005e15000092150000d6150000561600004c17000000ca9a3b
+    m_ExpandedIDs: 00000000420c0000c40c0000000d0000ec0d0000dc0e0000520f0000860f0000f6100000c0110000601200006a120000da120000841400004e1500005e15000092150000d6150000561600004c170000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2053,8 +2053,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 74260000
-    m_LastClickedInstanceID: 9844
+    m_SelectedInstanceIDs: 101c0000
+    m_LastClickedInstanceID: 7184
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300006e8d0000888d0000ce3100009c0b0000f43c0000484f000094c40000ca0b0000547e0000847e0000807e0000747e00007c7e0000787e0000c60900000c610000600b0000740f0000d8770100a4090000d20b00002e0d0000300d0000580d0000d20a0000ca590200704502006a6e0100180e0000a80a00007a0c0000ba0c0000600a00005c0b00004c0d0000780d00006c0b0000040a0000e60c0000401000005c0e0000120f00000c0e000024d40100aa0a0000ee0c0000fe0c0000c40b0000ba0a000096420000320c0000d80d0000800a0000cc420000720d0000cc110000dc0c00005c680000640e0000a40d0000d63100003c1400000000000018120000
     m_RenameOverlay:
@@ -2136,7 +2136,7 @@ MonoBehaviour:
   m_AnimEditor: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 9844
+  m_LastSelectedObjectID: 7184
 --- !u!114 &63
 MonoBehaviour:
   m_ObjectHideFlags: 52

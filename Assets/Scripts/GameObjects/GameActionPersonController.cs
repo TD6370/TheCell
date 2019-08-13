@@ -9,7 +9,7 @@ public class GameActionPersonController : MonoBehaviour
     public static bool IsGameActionPersons = true;
 
     public bool IsStartInit = false;
-
+    private bool m_stateInit = false;
 
     public GameObject PanelModelsViewNPC;
     private GameObject m_MeModelView;
@@ -75,22 +75,16 @@ public class GameActionPersonController : MonoBehaviour
         if (m_meMovement == null)
             return;
 
-        m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.PersonData;
-        //bool isNewModel = temp_dataNPC == null || temp_dataNPC.Equals(m_dataNPC);
-        bool isNewModel = temp_TypePrefab != m_dataNPC.TypePrefab;
-        if (isNewModel)
-        {
-            //temp_dataNPC = m_dataNPC;
-            temp_TypePrefab = m_dataNPC.TypePrefab;
-            UpdateMeModelView();
-        }
-        //ActivateMeModelView();
-        //TestNextAction(); //$$$
+        //$$$LC.2
+        CheckUpdateModelView();
+        
         AnimatorMove();
 
         //FixPositModelView();
-    }
 
+        TestNextAction();
+    }
+    
     private void FixPositModelView()
     {
         //var posDef = new Vector3(0, 0, -1);
@@ -102,6 +96,13 @@ public class GameActionPersonController : MonoBehaviour
         //    }
         //}
     }
+    public void StartInit()
+    {
+        m_stateInit = false;
+        IsStartInit = true;
+        TimeInField = Time.time + limitLockInField;
+    }
+
 
     private void LoadModelsView()
     {
@@ -169,7 +170,23 @@ public class GameActionPersonController : MonoBehaviour
         }
     }
 
-    private void UpdateMeModelView()
+    private void CheckUpdateModelView()
+    {
+        if (m_stateInit != IsStartInit)
+        {
+            m_stateInit = IsStartInit;
+            m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.PersonData;
+            bool isNewModel = temp_TypePrefab != m_dataNPC.TypePrefab;
+            if (isNewModel)
+            {
+                //temp_dataNPC = m_dataNPC;
+                temp_TypePrefab = m_dataNPC.TypePrefab;
+                UpdateMeModelView();
+            }
+        }
+    }
+
+    public void UpdateMeModelView()
     {
         if (m_ListViewModels == null)
             return;
@@ -186,52 +203,9 @@ public class GameActionPersonController : MonoBehaviour
             }
         }
 
-        //if (m_MeModelView == null)
-        //{
-        //    //if (!PoolGameObjects.IsUseTypePoolPrefabs)
-        //    //{
-        //    //TEST BOSS ---------------------------
-        //    Dictionary<int, SaveLoadData.TypePrefabs> collectionGenTypeNPC = new Dictionary<int, SaveLoadData.TypePrefabs>()
-        //    {
-        //        {0, SaveLoadData.TypePrefabs.Inspector},
-        //        {1, SaveLoadData.TypePrefabs.Machinetool},
-        //        {2, SaveLoadData.TypePrefabs.Mecha},
-        //        {3, SaveLoadData.TypePrefabs.Dendroid},
-        //        {4, SaveLoadData.TypePrefabs.Gary},
-        //        {5, SaveLoadData.TypePrefabs.Lollipop},
-        //        {6, SaveLoadData.TypePrefabs.Hydragon},
-        //        {7, SaveLoadData.TypePrefabs.Pavuk},
-        //        {8, SaveLoadData.TypePrefabs.Skvid},
-        //        {9, SaveLoadData.TypePrefabs.Fantom},
-        //        {10, SaveLoadData.TypePrefabs.Mask},
-        //        {11, SaveLoadData.TypePrefabs.Vhailor}
-        //    };
-        //    typeMePrefabNPC = collectionGenTypeNPC[UnityEngine.Random.Range(0, collectionGenTypeNPC.Count)];
-        //    foreach (var itemModel in m_ListViewModels)
-        //    {
-        //        itemModel.Value.SetActive(itemModel.Key == typeMePrefabNPC);
-        //        if (itemModel.Key == typeMePrefabNPC)
-        //            m_MeModelView = itemModel.Value;
-        //    }
-        //}
-        //----------------------------------
-
         //$$$ TEST MODEL VIEW 
         if (m_MeModelView == null)
         {
-            //Debug.Log("########### Not find model for " + typeMePrefabNPC);
-            //{
-            //    m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
-            //}
-
-            //m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
-            //foreach (GameObject itemModel in m_ListViewModels.Values)
-            //{
-            //    m_MeModelView = itemModel; //first item
-            //    break;
-            //}
-            //m_MeModelView.SetActive(true);
-
             //TEST
             var render = GetComponent<SpriteRenderer>();
             render.enabled = true;
@@ -258,11 +232,6 @@ public class GameActionPersonController : MonoBehaviour
             var render = GetComponent<SpriteRenderer>();
             render.enabled = false;
         }
-        //if (m_MeModelView == null)
-        //{
-        //    Debug.Log("####### UpdateMeModelView m_MeModelView == null");
-        //    return;
-        //}
 
         m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
         if (m_MeRender == null)
@@ -273,8 +242,6 @@ public class GameActionPersonController : MonoBehaviour
 
         var meAnimator = m_MeModelView.GetComponent<Animator>();
         m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
-
-        //m_MeModelView.transform.position = new Vector3(0, 0, -1);
     }
 
     private List<NameActionsPerson> GetActions()
@@ -296,6 +263,10 @@ public class GameActionPersonController : MonoBehaviour
         if (temp_ActionPerson != m_ActionPerson)
         {
             var m_ListPersonActions = GetActions();
+
+            if (m_ListPersonActions.Count == 0)
+                ExecuteActionNPC(NameActionsPerson.Move);
+
             if (m_ListPersonActions.Count > 0)
             {
                 //if (m_ActionPerson == m_ListPersonActions[0])
@@ -360,6 +331,14 @@ public class GameActionPersonController : MonoBehaviour
     }
        
 
+    private int stepTest=0;
+    private int stepLimitTest = 10;
+    private string lastFieldForLock = "";
+    private float limitLockInField = 3f;
+    private float TimeInField;// = Time.time + limitLockInField;
+    private float minDistLck = 0.005f;
+    private Vector3 lastPositionForLock;
+
     private void AnimatorMove()
     {
         //$$$$
@@ -380,12 +359,34 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //$$$ ---------
-        //float minDist = 1f;
-        //float dist = Vector3.Distance(targetPosition, transform.position);
-        //if (dist < minDist)
-        //{
-        //    ExecuteActionNPC(NameActionsPerson.MoveEnd);
-        //}
+        stepTest++;
+        if (stepTest > stepLimitTest)
+        {
+            float distLock = Vector3.Distance(lastPositionForLock, transform.position);
+            if (distLock < minDistLck)
+            {
+                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+            }
+            lastPositionForLock = transform.position;
+            stepTest = 0;
+        }
+        if (Time.time > TimeInField && lastFieldForLock != Storage.Instance.SelectFieldPosHero)
+        {
+            //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
+            if (!string.IsNullOrEmpty(lastFieldForLock))
+            {
+                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+            }
+            lastFieldForLock = Storage.Instance.SelectFieldPosHero;
+            TimeInField = Time.time + limitLockInField;
+        }
+
+        float minDist = 1f;
+        float dist = Vector3.Distance(targetPosition, transform.position);
+        if (dist < minDist)
+        {
+            ExecuteActionNPC(NameActionsPerson.MoveEnd);
+        }
         //---------------
 
         if (m_MeAnimation!=null)
@@ -396,6 +397,7 @@ public class GameActionPersonController : MonoBehaviour
     private void SetActionNewTargetMove()
     {
         m_dataNPC.SetTargetPosition();
+        ExecuteActionNPC(NameActionsPerson.Move);
     }
 
     private void SetActionIdle()
@@ -411,5 +413,10 @@ public class GameActionPersonController : MonoBehaviour
     private void SetActionDead()
     {
         //m_dataNPC.SetTargetPosition();
+    }
+
+    public void Kill()
+    {
+        Storage.Instance.AddDestroyGameObject(this.gameObject);
     }
 }

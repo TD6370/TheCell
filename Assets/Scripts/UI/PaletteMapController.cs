@@ -1195,7 +1195,7 @@ public class PaletteMapController : MonoBehaviour {
             //cellMap.transform.SetParent(this.gameObject.transform);
             //cellMap.GetComponent<Image>().sprite = item;
             var cellMap = CreateCellMapPalette(sprite);
-            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = TypesStructure.Person.ToString() };
+            cellMap.GetComponent<CellPrefabPaletteMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = TypesStructure.Person.ToString() };
             //cellMap.SetActive(true);
 
             m_listCellsOnPalette.Add(cellMap);
@@ -1252,7 +1252,7 @@ public class PaletteMapController : MonoBehaviour {
             }
 
             var cellMap = CreateCellMapPalette(sprite); 
-            cellMap.GetComponent<CellMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = typeTilePrefab.ToString() };
+            cellMap.GetComponent<CellPrefabPaletteMapControl>().DataTileCell = new DataTile() { Name = spriteName, X = index, Tag = typeTilePrefab.ToString() };
             m_listCellsOnPalette.Add(cellMap);
             index++;
         }
@@ -1395,7 +1395,7 @@ public class PaletteMapController : MonoBehaviour {
 
             //Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
             //cellMap.GetComponent<Image>().sprite = spriteTile; @!!!
-            cellMap.GetComponent<CellMapControl>().DataTileCell = itemTileData;
+            cellMap.GetComponent<CellPrefabPaletteMapControl>().DataTileCell = itemTileData;
             //cellMap.SetActive(true);
 
             if (isUpdate)
@@ -1413,7 +1413,7 @@ public class PaletteMapController : MonoBehaviour {
         for (int i = 0; i < m_listCellsOnPalette.Count; i++)
         {
             GameObject item = m_listCellsOnPalette[i];
-            var dataCell = item.GetComponent<CellMapControl>().DataTileCell;
+            var dataCell = item.GetComponent<CellPrefabPaletteMapControl>().DataTileCell;
             if (dataCell.X == itemTileData.X && dataCell.Y == itemTileData.Y)
             {
                 newIndex = i;
@@ -1514,7 +1514,7 @@ public class PaletteMapController : MonoBehaviour {
         if (selCellPalette == null)
             return;
 
-        GameObject borderCellPalette = selCellPalette.GetComponent<CellMapControl>().BorderCellPalette;
+        GameObject borderCellPalette = selCellPalette.GetComponent<CellPrefabPaletteMapControl>().BorderCellPalette;
         SelectedCellMap(DataTileCell, selCellPalette, borderCellPalette);
     }
 
@@ -2676,7 +2676,7 @@ public class PaletteMapController : MonoBehaviour {
         GameObject objCell = null;
         foreach (var cellMap in m_listCellsOnPalette)
         {
-            if (cellMap.GetComponent<CellMapControl>().DataTileCell.Name == SelectedCell.Name)
+            if (cellMap.GetComponent<CellPrefabPaletteMapControl>().DataTileCell.Name == SelectedCell.Name)
                 objCell = cellMap;
         }
         return objCell;

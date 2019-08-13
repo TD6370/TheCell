@@ -807,9 +807,11 @@ public class GenerateGridFields : MonoBehaviour {
 
                     if (!Storage.IsGridDataFieldExist(posFieldReal))
                     {
-                        Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
-                        Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData");
-                    } else
+                        //Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
+                        //$$$LC.1
+                        //Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData");
+                    }
+                    else
                     {
                         int indValid = Storage.Instance.GridDataG.FieldsD[posFieldReal].Objects.FindIndex(p => p.NameObject == gobj.name);
                         if (indValid != -1)
@@ -840,10 +842,11 @@ public class GenerateGridFields : MonoBehaviour {
                     //--------------------
                     indErr = "13.";
 
-                    if (!_gridData.FieldsD.ContainsKey(posFieldReal))
-                    {
-                        Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData"); //@<<@ 
-                    }
+                    //$$$LC.1
+                    //if (!_gridData.FieldsD.ContainsKey(posFieldReal))
+                    //{
+                    //    //$$$LC Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData"); //@<<@ 
+                    //}
 
                     indErr = "14.";
 

@@ -66,6 +66,7 @@ public class MovementNPC : MonoBehaviour {
         }
         m_isTrack = Storage.EventsUI.IsTrackPointsVisible;
 
+        
         if (GameActionPersonController.IsGameActionPersons)
         {
             var actionGame = GetComponent<GameActionPersonController>();
@@ -73,12 +74,12 @@ public class MovementNPC : MonoBehaviour {
                 Debug.Log("############ InitNPC().GameActionPersonController == null");
             else
             {
-                actionGame.IsStartInit = true;
-                
+                //actionGame.IsStartInit = true;
+                actionGame.StartInit();
                 //actionGame.InitActions();
+                //actionGame.UpdateMeModelView();
             }
         }
-        
     }
 
     protected virtual void StartMoving()
@@ -167,22 +168,8 @@ public class MovementNPC : MonoBehaviour {
     
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
-        Vector3 lastPositionForLock = transform.position;
-        Vector3 lastPositionForMoveField = transform.position;
-        string lastFieldForLock = Storage.Instance.SelectFieldPosHero;
-
-        int stepTest = 0;
-        int stepLimitTest = 10;
-        float limitLockInField = 3f;
-        float TimeInField = Time.time + limitLockInField;
-
-        float minDist = 0.005f;
-        
-
         int speed = 1;
         float step = 0;
-
-
         if (!Helper.IsDataInit(this.gameObject))
         {
             isRunning = false;
@@ -247,25 +234,6 @@ public class MovementNPC : MonoBehaviour {
                 yield break;
             }
 
-            stepTest++;
-            if (stepTest > stepLimitTest)
-            {
-                float distLock = Vector3.Distance(lastPositionForLock, transform.position);
-                if (distLock < minDist)
-                {
-                    _dataNPC.SetTargetPosition();
-                }
-                lastPositionForLock = transform.position;
-                stepTest = 0;
-            }
-            if (Time.time > TimeInField && lastFieldForLock != Storage.Instance.SelectFieldPosHero)
-            {
-                //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
-                lastFieldForLock = Storage.Instance.SelectFieldPosHero;
-                _dataNPC.SetTargetPosition();
-                TimeInField = Time.time + limitLockInField;
-            }
-
             Vector3 targetPosition = _dataNPC.TargetPosition;
             Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
 
@@ -290,11 +258,12 @@ public class MovementNPC : MonoBehaviour {
                 yield break;
             }
 
-            float dist = Vector3.Distance(targetPosition, transform.position);
-            if (dist < minDist)
-            {
-                _dataNPC.SetTargetPosition();
-            }
+            //$$$LC.4
+            //float dist = Vector3.Distance(targetPosition, transform.position);
+            //if (dist < minDist)
+            //{
+            //    _dataNPC.SetTargetPosition();
+            //}
 
             realtimeMoving = Time.time + 1f;
 
