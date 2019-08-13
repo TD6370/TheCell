@@ -15,11 +15,6 @@ public class PositionRenderSorting : MonoBehaviour {
     private bool m_IsCheckOverlap = false;
     private int m_offsetOverlap = 0;
 
-    //$$$$
-    private GameActionPersonController m_actionNPC;
-    private GameObject m_modelViewNPC;
-    private bool m_IsPerson = false;
-
     private void Awake()
     {
         if (IsHero)
@@ -29,12 +24,6 @@ public class PositionRenderSorting : MonoBehaviour {
         else
         {
             rendererSort = gameObject.GetComponent<Renderer>();
-            //rendererSort = gameObject.GetComponent<Renderer>();
-
-            //$$$$
-            m_actionNPC = gameObject.GetComponent<GameActionPersonController>();
-            if (m_actionNPC != null)
-                m_IsPerson = true;
         }
         FixedOverlapSprites();
     }
@@ -64,37 +53,30 @@ public class PositionRenderSorting : MonoBehaviour {
     private void Start()
     {
     }
+
     // Update is called once per frame
     void Update () {
-        
-        //rendererSort.sortingOrder = (int)(SortingBase - gameObject.transform.position.y - Offset);
-
-        //if(!m_IsCheckOverlap)
-        //{
-        //    FixedOverlapSprites();
-        //    m_IsCheckOverlap = true;
-        //}
-
     }
+
+    Renderer m_rendererSortBoss;
 
     private void FixedUpdate()
     {
-        //$$$$
-        if (m_IsPerson)
-        {
-            if (m_modelViewNPC == null)
-            {
-                if (m_actionNPC.ModelView != null)
-                {
-                    m_modelViewNPC = m_actionNPC.ModelView;
-                    rendererSort = m_modelViewNPC.GetComponent<Renderer>();
-                }
-            }
-        }
-
         float offsetCalculate = SortingBase - gameObject.transform.position.y; // - Offset; //@@+ fix
         offsetCalculate = (float)System.Math.Round(offsetCalculate, 2);
         offsetCalculate *= 100;
         rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap;
+        //Legacy code
+        if (m_rendererSortBoss != null)
+            m_rendererSortBoss.sortingOrder = rendererSort.sortingOrder;
+    }
+
+    public void UpdateOrderingLayer(Renderer rend = null) 
+    {
+        if (rend != null)
+        {
+            rendererSort = rend;
+            m_rendererSortBoss = gameObject.GetComponent<Renderer>();
+        }
     }
 }

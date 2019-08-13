@@ -1255,9 +1255,8 @@ public class MapWorld : MonoBehaviour {
         if (!Storage.Palette.TexturesMaps.ContainsKey(strTypePref))
         {
             Debug.Log("############# GetPrefabTexture   TexturesPrefabs not found type: " + typePredab.ToString());
-            return null;
+            return Storage.Palette.TexturesMaps["PrefabField"]; //fix 
         }
-        
 
         Texture2D textureRes = Storage.Palette.TexturesMaps[strTypePref];
         //Texture2D textureRes = Storage.GridData.PrefabElka.GetComponent<SpriteRenderer>().sprite.texture;

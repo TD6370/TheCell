@@ -248,6 +248,14 @@ public class StoragePerson : MonoBehaviour {
         //GenerateGridFields+<CalculateTealsObjects>c__Iterator0.MoveNext() (at Assets/Scripts/Storage/GenerateGridFields.cs:64)
         //UnityEngine.SetupCoroutine.InvokeMoveNext(IEnumerator enumerator, IntPtr returnValueAddress) (at C:/buildslave/unity/build/Runtime/Export/Coroutines.cs:17)
 
+
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            return Storage.Instance.GamesObjectsReal.
+                SelectMany(x => x.Value).
+                Where(p => p!=null && (p.tag == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())).ToList();
+        }
+
         return Storage.Instance.GamesObjectsReal.
                 SelectMany(x => x.Value).
                 Where(p => p!=null && (p.tag == _Ufo || p.tag == _Boss)).ToList();
@@ -269,6 +277,13 @@ public class StoragePerson : MonoBehaviour {
                     ModifObject(gobjItem);
                 }
                 Debug.Log("OBJECT(" + field + ") : " + gobjItem);
+            }
+
+            if (PoolGameObjects.IsUseTypePoolPrefabs)
+            {
+                Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).
+                    SelectMany(x => x.Value).
+                    Where(p => p != null && (p.tag == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())).ToList();
             }
 
             return Storage.Instance.GamesObjectsReal.Where(p => p.Key == field).
@@ -437,10 +452,26 @@ public class StoragePerson : MonoBehaviour {
                 }
                 else
                 {
-                    if (gobj.tag == _Boss)
+                    var dataAlien = findData as ModelNPC.GameDataAlien;
+                    if (dataAlien != null)
                     {
-                        Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
-                        Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                        Storage.EventsUI.ListLogAdd = "YES GameDataAlien " + gobj.name + "";
+                        Debug.Log("YES GameDataAlien " + gobj.name);
+                        dataBoss.ColorRender = Color.magenta;
+
+                        //#EXPAND
+                        Storage.EventsUI.AddExpandPerson(dataBoss.NameObject,
+                            dataBoss.GetParams,
+                            new List<string> { "Pause", "Kill", "StartTrack" },
+                            gobjObservable: gobj);
+                    }
+                    else
+                    {
+                        if (gobj.tag == _Boss)
+                        {
+                            Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ";
+                            Debug.Log("#### " + gobj.name + " SaveLoadData.GameDataBoss is EMPTY ");
+                        }
                     }
                 }
 
@@ -834,7 +865,12 @@ public static class PersonsExtensions
 {
     public static bool IsPerson(this string typePrefab)
     {
-
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            return typePrefab == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString() ||
+                typePrefab == PoolGameObjects.TypePoolPrefabs.PoolPersonBoss.ToString() ||
+                typePrefab == PoolGameObjects.TypePoolPrefabs.PoolPersonUFO.ToString();
+        }
         bool isNPC = Helper.IsTypePrefabNPC(typePrefab);
         return isNPC;
 
@@ -912,7 +948,15 @@ public static class PersonsExtensions
         bool isNPC = false;
         try
         {
-            isNPC = Helper.IsTypePrefabNPC(gobj.tag.ToString());
+            var typeT = gobj.tag.ToString();
+            if (PoolGameObjects.IsUseTypePoolPrefabs)
+            {
+                return typeT == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString() ||
+                    typeT == PoolGameObjects.TypePoolPrefabs.PoolPersonBoss.ToString() ||
+                    typeT == PoolGameObjects.TypePoolPrefabs.PoolPersonUFO.ToString();
+            }
+
+            isNPC = Helper.IsTypePrefabNPC(typeT);
         }
         catch(Exception x)
         {
@@ -939,7 +983,9 @@ public static class PersonsExtensions
 
     public static bool IsUFO(this GameObject gobj)
     {
-        return gobj.tag.Equals(StoragePerson._Ufo); 
+        var data = gobj.GetDataNPC();
+        return data != null && data.TypePrefab == SaveLoadData.TypePrefabs.PrefabUfo;
+        //return gobj.tag.Equals(StoragePerson._Ufo); 
     }
 
     public static void DisableComponents(this GameObject gobj)

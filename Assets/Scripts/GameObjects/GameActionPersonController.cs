@@ -29,6 +29,7 @@ public class GameActionPersonController : MonoBehaviour
     private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
     private ModelNPC.PersonData temp_dataNPC;
     private SaveLoadData.TypePrefabs temp_TypePrefab = SaveLoadData.TypePrefabs.PrefabField;
+    private PositionRenderSorting m_sortiongLayer;
 
     public enum NameActionsPerson
     {
@@ -37,6 +38,8 @@ public class GameActionPersonController : MonoBehaviour
 
     private void Awake()
     {
+        m_sortiongLayer = GetComponent<PositionRenderSorting>();
+
         LoadModelsView();
     }
 
@@ -103,7 +106,10 @@ public class GameActionPersonController : MonoBehaviour
     private void LoadModelsView()
     {
         //bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.tag.ToString() == "PoolPerson";
-        bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.tag.ToString() == "PoolPerson";
+        //bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.tag.ToString() == "PoolPerson";
+        //Skip prefab original
+        bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.name == "PrefabPerson";
+        
         //if (!isThisPrefab)
         //    return;
 
@@ -170,53 +176,93 @@ public class GameActionPersonController : MonoBehaviour
 
         SaveLoadData.TypePrefabs typeMePrefabNPC = m_dataNPC.TypePrefab;
 
-        //TEST BOSS ---------------------------
-        Dictionary<int, SaveLoadData.TypePrefabs> collectionGenTypeNPC = new Dictionary<int, SaveLoadData.TypePrefabs>()
-        {
-            {0, SaveLoadData.TypePrefabs.Inspector},
-            {1, SaveLoadData.TypePrefabs.Machinetool},
-            {2, SaveLoadData.TypePrefabs.Mecha},
-            {3, SaveLoadData.TypePrefabs.Dendroid},
-            {4, SaveLoadData.TypePrefabs.Gary},
-            {5, SaveLoadData.TypePrefabs.Lollipop},
-            {6, SaveLoadData.TypePrefabs.Hydragon},
-            {7, SaveLoadData.TypePrefabs.Pavuk},
-            {8, SaveLoadData.TypePrefabs.Skvid},
-            {9, SaveLoadData.TypePrefabs.Fantom},
-            {10, SaveLoadData.TypePrefabs.Mask},
-            {11, SaveLoadData.TypePrefabs.Vhailor}
-        };
-        typeMePrefabNPC = collectionGenTypeNPC[UnityEngine.Random.Range(0, collectionGenTypeNPC.Count)];
-        //----------------------------------
-
         foreach (var itemModel in m_ListViewModels)
         {
             itemModel.Value.SetActive(itemModel.Key == typeMePrefabNPC);
             if (itemModel.Key == typeMePrefabNPC)
+            {
                 m_MeModelView = itemModel.Value;
+                m_sortiongLayer.UpdateOrderingLayer(m_MeModelView.GetComponent<Renderer>());
+            }
         }
 
-        //$$$ TEST MODEL VIEW 
         //if (m_MeModelView == null)
         //{
-        //    //m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
-        //    foreach (GameObject itemModel in m_ListViewModels.Values)
+        //    //if (!PoolGameObjects.IsUseTypePoolPrefabs)
+        //    //{
+        //    //TEST BOSS ---------------------------
+        //    Dictionary<int, SaveLoadData.TypePrefabs> collectionGenTypeNPC = new Dictionary<int, SaveLoadData.TypePrefabs>()
         //    {
-        //        m_MeModelView = itemModel; //first item
-        //        break;
+        //        {0, SaveLoadData.TypePrefabs.Inspector},
+        //        {1, SaveLoadData.TypePrefabs.Machinetool},
+        //        {2, SaveLoadData.TypePrefabs.Mecha},
+        //        {3, SaveLoadData.TypePrefabs.Dendroid},
+        //        {4, SaveLoadData.TypePrefabs.Gary},
+        //        {5, SaveLoadData.TypePrefabs.Lollipop},
+        //        {6, SaveLoadData.TypePrefabs.Hydragon},
+        //        {7, SaveLoadData.TypePrefabs.Pavuk},
+        //        {8, SaveLoadData.TypePrefabs.Skvid},
+        //        {9, SaveLoadData.TypePrefabs.Fantom},
+        //        {10, SaveLoadData.TypePrefabs.Mask},
+        //        {11, SaveLoadData.TypePrefabs.Vhailor}
+        //    };
+        //    typeMePrefabNPC = collectionGenTypeNPC[UnityEngine.Random.Range(0, collectionGenTypeNPC.Count)];
+        //    foreach (var itemModel in m_ListViewModels)
+        //    {
+        //        itemModel.Value.SetActive(itemModel.Key == typeMePrefabNPC);
+        //        if (itemModel.Key == typeMePrefabNPC)
+        //            m_MeModelView = itemModel.Value;
         //    }
-        //    m_MeModelView.SetActive(true);
         //}
-        if(m_MeModelView == null)
+        //----------------------------------
+
+        //$$$ TEST MODEL VIEW 
+        if (m_MeModelView == null)
         {
-            Debug.Log("####### UpdateMeModelView m_MeModelView == null");
+            //Debug.Log("########### Not find model for " + typeMePrefabNPC);
+            //{
+            //    m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
+            //}
+
+            //m_MeModelView = m_ListViewModels[SaveLoadData.TypePrefabs.Lollipop];
+            //foreach (GameObject itemModel in m_ListViewModels.Values)
+            //{
+            //    m_MeModelView = itemModel; //first item
+            //    break;
+            //}
+            //m_MeModelView.SetActive(true);
+
+            //TEST
+            var render = GetComponent<SpriteRenderer>();
+            render.enabled = true;
+            string modelView = m_dataNPC.ModelView;
+            Sprite spriteNew = null;
+
+            if (Storage.Person.SpriteCollection.ContainsKey(modelView))
+            {
+                spriteNew = Storage.Person.SpriteCollection[modelView];
+            } else
+            {
+                spriteNew = Storage.Palette.SpritesPrefabs[modelView];
+            }
+            if(spriteNew == null)
+            {
+                Debug.Log("############ Not find sprite in Atlas : modelView=" + modelView);
+            }
+            render.sprite = spriteNew;
             return;
         }
-
-
-        //TEST
-        var render = GetComponent<SpriteRenderer>();
-        render.enabled = false;
+        else
+        {
+            //TEST
+            var render = GetComponent<SpriteRenderer>();
+            render.enabled = false;
+        }
+        //if (m_MeModelView == null)
+        //{
+        //    Debug.Log("####### UpdateMeModelView m_MeModelView == null");
+        //    return;
+        //}
 
         m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
         if (m_MeRender == null)

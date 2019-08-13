@@ -913,15 +913,23 @@ public class ModelNPC
         public override void UpdateGameObject(GameObject objGame)
         {
             if ((!IsLoadad || ModelView == null) && IsReality)
+            {
                 Init();
 
-            if (!isUseAtlas)
-            {
-                objGame.GetComponent<SpriteRenderer>().sprite = Storage.TilesManager.CollectionSpriteTiles[ModelView];
+                //if(PoolGameObjects.IsUseTypePoolPrefabs)
+                //{
+                //    objGame.name = NameObject;
+                //    objGame.transform.position = Position;
+                //}
             }
-            else
+
+            //if (!isUseAtlas)
+            //{
+            //    objGame.GetComponent<SpriteRenderer>().sprite = Storage.TilesManager.CollectionSpriteTiles[ModelView];
+            //}
+            //else
             //------------------------- Atlas
-            {
+            //{
                 try
                 {
                     objGame.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[ModelView];
@@ -929,7 +937,7 @@ public class ModelNPC
                 {
                     Debug.Log("############## TerraData.UpdateGameObject ModelView: " + ModelView + "  " + x.Message);
                 }
-            }
+            //}
             //-------------------------
         }
     }

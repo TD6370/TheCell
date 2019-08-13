@@ -94,6 +94,10 @@ public class GenerateGridFields : MonoBehaviour {
                 GameObject newField;
 
                 string nameFieldNew = Helper.GetNameField(x, y);
+                if(PoolGameObjects.IsUseTypePoolPrefabs) //$$$
+                {
+                    prefabField.tag = PoolGameObjects.TypePoolPrefabs.PoolFloor.ToString();
+                }
                 newField = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
 
                 newField.tag = "Field";
@@ -902,8 +906,6 @@ public class GenerateGridFields : MonoBehaviour {
                         Storage.Data.AddNewFieldInRealObject(posFieldReal, "SaveListObjectsToData");
                     }
 
-
-
                     indErr = "23.";
                     if (!isDestroy)
                     {
@@ -975,6 +977,9 @@ public class GenerateGridFields : MonoBehaviour {
         {
             var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
             objData.UpdateGameObject(newGO);
+            newGO.transform.position = objData.Position;
+            newGO.name = objData.NameObject;
+
             return newGO;
         }
         

@@ -306,6 +306,19 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
+    public static bool IsTerraAlpha(PoolGameObjects.TypePoolPrefabs typePrefab)
+    {
+        switch (typePrefab)
+        {
+            case PoolGameObjects.TypePoolPrefabs.PoolFlore:
+            case PoolGameObjects.TypePoolPrefabs.PoolWall:
+            case PoolGameObjects.TypePoolPrefabs.PoolWood:
+                return true;
+        }
+        return false;
+    }
+
+
     public static Vector2 NormalizPosToField(System.Single x, System.Single y)
     {
         x = (int)(x / Storage.ScaleWorld);

@@ -26,12 +26,40 @@ public class EventsObject : MonoBehaviour {
         if (this.gameObject == null)
             return;
 
-        SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
-        if (Helper.IsTerraAlpha(typePrefab))
+        if (PoolGameObjects.IsUseTypePoolPrefabs) //$$$
         {
-            IsMeTerra = true;
+            PoolGameObjects.TypePoolPrefabs typePool = PoolGameObjects.TypePoolPrefabs.PoolFloor;
+            bool isValid = System.Enum.IsDefined(typeof(PoolGameObjects.TypePoolPrefabs), this.gameObject.tag);
+            if (isValid == false)
+            {
+                //Debug.Log("!!!!!!!!!!!!! ERROR TAG OLD " + this.gameObject.tag); //$$$
+                if (this.gameObject.tag == "PrefabUfo")
+                    typePool = PoolGameObjects.TypePoolPrefabs.PoolPersonUFO;
+                else if (this.gameObject.tag == "PrefabBoss")
+                    typePool = PoolGameObjects.TypePoolPrefabs.PoolPersonBoss;
+                else
+                {
+                    Debug.Log("!!!!!!!!!!!!! ERROR TAG OLD " + this.gameObject.tag); //$$$
+                    typePool = PoolGameObjects.TypePoolPrefabs.PoolWall;
+                }
+            }
+            else
+            {
+                typePool = (PoolGameObjects.TypePoolPrefabs)Enum.Parse(typeof(PoolGameObjects.TypePoolPrefabs), this.gameObject.tag);
+            }
+            if (Helper.IsTerraAlpha(typePool))
+            {
+                IsMeTerra = true;
+            }
         }
-
+        else
+        {
+            SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
+            if (Helper.IsTerraAlpha(typePrefab))
+            {
+                IsMeTerra = true;
+            }
+        }
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_DataController = GetComponent<GameObjecDataController>();
         

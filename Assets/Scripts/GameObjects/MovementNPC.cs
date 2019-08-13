@@ -74,9 +74,11 @@ public class MovementNPC : MonoBehaviour {
             else
             {
                 actionGame.IsStartInit = true;
+                
                 //actionGame.InitActions();
             }
         }
+        
     }
 
     protected virtual void StartMoving()

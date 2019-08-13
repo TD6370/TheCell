@@ -25,8 +25,8 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabFlore;
     public GameObject PrefabPerson;
     public GameObject PrefabWall;
+    public GameObject PrefabWood;
     public GameObject PrefabFloor;
-
 
     ////--- TAILS ---
     //public GameObject BackPalette;
@@ -540,7 +540,7 @@ public class SaveLoadData : MonoBehaviour {
     {
         ModelNPC.ObjectData newObject;
         string nameGameObject = p_gobject.name;
-        string typePrefab = p_gobject.tag.ToString();
+        //string typePrefab = p_gobject.tag.ToString();
         string nameField = Helper.GetNameFieldByName(nameGameObject);
         newObject = GetObjectDataFromGrid(nameGameObject, nameField);
         return newObject;
@@ -585,6 +585,12 @@ public class SaveLoadData : MonoBehaviour {
 
     private string GetTypeByName(string namePrefab)
     {
+        if (PoolGameObjects.IsUseTypePoolPrefabs)
+        {
+            Debug.Log("############### IsUseTypePoolPrefabs - LEGACY CODE  - GetTypeByName");
+            return "";
+        }
+
         string resType="";
 
         TypePrefabs prefabType = TypePrefabs.PrefabField;
@@ -690,6 +696,11 @@ public class SaveLoadData : MonoBehaviour {
             return GetTypeByName(namePrefab);
         }
         return resType;
+    }
+
+    public static GameObject CopyGameObject(GameObject defObj)
+    {
+        return Instantiate(defObj);
     }
 
     private GameObject FindPrefabHieracly(string namePrefab)

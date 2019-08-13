@@ -1243,6 +1243,7 @@ public class PaletteMapController : MonoBehaviour {
                 {
                     typeTilePrefab = TypesStructure.Terra;
                     Debug.Log("Load Prefabs On Palette Not Prefab in SaveLoadData.TypePrefabs >> " + spriteName);
+                    continue;
                 }
             }
             catch (System.ArgumentException)
