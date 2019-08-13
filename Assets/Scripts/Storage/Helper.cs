@@ -318,7 +318,6 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
-
     public static Vector2 NormalizPosToField(System.Single x, System.Single y)
     {
         x = (int)(x / Storage.ScaleWorld);

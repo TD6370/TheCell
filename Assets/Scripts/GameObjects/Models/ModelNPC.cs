@@ -80,6 +80,8 @@ public class ModelNPC
 
         public virtual void UpdateGameObject(GameObject objGame)
         {
+            //objGame.transform.position = Position;
+            //objGame.name = NameObject;
         }
 
         public object Clone()
@@ -341,7 +343,9 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
-            if(!IsLoadad && IsReality)
+            base.UpdateGameObject(objGame);
+
+            if (!IsLoadad && IsReality)
                 Init();
 
             string nameObjData = ((GameDataUfo)this).NameObject;
@@ -497,6 +501,7 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            base.UpdateGameObject(objGame);
             //#INTI
             if (!IsLoadad && IsReality)
                 Init();
@@ -592,6 +597,7 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            base.UpdateGameObject(objGame);
             //#INTI
             if (!IsLoadad && IsReality)
                 Init();
@@ -912,6 +918,8 @@ public class ModelNPC
 
         public override void UpdateGameObject(GameObject objGame)
         {
+            base.UpdateGameObject(objGame);
+
             if ((!IsLoadad || ModelView == null) && IsReality)
             {
                 Init();
@@ -1269,13 +1277,13 @@ public class ModelNPC
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabElka; } }
         public Elka() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
-    public class WallRock : WoodData
+    public class WallRock : WallData
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabWallRock; } }
         public WallRock() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
-    public class WallWood : WoodData
+    public class WallWood : WallData
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabWallWood; } }

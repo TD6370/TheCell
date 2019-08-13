@@ -50,6 +50,7 @@ public class StorageCorrect : MonoBehaviour {
     {
         return;
 
+        /*
         bool isCorrect = false;
 
         if (Storage.Instance.IsCorrectData)
@@ -132,12 +133,14 @@ public class StorageCorrect : MonoBehaviour {
         {
             //Storage.Instance.CorrectCreateName = "";
         }
+        */
     }
     //@CD@ //--- CORRECT -----
     public void CorrectData(GameObject realGO, GameObject thisGO, string callFunc)
     {
         return;
 
+        /*
         if (Storage.Instance.IsCorrectData)
         {
             Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
@@ -247,8 +250,10 @@ public class StorageCorrect : MonoBehaviour {
             Debug.Log("Not Start CreateNewCorrectObject...");
             //Storage.Instance.CorrectCreateName = "";
         }
+        */
     }
 
+    /*
     //@CD@ //--- CORRECT NEW -----
     private void CreateNewCorrectObject(string p_name, string callFunc)
     {
@@ -348,6 +353,7 @@ public class StorageCorrect : MonoBehaviour {
         Storage.Instance.SelectGameObjectID = idObj;
         Debug.Log("EEEEEEEEEEEEEEEEEEEEEEEE  Real +: " + newField.name);
     }
+    */
 
     #endregion
 

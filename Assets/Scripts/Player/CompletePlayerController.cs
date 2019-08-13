@@ -441,6 +441,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
         //Debug.Log("LoadGridLook CHECK FIELD COUNT: " + CountAdd);
     }
+    /*
     private void LoadOnlyData(string nameField)
     {
         int CountAdd = 0;
@@ -471,7 +472,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
         //Debug.Log("LoadOnlyData ADD COUNT: " + CountAdd);
     }
-    
+    */
 
     #endregion
 

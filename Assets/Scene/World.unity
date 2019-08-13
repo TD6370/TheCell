@@ -10891,6 +10891,11 @@ Prefab:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114082268443085190, guid: d07c882ede4a65141a30c5425f6d2d5b,
+        type: 2}
+      propertyPath: Offset
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
   m_IsPrefabAsset: 0
@@ -10959,7 +10964,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.0000104652545}
+  m_AnchoredPosition: {x: 8.5, y: 0.000014692646}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -20982,7 +20987,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 354061448}
   m_HandleRect: {fileID: 354061447}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -31291,7 +31296,7 @@ Prefab:
         type: 2}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8f90544dae6d67144a9ce71bb2d0d876,
+      objectReference: {fileID: 21300000, guid: b8e661676f7838f4892f899424962984,
         type: 3}
     - target: {fileID: 212217665885665382, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
         type: 2}
@@ -31306,17 +31311,17 @@ Prefab:
     - target: {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
         type: 2}
       propertyPath: m_SpriteTilingProperty.pivot.y
-      value: 0.05
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
         type: 2}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 3.36
+      value: 3.94
       objectReference: {fileID: 0}
     - target: {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
         type: 2}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 6.52
+      value: 5.19
       objectReference: {fileID: 0}
     - target: {fileID: 1482996925449300, guid: bebfdd6ac7b1c9e42b8b3836500b8a70, type: 2}
       propertyPath: m_TagString
@@ -31359,9 +31364,20 @@ Prefab:
     - target: {fileID: 114168615179167160, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
         type: 2}
       propertyPath: Offset
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114168615179167160, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
+        type: 2}
+      propertyPath: IsHero
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
+        type: 2}
+      propertyPath: m_Offset.y
+      value: -0.29
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: bebfdd6ac7b1c9e42b8b3836500b8a70, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1001 &1071488088
@@ -37495,6 +37511,21 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1482996925449300, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
     type: 2}
   m_PrefabInternal: {fileID: 1071399001}
+--- !u!70 &1295378881
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1295378880}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.01, y: -0.2}
+  m_Size: {x: 0.95, y: 0.72}
+  m_Direction: 1
 --- !u!224 &1295378885 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224683285761535178, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
@@ -41001,7 +41032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsHero: 0
-  Offset: -10
+  Offset: 0
   IsOverlapSprite: 0
 --- !u!70 &1432524895
 CapsuleCollider2D:
@@ -50777,7 +50808,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1787493363
   m_SortingLayer: 8
-  m_SortingOrder: 10
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 6cdcb1c78c0b6a142bd56f48390d6b37, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.67058825}
   m_FlipX: 0
@@ -50876,7 +50907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsHero: 1
-  Offset: -11
+  Offset: 0
   IsOverlapSprite: 0
 --- !u!70 &1798573871
 CapsuleCollider2D:
@@ -53486,7 +53517,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000021335845}
+  m_AnchoredPosition: {x: 8.5, y: -0.000003506692}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238

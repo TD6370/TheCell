@@ -28,7 +28,8 @@ public class PoolGameObjects
     public static bool IsStack = true; //false;// 
 
     [Header("Pool new Type")]
-    public static bool IsUseTypePoolPrefabs = true;//false;//true;
+    //public static bool IsUseTypePoolPrefabs = false;//true;//
+    public static bool IsUseTypePoolPrefabs = true;
 
     private int limitPoolOnRemovedBoss = 550;
     private int limitPoolOnRemoved = 1500;
@@ -388,27 +389,32 @@ public class PoolGameObjects
                 contUnlockPools = PoolGamesObjectsStack[tagPool].Count;
                 if (contUnlockPools > 0)
                 {
-                    PoolGameObject returnPool =  PoolGamesObjectsStack[tagPool].Peek();
-                    //#FIX ELKA
-                    returnPool.Tag = tagPool;
+                    //-------------------------------------------------------------------------------
+                    //PoolGameObject returnPool =  PoolGamesObjectsStack[tagPool].Peek();
+                    ////#FIX ELKA
+                    //returnPool.Tag = tagPool;
 
-                    if (returnPool==null)
-                    {
-                        Debug.Log("######## returnPool==null");
-                    }
-                    if (returnPool.GameObjectNext == null)
-                    {
-                        Debug.Log("######## returnPool.GameObjectNext==null");
-                    }
+                    //if (returnPool==null)
+                    //{
+                    //    Debug.Log("######## returnPool==null");
+                    //}
+                    //if (returnPool.GameObjectNext == null)
+                    //{
+                    //    Debug.Log("######## returnPool.GameObjectNext==null");
+                    //}
+                    //-------------------------------------------------------------------------------
 
                     //#TEST
                     int countInPool = PoolGamesObjectsStack[tagPool].Count;
+                    
+
                     if(countInPool==1)
                     {
                         AddPoolNewTypeObject(tagPool, false);
                     }
 
                     findPoolGO = PoolGamesObjectsStack[tagPool].Pop();
+                    findPoolGO.Tag = tagPool;//$$$$ //#FIX ELKA
 
                     if(findPoolGO == null)
                     {

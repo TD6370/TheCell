@@ -65,7 +65,8 @@ public class PositionRenderSorting : MonoBehaviour {
         float offsetCalculate = SortingBase - gameObject.transform.position.y; // - Offset; //@@+ fix
         offsetCalculate = (float)System.Math.Round(offsetCalculate, 2);
         offsetCalculate *= 100;
-        rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap;
+        //rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap;
+        rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap + (Offset*100);
         //Legacy code
         if (m_rendererSortBoss != null)
             m_rendererSortBoss.sortingOrder = rendererSort.sortingOrder;

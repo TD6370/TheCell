@@ -28,6 +28,7 @@ public class EventsObject : MonoBehaviour {
 
         if (PoolGameObjects.IsUseTypePoolPrefabs) //$$$
         {
+            //---------- $$$FLC
             PoolGameObjects.TypePoolPrefabs typePool = PoolGameObjects.TypePoolPrefabs.PoolFloor;
             bool isValid = System.Enum.IsDefined(typeof(PoolGameObjects.TypePoolPrefabs), this.gameObject.tag);
             if (isValid == false)
@@ -43,6 +44,7 @@ public class EventsObject : MonoBehaviour {
                     typePool = PoolGameObjects.TypePoolPrefabs.PoolWall;
                 }
             }
+            //---------- 
             else
             {
                 typePool = (PoolGameObjects.TypePoolPrefabs)Enum.Parse(typeof(PoolGameObjects.TypePoolPrefabs), this.gameObject.tag);

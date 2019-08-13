@@ -351,11 +351,13 @@ public class GenerateGridFields : MonoBehaviour {
         //Profiler.EndSample();
     }
 
+    /*
     public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)
     {
         GameObject newGameObject = CreatePrefabByName(dataObj);
         Storage.Instance.GamesObjectsReal[fieldName].Add(newGameObject);
     }
+    */
 
     public void LoadObjectToReal(string nameField)
     {
@@ -463,7 +465,7 @@ public class GenerateGridFields : MonoBehaviour {
                 dataObj.IsReality = true;
                 indErr = "15. dataObj = " + dataObj.NameObject + " " + dataObj.ToString();
 
-                GameObject gobj = CreatePrefabByName(dataObj);
+                GameObject gobj = CreateGameObjectByData(dataObj);
                 indErr = "16.";
 
                 listGameObjectReal.Add(gobj);
@@ -969,8 +971,20 @@ public class GenerateGridFields : MonoBehaviour {
         return _sctiptData.FindPrefab(namePrefab, nameObject);
     }
 
+    public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
+    {
+        var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
+        objData.UpdateGameObject(newGO);
+        newGO.transform.position = objData.Position;
+        newGO.name = objData.NameObject;
+
+        return newGO;
+    }
+
+
     //--------------- LINK: public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
     //+++ CreateObjectData +++ LoadObjectForLook
+    /*
     public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
     {
         if (PoolGameObjects.IsUseTypePoolPrefabs)
@@ -982,7 +996,7 @@ public class GenerateGridFields : MonoBehaviour {
 
             return newGO;
         }
-        
+
         //LEGACY CODE
         string strErr = "start";
 
@@ -1070,7 +1084,7 @@ public class GenerateGridFields : MonoBehaviour {
 
         return newObjGame;
     }
-
+    */
 
     public void SaveAllRealGameObjects()
     {
