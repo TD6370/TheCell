@@ -864,8 +864,6 @@ public class PaletteMapController : MonoBehaviour {
             Storage.Map.Refresh();
     }
 
-
-
     void ConstructsValueChanged(Dropdown dpntStructurs)
     {
         if (dpntStructurs.value > m_ListNamesConstructs.Count - 1)
@@ -875,7 +873,13 @@ public class PaletteMapController : MonoBehaviour {
         }
         if (isPaletteBrushOn)
         {
-            LoadTypeBrushOnPalette(ListTypesBrushes[dpntStructurs.value]);
+            try
+            {
+                LoadTypeBrushOnPalette(ListTypesBrushes[dpntStructurs.value]);
+            }
+            catch (System.Exception ex) {
+                Debug.Log("############# Error ConstructsValueChanged (ComboBox source) " + ex.Message);
+            }
         }
         else
         {

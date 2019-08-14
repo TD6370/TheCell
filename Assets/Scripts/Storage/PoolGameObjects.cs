@@ -239,19 +239,17 @@ public class PoolGameObjects
         GameObject newGO = null;
         if (IsUseTypePoolPrefabs)
         {
-            if (m_collectionPoolPrefabsStr.ContainsKey(prefabTag))
+            if (!m_collectionPoolPrefabsStr.ContainsKey(prefabTag))
             {
-                GameObject prefabPoolInst = m_collectionPoolPrefabsStr[prefabTag];
-                if (prefabPoolInst == null)
-                {
-                    Debug.Log("####### AddPoolNewTypeObject prefabPoolInst == null " + prefabTag);
-                }
-                newGO = SaveLoadData.CopyGameObject(prefabPoolInst);
-            }
-            else
-            {
+                prefabTag = TypePoolPrefabs.PoolFloor.ToString();
                 Debug.Log("############ AddPoolNewTypeObject Not prefab in collection for prefabTag=" + prefabTag);
             }
+            GameObject prefabPoolInst = m_collectionPoolPrefabsStr[prefabTag];
+            if (prefabPoolInst == null)
+            {
+                Debug.Log("####### AddPoolNewTypeObject prefabPoolInst == null " + prefabTag);
+            }
+            newGO = SaveLoadData.CopyGameObject(prefabPoolInst);
         }
         else
         {
@@ -632,6 +630,11 @@ public class PoolGameObject
 
     public void Init(GameObject newGO)
     {
+        if (newGO==null)
+        {
+            Debug.Log("############ PoolGameObject.Init newGO == null");
+            return;
+        }
         //#FIX POOL
         Tag = Storage.GridData.GetTypePool(newGO.tag);
         //Tag = newGO.tag;

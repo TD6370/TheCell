@@ -533,6 +533,8 @@ public class SaveLoadData : MonoBehaviour {
         return newObject;
     }
 
+   
+
     public static ModelNPC.ObjectData GetObjectDataFromGrid(string nameGameObject, string nameField)
     {
         if (!Storage.IsGridDataFieldExist(nameField))

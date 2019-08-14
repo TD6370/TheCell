@@ -295,7 +295,14 @@ public class Storage : MonoBehaviour {
     {
         return Instance._GridDataG.FieldsD.ContainsKey(field);
     }
-    
+
+    public static List<ModelNPC.ObjectData> GetObjecsDataFromGrid(string nameField)
+    {
+        if (!Storage.IsGridDataFieldExist(nameField))
+            Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
+        return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+    }
+
     //public static Storage Instance { get; private set; }
     public void Awake()
     {
@@ -325,6 +332,8 @@ public class Storage : MonoBehaviour {
         LoadGameObjects();
 
         LoadDefaultUI();
+
+        Player.LoadPositionHero();
     }
 
     void Update()
@@ -514,6 +523,7 @@ public class Storage : MonoBehaviour {
         _screiptHero.FindFieldCurrent(false);
         _scriptGrid.StartGenGrigField(true);
         _screiptHero.FindFieldCurrent();
+
         //------------------------------
 
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");

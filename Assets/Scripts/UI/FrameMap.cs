@@ -755,7 +755,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         List<SaveLoadData.TypePrefabs> fieldListPrefbs = new List<SaveLoadData.TypePrefabs>();
         List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
 
-        foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+        //foreach (ModelNPC.ObjectData datObjItem in Storage.Instance.GridDataG.FieldsD[nameField].Objects)
+        foreach (ModelNPC.ObjectData datObjItem in Storage.GetObjecsDataFromGrid(nameField))
         {
             //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 

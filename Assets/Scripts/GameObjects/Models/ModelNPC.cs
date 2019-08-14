@@ -592,6 +592,8 @@ public class ModelNPC
             if (IsCanSetTargetPosition && IsReality)
                 SetTargetPosition();
 
+            if(PersonActions == null)
+                PersonActions =  new string[]{};
             IsLoadad = true;
         }
 
@@ -630,8 +632,7 @@ public class ModelNPC
         {
             get
             {
-                string actions = "Actions:\n" + string.Join("\n", PersonActions);
-                return new List<string> {
+                var list = new List<string> {
                     "Name: " + NameObject,
                     "Pool: " + TypePoolPrefabName,
                     "Prefab: " + TypePrefabName,
@@ -641,8 +642,16 @@ public class ModelNPC
                     "Life: " + Life,
                     "Speed: " + Speed,
                     "Individ: " + ModelView,
-                    actions
+                   "Actions:",
                   };
+
+                //string actions =
+                //    PersonActions == null ?
+                //    string.Empty :
+                //    "Actions:\n" + string.Join("\n", PersonActions);
+                list.AddRange(PersonActions);
+
+                return list;
             }
         }
     }
