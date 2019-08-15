@@ -14,10 +14,10 @@ public class PoolGameObjects
 
     public PoolGameObjects()
     {
-        if (IsUseTypePoolPrefabs)
+        //if (IsUseTypePoolPrefabs)
             LoadPoolGamePrefabs(); //new
-        else
-            LoadPoolGameObjects();
+        //else
+        //    LoadPoolGameObjects();
     }
 
     #region Pool
@@ -82,7 +82,7 @@ public class PoolGameObjects
         PoolPersonBoss
     }
 
-   
+   /*
     void LoadPoolGameObjects()
     {
         PoolConfig poolConfig = new PoolConfig();
@@ -151,22 +151,12 @@ public class PoolGameObjects
             AddPoolNewTypeObject(SaveLoadData.TypePrefabs.PrefabFlore.ToString(), false);
         }
     }
+    */
        
 
     void LoadPoolGamePrefabs()
     {
         PoolConfig poolConfig = new PoolConfig();
-        //m_collectionPoolPrefabs = new Dictionary<TypePoolPrefabs, GameObject>()
-        //{
-        //    {TypePoolPrefabs.PoolFloor, Storage.GridData.PrefabFloor},
-        //    {TypePoolPrefabs.PoolFlore, Storage.GridData.PrefabFlore},
-        //    {TypePoolPrefabs.PoolWood, Storage.GridData.PrefabWall},
-        //    {TypePoolPrefabs.PoolPerson, Storage.GridData.PrefabPerson},
-
-        //    { TypePoolPrefabs.PoolWall, Storage.GridData.PrefabWall},
-        //    {TypePoolPrefabs.PoolPersonUFO, Storage.GridData.PrefabUfo},
-        //    {TypePoolPrefabs.PoolPersonBoss, Storage.GridData.PrefabBoss },
-        //};
         m_collectionPoolPrefabsStr = new Dictionary<string, GameObject>()
         {
             {TypePoolPrefabs.PoolFloor.ToString(), Storage.GridData.PrefabFloor},
@@ -237,8 +227,8 @@ public class PoolGameObjects
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
         GameObject newGO = null;
-        if (IsUseTypePoolPrefabs)
-        {
+        //if (IsUseTypePoolPrefabs)
+        //{
             if (!m_collectionPoolPrefabsStr.ContainsKey(prefabTag))
             {
                 prefabTag = TypePoolPrefabs.PoolFloor.ToString();
@@ -250,13 +240,13 @@ public class PoolGameObjects
                 Debug.Log("####### AddPoolNewTypeObject prefabPoolInst == null " + prefabTag);
             }
             newGO = SaveLoadData.CopyGameObject(prefabPoolInst);
-        }
-        else
-        {
-            newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
-            //if (prefabTag == "PrefabPerson")
-            //    newGO.tag = "PrefabPerson";
-        }
+        //}
+        //else
+        //{
+        //    newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
+        //    //if (prefabTag == "PrefabPerson")
+        //    //    newGO.tag = "PrefabPerson";
+        //}
 
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
@@ -267,17 +257,17 @@ public class PoolGameObjects
         poolObj.Deactivate();
 
         //Fix Tile field 
-        if (PoolGameObjects.IsUsePoolObjects)
-        {
+        //if (PoolGameObjects.IsUsePoolObjects)
+        //{
             bool isField = false;
-            if (IsUseTypePoolPrefabs)
-            {
+            //if (IsUseTypePoolPrefabs)
+            //{
                 isField = TypePoolPrefabs.PoolFloor.ToString() == prefabTag;
-            } else
-            {
-                var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
-                isField = (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString());
-            }
+            //} else
+            //{
+            //    var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
+            //    isField = (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString());
+            //}
             if(isField)
             {
                 ModelNPC.TerraData terrD = new ModelNPC.TerraData()
@@ -287,7 +277,7 @@ public class PoolGameObjects
                 //Update texture Object pool Field default
                 terrD.UpdateGameObject(newGO);
             }
-        }
+        //}
 
         //if (IsStack)
         //{
@@ -514,11 +504,14 @@ public class PoolGameObjects
 
     public void Restart()
     {
-        if (IsStack)
-        {
+    //    if (IsStack)
+    //    {
             PoolGamesObjectsStack.Clear();
-            LoadPoolGameObjects();
-        }
+            //if (IsUseTypePoolPrefabs)
+                LoadPoolGamePrefabs(); //new
+            //else
+            //    LoadPoolGameObjects();
+        //}
     }
 
     public bool DestroyPoolGameObject(GameObject delGO)

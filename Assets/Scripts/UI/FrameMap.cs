@@ -760,65 +760,67 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 
-            prefabType = SaveLoadData.TypePrefabs.PrefabField;
+            //prefabType = SaveLoadData.TypePrefabs.PrefabField;
             //Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
 
             if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-            datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString() && 
+                datObjItem.TypePoolPrefab != PoolGameObjects.TypePoolPrefabs.PoolPerson)
             {
                 prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
+                break;
             }
-            else
-            {
-                ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
-                if (bossObj != null)
-                {
-                    prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
+            //else
+            //{
+            //    ModelNPC.GameDataBoss bossObj = datObjItem as ModelNPC.GameDataBoss;
+            //    if (bossObj != null)
+            //    {
+            //        prefabType = SaveLoadData.TypePrefabs.PrefabBoss;
 
-                    fieldListPrefbs.Add(prefabType);
+            //        fieldListPrefbs.Add(prefabType);
 
-                    ////+++DRAW PERSON ---------------------------------
-                    Texture2D personMapTexture = TypeBoss.Instance.GetTextureMapForIndexLevel(bossObj.Level);
-                    if (personMapTexture == null)
-                    {
-                        Debug.Log("####### ShowSelectorCell Textute is Empty  TypeBoss.Instance.GetNameTextureMapForIndexLevel(" + bossObj.Level + ") ");
-                        break;
-                    }
-                    listPersonsMapTexture.Add(personMapTexture);
-                    //-----------------------------------------------------
-                }
-            }
+            //        ////+++DRAW PERSON ---------------------------------
+            //        Texture2D personMapTexture = TypeBoss.Instance.GetTextureMapForIndexLevel(bossObj.Level);
+            //        if (personMapTexture == null)
+            //        {
+            //            Debug.Log("####### ShowSelectorCell Textute is Empty  TypeBoss.Instance.GetNameTextureMapForIndexLevel(" + bossObj.Level + ") ");
+            //            break;
+            //        }
+            //        listPersonsMapTexture.Add(personMapTexture);
+            //        //-----------------------------------------------------
+            //    }
+            //}
             //fieldListPrefbs.Add(prefabType);
         }
 
        
-        bool _isPerson = false;
+        //bool _isPerson = false;
 
-        for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count; indMap2D++)
-        {
-            Texture2D texturePerson = listPersonsMapTexture[indMap2D];
-            if (texturePerson == null)
-            {
-                Debug.Log("####### ShowSelectorCell Textute is Empty    listPersonsMapTexture[" + indMap2D + "] ");
-                break;
-            }
+        //for (int indMap2D = 0; indMap2D < listPersonsMapTexture.Count; indMap2D++)
+        //{
+        //    Texture2D texturePerson = listPersonsMapTexture[indMap2D];
+        //    if (texturePerson == null)
+        //    {
+        //        Debug.Log("####### ShowSelectorCell Textute is Empty    listPersonsMapTexture[" + indMap2D + "] ");
+        //        break;
+        //    }
 
-            // Draw Texture On Map
-            //Storage.Map.DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
+        //    // Draw Texture On Map
+        //    //Storage.Map.DrawTextureTo(scaleCell, indErr, addSize, texture, y, x, texturePerson);
 
-            int cellX = (int)SelectPointField.x;
-            int cellY = (int)SelectPointField.y;
-            Storage.Map.DrawMapCell(cellX, cellY, texturePerson);
+        //    int cellX = (int)SelectPointField.x;
+        //    int cellY = (int)SelectPointField.y;
+        //    Storage.Map.DrawMapCell(cellX, cellY, texturePerson);
 
-            Sprite spriteCell = Sprite.Create(texturePerson, new Rect(0.0f, 0.0f, texturePerson.width, texturePerson.height), new Vector2(0.5f, 0.5f), 100.0f);
-            MapIcon.GetComponent<SpriteRenderer>().sprite = spriteCell;
-            _isPerson = true;
-            //MapCellFrame.GetComponent<SpriteRenderer>().sprite.texture = texturePerson;
-            break;
-        }
+        //    Sprite spriteCell = Sprite.Create(texturePerson, new Rect(0.0f, 0.0f, texturePerson.width, texturePerson.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //    MapIcon.GetComponent<SpriteRenderer>().sprite = spriteCell;
+        //    _isPerson = true;
+        //    //MapCellFrame.GetComponent<SpriteRenderer>().sprite.texture = texturePerson;
+        //    break;
+        //}
 
-        if (!_isPerson)
-        {
+        //if (!_isPerson)
+        //{
             Texture2D texturePrefab = Storage.Map.GetPrefabTexture(prefabType);
             if (texturePrefab == null)
             {
@@ -831,7 +833,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
                 MapIcon.GetComponent<SpriteRenderer>().sprite = spriteCell;
             }
 
-        }
+        //}
     }
 
     public void UpdateBorderCellLocation()

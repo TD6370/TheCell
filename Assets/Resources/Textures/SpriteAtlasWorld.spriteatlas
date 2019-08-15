@@ -50,6 +50,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 80b8b2c0effebb74184497b7bc29b4ed, type: 3}
   - {fileID: 21300000, guid: 6d9ad9e01cfd4524e8fb3955872947a9, type: 3}
   - {fileID: 21300000, guid: b4b077f0172ba1d4d9931a8551cb9bb6, type: 3}
+  - {fileID: 21300000, guid: bec7b13118f98b44e954f47f6b3302c7, type: 3}
   - {fileID: 21300000, guid: 8bd23b515d669b4428f7301d706cb850, type: 3}
   - {fileID: 21300000, guid: 33eaa861f26e37945a85923256d90be9, type: 3}
   - {fileID: 21300000, guid: 928ce732bd93d6947a70363ed5463a52, type: 3}
@@ -74,7 +75,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: eb457997aa4435f458f55314fba24a9e, type: 3}
   - {fileID: 21300000, guid: 6cdcb1c78c0b6a142bd56f48390d6b37, type: 3}
   - {fileID: 21300000, guid: 056e0858d45d5304aa5fd697ff18bf86, type: 3}
-  - {fileID: 21300000, guid: 8b5db5c8f2e389b45a98b7d82ecd75b5, type: 3}
   - {fileID: 21300000, guid: 00bdfc790d9a50e479d9bae70ed8f1cd, type: 3}
   - {fileID: 21300000, guid: f6473c3a10c04604e9a4acf5c21f13d7, type: 3}
   - {fileID: 21300000, guid: 3677457aa3380ed42b86a950f048e182, type: 3}
@@ -96,6 +96,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6ae9efbdba8dc1d409c9808cacae3eb0, type: 3}
   - {fileID: 21300000, guid: a560160ef64d85f47ab93862eb6e5ca4, type: 3}
   - {fileID: 21300000, guid: b7b4204ec1802dc4da555cc93bf2dc04, type: 3}
+  - {fileID: 21300000, guid: edc7fc1fc7d5dad41bbbeabfe1f7089b, type: 3}
   - {fileID: 21300000, guid: 6651e24fe9dd8a549b9592aab3252f72, type: 3}
   - {fileID: 21300000, guid: 13008c6f4202d674a987504176ee1380, type: 3}
   - {fileID: 21300000, guid: 468504af917c4a147a23b6470a63015c, type: 3}
@@ -106,6 +107,7 @@ SpriteAtlas:
   - Fantom
   - Chip
   - Nadmozg
+  - Lantern
   - Kamish
   - Vhailor
   - Orbits
@@ -130,7 +132,6 @@ SpriteAtlas:
   - Desert
   - Hero
   - MaskDetails
-  - Lantern
   - Cluben
   - Weedflower
   - Machinetool
@@ -152,6 +153,7 @@ SpriteAtlas:
   - PavukDetails
   - Bananas
   - Gecsagon
+  - Fangs
   - Kolba
   - MechaDetails
   - Berry

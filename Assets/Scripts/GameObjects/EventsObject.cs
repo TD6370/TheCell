@@ -40,7 +40,7 @@ public class EventsObject : MonoBehaviour {
                     typePool = PoolGameObjects.TypePoolPrefabs.PoolPersonBoss;
                 else
                 {
-                    Debug.Log("!!!!!!!!!!!!! ERROR TAG OLD " + this.gameObject.tag); //$$$
+                    Debug.Log("!!!!!!!!!!!!! LEGACY CODE " + this.gameObject.tag); //$$$
                     typePool = PoolGameObjects.TypePoolPrefabs.PoolWall;
                 }
             }

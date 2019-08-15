@@ -391,7 +391,7 @@ public class UIEvents : MonoBehaviour {
                 SetTittle = "...";
                 //TEST
                 //Storage.Events.ListLogAdd = Helper.GetNameFieldByName("PrefabField_Field21x9_a87f");
-                Sprite[] _sprites = Storage.Map.GetSpritesAtlasMapPrefab();
+                Sprite[] _sprites = Storage.Palette.GetSpritesAtlasMapPrefab();
                 foreach (var item in _sprites)
                 {
                     Storage.PaletteMap.CreateCellPalette(item);

@@ -14,7 +14,7 @@ SpriteAtlas:
       compressionQuality: 50
       maxTextureSize: 2048
       textureCompression: 0
-      filterMode: 0
+      filterMode: 1
       generateMipMaps: 0
       readable: 0
       crunchedCompression: 0
@@ -33,10 +33,10 @@ SpriteAtlas:
       m_AndroidETC2FallbackOverride: 0
     packingSettings:
       serializedVersion: 2
-      padding: 2
+      padding: 4
       blockOffset: 1
       allowAlphaSplitting: 0
-      enableRotation: 1
+      enableRotation: 0
       enableTightPacking: 1
     variantMultiplier: 1
     packables:
@@ -47,23 +47,78 @@ SpriteAtlas:
     - {fileID: 2800000, guid: ce49cdef70885494bbb138bfd756bc89, type: 3}
     - {fileID: 2800000, guid: 31a1ce3a466bb8448ac987e398db5a16, type: 3}
     - {fileID: 2800000, guid: a39969dd493103c4196819ab3b3951a3, type: 3}
+    - {fileID: 102900000, guid: fb5ff5d89ef83cf43882c23ff6a76e0e, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: e86329703ce2baf40b76453fcdeee4f7, type: 3}
+  - {fileID: 21300000, guid: 7d4069f0ea58a974fb80938d8c057af4, type: 3}
+  - {fileID: 21300000, guid: 4f5dba1111df68b4ba4416ee3f612c5f, type: 3}
+  - {fileID: 21300000, guid: f53aafe14db57104790378ffba7024ca, type: 3}
+  - {fileID: 21300000, guid: b387f11302d57394ab691185c6d5891f, type: 3}
   - {fileID: 21300000, guid: 2b0fc8837cc3a2346941ae3415dc2be2, type: 3}
+  - {fileID: 21300000, guid: 5948c1a39b421654a949977c3d130ccc, type: 3}
+  - {fileID: 21300000, guid: 8de8d5e3e31a2154cb0c2ebba85ec03c, type: 3}
+  - {fileID: 21300000, guid: 00896b849c174f64c818270831a33946, type: 3}
+  - {fileID: 21300000, guid: 5bcecea5d6275b0449c5e781e1aa5de0, type: 3}
+  - {fileID: 21300000, guid: cdaf8ec54d1e02642a291e8c50285a30, type: 3}
+  - {fileID: 21300000, guid: 63ac8dd514a351c4ca634be8cb49adff, type: 3}
+  - {fileID: 21300000, guid: 32443976b2678214b8d82fabc1cbc7b9, type: 3}
+  - {fileID: 21300000, guid: f5ef9f6700a07914fad4543fa7348ffa, type: 3}
   - {fileID: 21300000, guid: 71c69cb73caa7eb428f57fa4fbb50cf6, type: 3}
+  - {fileID: 21300000, guid: 576c55d72145296489cef1bc02589423, type: 3}
+  - {fileID: 21300000, guid: 56e653088740a0e4688627d972729ecd, type: 3}
+  - {fileID: 21300000, guid: e8ff93f836be09c4fbc9efee21c5d5fe, type: 3}
+  - {fileID: 21300000, guid: 6bb07e49b7bbfa646b3a9e7e7f25a30e, type: 3}
+  - {fileID: 21300000, guid: a3a64759ec134664fb6598a50ce68bff, type: 3}
   - {fileID: 21300000, guid: 29bd5a69888431a46a23a9ef113ce6d6, type: 3}
+  - {fileID: 21300000, guid: 06de550a73b7e1241b5b63ba202f045e, type: 3}
   - {fileID: 21300000, guid: 31a1ce3a466bb8448ac987e398db5a16, type: 3}
   - {fileID: 21300000, guid: f0b3946aef6922842bf2007eb8d92aa9, type: 3}
+  - {fileID: 21300000, guid: 1d43a9eada478f64ca7aa9ac2e805b2c, type: 3}
+  - {fileID: 21300000, guid: fcb916bb255767b42a32afae15009510, type: 3}
+  - {fileID: 21300000, guid: 536690db20a064746a8da7fca23a1b19, type: 3}
+  - {fileID: 21300000, guid: 360037eb7bb8f5f4cac4148fccc96c3c, type: 3}
+  - {fileID: 21300000, guid: 14858e5c751e3fb458ac1ee3c1b3bd5b, type: 3}
+  - {fileID: 21300000, guid: 0735633d0aaec9845b2f8f8ad4afcc93, type: 3}
   - {fileID: 21300000, guid: a39969dd493103c4196819ab3b3951a3, type: 3}
+  - {fileID: 21300000, guid: 1b63fe7eb8eaca54db8b2736cf1c2e64, type: 3}
+  - {fileID: 21300000, guid: 5fc0dfae63363d54f99844369cd65ad2, type: 3}
   - {fileID: 21300000, guid: ce49cdef70885494bbb138bfd756bc89, type: 3}
   m_PackedSpriteNamesToIndex:
+  - DesertMap
+  - SwampMap
+  - KamishMap
+  - ShampinionMap
+  - CloudwoodMap
   - VoodMap
+  - ClubenMap
+  - LanternMap
+  - WeedflowerMap
+  - CoralsMap
+  - KishkaMap
+  - NervMap
+  - ParketMap
+  - AraculMap
   - ElkaMap
+  - DiodsMap
+  - BananasMap
+  - WeedMap
+  - GecsagonMap
+  - NadmozgMap
   - RockMap
+  - PandoraMap
   - WallRockMap
   - HeroMap
+  - KolbaMap
+  - OrbitsMap
+  - ChpokMap
+  - BerryMap
+  - DustMap
+  - ChipMap
   - WallWoodMap
+  - TriffidMap
+  - MashroomsMap
   - FieldMap
   m_Tag: SpriteAtlasMap
   m_IsVariant: 0

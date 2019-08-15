@@ -23,12 +23,13 @@ public class MapWorld : MonoBehaviour {
     public Texture2D textureWallWood;
     public Texture2D textureHero;
     public Texture2D textureTest;
+    public Texture2D textureParket;
 
     //--- Grid Map
     public GameObject PrefabGridMap;
     public GameObject PrefabSpriteCellMap;
     public Stack<string> StackSectorsUpdating;
-    public SpriteAtlas SpriteAtlasMapPrefab;
+    //public SpriteAtlas SpriteAtlasMapPrefab;
 
     private GridLayoutGroup m_GridMap;
     private List<GameObject> m_listCellsGridMap = new List<GameObject>();
@@ -128,6 +129,15 @@ public class MapWorld : MonoBehaviour {
 		
 	}
 
+    private void InitImageMap()
+    {
+        //int sizeDraw = Helper.HeightLevel * SizeCellMap;
+        //listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
+        //listPersonsPrefabTexture = new List<Texture2D>();
+        //listPersonsMapTexture = new List<Texture2D>();
+    }
+
+
     private void CreateFrameMap()
     {
         Vector2 posHero = Storage.PlayerController.transform.position;
@@ -151,18 +161,9 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
-    private void InitImageMap()
-    {
-        //colorsPersons = new List<Color>();
-        //texture = new Texture2D(sizeDraw, sizeDraw);
-        int sizeDraw = Helper.HeightLevel * SizeCellMap;
-        //textureMap = new Texture2D(sizeDraw, sizeDraw); //#fix mem 2. Texture2D textureMap;
-        listPersonsTypes = new List<SaveLoadData.TypePrefabs>();
-        listPersonsPrefabTexture = new List<Texture2D>();
-        listPersonsMapTexture = new List<Texture2D>();
 
-        //var init = SpritesMaps;
-    }
+    //#region Fill Image map icons
+    
 
     public void Refresh()
     {
@@ -887,10 +888,13 @@ public class MapWorld : MonoBehaviour {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
                         if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
-                        datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
+                            datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString() &&
+                            datObjItem.TypePoolPrefab != PoolGameObjects.TypePoolPrefabs.PoolPerson)
                         {
                             indErr = "11";
                             prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), datObjItem.TypePrefabName);
+                            if (datObjItem.TypePoolPrefab != PoolGameObjects.TypePoolPrefabs.PoolFloor)
+                                break;
                         }
                     }
                     DrawTextureTo(scaleCell, indErr, addSize, textureMap, y, x, prefabType);
@@ -1121,52 +1125,6 @@ public class MapWorld : MonoBehaviour {
 
     }
 
-    Dictionary<string, Texture2D> TexturesMaps;
-
-    private Dictionary<string, Sprite> m_SpritesMaps = null;
-    Dictionary<string, Sprite> SpritesMaps
-    {
-        get
-        {
-            if (m_SpritesMaps == null)
-            {
-                //SpriteAtlas atlasPredab = Resources.Load<SpriteAtlas>("SpriteAtlasMap");
-                m_SpritesMaps = new Dictionary<string, Sprite>();
-                TexturesMaps = new Dictionary<string, Texture2D>();
-                Sprite[] _sprites = GetSpritesAtlasMapPrefab();
-                //foreach(var item in m_TexturesMaps)
-                //{
-                //    m_SpritesMaps[item.n]
-                //}
-                string nameSprite; 
-                foreach(Sprite sprt in _sprites)
-                {
-                    nameSprite = sprt.name.Replace("(Clone)", "");
-                    m_SpritesMaps.Add(nameSprite, sprt);
-                    TexturesMaps.Add(nameSprite, sprt.texture);
-                }
-            }
-            return m_SpritesMaps;
-        }
-
-    }
-
-    public Sprite[] GetSpritesAtlasMapPrefab()
-    {
-        Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
-        SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
-        return spritesAtlas;
-    }
-
-    public Sprite GetSpriteAtlasPrefab(string prefabType)
-    {
-        string nameTexture = NamesTexturesMaps[prefabType];
-        //Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
-        //SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
-        //SpriteAtlasMapPrefab
-        return SpriteAtlasMapPrefab.GetSprite(nameTexture);// .Find(p=>p.name=="");
-    }
-
     //DrawTextureTo(SizeCellMap, "Restore", SizeCellMap - 1, textureResult, y, x, prefabType);
     public void DrawTextureTo(int scaleCell, string indErr, int addSize, Texture2D texture, int y, int x, SaveLoadData.TypePrefabs prefabType)
     {
@@ -1194,9 +1152,10 @@ public class MapWorld : MonoBehaviour {
 
         if (texturePrefab != null && texture.format.ToString() != texturePrefab.format.ToString())
         {
-            Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startX1 + "x" + startY1 + " Size=" + addSize);
-            Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
-            Debug.Log(".......... Start CopyTexture " + prefabType + "  Formats texturePrefab:" + texturePrefab.format.ToString());
+            //Debug.Log(".......... Start CopyTexture   prefabType:" + prefabType + " : " + startX1 + "x" + startY1 + " Size=" + addSize);
+            //Debug.Log(".......... Start CopyTexture   Formats source:" + texture.format.ToString());
+            //Debug.Log(".......... Start CopyTexture " + prefabType + "  Formats texturePrefab:" + texturePrefab.format.ToString());
+            Debug.Log(".......... CopyTexture Type:" + prefabType + " Formats source:" + texture.format.ToString() + " Formats texturePrefab: " + texturePrefab.format.ToString());
             return;
         }
 
@@ -1227,6 +1186,7 @@ public class MapWorld : MonoBehaviour {
         }
     }
 
+    private string test_textureType = "";
 
     public Texture2D GetPrefabTexture(SaveLoadData.TypePrefabs typePredab)
     {
@@ -1258,7 +1218,37 @@ public class MapWorld : MonoBehaviour {
             return Storage.Palette.TexturesMaps["PrefabField"]; //fix 
         }
 
+        //------- test
+        List<string> strFilter = new List<string>() {
+                    "PrefabVood",
+                    "PrefabElka",
+                    "PrefabRock",
+                    "PrefabWallRock",
+                    "PrefabWallWood",
+                    "PrefabField",
+                    "PrefabHero",
+        };
+        
+        //------------------------------
+
         Texture2D textureRes = Storage.Palette.TexturesMaps[strTypePref];
+
+        if (!strFilter.Contains(strTypePref))
+        {
+            if(test_textureType != strTypePref)
+            {
+                test_textureType = strTypePref;
+                Debug.Log("---- DRAW ICON >> " + strTypePref);
+            }
+            //textureRes = Storage.Palette.SpritesMaps[strTypePref].texture;
+
+            //var spriteRes = Storage.Palette.SpriteAtlasMapPrefab.GetSprite(strTypePref + "Map");
+            //if (spriteRes == null)
+            //    Debug.Log("---- DRAW ICON >> spriteRes = null");
+            //else
+            //    textureRes = spriteRes.texture;
+        }
+
         //Texture2D textureRes = Storage.GridData.PrefabElka.GetComponent<SpriteRenderer>().sprite.texture;
         return textureRes;
     }

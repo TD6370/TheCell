@@ -22,9 +22,12 @@ public class ManagerPalette : MonoBehaviour {
     public Dictionary<string, Sprite> SpritesPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> SpritesWorldPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
+    //private Dictionary<string, Texture2D> m_TexturesMaps;
+    private Dictionary<string, Sprite> m_SpritesMaps = null;
 
     public SpriteAtlas SpriteAtlasPrefab;
     public SpriteAtlas SpriteAtlasPrefabWorld;
+    public SpriteAtlas SpriteAtlasMapPrefab;
 
     private void Awake()
     {
@@ -78,30 +81,9 @@ public class ManagerPalette : MonoBehaviour {
 
     }
 
-
+    #region Load map icons
     public void LoadSpritePrefabs()
     {
-
-        //PaletteColors = new Dictionary<string, Color>
-        //{
-        //    {"SpriteBossLizard",ColorBossLizard },
-        //    {"SpriteBossRed",ColorBossRed },
-        //    {"SpriteBossBandos",ColorBossBandos },
-        //    {"SpriteBossBooble",ColorBossBooble },
-        //    {"SpriteBossAlien",ColorBossAlien },
-        //    {"SpriteBossDroid",ColorBossDroid },
-        //    {"SpriteBossArm",ColorBossArm },
-        //    {"SpriteBoss",ColorBoss },
-        //    {"PrefabVood",ColorVood },
-        //    {"PrefabRock",ColorRock },
-        //    {"PrefabBoss","#F152FF".ToColor() },
-        //    {"PrefabUfo",ColorUfo },
-        //    {"PrefabElka",ColorElka },
-        //    {"PrefabWallRock",ColorWallRock },
-        //    {"PrefabWallWood",ColorWallWood },
-
-        //};
-
         List<Sprite> spritesAtlas = new List<Sprite>();
 
         Sprite[] spritesPrefabsAtlas = GetSpritesAtlasPrefab();
@@ -130,6 +112,12 @@ public class ManagerPalette : MonoBehaviour {
             //Debug.Log("ADD spritesPrefabsAtlas: " + nameSprite);
         }
 
+        InitMapIconsTextures();
+    }
+
+    public void InitMapIconsTextures()
+    {
+        
         TexturesMaps = new Dictionary<string, Texture2D>
         {
             {"PrefabVood", Storage.Map.textureVood },
@@ -139,9 +127,63 @@ public class ManagerPalette : MonoBehaviour {
             {"PrefabWallWood", Storage.Map.textureWallWood },
             {"PrefabField", Storage.Map.textureField },
             {"PrefabHero", Storage.Map.textureHero },
-
+            {"Parket", Storage.Map.textureParket },
         };
+        var init = SpritesMaps;
     }
+    
+    public Dictionary<string, Sprite> SpritesMaps
+    {
+        get
+        {
+            if (m_SpritesMaps == null)
+            {
+                m_SpritesMaps = new Dictionary<string, Sprite>();
+                Sprite[] _sprites = GetSpritesAtlasMapPrefab();
+                string nameSprite;
+                int indS = 0;
+                foreach (Sprite sprt in _sprites)
+                {
+                    var textureItem =  sprt.texture;
+                    //Texture2D textureItem = _sprites[indS].texture;
+                    //indS++;
+
+                    nameSprite = sprt.name.Replace("(Clone)", "");
+                    nameSprite = nameSprite.Replace("Map", "");
+
+                    Texture2D textureRes = Resources.Load<Texture2D>("Textures/Map/GridIcons/" + nameSprite + "Map");
+                    if (textureRes != null)
+                        textureItem = textureRes;
+
+                    m_SpritesMaps.Add(nameSprite, sprt);
+                    if (TexturesMaps.ContainsKey(nameSprite))
+                        Debug.Log("######## EXIST TEXTURE MAP: " + nameSprite);
+                    else
+                        TexturesMaps.Add(nameSprite, textureItem);
+                }
+            }
+            return m_SpritesMaps;
+        }
+
+    }
+
+    public Sprite[] GetSpritesAtlasMapPrefab()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
+        SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
+
+    //public Sprite GetSpriteFromAtlasPrefab(string prefabType)
+    //{
+    //    string nameTexture = NamesTexturesMaps[prefabType];
+    //    //Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
+    //    //SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
+    //    //SpriteAtlasMapPrefab
+    //    return SpriteAtlasMapPrefab.GetSprite(nameTexture);// .Find(p=>p.name=="");
+    //}
+#endregion
+
 
     public static Color GetColor(string nameColor)
     {

@@ -310,7 +310,7 @@ public static class Helper { //: MonoBehaviour {
     {
         switch (typePrefab)
         {
-            case PoolGameObjects.TypePoolPrefabs.PoolFlore:
+            //case PoolGameObjects.TypePoolPrefabs.PoolFlore:
             case PoolGameObjects.TypePoolPrefabs.PoolWall:
             case PoolGameObjects.TypePoolPrefabs.PoolWood:
                 return true;
