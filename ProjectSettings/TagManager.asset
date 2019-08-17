@@ -38,6 +38,7 @@ TagManager:
   - PoolWall
   - PoolFlore
   - PoolFloor
+  - InventoryCase
   layers:
   - Default
   - TransparentFX

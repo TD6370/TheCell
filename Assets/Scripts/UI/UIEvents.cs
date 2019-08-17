@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 
@@ -30,7 +31,7 @@ public class UIEvents : MonoBehaviour {
     public int LimitLogView = 10;
 
     public Text txtMessage;         //Store a reference to the UI Text component which will display the 'You win' message.
-   
+
     public string SetTittle
     {
         get
@@ -68,7 +69,10 @@ public class UIEvents : MonoBehaviour {
     public GameObject PointGO;
     public GameObject PanelMessage;
     public GameObject PrefabListBox;
+
     public GameObject PanelInventory;
+
+
     public GameObject BackgroundTittle;
     public Text MessageBox;
     public Toggle checkHideCanvasUI;
@@ -147,7 +151,11 @@ public class UIEvents : MonoBehaviour {
         });
 
         btnTest.onClick.AddListener(TestClick);
+
+        //LoadInventoryCase();
     }
+
+   
 
     // Use this for initialization
     void Start()

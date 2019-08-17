@@ -22,12 +22,14 @@ public class ManagerPalette : MonoBehaviour {
     public Dictionary<string, Sprite> SpritesPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> SpritesWorldPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
+    public Dictionary<string, Sprite> SpritesInventory = new Dictionary<string, Sprite>();
     //private Dictionary<string, Texture2D> m_TexturesMaps;
     private Dictionary<string, Sprite> m_SpritesMaps = null;
 
     public SpriteAtlas SpriteAtlasPrefab;
     public SpriteAtlas SpriteAtlasPrefabWorld;
     public SpriteAtlas SpriteAtlasMapPrefab;
+    public SpriteAtlas SpriteAtlasInventory;
 
     private void Awake()
     {
@@ -53,8 +55,11 @@ public class ManagerPalette : MonoBehaviour {
             //{"PrefabWallWood",ColorWallWood },
 
         };
+        foreach(Sprite sprt in  GetSpritesAtlasInventory())
+        {
+            SpritesInventory.Add(sprt.name, sprt);
+        }
 
-       
         //{ "PrefabVood",ColorVood },
         //{ "PrefabRock",ColorRock },
     }
@@ -171,6 +176,13 @@ public class ManagerPalette : MonoBehaviour {
     {
         Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
         SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
+
+    public Sprite[] GetSpritesAtlasInventory()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasInventory.spriteCount];
+        SpriteAtlasInventory.GetSprites(spritesAtlas);
         return spritesAtlas;
     }
 

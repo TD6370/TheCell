@@ -139,10 +139,12 @@
     <Compile Include="Assets\Scripts\TileGen.cs" />
     <Compile Include="Assets\Scripts\TilesType\DataTilesManager.cs" />
     <Compile Include="Assets\Scripts\TilesType\TileRoad.cs" />
+    <Compile Include="Assets\Scripts\UI\CaseInventoryData.cs" />
     <Compile Include="Assets\Scripts\UI\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\UI\CellPrefabPaletteMapControl.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
+    <Compile Include="Assets\Scripts\UI\InventoryController.cs" />
     <Compile Include="Assets\Scripts\UI\MapWorld.cs" />
     <Compile Include="Assets\Scripts\UI\PaletteMapController.cs" />
     <Compile Include="Assets\Scripts\UI\TrackPointsNavigator.cs" />
