@@ -216,6 +216,70 @@ public class SaveLoadData : MonoBehaviour {
         Vhailor,
     }
 
+    public enum TypeInventoryObjects
+    {
+        PrefabField,
+        PrefabRock,
+        PrefabVood,
+        PrefabUfo,
+        PrefabBoss,
+        PrefabElka,
+        PrefabWallRock,
+        PrefabWallWood,
+
+        Swamp,
+        Chip,
+        Gecsagon,
+        Kamish,
+
+        Berry,
+        Mashrooms,
+        Weed,
+        Weedflower,
+
+        Kishka,
+        Nerv,
+        Orbits,
+        Shampinion,
+
+        Corals,
+        Desert,
+        Diods,
+        Parket,
+        //----- NPC
+        Inspector,
+        Machinetool,
+        Mecha,
+
+        Dendroid,
+        Gary,
+        Lollipop,
+
+        Blastarr,
+        Hydragon,
+        Pavuk,
+        Skvid,
+
+        Fantom,
+        Mask,
+        Vhailor,
+        //--------- Wall
+        Kolba,
+        Lantern,
+
+        Bananas,
+        Cluben,
+
+        Chpok,
+        Pandora,
+
+        Nadmozg,
+        Triffid,
+
+        Aracul,
+        Cloudwood
+    }
+
     private void Awake()
     {
         InitPrefabCollections();

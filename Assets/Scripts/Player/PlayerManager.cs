@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
-      
+
+    public DataObjectInventory SelectedInventoryObject;
 
     private bool m_HeroExtremal = false;
     public bool HeroExtremal
@@ -44,6 +45,16 @@ public class PlayerManager : MonoBehaviour {
         get { return _heroPositionY; }
     }
 
+    private InventoryController m_Inventory;
+    private InventoryController Inventory
+    {
+        get
+        {
+            if(m_Inventory == null)
+                m_Inventory = Storage.EventsUI.PanelInventory.GetComponent<InventoryController>();
+            return m_Inventory;
+        }
+    }
 
     private void Awake()
     {
@@ -271,5 +282,23 @@ public class PlayerManager : MonoBehaviour {
             //if(DrawGeom!=null)
             //    DrawGeom.DrawRect(rX, rY, rX2, rY2);
         }
+        
     }
+
+    #region Inventory
+
+    //public SaveLoadData.TypeInventoryObjects SelectedInventoryObject;
+    
+    public void PushInventury()
+    {
+        //
+        Inventory.AddCase(SelectedInventoryObject);
+    }
+    public void PullInventury()
+    {
+        Inventory.SetCurrentCaseInventoryIndex(0);
+        SelectedInventoryObject = Inventory.GetObjectFromCurrentCase();
+    }
+
+    #endregion
 }

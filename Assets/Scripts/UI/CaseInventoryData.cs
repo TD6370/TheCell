@@ -6,21 +6,18 @@ using UnityEngine;
 public class CaseInventoryData : MonoBehaviour {
 
     [NonSerialized]
-    //public SaveLoadData.TypePrefabs TypeInventopyObject;
-    public string NameInventopyObject;
-
-    public SaveLoadData.TypePrefabs TypeInventopyObject
+    public DataObjectInventory DataObjectInv;
+    public string NameInventopyObject
     {
         get
         {
-            if(Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), NameInventopyObject))
-            {
-                Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + NameInventopyObject);
-                return SaveLoadData.TypePrefabs.PrefabField;
-            }
-            return (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), NameInventopyObject);
+            if(DataObjectInv == null)
+                DataObjectInv = new DataObjectInventory("");
+            //DataObjectInv = new DataObjectInventory(SaveLoadData.TypeInventoryObjects.PrefabField.ToString());
+            return DataObjectInv.NameInventopyObject;
         }
     }
+
 
     // Use this for initialization
     void Start () {

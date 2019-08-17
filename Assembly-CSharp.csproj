@@ -142,6 +142,7 @@
     <Compile Include="Assets\Scripts\UI\CaseInventoryData.cs" />
     <Compile Include="Assets\Scripts\UI\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\UI\CellPrefabPaletteMapControl.cs" />
+    <Compile Include="Assets\Scripts\UI\DataObjectInventory.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
     <Compile Include="Assets\Scripts\UI\InventoryController.cs" />
