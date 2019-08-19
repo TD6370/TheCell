@@ -36,10 +36,14 @@ public class UIEvents : MonoBehaviour {
     {
         get
         {
+            if (txtMessage == null)
+                return string.Empty;
             return txtMessage.text;
         }
         set
         {
+            if (txtMessage == null)
+                return;
             txtMessage.text = value;
         }
     }

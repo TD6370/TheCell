@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using System.Text;
 
 
 #region Serialize Helper
@@ -485,7 +486,7 @@ public class Serializator
     }
     */
 
-    static public ModelNPC.GridData LoadGridXml(string datapath)
+    static public ModelNPC.GridData LoadGridXml_1(string datapath)
     {
         //--Load parts
         //return LoadGridPartsXml();
@@ -518,8 +519,73 @@ public class Serializator
         }
         catch (Exception x)
         {
+            Storage.EventsUI.SetTittle = "Error LoadGridXml : " + datapath;
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml";
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml : " + datapath;
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml";
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml stepErr: " + stepErr;
+            Storage.EventsUI.ListLogAdd = "Error LoadGridXml : " + x.Message; 
+
             state = null;
             Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        if(state == null)
+        {
+            Storage.EventsUI.SetTittle = "LoadGridXml data is empty: " + datapath;
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty";
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty: " + datapath;
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty";
+        }
+
+        return state;
+    }
+
+    static public ModelNPC.GridData LoadGridXml(string datapath)
+    {
+        //--Load parts
+        //return LoadGridPartsXml();
+        //return null;
+        //-------------------
+
+        string stepErr = "start";
+        ModelNPC.GridData state = null;
+        try
+        {
+            Debug.Log("Loaded Xml GridData start...");
+
+            var encoding = Encoding.GetEncoding("UTF-8");
+            XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.GridData), extraTypes);
+            using (StreamReader reader = new StreamReader(datapath, Encoding.UTF8, true))
+            {
+                state = (ModelNPC.GridData)serializer.Deserialize(reader);
+            }
+
+            stepErr = ".6";
+            state.FieldsD = state.FieldsXML.ToDictionary(x => x.Key, x => x.Value);
+            stepErr = ".7";
+            Debug.Log("Loaded Xml GridData D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
+            //## 
+            state.FieldsXML = null;
+        }
+        catch (Exception x)
+        {
+            Storage.EventsUI.SetTittle = "Error LoadGridXml : " + datapath;
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml";
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml : " + datapath;
+            Storage.EventsUI.ListLogAdd = "########### Error LoadGridXml stepErr: " + stepErr;
+            Storage.EventsUI.ListLogAdd = "Error LoadGridXml : " + x.Message;
+
+            state = null;
+            Debug.Log("Error DeXml: " + x.Message + " " + stepErr);
+        }
+
+        if (state == null)
+        {
+            Storage.EventsUI.SetTittle = "LoadGridXml data is empty: " + datapath;
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty";
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty: " + datapath;
+            Storage.EventsUI.ListLogAdd = "LoadGridXml data is empty";
         }
 
         return state;
@@ -534,14 +600,23 @@ public class Serializator
             Debug.Log("Loaded Xml GridData start...");
 
             stepErr = ".1";
+            
+            //XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.LevelData), extraTypes);
+            //stepErr = ".3";
+            //FileStream fs = new FileStream(datapath, FileMode.Open);
+            //stepErr = ".4";
+            //state = (ModelNPC.LevelData)serializer.Deserialize(fs);
+            //stepErr = ".5";
+            //fs.Close();
+            var encoding = Encoding.GetEncoding("UTF-8");
             stepErr = ".2";
             XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.LevelData), extraTypes);
             stepErr = ".3";
-            FileStream fs = new FileStream(datapath, FileMode.Open);
-            stepErr = ".4";
-            state = (ModelNPC.LevelData)serializer.Deserialize(fs);
-            stepErr = ".5";
-            fs.Close();
+            using (StreamReader reader = new StreamReader(datapath, Encoding.UTF8, true))
+            {
+                stepErr = ".4";
+                state = (ModelNPC.LevelData)serializer.Deserialize(reader);
+            }
             stepErr = ".6";
             state.Persons = state.PersonsXML.ToDictionary(x => x.Key, x => x.Value);
             stepErr = ".7";
@@ -567,13 +642,23 @@ public class Serializator
 
             stepErr = ".1";
             stepErr = ".2";
-            XmlSerializer serializer = new XmlSerializer(typeof(TilesData), extraTypes);
+            //XmlSerializer serializer = new XmlSerializer(typeof(TilesData), extraTypes);
+            //stepErr = ".3";
+            //FileStream fs = new FileStream(datapath, FileMode.Open);
+            //stepErr = ".4";
+
+            //state = (TilesData)serializer.Deserialize(fs);
+            //stepErr = ".5";
+            //fs.Close();
+            var encoding = Encoding.GetEncoding("UTF-8");
             stepErr = ".3";
-            FileStream fs = new FileStream(datapath, FileMode.Open);
+            XmlSerializer serializer = new XmlSerializer(typeof(TilesData), extraTypes);
             stepErr = ".4";
-            state = (TilesData)serializer.Deserialize(fs);
-            stepErr = ".5";
-            fs.Close();
+            using (StreamReader reader = new StreamReader(datapath, Encoding.UTF8, true))
+            {
+                stepErr = ".5";
+                state = (TilesData)serializer.Deserialize(reader);
+            }
             stepErr = ".6";
             state.TilesD = state.TilesXML.ToDictionary(x => x.Key, x => x.Value);
             stepErr = ".7";
@@ -625,26 +710,6 @@ public class Serializator
         //Debug.Log("Saved Xml GridData L:" + state.Fields.Count() + "  D:" + state.FieldsD.Count() + "   XML:" + state.FieldsXML.Count() + "     datapath=" + datapath);
     }
 
-    //[XmlRoot("TilesData")]
-    //[XmlInclude(typeof(DataTile))]
-    //public class TilesData
-    //{
-    //    private Dictionary<string, List<DataTile>> CollectionDataMapTales;
-    //    public List<KeyValuePair<string, List<DataTile>>> TilesXML = new List<KeyValuePair<string, List<DataTile>>>();
-    //    public TilesData() { }
-    //}
-
-    //[XmlType("Tile")]
-    //public class DataTile
-    //{
-    //    public int X { get; set; }
-    //    public int Y { get; set; }
-    //    public string Name { get; set; }
-    //    public string Tag { get; set; }
-    //    public bool IsLock { get; set; }
-
-    //    public DataTile() { }
-    //}
 
     static public T LoadXml<T>(string datapath, Type[] p_extraTypes = null) where T : class
     {

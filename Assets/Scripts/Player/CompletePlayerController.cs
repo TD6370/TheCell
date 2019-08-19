@@ -441,38 +441,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
         //Debug.Log("LoadGridLook CHECK FIELD COUNT: " + CountAdd);
     }
-    /*
-    private void LoadOnlyData(string nameField)
-    {
-        int CountAdd = 0;
-
-        //var listDataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p=>p.IsReality==false);
-        var listDataObjects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-
-        //var listDataObjects = Storage.Person.GetAllDataPersonsForName(nameField);
-
-        foreach (ModelNPC.ObjectData dataObj in listDataObjects)
-        {
-            if (dataObj.IsReality)
-            {
-                //continue;
-
-                var realObj = Storage.Instance.GamesObjectsReal[nameField].Find(p => p.name == dataObj.NameObject);
-                if (realObj != null)
-                {
-                    //Debug.Log("LoadOnlyData ... EXIST: " + realObj.name);
-                    continue;
-                }
-            }
-            dataObj.IsReality = true;
-            Storage.GenGrid.CreateDataObject(dataObj, nameField);
-            //GameObject newField = CreatePrefabByName(dataObj);
-            //listGameObjectReal.Add(newField);
-            //CountAdd++;
-        }
-        //Debug.Log("LoadOnlyData ADD COUNT: " + CountAdd);
-    }
-    */
+    
 
     #endregion
 

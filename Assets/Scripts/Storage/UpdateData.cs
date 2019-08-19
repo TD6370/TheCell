@@ -85,10 +85,10 @@ public class UpdateData {
         foreach (var item in _GridDataG.FieldsD)
         {
             string nameField = item.Key;
-            List<ModelNPC.ObjectData> resListData = _GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+            List<ModelNPC.ObjectData> resListData = ReaderScene.GetObjecsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
             if (resListData != null)
             {
-                var resListDataTest = Storage.Instance.GridDataG.FieldsD[nameField].Objects.Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                var resListDataTest = ReaderScene.GetObjecsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
                 if (resListDataTest.Count() != resListData.Count())
                 {
                     Debug.Log("+++++ RemoveAllFindDataObject: resListDataTest.Count(" + resListDataTest.Count() + ") != resListData.Count(" + resListData.Count() + ")");
@@ -116,9 +116,30 @@ public class UpdateData {
         Serializator.SaveGridXml(_GridDataG, _datapathLevel, isNewWorld);
     }
 
+    public void SetObjecDataFromGrid(string nameField, int index, ModelNPC.ObjectData newData)
+    {
+        if (!ReaderScene.IsGridDataFieldExist(nameField))
+            Storage.Data.AddNewFieldInGrid(nameField, "SetObjecDataFromGrid");
+        ReaderScene.GetObjecsDataFromGrid(nameField)[index] = newData;
+    }
+
+    public void ClearObjecsDataFromGrid(string nameField)
+    {
+        ReaderScene.GetObjecsDataFromGrid(nameField).Clear();
+    }
+
+    public void RemoveObjecDataGridByIndex(string nameField, int index)
+    {
+        ReaderScene.GetObjecsDataFromGrid(nameField).RemoveAt(index);
+    }
+
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc)
     {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = newField };
+
+        if (Storage.Instance.IsLoadingWorldThread)
+            return fieldData;
+
         _GridDataG.FieldsD.Add(newField, fieldData);
 
         //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
@@ -318,20 +339,20 @@ public class UpdateData {
     {
         ModelNPC.ObjectData histData = null;
         if (Storage.Log.IsSaveHistory)
-            histData = _GridDataG.FieldsD[nameField].Objects[index];
+            histData = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
         if (isDebug)
             Debug.Log("****** RemoveDataObjectInGrid : start " + histData);
 
         if(dataObjDel!=null && dataObjDel.NameObject != histData.NameObject)
         {
-            index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            index = ReaderScene.GetObjecsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
             if (index == -1)
             {
                 Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
                 Storage.Log.SaveHistory(histData.NameObject, "ERROR RemoveDataObjectInGrid", callFunc, nameField, "Conflict Name", dataObjDel, histData);
                 return;
             }
-            histData = _GridDataG.FieldsD[nameField].Objects[index];
+            histData = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
             if(dataObjDel.NameObject != histData.NameObject)
             {
                 Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
@@ -339,7 +360,9 @@ public class UpdateData {
                 return;
             }
         }
-        _GridDataG.FieldsD[nameField].Objects.RemoveAt(index);
+
+        //ReaderScene.GetObjecsDataFromGrid(nameField).RemoveAt(index);
+        RemoveObjecDataGridByIndex(nameField, index);
 
         if (Storage.Log.IsSaveHistory)
         {
@@ -359,7 +382,9 @@ public class UpdateData {
     {
         if (Storage.Log.IsSaveHistory)
         {
-            ModelNPC.ObjectData oldObj = _GridDataG.FieldsD[nameField].Objects[index];
+            //ModelNPC.ObjectData oldObj = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
+            ModelNPC.ObjectData oldObj = ReaderScene.GetObjecDataFromGrid(nameField, index);
+            
             Storage.Log.SaveHistory(setObject.NameObject, "UpdateDataObect", callFunc, nameField, "", oldObj, setObject);
             Storage.Log.SaveHistory(oldObj.NameObject, "UpdateDataObect", callFunc, nameField, "RESAVE", oldObj, setObject);
         }
@@ -370,8 +395,7 @@ public class UpdateData {
             //Debug.Log("------------------------ UpdateDataObect NEW Pos");
             setObject.Position = newPos;
         }
-        //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
-        _GridDataG.FieldsD[nameField].Objects[index] = setObject;
+        SetObjecDataFromGrid(nameField, index, setObject);
 
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);

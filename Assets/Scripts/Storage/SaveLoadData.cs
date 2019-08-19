@@ -337,7 +337,15 @@ public class SaveLoadData : MonoBehaviour {
             return;
         }
 
-        GenericWorldLegacy();
+        if (Storage.Instance.GridDataG == null)
+        {
+            Storage.EventsUI.SetTittle = "CreateDataGamesObjectsWorld GridDataG is Empty";
+            Storage.EventsUI.ListLogAdd = "CreateDataGamesObjectsWorld GridDataG is Empty";
+            Storage.EventsUI.ListLogAdd = "CreateDataGamesObjectsWorld GridDataG is Empty";
+        }
+
+        //test
+        //GenericWorldLegacy();
     }
 
     private void GenericWorldLegacy()
@@ -399,7 +407,7 @@ public class SaveLoadData : MonoBehaviour {
     }
 
 
-    public void GenWorld()
+    public void GenericWorld()
     {
         Storage.Instance.IsLoadingWorld = true;
 
@@ -536,12 +544,12 @@ public class SaveLoadData : MonoBehaviour {
 
     public static ModelNPC.ObjectData GetObjectDataFromGrid(string nameGameObject, string nameField)
     {
-        if (!Storage.IsGridDataFieldExist(nameField))
+        if (!ReaderScene.IsGridDataFieldExist(nameField))
         {
             Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
             return null;
         }
-        List<ModelNPC.ObjectData> objects = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+        List<ModelNPC.ObjectData> objects = ReaderScene.GetObjecsDataFromGrid(nameField);
         int index = objects.FindIndex(p => p.NameObject == nameGameObject);
         if (index == -1)
         {

@@ -2054,14 +2054,14 @@ public class PaletteMapController : MonoBehaviour {
 
     private bool IsTestFieldFilled(string nameField, DataTile itemTile, bool isTestFilledField = false, bool isTestExistMeType = false)
     {
-        if (Storage.IsGridDataFieldExist(nameField))
+        if (ReaderScene.IsGridDataFieldExist(nameField))
         {
             if (isTestFilledField)
                 return true;
 
             if (isTestExistMeType)
             {
-                var indTM = Storage.Instance.GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.TypePrefabName == itemTile.Tag);
+                var indTM = ReaderScene.GetObjecsDataFromGrid(nameField).FindIndex(p => p.TypePrefabName == itemTile.Tag);
                 if (indTM != -1)
                     return true;
             }
@@ -2261,9 +2261,9 @@ public class PaletteMapController : MonoBehaviour {
                 Storage.Map.CheckSector(field);
 
             //Destroy All DATA Objects
-            if (Storage.IsGridDataFieldExist(field))
+            if (ReaderScene.IsGridDataFieldExist(field))
             {
-                Storage.Instance.GridDataG.FieldsD[field].Objects.Clear();
+                Storage.Data.ClearObjecsDataFromGrid(field);
             }
         }
     }

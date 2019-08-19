@@ -132,6 +132,9 @@ public class DiskData : MonoBehaviour
 
     IEnumerator StartThreadLoadDataBigXML()
     {
+        Storage.EventsUI.SetTittle = "StartThreadLoadDataBigXML";
+        Storage.EventsUI.ListLogAdd = "StartThreadLoadDataBigXML";
+
         yield return null;
 
         LoadingWordlTimer = Time.time;
@@ -154,6 +157,9 @@ public class DiskData : MonoBehaviour
         Storage.EventsUI.SetTittle = "Loaded:" + loadingTime;
         Storage.EventsUI.ListLogAdd = "Loaded:" + loadingTime;
         Debug.Log("*********************** Time loding World: " + loadingTime);
+
+        yield return null;
+        Storage.Instance.IsLoadingWorldThread = false;
 
         yield break;
     }
@@ -231,9 +237,8 @@ public class DiskData : MonoBehaviour
                                     yield break;
                                 }
                                 //-------------------------
-                                if (Storage.IsGridDataFieldExist(nameField))
+                                if (ReaderScene.IsGridDataFieldExist(nameField))
                                 {
-                                    //_GridDataG.FieldsD[nameField].Objects.Add(dataResult);
                                     fieldsD_Test[nameField].Objects.Add(dataResult);
                                 }
                                 else

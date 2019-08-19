@@ -639,7 +639,7 @@ public class StoragePerson : MonoBehaviour {
             //return "Error";
             return "";
         }
-        if (!Storage.IsGridDataFieldExist(p_OldField))
+        if (!ReaderScene.IsGridDataFieldExist(p_OldField))
         {
             Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Debug.Log("********** UpdatePosition      GridData not found OldField = " + p_OldField);
@@ -647,7 +647,7 @@ public class StoragePerson : MonoBehaviour {
         }
 
         List<GameObject> realObjectsOldField = Storage.Instance.GamesObjectsReal[p_OldField];
-        List<ModelNPC.ObjectData> dataObjectsOldField = Storage.Instance.GridDataG.FieldsD[p_OldField].Objects;
+        List<ModelNPC.ObjectData> dataObjectsOldField = ReaderScene.GetObjecsDataFromGrid(p_OldField);
 
         if (realObjectsOldField == null)
         {
@@ -745,10 +745,11 @@ public class StoragePerson : MonoBehaviour {
         }
 
         //add to new Field
-        if (!Storage.IsGridDataFieldExist(p_NewField))
+        if (!ReaderScene.IsGridDataFieldExist(p_NewField))
         {
             //#!!!!  Debug.Log("SaveListObjectsToData GridData ADD new FIELD : " + posFieldReal);
-            Storage.Instance.GridDataG.FieldsD.Add(p_NewField, new ModelNPC.FieldData());
+            //Storage.Instance.GridDataG.FieldsD.Add(p_NewField, new ModelNPC.FieldData());
+            Storage.Data.AddNewFieldInGrid(p_NewField, "UpdateGamePosition");
         }
 
         if (p_newPosition != gobj.transform.position)
@@ -767,9 +768,9 @@ public class StoragePerson : MonoBehaviour {
         //VALID ==============================================================
         string nameObjectTest = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
         //if (IsGridDataFieldExist(p_NewField))
-        if (Storage.IsGridDataFieldExist(p_NewField))
+        if (ReaderScene.IsGridDataFieldExist(p_NewField))
         {
-            var indT1 = Storage.Instance.GridDataG.FieldsD[p_NewField].Objects.FindIndex(p => p.NameObject == nameObjectTest);
+            var indT1 = ReaderScene.GetObjecsDataFromGrid(p_NewField).FindIndex(p => p.NameObject == nameObjectTest);
             if (indT1 != -1)
             {
                 Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);
@@ -847,8 +848,6 @@ public class StoragePerson : MonoBehaviour {
                 return "";
             }
         }
-
-        //_GridDataG.FieldsD[p_NewField].Objects.Add(objData);
 
         //remove
         dataObjectsOldField.RemoveAt(testIndData);

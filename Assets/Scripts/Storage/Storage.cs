@@ -60,6 +60,7 @@ public class Storage : MonoBehaviour {
 
     public string CorrectCreateName = "";
     public bool IsLoadingWorld = false;
+    public bool IsLoadingWorldThread = false;
     public bool IsTartgetPositionAll = false;
     public void IsTartgetPositionAllOn()
     {
@@ -290,24 +291,7 @@ public class Storage : MonoBehaviour {
             }
         }
     }
-
-    public static bool IsGridDataFieldExist(string field)
-    {
-        return Instance._GridDataG.FieldsD.ContainsKey(field);
-    }
-
-    public static List<ModelNPC.ObjectData> GetObjecsDataFromGrid(string nameField)
-    {
-        //if (!Storage.IsGridDataFieldExist(nameField))
-        //    Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
-        //return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-
-        if (!IsGridDataFieldExist(nameField))
-            Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
-        return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
-
-    }
-
+      
     //public static Storage Instance { get; private set; }
     public void Awake()
     {
@@ -534,7 +518,7 @@ public class Storage : MonoBehaviour {
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         if (isGenNewWorld)
         {
-            _scriptData.GenWorld();
+            _scriptData.GenericWorld();
         }
         else
         {
@@ -589,12 +573,15 @@ public class Storage : MonoBehaviour {
 
     public void LoadData()
     {
+
+        Storage.EventsUI.SetTittle = "##### LoadPathData";
         //string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelDataPart1x1.xml";
         if (File.Exists(_datapathLevel))
         {
-            _GridDataG = Serializator.LoadGridXml(_datapathLevel);
+            Storage.Instance.IsLoadingWorldThread = true;
 
+            _GridDataG = Serializator.LoadGridXml(_datapathLevel);
             //--load parts 
             //StartCoroutine(StartLoadDataPartsXML());
             //--load cash
@@ -615,6 +602,9 @@ public class Storage : MonoBehaviour {
         else
         {
             Debug.Log("# LoadPathData not exist: " + _datapathLevel);
+            Storage.EventsUI.ListLogAdd = "##### LoadPathData";
+            Storage.EventsUI.ListLogAdd = "##### LoadPathData not exist: " + _datapathLevel;
+            Storage.EventsUI.ListLogAdd = "##### LoadPathData";
         }
 
         _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
@@ -866,12 +856,12 @@ public class Storage : MonoBehaviour {
         }
 
         //Destroy to Data
-        if (false == IsGridDataFieldExist(nameField))
+        if (false == ReaderScene.IsGridDataFieldExist(nameField))
         {
             Debug.Log("+++++ ------- DestroyRealObject ----- !GridData.FieldsD not field=" + nameField);
             return false;
         }
-        List<ModelNPC.ObjectData> dataObjects = _GridDataG.FieldsD[nameField].Objects;
+        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjecsDataFromGrid(nameField);
         int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
         if (!isCorrect)
         {

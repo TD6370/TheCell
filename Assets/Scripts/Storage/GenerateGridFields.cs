@@ -393,7 +393,7 @@ public class GenerateGridFields : MonoBehaviour {
                 return;
 
             indErr = "3.";
-            List<ModelNPC.ObjectData> listDataObjectInField = _gridData.FieldsD[p_nameField].Objects;
+            List<ModelNPC.ObjectData> listDataObjectInField = ReaderScene.GetObjecsDataFromGrid(p_nameField);
             indErr = "4.";
             List<GameObject> listGameObjectReal = new List<GameObject>();
 
@@ -597,82 +597,6 @@ public class GenerateGridFields : MonoBehaviour {
             return -1;
         }
         return -1;
-
-        //--------------
-        //var listDataObjsInField = Storage.Person.GetAllDataPersonsForID(gobj.name);
-
-        //if (listDataObjsInField != null && listDataObjsInField.Count() != 0)
-        //{
-        //    bool isFind = false;
-        //    foreach (var item in listDataObjsInField)
-        //    {
-        //        Debug.Log("################# SaveListObjectsToData (" + gobj.name + ") [" + p_nameField + "] FIND: listDataObjsInField: " + item);
-        //        if (item.NameObject == gobj.name)
-        //        {
-        //            isFind = true;
-        //        }
-        //    }
-        //    Debug.Log("################# SaveListObjectsToData isFind " + isFind);
-        //    if (isFind)
-        //    {
-        //        findPersonData = Storage.Person.GetFindPersonsDataForName(p_nameField);
-        //        string strInfo = (findPersonData != null) ? "true " + ""
-        //            : "false";
-        //        Debug.Log("################# SaveListObjectsToData find PersonData is " + strInfo);
-        //        if (findPersonData != null)
-        //        {
-        //            //dataObjects = findPersonData.DataObj;
-        //            if (p_nameField != findPersonData.Field)
-        //            {
-        //                Debug.Log("################# SaveListObjectsToData (" + gobj.name + ") FIND Field (" + p_nameField +
-        //                    ") in DATA (" + findPersonData.DataObj + ") FIELD !!!!: " + findPersonData.Field);
-        //                Storage.Log.GetHistory(gobj.name);
-        //                return -1;
-        //            }
-        //            if (gobj.name != findPersonData.DataObj.NameObject)
-        //            {
-        //                Debug.Log("################# SaveListObjectsToData (" + gobj.name + ")  FIND Field [" + p_nameField +
-        //                    "] in DATA --- NAME !!!! (" + findPersonData.DataObj + ") [" + findPersonData.Field + "]");
-        //                Storage.Log.GetHistory(gobj.name);
-        //                return -1;
-        //            }
-
-
-
-        //            int indDataNew = Storage.Instance.GridDataG.FieldsD[findPersonData.Field].Objects.FindIndex(p => p.NameObject.IndexOf(p_nameField) != -1);
-        //            if (indDataNew == -1)
-        //            {
-        //                Debug.Log("################# SaveListObjectsToData 1. new indData =" + indDataNew);
-        //                indDataNew = Storage.Instance.GridDataG.FieldsD[findPersonData.Field].Objects.FindIndex(p => p.NameObject == findPersonData.DataObj.NameObject);
-        //            }
-        //            Debug.Log("################# SaveListObjectsToData 2. new indData " + indDataNew);
-        //            if (indDataNew == -1)
-        //            {
-        //                Debug.Log("################# SaveListObjectsToData   NOT FIND [" + findPersonData.Field + "][" + p_nameField + "] WORK FindPersonData " + findPersonData.DataObj + " " + findPersonData.DataObj);
-        //            }
-        //            else
-        //            {
-        //                if (dataObjects.Count <= indDataNew)
-        //                {
-        //                    Debug.Log("################# SaveListObjectsToData indDataNew[" + indDataNew + "]  out of range " + dataObjects.Count);
-        //                }
-        //                else
-        //                {
-        //                    //Debug.Log("#################");
-        //                    //Debug.Log("################# SaveListObjectsToData FIND NEW: " + dataObjects[indDataNew] + "[" + indDataNew + "] ");
-        //                    if (dataObjects[indDataNew].NameObject != gobj.name)
-        //                    {
-        //                        Debug.Log("################# SaveListObjectsToData " + dataObjects[indDataNew] + "[" + indDataNew + "]  <> " + gobj.name);
-        //                        return -1;
-        //                    }
-        //                    Debug.Log("################# SaveListObjectsToData SAVE New Index: " + dataObjects[indDataNew] + "[" + indDataNew + "] ");
-        //                    return indDataNew;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-        //return -1;
     }
 
     //#.D //UPDATE FOR LOOK - DATA_2
@@ -705,9 +629,7 @@ public class GenerateGridFields : MonoBehaviour {
             return;
         }
 
-        //@<<@ 
-        //List<SaveLoadData.ObjectData> dataObjects = _gridData.FieldsD[p_nameField].Objects;
-        List<ModelNPC.ObjectData> dataObjects = Storage.Instance.GridDataG.FieldsD[p_nameField].Objects;
+        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjecsDataFromGrid(p_nameField);
         try
         {
             indErr = "1.";
@@ -733,7 +655,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
                     indData = 0;
                     bool isFind = false;
-                    foreach (var itemObj in Storage.Instance.GridDataG.FieldsD[p_nameField].Objects)
+                    foreach (var itemObj in ReaderScene.GetObjecsDataFromGrid(p_nameField))
                     {
                         Debug.Log("[" + p_nameField + "] :: " + itemObj.NameObject);
                         if (itemObj.NameObject == gobj.name)
@@ -805,7 +727,7 @@ public class GenerateGridFields : MonoBehaviour {
                     indErr = "10. posFieldReal=" + posFieldReal + " <> posFieldOld=" + posFieldOld + "  " + gobj.name;
 
 
-                    if (!Storage.IsGridDataFieldExist(posFieldReal))
+                    if (!ReaderScene.IsGridDataFieldExist(posFieldReal))
                     {
                         //Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
                         //$$$LC.1
@@ -813,7 +735,7 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     else
                     {
-                        int indValid = Storage.Instance.GridDataG.FieldsD[posFieldReal].Objects.FindIndex(p => p.NameObject == gobj.name);
+                        int indValid = ReaderScene.GetObjecsDataFromGrid(posFieldReal).FindIndex(p => p.NameObject == gobj.name);
                         if (indValid != -1)
                         {
                             Debug.Log("################# SaveListObjectsToData ))))))))))))))   Find " + gobj.name + "  in " + posFieldReal);
@@ -833,9 +755,9 @@ public class GenerateGridFields : MonoBehaviour {
 
                     // #????# ????????????????
                     //Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
-                    if (Storage.IsGridDataFieldExist(posFieldOld))
+                    if (ReaderScene.IsGridDataFieldExist(posFieldOld))
                     {
-                        int indLast = Storage.Instance.GridDataG.FieldsD[posFieldOld].Objects.FindIndex(p => p.NameObject == gobj.name);
+                        int indLast = ReaderScene.GetObjecsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
                         if (indLast == -1)
                             Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
                     }
@@ -850,15 +772,6 @@ public class GenerateGridFields : MonoBehaviour {
 
                     indErr = "14.";
 
-                    //dataObjects = _gridData.FieldsD[posFieldReal].Objects;
-                    //indData = dataObjects.FindIndex(p => p.NameObject == name);
-                    //if (indData == -1)
-                    //{
-                    //    //dataObj = dataObjects[indData];
-                    //    Debug.Log("################# SaveListObjectsToData 3.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
-                    //    Storage.Log.GetHistory(gobj.name);
-                    //    continue;
-                    //}
                     dataObj = dataObjNew;
                     indErr = "15.";
                     //dataObj = dataObjects[indData];
@@ -870,15 +783,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //if (isDestroy)
                     //    dataObj.IsReality = false;
                     indErr = "16.";
-                    //#TEST -----------------
-                    //var objTest = _gridData.FieldsD[posFieldReal].Objects.Find(p => p.NameObject == dataObj.NameObject);
-                    //if (objTest != null)
-                    //{
-                    //    Debug.Log("################# Error SaveListObjectsToData GridData.FieldsD[" + posFieldReal + "].Objects already Exist : " + objTest);
-                    //    continue;
-                    //}
-                    //-----------------------------------
-
+                   
                     indErr = "17.";
                     //@SAVE@ ------ RESAVE PROPERTIES
                     if (dataObj.NameObject != gobj.name)
