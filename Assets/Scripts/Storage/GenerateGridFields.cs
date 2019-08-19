@@ -51,10 +51,6 @@ public class GenerateGridFields : MonoBehaviour {
 
     }
 
-    
-
-   
-
     public void StartGenGrigField(bool isOffsetHero = false)
     {
         int maxWidth = (int)GridY * -1;
@@ -63,9 +59,6 @@ public class GenerateGridFields : MonoBehaviour {
         Debug.Log("counter=" + Counter.ToString());
         Counter = 0;
         string _nameField = "";
-
-        
-        
 
         int startX = 0;
         int startY = 0;
@@ -80,10 +73,7 @@ public class GenerateGridFields : MonoBehaviour {
             maxWidthOffset += startY - 1;
         }
 
-        
-
         Storage.Instance.Fields.Clear();
-
         for (int y = startY; y > maxWidthOffset; y--)
         {
             for (int x = startX; x < maxHeightOffset; x++)
@@ -112,66 +102,8 @@ public class GenerateGridFields : MonoBehaviour {
                 Counter++;
             }
         }
-
-       
-
         Debug.Log("Pole Field name init : " + _nameField);
     }
-
-
-    //Add start position
-
-
-    //public void StartGenGrigField(bool isOffsetHero = false)
-    //{
-    //    int maxWidth = (int)GridY * -1;
-    //    int maxHeight = (int)GridX;
-    //    Counter = maxWidth * maxHeight;
-    //    Debug.Log("counter=" + Counter.ToString());
-    //    Counter = 0;
-    //    string _nameField = "";
-
-    //    int startX = 0;
-    //    int startY = 0;
-    //    int maxWidthOffset = maxWidth;
-    //    int maxHeightOffset = maxHeight;
-    //    if (isOffsetHero)
-    //    {
-    //        startX = Storage.Instance.ZonaField.X;
-    //        startY = Storage.Instance.ZonaField.Y*(-1);
-    //        //Debug.Log("-------- StartGenGrigField ---- " + startX + "x" + startY + "    h:" + maxHeightOffset + " w:" + maxWidthOffset);
-    //        maxHeightOffset += startX + 1;
-    //        maxWidthOffset += startY - 1;
-    //    }
-
-    //    Storage.Instance.Fields.Clear();
-
-    //    for (int y = startY; y > maxWidthOffset; y--)
-    //    {
-    //        for (int x = startX; x < maxHeightOffset; x++)
-    //        {
-    //            Vector3 pos = new Vector3(x, y, 1) * Spacing;
-    //            pos.z = 0;
-
-    //            GameObject newField;
-    //            if (!IsUsePoolField)
-    //            {
-    //                newField = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-    //            }else
-    //            {
-    //                newField = InstantiatePool(prefabField, pos);
-    //            }
-    //            newField.tag = "Field";
-    //            string nameField = Helper.GetNameField(x, y);
-    //            newField.name = nameField;
-    //            _nameField = nameField;
-    //            Storage.Instance.Fields.Add(nameField, newField);
-    //            Counter++;
-    //        }
-    //    }
-
-    //    Debug.Log("Pole Field name init : " + _nameField);
-    //}
 
     private bool m_onLoadFields = false;
 
@@ -185,13 +117,11 @@ public class GenerateGridFields : MonoBehaviour {
 
         if (!m_onLoadFields && (Storage.Instance.Fields.Count < countField || countField == 0))
         {
-
             Debug.Log("!!!!! Fields.Count =" + Storage.Instance.Fields.Count + "   Grid Field Limit =" + countField);
             Storage.Data.IsUpdatingLocationPersonGlobal = false;
             return;
         }
         m_onLoadFields = true;
-        
 
         if (_movement.x != 0)
         {
@@ -347,17 +277,8 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         Storage.Data.IsUpdatingLocationPersonGlobal = false;
-
         //Profiler.EndSample();
     }
-
-    /*
-    public void CreateDataObject(ModelNPC.ObjectData dataObj, string fieldName)
-    {
-        GameObject newGameObject = CreatePrefabByName(dataObj);
-        Storage.Instance.GamesObjectsReal[fieldName].Add(newGameObject);
-    }
-    */
 
     public void LoadObjectToReal(string nameField)
     {
@@ -869,16 +790,6 @@ public class GenerateGridFields : MonoBehaviour {
             _movementUfo.UpdateData("GameObjectUpdatePersonData");
     }
 
-
-    //public GameObject FindPrefab(string namePrefab, string nameObject)
-    //{
-    //    //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
-    //    if (_sctiptData == null)
-    //        return null;
-
-    //    return _sctiptData.FindPrefab(namePrefab, nameObject);
-    //}
-
     public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
     {
         var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
@@ -889,111 +800,6 @@ public class GenerateGridFields : MonoBehaviour {
         return newGO;
     }
 
-
-    //--------------- LINK: public static ModelNPC.ObjectData CreateObjectData(GameObject p_gobject)
-    //+++ CreateObjectData +++ LoadObjectForLook
-    /*
-    public GameObject CreatePrefabByName(ModelNPC.ObjectData objData)
-    {
-        if (PoolGameObjects.IsUseTypePoolPrefabs)
-        {
-            var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
-            objData.UpdateGameObject(newGO);
-            newGO.transform.position = objData.Position;
-            newGO.name = objData.NameObject;
-
-            return newGO;
-        }
-
-        //LEGACY CODE
-        string strErr = "start";
-
-        string typePrefab = objData.TypePrefabName;
-        string namePrefab = objData.NameObject;
-        Vector3 pos = objData.Position;
-     
-        GameObject newObjGame = null;// = new GameObject();
-        try
-        {
-            strErr = "1";
-            newObjGame = FindPrefab(typePrefab, objData.NameObject);
-
-            newObjGame.transform.position = pos; //@!@.1
-
-            strErr = "2";
-            SaveLoadData.TypePrefabs prefabType = SaveLoadData.TypePrefabs.PrefabField;
-
-
-            strErr = "3";
-            if (!String.IsNullOrEmpty(newObjGame.tag))
-                prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), newObjGame.tag.ToString()); ;
-
-            switch (prefabType)
-            {
-                case SaveLoadData.TypePrefabs.PrefabUfo:
-                    strErr = "4";
-                    var objUfo = objData as ModelNPC.GameDataUfo;
-                    if (objUfo != null)
-                    {
-                        //LoadObjectForLook:  DATA -->> PERSONA #P#
-                        strErr = "5";
-                        objUfo.UpdateGameObject(newObjGame);
-                    }
-                    else
-                    {
-                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is Model ObjectDataUfo !!!!");
-                    }
-                    break;
-                case SaveLoadData.TypePrefabs.PrefabBoss: //$$
-                    strErr = "6";
-                    //Debug.Log("################ CreatePrefabByName.. BOSS: " + prefabType);
-                    var objBoss = objData as ModelNPC.GameDataBoss;
-                    if (objBoss != null)
-                    {
-                        strErr = "7";
-                        objBoss.UpdateGameObject(newObjGame);
-                    }
-                    else
-                    {
-                        Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is Model ObjectDataUfo !!!!");
-                    }
-                    break;
-                case SaveLoadData.TypePrefabs.PrefabField:
-                    strErr = "8";
-                    var objTerra = objData as ModelNPC.TerraData;
-                    if (objTerra != null)
-                    {
-                        strErr = "9";
-                        objTerra.UpdateGameObject(newObjGame);
-                    }
-                    else
-                    {
-                        //---fix new pool type prefab
-                        var objAlien = objData as ModelNPC.GameDataAlien;
-                        if (objAlien != null)
-                            objAlien.UpdateGameObject(newObjGame);
-                        else
-                            Debug.Log("CreatePrefabByName... (" + objData.NameObject + ")  objData not is TerraData !!!!");
-                    }
-                    break;
-                default:
-                    //Debug.Log("################ CreatePrefabByName.. default Type: " + prefabType);
-                    break;
-            }
-            //.............
-            strErr = "10";
-            newObjGame.name = namePrefab;
-
-        }
-        catch (Exception x)
-        {
-            Debug.Log("###############" + strErr + " CreatePrefabByName: tag " + newObjGame.tag + " " + x.Message);
-        }
-
-        return newObjGame;
-    }
-    */
-
     public void SaveAllRealGameObjects()
     {
         if (Storage.Instance.IsLoadingWorld)
@@ -1001,12 +807,9 @@ public class GenerateGridFields : MonoBehaviour {
             Debug.Log("_______________ LOADING WORLD ....._______________");
             return;
         }
-
         Storage.Instance.IsLoadingWorld = true;
 
-
         Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects ...........");
-
         DateTime startTestTime = DateTime.Now;
 
         //------------
@@ -1018,40 +821,7 @@ public class GenerateGridFields : MonoBehaviour {
             SaveListObjectsToData(nameField);
         }
         //------------
-
         Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T1 : " + (DateTime.Now - startTestTime).TotalMilliseconds);
-        //startTestTime = DateTime.Now;
-
-        //-------------
-        //var listKey = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
-        //foreach (var itemKey in listKey)
-        //{
-        //    List<GameObject> objects = Storage.Instance.GamesObjectsReal[itemKey];
-
-        //    //foreach (var gobj in objects)
-        //    for (int i = objects.Count() - 1; i >= 0; i--)
-        //    {
-        //        var gobj = objects[i];
-
-        //        var moveUfo = gobj.GetComponent<MovementUfo>();
-        //        if (moveUfo != null)
-        //        {
-        //            moveUfo.SaveData();
-        //        }
-        //        //var moveNPC = gobj.GetComponent<MovementNPC>();
-        //        //if (moveNPC != null)
-        //        //    moveNPC.SaveData();
-        //        //var moveBoss = gobj.GetComponent<MovementBoss>();
-        //        //if (moveBoss != null)
-        //        //    moveBoss.SaveData();
-        //    }
-        //}
-        //------------
-        //Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T2 : " + (DateTime.Now - startTestTime).TotalMilliseconds);
-
-        //Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR);
-        //_dataUfo.NextPosition(this.gameObject);
-        //Storage.Instance.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
 
         Storage.Instance.IsLoadingWorld = false;
     }
@@ -1092,69 +862,29 @@ public class GenerateGridFields : MonoBehaviour {
     private GameObject GetPrefabField(Vector3 pos, string nameFieldNew)
     {
         GameObject resGO;
-        //#PRED 
-        //if (!PoolGameObjects.IsUsePoolField)
-        //{
-        //    resGO = (GameObject)Instantiate(prefabField, pos, Quaternion.identity);
-        //}
-        //else
-        //{
-            resGO = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
-            if (PoolGameObjects.IsUsePoolObjects)
-            {
-                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
-                {
-                    ModelView = "Tundra"
-                };
-                terrD.UpdateGameObject(resGO);
-                //fix alpha field
-                resGO.GetComponent<SpriteRenderer>().sortingLayerName = Helper.LayerTerraName;
-            }
-        //}
-
+        resGO = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
+        ModelNPC.TerraData terrD = new ModelNPC.TerraData()
+        {
+            ModelView = "Weed"
+        };
+        terrD.UpdateGameObject(resGO);
+        //fix alpha field
+        resGO.GetComponent<SpriteRenderer>().sortingLayerName = Helper.LayerTerraName;
         return resGO;
     }
+
     private bool DestroyField(GameObject findGobjField)
     {
-        //#PRED 
-        //if (!PoolGameObjects.IsUsePoolObjects)
-        if (!PoolGameObjects.IsUsePoolField)
-        {
-            Destroy(findGobjField);
-        }
-        else
-        {
-            //For Pool
-            Storage.Pool.DestroyPoolGameObject(findGobjField);
-
-        }
+        //For Pool
+        Storage.Pool.DestroyPoolGameObject(findGobjField);
         return true;
     }
 
     private bool DestroyObject(GameObject findGobj)
     {
-        if (!PoolGameObjects.IsUsePoolObjects)
-        {
-            Destroy(findGobj);
-        }
-        else
-        {
-            //For Pool
-            Storage.Pool.DestroyPoolGameObject(findGobj);
-        }
+        //For Pool
+        Storage.Pool.DestroyPoolGameObject(findGobj);
         return true;
     }
-
-
-    private void TestIsNewGameObject(string info = "")
-    {
-        var findEmpty = GameObject.Find("New Game Object");
-        if (findEmpty != null)
-        {
-            Debug.Log("@@@@@@@@@@@@ New Game Object " + DateTime.Now.ToShortTimeString() + "    " + info);
-        }
-    }
-
-   
 
 }

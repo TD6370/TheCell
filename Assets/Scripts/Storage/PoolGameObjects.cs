@@ -227,76 +227,47 @@ public class PoolGameObjects
     public PoolGameObject AddPoolNewTypeObject(string prefabTag, bool isLog = false)
     {
         GameObject newGO = null;
-        //if (IsUseTypePoolPrefabs)
-        //{
-            if (!m_collectionPoolPrefabsStr.ContainsKey(prefabTag))
-            {
-                prefabTag = TypePoolPrefabs.PoolFloor.ToString();
-                Debug.Log("############ AddPoolNewTypeObject Not prefab in collection for prefabTag=" + prefabTag);
-            }
-            GameObject prefabPoolInst = m_collectionPoolPrefabsStr[prefabTag];
-            if (prefabPoolInst == null)
-            {
-                Debug.Log("####### AddPoolNewTypeObject prefabPoolInst == null " + prefabTag);
-            }
-            newGO = SaveLoadData.CopyGameObject(prefabPoolInst);
-        //}
-        //else
-        //{
-        //    newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
-        //    //if (prefabTag == "PrefabPerson")
-        //    //    newGO.tag = "PrefabPerson";
-        //}
+        if (!m_collectionPoolPrefabsStr.ContainsKey(prefabTag))
+        {
+            prefabTag = TypePoolPrefabs.PoolFloor.ToString();
+            Debug.Log("############ AddPoolNewTypeObject Not prefab in collection for prefabTag=" + prefabTag);
+        }
+        GameObject prefabPoolInst = m_collectionPoolPrefabsStr[prefabTag];
+        if (prefabPoolInst == null)
+        {
+            Debug.Log("####### AddPoolNewTypeObject prefabPoolInst == null " + prefabTag);
+        }
+        newGO = SaveLoadData.CopyGameObject(prefabPoolInst);
 
         PoolGameObject poolObj = new PoolGameObject();
         poolObj.Name = "GameObjectPool " + indexPool++;
         poolObj.Tag = prefabTag;
-        //if (false == IsUseTypePoolPrefabs && newGO.tag != prefabTag)//fix legacy code
-        //    newGO.tag = prefabTag;
         poolObj.Init(newGO);
         poolObj.Deactivate();
 
         //Fix Tile field 
-        //if (PoolGameObjects.IsUsePoolObjects)
-        //{
-            bool isField = false;
-            //if (IsUseTypePoolPrefabs)
-            //{
-                isField = TypePoolPrefabs.PoolFloor.ToString() == prefabTag;
-            //} else
-            //{
-            //    var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
-            //    isField = (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString());
-            //}
-            if(isField)
+        bool isField = false;
+        isField = TypePoolPrefabs.PoolFloor.ToString() == prefabTag;
+        if(isField)
+        {
+            //see: GetPrefabField
+            ModelNPC.TerraData terrD = new ModelNPC.TerraData()
             {
-                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
-                {
-                    ModelView = "Weed"
-                };
-                //Update texture Object pool Field default
-                terrD.UpdateGameObject(newGO);
-            }
-        //}
+                ModelView = "Weed"
+            };
+            //Update texture Object pool Field default
+            terrD.UpdateGameObject(newGO);
+        }
+        var stackPool = new Stack<PoolGameObject>();
+        if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
+            PoolGamesObjectsStack.Add(prefabTag, stackPool);
+        else
+            stackPool = PoolGamesObjectsStack[prefabTag];
 
-        //if (IsStack)
-        //{
-            var stackPool = new Stack<PoolGameObject>();
-            if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
-                PoolGamesObjectsStack.Add(prefabTag, stackPool);
-            else
-                stackPool = PoolGamesObjectsStack[prefabTag];
+        //int countInPool = PoolGamesObjectsStack[prefabTag].Count;
 
-            //#test
-            int countInPool = PoolGamesObjectsStack[prefabTag].Count;
-
-            stackPool.Push(poolObj);
-            //PoolGamesObjectsStack.Add(prefabTag, stackPool);
-        //}
-        //else
-        //{
-        //    PoolGamesObjects.Add(poolObj);
-        //}
+        stackPool.Push(poolObj);
+           
         return poolObj;
     }
 
