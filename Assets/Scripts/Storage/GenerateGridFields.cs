@@ -965,14 +965,14 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
 
-    public GameObject FindPrefab(string namePrefab, string nameObject)
-    {
-        //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
-        if (_sctiptData == null)
-            return null;
+    //public GameObject FindPrefab(string namePrefab, string nameObject)
+    //{
+    //    //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
+    //    if (_sctiptData == null)
+    //        return null;
 
-        return _sctiptData.FindPrefab(namePrefab, nameObject);
-    }
+    //    return _sctiptData.FindPrefab(namePrefab, nameObject);
+    //}
 
     public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
     {

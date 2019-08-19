@@ -245,7 +245,7 @@ public class MovementUfo : MonoBehaviour {
 
     private ModelNPC.GameDataUfo FindObjectData(string callFunc)
     {
-        var dataUfo = SaveLoadData.FindObjectData(this.gameObject) as ModelNPC.GameDataUfo;
+        var dataUfo = SaveLoadData.GetObjectDataByGobj(this.gameObject) as ModelNPC.GameDataUfo;
 
 
         if (dataUfo == null)

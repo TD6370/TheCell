@@ -18,7 +18,7 @@ public class GameObjecDataController : MonoBehaviour {
 
     public ModelNPC.ObjectData UpdateData(string callFunc)
     {
-        _dataObject = SaveLoadData.FindObjectData(this.gameObject);
+        _dataObject = SaveLoadData.GetObjectDataByGobj(this.gameObject);
    
         if (_dataObject == null)
         {

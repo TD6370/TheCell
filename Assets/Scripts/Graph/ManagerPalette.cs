@@ -1,4 +1,5 @@
 ﻿//using System.Collections;
+using System;
 using System.Collections.Generic;
 //using UnityEditor.Sprites;
 using UnityEngine;
@@ -186,15 +187,26 @@ public class ManagerPalette : MonoBehaviour {
         return spritesAtlas;
     }
 
-    //public Sprite GetSpriteFromAtlasPrefab(string prefabType)
-    //{
-    //    string nameTexture = NamesTexturesMaps[prefabType];
-    //    //Sprite[] spritesAtlas = new Sprite[SpriteAtlasMapPrefab.spriteCount];
-    //    //SpriteAtlasMapPrefab.GetSprites(spritesAtlas);
-    //    //SpriteAtlasMapPrefab
-    //    return SpriteAtlasMapPrefab.GetSprite(nameTexture);// .Find(p=>p.name=="");
-    //}
-#endregion
+
+    public Sprite GetSpriteBoss(int index, out string spriteName)
+    {
+
+        try
+        {
+            spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
+
+            return spriteBoss;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("################# GetSpriteBoss [" + index + "] : " + ex.Message);
+        }
+        spriteName = "error";
+
+        return null;
+    }
+    #endregion
 
 
     public static Color GetColor(string nameColor)

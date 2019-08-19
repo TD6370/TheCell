@@ -38,17 +38,6 @@ public class UpdateData {
             return Storage.Instance.GridDataG;
         }
     }
-
-    //// Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
-
     #region Add Remove Update Real and Data
 
 
@@ -121,12 +110,6 @@ public class UpdateData {
         }
         return isRemoved;
     }
-
-    //----- Data Object
-    //public void ClearGridData()
-    //{
-    //    _GridDataG = new SaveLoadData.GridData();
-    //}
 
     public void SaveGridGameObjectsXml(bool isNewWorld = false)
     {
@@ -393,25 +376,6 @@ public class UpdateData {
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
     }
-
-    //public void UpdateDataObect(string nameField, string nameObj, SaveLoadData.ObjectData setObject, string callFunc, Vector3 newPos = new Vector3())
-    //{
-    //    if(!_GridDataG.FieldsD.ContainsKey(nameField))
-    //    {
-    //        Debug.Log("################### UpdateDataObect not in DATA Field:" + nameField);
-    //        return;
-    //    }
-
-    //    int index = _GridDataG.FieldsD[nameField].Objects.FindIndex(p => p.NameObject == nameObj);
-    //    if(index==-1)
-    //    {
-    //        Debug.Log("################### UpdateDataObect not DATA (" + nameField + ") Find : " + nameObj);
-    //        return;
-    //    }
-    //    UpdateDataObect(nameField, index, setObject, callFunc, newPos);
-
-    //}
-
     //----- Real Object
 
     public List<GameObject> AddNewFieldInRealObject(string newField, string callFunc)
@@ -501,36 +465,6 @@ public class UpdateData {
 
         _GamesObjectsReal[nameField].RemoveAt(indexDel);
     }
-
-    //async Task TestReader(System.IO.Stream stream)
-    //{
-    //    XmlReaderSettings settings = new XmlReaderSettings();
-    //    settings.Async = true;
-
-    //    using (XmlReader reader = XmlReader.Create(stream, settings))
-    //    {
-    //        while (await reader.ReadAsync())
-    //        {
-    //            switch (reader.NodeType)
-    //            {
-    //                case XmlNodeType.Element:
-    //                    Console.WriteLine("Start Element {0}", reader.Name);
-    //                    break;
-    //                case XmlNodeType.Text:
-    //                    Console.WriteLine("Text Node: {0}",
-    //                             await reader.GetValueAsync());
-    //                    break;
-    //                case XmlNodeType.EndElement:
-    //                    Console.WriteLine("End Element {0}", reader.Name);
-    //                    break;
-    //                default:
-    //                    Console.WriteLine("Other node {0} with value {1}",
-    //                                    reader.NodeType, reader.Value);
-    //                    break;
-    //            }
-    //        }
-    //    }
-    //}
 
     Thread threadLoadWorld = null;
     public string DataPathBigPart = Application.dataPath + "/Levels/LevelDataPart1x2.xml";
@@ -622,89 +556,6 @@ public class UpdateData {
             fieldsD_Temp = tempGridData.FieldsD;
         }
     }
-
-    /*
-    public void BackgroundLoadDataBigXML()
-    {
-        string stepErr = "start";
-        //Debug.Log("Loaded Xml GridData start...");
-
-        //fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();
-
-        string saveField = "";
-
-        if (File.Exists(DataPathBigPart))
-        {
-            string nameField = "";
-
-            using (XmlReader xml = XmlReader.Create(DataPathBigPart))
-            {
-                while (xml.Read())
-                {
-                    switch (xml.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            if (xml.Name == "Key")
-                            {
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                nameField = el.Value;
-                                
-                                //nameField = xml.Value;
-                                break;
-                            }
-                            //if (xml.Name == "Objects")
-                            if (xml.Name == "ObjectData") //WWW
-                            {
-                                XElement el = XElement.ReadFrom(xml) as XElement;
-                                string inputString = el.ToString();
-
-                                XmlSerializer serializer = new XmlSerializer(typeof(ModelNPC.ObjectData), Serializator.extraTypes);
-                                StringReader stringReader = new StringReader(inputString);
-                                //--------------
-
-                                ModelNPC.ObjectData dataResult;
-                                try
-                                {
-                                    dataResult = (ModelNPC.ObjectData)serializer.Deserialize(stringReader);
-                                }
-                                catch (Exception x)
-                                {
-                                    Debug.Log("############# " + x.Message);
-                                    return;
-                                }
-                                //-------------------------
-                                if(saveField==nameField)
-                                {
-                                    if(_GridDataG.FieldsD.ContainsKey(nameField))
-                                    {
-                                        fieldsD_Temp[nameField].Objects.Add(dataResult);
-                                    }
-                                    else
-                                    {
-                                        fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
-                                        {
-                                            NameField = nameField,
-                                            Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                        });
-                                    }
-                                }
-                                else
-                                {
-                                    saveField = nameField;
-                                    fieldsD_Temp.Add(nameField, new ModelNPC.FieldData()
-                                    {
-                                        NameField = nameField,
-                                        Objects = new List<ModelNPC.ObjectData>() { dataResult }
-                                    });
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        */
         #endregion
 
     }

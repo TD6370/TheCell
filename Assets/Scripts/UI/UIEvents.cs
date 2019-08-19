@@ -503,7 +503,7 @@ public class UIEvents : MonoBehaviour {
             case "GenWorldExtremal":
                 Storage.GamePause = true;
                 Storage.Instance.StopGame();
-                Storage.GridData.CreateDataGamesObjectsExtremalWorld();
+                Storage.GridData.GenericWorldExtremal();
                 Storage.Instance.ReloadWorld();
                 Storage.GenGrid.LoadObjectsNearHero();
                 break;

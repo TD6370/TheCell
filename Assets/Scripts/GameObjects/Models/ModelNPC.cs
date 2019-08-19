@@ -521,7 +521,7 @@ public class ModelNPC
                 //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
             }
             string _nameSprite = "";
-            Sprite spriteMe = Storage.GridData.GetSpriteBoss(Level, out _nameSprite);
+            Sprite spriteMe = Storage.Palette.GetSpriteBoss(Level, out _nameSprite);
             ModelView = _nameSprite;
             if (spriteMe != null)
             {

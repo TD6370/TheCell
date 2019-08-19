@@ -337,13 +337,18 @@ public class SaveLoadData : MonoBehaviour {
             return;
         }
 
+        GenericWorldLegacy();
+    }
+
+    private void GenericWorldLegacy()
+    {
         int coutCreateObjects = 0;
         TypePrefabs prefabName = TypePrefabs.PrefabField;
         Debug.Log("# CreateDataGamesObjectsWorld...");
         Storage.Instance.ClearGridData();
 
         int countAll = Helper.HeightLevel * 2;
-        int index =1;
+        int index = 1;
 
         for (int y = 0; y < Helper.HeightLevel; y++)
         {
@@ -391,6 +396,27 @@ public class SaveLoadData : MonoBehaviour {
         Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
 
         Storage.EventsUI.SetTittle = String.Format("World is Loaded");
+    }
+
+
+    public void GenWorld()
+    {
+        Storage.Instance.IsLoadingWorld = true;
+
+        if (Storage.PaletteMap.SelectedCell == null)
+        {
+            Storage.PaletteMap.GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
+        }
+        else
+        {
+            Storage.PaletteMap.GenericOnWorld(true);
+        }
+        Storage.Instance.IsLoadingWorld = false;
+    }
+
+    public void GenericWorldExtremal()
+    {
+        StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
     }
 
 
@@ -495,99 +521,8 @@ public class SaveLoadData : MonoBehaviour {
 
         yield break;
     }
-
-    IEnumerator CreateDataGamesObjectsExtremalTerraWorldProgress()
-    {
-        int coutCreateObjects = 0;
-        TypePrefabs prefabName = TypePrefabs.PrefabField;
-        Debug.Log("# CreateDataGamesObjectsWorld...");
-        Storage.Instance.ClearGridData();
-
-        int countAll = Helper.HeightLevel * 2;
-        int index = 1;
-
-        for (int y = 0; y < Helper.HeightLevel; y++)
-        {
-            for (int x = 0; x < Helper.WidthLevel; x++)
-            {
-                int intRndCount = UnityEngine.Random.Range(0, 5);
-
-                int maxObjectInField = 1;
-
-                if (intRndCount == 0)
-                    maxObjectInField = 2;
-                else
-                    maxObjectInField = 1;
-
-                intRndCount = UnityEngine.Random.Range(0, 3);
-
-                string nameField = Helper.GetNameField(x, y);
-
-                index++;
-
-
-                Storage.EventsUI.SetTittle = String.Format("{0} % [{1}]", (countAll / index).ToString(), index.ToString());
-
-                List<GameObject> ListNewObjects = new List<GameObject>();
-                for (int i = 0; i < maxObjectInField; i++)
-                {
-                    //GEN -----
-                    //prefabName = GenObjectWorld();// UnityEngine.Random.Range(1, 8);
-                    //if (prefabName == TypePrefabs.PrefabField)
-                    //continue;
-                    //-----------
-                    if (i == 0)
-                        prefabName = TypePrefabs.PrefabField;
-                    else if (i == 1)
-                    {
-                        if(intRndCount==1)
-                            prefabName = TypePrefabs.PrefabVood;
-                        else
-                            prefabName = TypePrefabs.PrefabWallWood;
-                    }
-
-                    int _y = y * (-1);
-                    Vector3 pos = new Vector3(x, _y, 0) * Spacing;
-                    pos.z = -1;
-                    if (prefabName == TypePrefabs.PrefabUfo)
-                        pos.z = -2;
-
-                    string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-                    ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
-                    objDataSave.NameObject = nameObject;
-                    //objDataSave.TagObject = prefabName.ToString(); //@del
-                    objDataSave.Position = pos;
-
-                    coutCreateObjects++;
-
-                    Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
-                }
-            }
-            yield return null;
-        }
-
-        Storage.EventsUI.SetTittle = String.Format("World Loaded");
-
-        Storage.Data.SaveGridGameObjectsXml(true);
-
-        Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
-
-        yield break;
-    }
-
-    public void CreateDataGamesObjectsExtremalWorld()
-    {
-        //Storage.GamePause = true;
-        //Storage.Instance.StopGame();
-        //Storage.Instance.DestroyAllGamesObjects();
-
-        StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
-        //StartCoroutine(CreateDataGamesObjectsExtremalTerraWorldProgress());
-
-        //Storage.GamePause = false;
-    }
        
-    public static ModelNPC.ObjectData FindObjectData(GameObject p_gobject)
+    public static ModelNPC.ObjectData GetObjectDataByGobj(GameObject p_gobject)
     {
         ModelNPC.ObjectData newObject;
         string nameGameObject = p_gobject.name;
@@ -614,26 +549,6 @@ public class SaveLoadData : MonoBehaviour {
             return null;
         }
         return objects[index];
-    }
-
-    public GameObject FindPrefab(string namePrefab, string nameObject)
-    {
-        if (PoolGameObjects.IsUsePoolObjects && !string.IsNullOrEmpty(nameObject))
-        {
-            //#FIX POOL
-            string tagPool = GetTypePool(namePrefab);
-            GameObject gobj = Storage.Pool.GetPoolGameObject(nameObject, tagPool, new Vector3(0, 0, 0));
-            if(gobj==null)
-                Debug.Log("############## Error on FindPrefab gobj is null");
-            return gobj;
-        }
-        else
-        {
-            //#TEST #PREFABF.1
-            //return (GameObject)Resources.Load("Prefabs/" + namePrefab, typeof(GameObject));
-            //#TEST #PREFABF.2
-            return FindPrefabHieracly(namePrefab);
-        }
     }
 
     private string GetTypeByName(string namePrefab)
@@ -703,171 +618,17 @@ public class SaveLoadData : MonoBehaviour {
 
     public string GetTypePool(string namePrefab)
     {
-        if (PoolGameObjects.IsUseTypePoolPrefabs)
-        {
+        //if (PoolGameObjects.IsUseTypePoolPrefabs)
+        //{
             return namePrefab;
-        }
-
-        string resType = "";
-        if (namePrefab == TypePrefabs.PrefabElka.ToString())
-        {
-            return namePrefab;
-        }
-        else if (namePrefab == "Field")
-        {
-            return TypePrefabs.PrefabField.ToString();
-        }
-        else
-        {
-            if (PoolGameObjects.IsUseTypePoolPrefabs == false)
-            {
-                //fix legacy code
-                if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())
-                {
-                    string oldType = TypePrefabs.PrefabPerson.ToString();
-                    namePrefab = oldType;
-                }
-                else if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolFlore.ToString())
-                {
-                    string oldType = TypePrefabs.PrefabField.ToString();
-                    namePrefab = oldType;
-                }
-                //else if(namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPerson.ToString())
-                //{
-                //    var t = "TEST";
-                //}
-                //else if (namePrefab == PoolGameObjects.TypePoolPrefabs.PoolPersonUFO.ToString())
-                //{
-                //    var t = "TEST";
-                //}
-                //else
-                //{
-                //    string oldType = TypePrefabs.PrefabField.ToString();
-                //    namePrefab = oldType;
-                //}
-            }
-            return GetTypeByName(namePrefab);
-        }
-        return resType;
+        //}
     }
 
     public static GameObject CopyGameObject(GameObject defObj)
     {
         return Instantiate(defObj);
     }
-
-    private GameObject FindPrefabHieracly(string namePrefab)
-    {
-        try
-        {
-            TypePrefabs prefabType = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), namePrefab);
-            GameObject resPrefab = null;
-
-            switch (prefabType)
-            {
-                case TypePrefabs.PrefabRock:
-                    resPrefab = Instantiate(PrefabRock);
-                    break;
-                case TypePrefabs.PrefabVood:
-                    resPrefab = Instantiate(PrefabVood);
-                    break;
-                case TypePrefabs.PrefabUfo:
-                    resPrefab = Instantiate(PrefabUfo);
-                    break;
-                case TypePrefabs.PrefabBoss:
-                    resPrefab = Instantiate(PrefabBoss);
-                    break;
-                case TypePrefabs.PrefabWallRock:
-                    resPrefab = Instantiate(PrefabWallRock);
-                    break;
-                case TypePrefabs.PrefabWallWood:
-                    resPrefab = Instantiate(PrefabWallWood);
-                    break;
-                case TypePrefabs.PrefabElka:
-                    resPrefab = Instantiate(PrefabElka);
-                    break;
-                case TypePrefabs.PrefabField:
-                    resPrefab = Instantiate(PrefabField);
-                    break;
-                case TypePrefabs.PrefabPerson:
-                    resPrefab = Instantiate(PrefabPerson);
-                    //fix legacy code
-                    //string oldType = TypePrefabs.PrefabPerson.ToString();
-                    //resPrefab.tag = oldType;
-                    break;
-                case TypePrefabs.PrefabFlore:
-                    resPrefab = Instantiate(PrefabFlore);
-                    break;
-                default:
-                    Debug.Log("!!! FindPrefabHieracly no type : " + prefabType.ToString());
-                    break;
-
-            }
-
-            if (resPrefab == null)
-                Debug.Log("############## Error on FindPrefabHieracly gobj is null");
-
-            //Debug.Log("FindPrefabHieracly: " + prefabType.ToString());
-            return resPrefab;
-        }
-        catch (Exception x)
-        {
-            Debug.Log("Error FindPrefabHieracly: " + x.Message);
-        }
-        Debug.Log("Error FindPrefabHieracly: object is null");
-
-        return null;
-    }
-
-    public Sprite GetSpriteBoss(int index, out string spriteName)
-    {
-        
-        try
-        {
-            spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
-            Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
-            
-            return spriteBoss;
-        }
-        catch (Exception x)
-        {
-            Debug.Log("################# GetSpriteBoss [" + index + "] : " + x.Message);
-        }
-        spriteName = "error";
-
-        return null;
-    }
-
-    //public static ModelNPC.ObjectData BildObjectData(TypePrefabs prefabType, bool isTerraGen = false)
-    //{
-    //    ModelNPC.ObjectData objGameBild;
-
-    //    switch (prefabType)
-    //    {
-    //        case SaveLoadData.TypePrefabs.PrefabUfo:
-    //            objGameBild = new ModelNPC.GameDataUfo();
-    //            break;
-    //        case SaveLoadData.TypePrefabs.PrefabBoss:
-    //            objGameBild = new ModelNPC.GameDataBoss(); //$$
-    //            break;
-    //        case SaveLoadData.TypePrefabs.PrefabField:
-    //            //objGameBild = new ModelNPC.TerraData(isTerraGen); //$$
-    //            objGameBild = new ModelNPC.TerraData(); //$$
-    //            break;
-    //        case SaveLoadData.TypePrefabs.PrefabNPC:
-    //            objGameBild = new ModelNPC.GameDataAlien();
-    //            break;
-    //        case SaveLoadData.TypePrefabs.PrefabFlore:
-    //            objGameBild = new ModelNPC.ObjectData();
-    //            break;
-    //        default:
-    //            objGameBild = new ModelNPC.ObjectData();
-    //            break;
-    //    }
-    //    return objGameBild;
-    //}
-
-
+  
     public bool AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)
     {
         
@@ -986,20 +747,7 @@ public class SaveLoadData : MonoBehaviour {
         //Storage.Instance.GridDataG.FieldsD.Clear();
     }
 
-    public void GenWorld()
-    {
-        Storage.Instance.IsLoadingWorld = true;
-
-        if(Storage.PaletteMap.SelectedCell == null)
-        { 
-            Storage.PaletteMap.GenericOnWorld(false, SaveLoadData.TypePrefabs.PrefabWallWood);
-        }
-        else
-        {
-            Storage.PaletteMap.GenericOnWorld(true); 
-        }
-        Storage.Instance.IsLoadingWorld = false;
-    }
+   
 
 
 

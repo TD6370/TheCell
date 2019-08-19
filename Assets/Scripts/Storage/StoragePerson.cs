@@ -411,7 +411,7 @@ public class StoragePerson : MonoBehaviour {
                 //MovementNPC movement = gobj.GetComponent<MovementNPC>();
                 GameObjecDataController dataObj = gobj.GetComponent<GameObjecDataController>();
                 ModelNPC.ObjectData findData = dataObj.GetData();
-                var objData = SaveLoadData.FindObjectData(gobj);
+                var objData = SaveLoadData.GetObjectDataByGobj(gobj);
                 if (findData != objData)
                 {
                     Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " conflict DATA";

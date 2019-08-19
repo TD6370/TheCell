@@ -1564,11 +1564,7 @@ public class PaletteMapController : MonoBehaviour {
     {
         DataTile genPrefab = null;
         if (isSelected)
-        {
             genPrefab = SelectedCell;//  selectGeneticObject;
-            if(genPrefab==null)
-                genPrefab = SelectedCell;
-        }
 
         if (genPrefab == null)
         {

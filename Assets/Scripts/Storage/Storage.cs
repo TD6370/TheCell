@@ -298,9 +298,14 @@ public class Storage : MonoBehaviour {
 
     public static List<ModelNPC.ObjectData> GetObjecsDataFromGrid(string nameField)
     {
-        if (!Storage.IsGridDataFieldExist(nameField))
-            Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
+        //if (!Storage.IsGridDataFieldExist(nameField))
+        //    Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
+        //return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+
+        if (!IsGridDataFieldExist(nameField))
+            Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+
     }
 
     //public static Storage Instance { get; private set; }
