@@ -214,6 +214,15 @@ public class Storage : MonoBehaviour {
         get { return _GamesObjectsReal; }
     }
 
+    private ReaderScene m_ReaderWorld;
+    public static ReaderScene ReaderWorld
+    {
+        get
+        {
+            return Instance.m_ReaderWorld;
+        }
+    }
+
     private ModelNPC.GridData _GridDataG = null;
     public ModelNPC.GridData GridDataG
     {
@@ -617,6 +626,19 @@ public class Storage : MonoBehaviour {
         {
             Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
+    }
+
+    public bool ReaderSceneIsValid
+    {
+        get
+        {
+            return m_ReaderWorld !=null && m_ReaderWorld.IsLoaded;
+        }
+    }
+
+    public void InitCollectionID()
+    {
+        m_ReaderWorld = new ReaderScene();
     }
 
     public void ReloadWorld()

@@ -53,6 +53,7 @@ public class ModelNPC
     [XmlRoot(ElementName = "ObjectData"), XmlType("ObjectData")]
     public class ObjectData : ICloneable
     {
+        //public string NameObject { get; set; }
         public string NameObject { get; set; }
         public string TypePoolPrefabName { get; set; }
 
@@ -64,6 +65,7 @@ public class ModelNPC
         public virtual SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabField; } }
         public virtual string ModelView { get; set; }
         public virtual Vector3 Position { get; set; }
+        //public virtual Vector3 Position { get { return position2; } }
 
         [XmlIgnore]
         public bool IsReality = false;
@@ -72,6 +74,21 @@ public class ModelNPC
         {
             TypePoolPrefabName = TypePoolPrefab.ToString();
             TypePrefabName = TypePrefab.ToString();
+        }
+
+        public virtual void SetPosition(Vector3 newPosition)
+        {
+            Position = new Vector3(newPosition.x, newPosition.y, Position.z);
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkData(this);
+            
+        }
+
+        public virtual void SetNameObject(string newNameObject)
+        {
+            NameObject = newNameObject;
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkData(this);
         }
 
         public virtual void Init()
@@ -262,6 +279,10 @@ public class ModelNPC
             {
                 Storage.Instance.DestroyObject(gobj);
             }
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkGobject(gobj);
+
+
             return newName;
         }
 

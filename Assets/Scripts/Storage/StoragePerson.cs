@@ -412,6 +412,8 @@ public class StoragePerson : MonoBehaviour {
                 GameObjecDataController dataObj = gobj.GetComponent<GameObjecDataController>();
                 ModelNPC.ObjectData findData = dataObj.GetData();
                 var objData = SaveLoadData.GetObjectDataByGobj(gobj);
+                if (objData == null)
+                    continue;
                 if (findData != objData)
                 {
                     Storage.EventsUI.ListLogAdd = "#### " + gobj.name + " conflict DATA";
@@ -811,7 +813,9 @@ public class StoragePerson : MonoBehaviour {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         Storage.Data.UpdatingLocationPersonLocal++;
 
-        objData.NameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        //objData.NameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        string nameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        objData.SetNameObject(nameObject);
         gobj.name = objData.NameObject;
 
         if (p_newPosition != gobj.transform.position)
@@ -820,7 +824,9 @@ public class StoragePerson : MonoBehaviour {
             Debug.Log("********** ERROR UpdatePosition 2.   ERROR POSITOIN :  GAME OBJ NEW POS: " + p_newPosition + "       REAL OBJ POS: " + gobj.transform.position);
             return "";
         }
-        objData.Position = gobj.transform.position;
+
+        //objData.Position = gobj.transform.position;
+        objData.SetPosition(gobj.transform.position);//###ERR
 
         if (isDestroy)
             objData.IsReality = false;

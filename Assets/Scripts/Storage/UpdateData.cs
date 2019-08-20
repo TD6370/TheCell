@@ -133,13 +133,15 @@ public class UpdateData {
         ReaderScene.GetObjecsDataFromGrid(nameField).RemoveAt(index);
     }
 
-    public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc)
+    public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc, bool isForce = false)
     {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = newField };
 
-        if (Storage.Instance.IsLoadingWorldThread)
-            return fieldData;
-
+        //if (Storage.Instance.IsLoadingWorldThread && isForce == false)
+        //{
+        //    Debug.Log("NOT AddNewFieldInGrid IsLoadingWorldThread is run");
+        //    return fieldData;
+        //}
         _GridDataG.FieldsD.Add(newField, fieldData);
 
         //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
@@ -179,6 +181,9 @@ public class UpdateData {
         }
 
         fieldData.Objects.Add(objDataSave);
+
+        if(Storage.Instance.ReaderSceneIsValid)
+            Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
 
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
@@ -327,6 +332,9 @@ public class UpdateData {
 
         fieldData.Objects.Add(objDataSave);
 
+        if (Storage.Instance.ReaderSceneIsValid)
+            Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
+
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
 
@@ -393,7 +401,8 @@ public class UpdateData {
         if (testPos != newPos)
         {
             //Debug.Log("------------------------ UpdateDataObect NEW Pos");
-            setObject.Position = newPos;
+            //setObject.Position = newPos;
+            setObject.SetPosition(newPos);//###ERR
         }
         SetObjecDataFromGrid(nameField, index, setObject);
 

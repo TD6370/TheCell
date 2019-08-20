@@ -718,7 +718,8 @@ public class GenerateGridFields : MonoBehaviour {
                         //gobj.name = dataObj.NameObject;
                         indErr = "19.";
                         //Debug.Log("___ RESAVE POS : GO: " + dataObj.Position + "  >>  " + gobj.transform.position);
-                        dataObj.Position = gobj.transform.position;
+                        //dataObj.Position = gobj.transform.position;
+                        dataObj.SetPosition(gobj.transform.position);//###ERR
                     }
                     //dataObj.IsReality = true;
                     dataObj.IsReality = false;

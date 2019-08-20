@@ -359,27 +359,8 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //$$$ ---------
-        stepTest++;
-        if (stepTest > stepLimitTest)
-        {
-            float distLock = Vector3.Distance(lastPositionForLock, transform.position);
-            if (distLock < minDistLck)
-            {
-                ExecuteActionNPC(NameActionsPerson.MoveEnd);
-            }
-            lastPositionForLock = transform.position;
-            stepTest = 0;
-        }
-        if (Time.time > TimeInField && lastFieldForLock != Storage.Instance.SelectFieldPosHero)
-        {
-            //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
-            if (!string.IsNullOrEmpty(lastFieldForLock))
-            {
-                ExecuteActionNPC(NameActionsPerson.MoveEnd);
-            }
-            lastFieldForLock = Storage.Instance.SelectFieldPosHero;
-            TimeInField = Time.time + limitLockInField;
-        }
+        TestMoveTargetLock();
+
 
         float minDist = 1f;
         float dist = Vector3.Distance(targetPosition, transform.position);
@@ -393,7 +374,35 @@ public class GameActionPersonController : MonoBehaviour
             m_MeAnimation.PersonMove(m_ActionPerson == NameActionsPerson.Move);
     }
 
-    
+    private void TestMoveTargetLock()
+    {
+        stepTest++;
+        if (stepTest > stepLimitTest)
+        {
+            float distLock = Vector3.Distance(lastPositionForLock, transform.position);
+            if (distLock < minDistLck)
+            {
+                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+                Debug.Log("~~~ New Taget 1 " + this.gameObject.name);
+            }
+            lastPositionForLock = transform.position;
+            stepTest = 0;
+        }
+        if (Time.time > TimeInField && lastFieldForLock != Storage.Instance.SelectFieldPosHero)
+        {
+            //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
+            if (!string.IsNullOrEmpty(lastFieldForLock))
+            {
+                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+                Debug.Log("~~~ New Taget 2 " + this.gameObject.name);
+            }
+            lastFieldForLock = Storage.Instance.SelectFieldPosHero;
+            TimeInField = Time.time + limitLockInField;
+        }
+
+    }
+
+
     private void SetActionNewTargetMove()
     {
         m_dataNPC.SetTargetPosition();

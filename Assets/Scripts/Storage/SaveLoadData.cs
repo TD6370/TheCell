@@ -345,7 +345,7 @@ public class SaveLoadData : MonoBehaviour {
         }
 
         //test
-        //GenericWorldLegacy();
+        GenericWorldLegacy();
     }
 
     private void GenericWorldLegacy()
@@ -389,8 +389,9 @@ public class SaveLoadData : MonoBehaviour {
 
                     string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
                     ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
-                    objDataSave.NameObject = nameObject;
+                    objDataSave.SetNameObject(nameObject);
                     objDataSave.Position = pos;
+                    //objDataSave.SetPosition(pos);//###ERR
 
                     coutCreateObjects++;
 
@@ -424,7 +425,7 @@ public class SaveLoadData : MonoBehaviour {
 
     public void GenericWorldExtremal()
     {
-        StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
+        //StartCoroutine(CreateDataGamesObjectsExtremalWorldProgress());
     }
 
 
@@ -456,6 +457,7 @@ public class SaveLoadData : MonoBehaviour {
         return prefabName;
     }
 
+    /*
     IEnumerator CreateDataGamesObjectsExtremalWorldProgress()
     {
         int coutCreateObjects = 0;
@@ -511,7 +513,7 @@ public class SaveLoadData : MonoBehaviour {
                     ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
                     objDataSave.NameObject = nameObject;
                     //objDataSave.TagObject = prefabName.ToString();//@del
-                    objDataSave.Position = pos;
+                    objDataSave.SetPosition(pos);
 
                     coutCreateObjects++;
 
@@ -529,6 +531,7 @@ public class SaveLoadData : MonoBehaviour {
 
         yield break;
     }
+    */
        
     public static ModelNPC.ObjectData GetObjectDataByGobj(GameObject p_gobject)
     {
@@ -546,8 +549,17 @@ public class SaveLoadData : MonoBehaviour {
     {
         if (!ReaderScene.IsGridDataFieldExist(nameField))
         {
-            Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField);
+            Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField + "   find object: " + nameGameObject);
+            //if (!Storage.Instance.IsLoadingWorldThread)
+            //{
+                //Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid", true);
+            //}
+            //else
+            //{
+            //    Debug.Log("################# Error FindObjectData FIELD NOT FOUND :" + nameField + "   find object: " + nameGameObject);
             return null;
+            //    //return new ModelNPC.ObjectData();
+            //}
         }
         List<ModelNPC.ObjectData> objects = ReaderScene.GetObjecsDataFromGrid(nameField);
         int index = objects.FindIndex(p => p.NameObject == nameGameObject);
@@ -691,9 +703,10 @@ public class SaveLoadData : MonoBehaviour {
         ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, false);
         string typePool = objDataSave.TypePoolPrefabName; //test
 
-        objDataSave.NameObject = nameObject;
+        objDataSave.SetNameObject(nameObject);
         //objDataSave.TagObject = prefabName.ToString(); //@del
-        objDataSave.Position = pos;
+        //objDataSave.Position = pos;
+        objDataSave.SetPosition(pos);//###ERR
 
         if (PoolGameObjects.IsUseTypePoolPrefabs)
         {
