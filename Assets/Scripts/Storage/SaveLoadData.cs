@@ -170,6 +170,7 @@ public class SaveLoadData : MonoBehaviour {
         Parket,
     }
 
+
     public enum TypePrefabObjects
     {
         PrefabRock,
@@ -214,6 +215,96 @@ public class SaveLoadData : MonoBehaviour {
         Fantom,
         Mask,
         Vhailor,
+    }
+
+    public enum TypesBiomBlue
+    {
+        //----- NPC
+        Inspector,
+        Machinetool,
+        Mecha,
+
+        //--------- Wall
+
+
+        //--------- Wood
+        Kolba,
+        Lantern,
+
+        //--------- Flore
+        Kamish,
+        Chip,
+
+        //--------- Floor
+        Swamp,
+        Gecsagon,
+    }
+    public enum TypesBiomRed
+    {
+        //----- NPC
+        Blastarr,
+        Hydragon,
+        Pavuk,
+        Skvid,
+
+        //--------- Wall
+
+        //--------- Wood
+        Nadmozg,
+        Triffid,
+
+        //--------- Flore
+        Orbits,
+        Shampinion,
+
+        //--------- Floor
+        Kishka,
+        Nerv,
+        
+    }
+    public enum TypesBiomGreen
+    {
+        //----- NPC
+        Dendroid,
+        Gary,
+        Lollipop,
+
+        //--------- Wall
+
+        //--------- Wood
+        Bananas,
+        Cluben,
+
+        //--------- Flore
+        Berry,
+        Mashrooms,
+        Weedflower,
+
+        //--------- Floor
+        Weed,
+    }
+    public enum TypesBiomViolet
+    {
+        //----- NPC
+        Fantom,
+        Mask,
+        Vhailor,
+
+        //--------- Wall
+
+        //--------- Wood
+        Aracul,
+        Chpok,
+        Pandora,
+        Cloudwood,
+
+        //--------- Flore
+        Corals,
+        Diods,
+
+        //--------- Floor
+        Desert,
+        Parket,
     }
 
     public enum TypeInventoryObjects

@@ -26,8 +26,8 @@ public class EventsObject : MonoBehaviour {
         if (this.gameObject == null)
             return;
 
-        if (PoolGameObjects.IsUseTypePoolPrefabs) //$$$
-        {
+        //if (PoolGameObjects.IsUseTypePoolPrefabs) //$$$
+        //{
             //---------- $$$FLC
             PoolGameObjects.TypePoolPrefabs typePool = PoolGameObjects.TypePoolPrefabs.PoolFloor;
             bool isValid = System.Enum.IsDefined(typeof(PoolGameObjects.TypePoolPrefabs), this.gameObject.tag);
@@ -53,15 +53,15 @@ public class EventsObject : MonoBehaviour {
             {
                 IsMeTerra = true;
             }
-        }
-        else
-        {
-            SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
-            if (Helper.IsTerraAlpha(typePrefab))
-            {
-                IsMeTerra = true;
-            }
-        }
+        //}
+        //else
+        //{
+        //    SaveLoadData.TypePrefabs typePrefab = Helper.GetTypePrefab(this.gameObject);
+        //    if (Helper.IsTerraAlpha(typePrefab))
+        //    {
+        //        IsMeTerra = true;
+        //    }
+        //}
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_DataController = GetComponent<GameObjecDataController>();
         

@@ -198,6 +198,23 @@ public static class BilderExtension
     {
         return model is ModelNPC.GameDataNPC;
     }
+    public static bool IsFloor(this ModelNPC.ObjectData model)
+    {
+        return model is ModelNPC.FloorData;
+    }
+    public static bool IsFlore(this ModelNPC.ObjectData model)
+    {
+        return model is ModelNPC.FloreData;
+    }
+    public static bool IsWall(this ModelNPC.ObjectData model)
+    {
+        return model is ModelNPC.WallData;
+    }
+    public static bool IsWood(this ModelNPC.ObjectData model)
+    {
+        return model is ModelNPC.WallWood;
+    }
+
     public static bool IsBoss(this ModelNPC.ObjectData model)
     {
         return model is ModelNPC.GameDataBoss;

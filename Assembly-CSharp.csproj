@@ -107,6 +107,7 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameActionPersonController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameObjecDataController.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
+    <Compile Include="Assets\Scripts\Storage\PriorityFinder.cs" />
     <Compile Include="Assets\Scripts\Storage\ReaderScene.cs" />
     <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
     <Compile Include="Assets\Scripts\Storage\Serializator.cs" />
