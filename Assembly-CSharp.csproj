@@ -107,7 +107,6 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
-    <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameActionPersonController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameObjecDataController.cs" />

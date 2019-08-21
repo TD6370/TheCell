@@ -13,7 +13,7 @@ using System.Xml.Linq;
 public class Storage : MonoBehaviour {
 
     private CompletePlayerController _screiptHero;
-    private CreateNPC _scriptNPC;
+    //private CreateNPC _scriptNPC;
     private UIEvents _scriptUIEvents;
 
     public static string FieldKey
@@ -364,12 +364,12 @@ public class Storage : MonoBehaviour {
             return;
         }
 
-        _scriptNPC = MainCamera.GetComponent<CreateNPC>();
-        if (_scriptNPC == null)
-        {
-            Debug.Log("Storage.Start scriptNPC not load !!!!!");
-            return;
-        }
+        //_scriptNPC = MainCamera.GetComponent<CreateNPC>();
+        //if (_scriptNPC == null)
+        //{
+        //    Debug.Log("Storage.Start scriptNPC not load !!!!!");
+        //    return;
+        //}
         _scriptMapWorld = MainCamera.GetComponent<MapWorld>();
         if (_scriptMapWorld == null)
         {
@@ -495,8 +495,8 @@ public class Storage : MonoBehaviour {
 
     public void StopGame()
     {
-        if (_scriptNPC != null)
-            _scriptNPC.StopCrateNPC();
+        //if (_scriptNPC != null)
+        //    _scriptNPC.StopCrateNPC();
 
         //---
         DestroyAllGamesObjects();
@@ -541,7 +541,7 @@ public class Storage : MonoBehaviour {
             //Debug.Log("III ....Init LoadObjectsNearHero ......");
             _scriptGrid.LoadObjectsNearHero();
             //Debug.Log("III ....Sart Crate NPC......");
-            _scriptNPC.SartCrateNPC();
+            //_scriptNPC.SartCrateNPC();
         }
 
         Map.RefreshFull();
@@ -576,7 +576,7 @@ public class Storage : MonoBehaviour {
         }
 
         //Debug.Log("III ....Sart Crate NPC......");
-        _scriptNPC.SartCrateNPC();
+        //_scriptNPC.SartCrateNPC();
     }
        
 
