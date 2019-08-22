@@ -16183,9 +16183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c4e67bc69d1fa46a69f1a8454d048b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ContainerPriority: {fileID: 11400000, guid: 9a551968dbe5bc04c8bfeb82df61a090, type: 2}
-  m_IsRunSearching: 0
-  m_IsFilledSearchingCollection: 0
 --- !u!114 &580250722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42581,6 +42578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsStartInit: 0
   PanelModelsViewNPC: {fileID: 972312081}
+  ActionPerson: 0
 --- !u!1 &1393102735
 GameObject:
   m_ObjectHideFlags: 0
@@ -43809,6 +43807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsStartInit: 0
   PanelModelsViewNPC: {fileID: 972312081}
+  ActionPerson: 0
 --- !u!1 &1434991560
 GameObject:
   m_ObjectHideFlags: 0

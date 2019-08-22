@@ -541,9 +541,21 @@ public class UpdateData {
 
     public void CompletedLoadWorld()
     {
-        //v.1
-        Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
-                                .ToDictionary(x => x.Key, x => x.Value);
+        try
+        {
+            //v.1
+            Storage.Instance.GridDataG.FieldsD = Storage.Instance.GridDataG.FieldsD.Concat(fieldsD_Temp)
+                                    .ToDictionary(x => x.Key, x => x.Value);
+
+            Storage.EventsUI.SetTittle = "World is loaded";
+            Storage.EventsUI.ListLogAdd = "************** World is loaded **************";
+        }
+        catch(Exception ex)
+        {
+            Debug.Log("########## Error On CompletedLoadWorld : " + ex.Message);
+            Storage.EventsUI.SetTittle = "World is dublicate error load";
+            Storage.EventsUI.ListLogAdd = "########### World ERROR loaded ############";
+        }
 
         //return;
 
@@ -563,10 +575,6 @@ public class UpdateData {
         //        });
         //    }
         //}
-        
-
-        Storage.EventsUI.SetTittle = "World is loaded";
-        Storage.EventsUI.ListLogAdd = "************** World is loaded **************";
     }
 
     Dictionary<string, ModelNPC.FieldData> fieldsD_Temp = new Dictionary<string, ModelNPC.FieldData>();

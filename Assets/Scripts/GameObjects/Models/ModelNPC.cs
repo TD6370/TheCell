@@ -597,6 +597,11 @@ public class ModelNPC
         [XmlIgnore]
         public virtual int Level { get; set; }
 
+        [XmlIgnore]
+        public float TimeEndCurrentAction = -1f;
+        [XmlIgnore]
+        public Vector3 MovePosition;
+
         public GameDataAlien() : base()
         {
         }

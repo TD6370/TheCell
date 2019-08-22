@@ -11,6 +11,8 @@ public class GodsWorldSceneActions : MonoBehaviour {
 
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
 
+    //private GameActionPersonController m_actionController;
+
     private void Awake()
     {
         
@@ -18,7 +20,8 @@ public class GodsWorldSceneActions : MonoBehaviour {
 
     void Start () {
         //StartCoroutine(NavigateWorldScne());
-        LoadPriorityPerson();
+        //LoadPriorityPerson();
+        //m_actionController = new GameActionPersonController();
     }
 	
 	void Update () {
@@ -76,18 +79,16 @@ public class GodsWorldSceneActions : MonoBehaviour {
 
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC)
     {
-
-        //public class PersonData : GameDataNPC
-        //public override Vector3 TargetPosition { get; set; }
-
-        //public string Id { get; set; }
-
-        //public string[] PersonActions { get; set; } //$$$
-
         var persData = infoNPC.Data as ModelNPC.PersonData;
         //persData.Id;
         List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
-        var t = persData.CurrentAction;
-        //string[] actonsNPC = persData.PersonActions;
+        GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
+
+        GameActionPersonController.CheckComplitionActions(persData, actionCurrent, null);
+
+        actonsNPC = GameActionPersonController.GetActions(persData);
+        actionCurrent = GameActionPersonController.GetCurrentAction(persData);
+
+        GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
     }
 }
