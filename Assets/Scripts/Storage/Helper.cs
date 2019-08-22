@@ -235,36 +235,36 @@ public static class Helper { //: MonoBehaviour {
         return prefabType;
     }
 
-    public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
-    {
-        bool isTerra = Enum.IsDefined(typeof(SaveLoadData.TypePrefabObjects), typePrefab.ToString());
-        //bool isTerra = IsTypeTypePrefabObjectsContains(typePrefab.ToString());
-        return isTerra;
+    //public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
+    //{
+    //    bool isTerra = Enum.IsDefined(typeof(SaveLoadData.TypePrefabObjects), typePrefab.ToString());
+    //    //bool isTerra = IsTypeTypePrefabObjectsContains(typePrefab.ToString());
+    //    return isTerra;
 
-        //switch(typePrefab)
-        //{
-        //    case SaveLoadData.TypePrefabs.PrefabRock:
-        //    case SaveLoadData.TypePrefabs.PrefabVood:
-        //    case SaveLoadData.TypePrefabs.PrefabElka:
-        //    case SaveLoadData.TypePrefabs.PrefabWallRock:
-        //    case SaveLoadData.TypePrefabs.PrefabWallWood:
-        //        return true;
-        //}
-        //return false;
-    }
+    //    //switch(typePrefab)
+    //    //{
+    //    //    case SaveLoadData.TypePrefabs.PrefabRock:
+    //    //    case SaveLoadData.TypePrefabs.PrefabVood:
+    //    //    case SaveLoadData.TypePrefabs.PrefabElka:
+    //    //    case SaveLoadData.TypePrefabs.PrefabWallRock:
+    //    //    case SaveLoadData.TypePrefabs.PrefabWallWood:
+    //    //        return true;
+    //    //}
+    //    //return false;
+    //}
 
-    public static bool IsTerra(this string typePrefabStr)
-    {
-        try
-        {
-            SaveLoadData.TypePrefabs typePrefab = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), typePrefabStr);
-            return IsTerra(typePrefab);
-        }catch(Exception x)
-        {
-            Debug.Log("IsTerra " + x.Message);
-            return false;
-        }
-    }
+    //public static bool IsTerra(this string typePrefabStr)
+    //{
+    //    try
+    //    {
+    //        SaveLoadData.TypePrefabs typePrefab = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), typePrefabStr);
+    //        return IsTerra(typePrefab);
+    //    }catch(Exception x)
+    //    {
+    //        Debug.Log("IsTerra " + x.Message);
+    //        return false;
+    //    }
+    //}
         
     public static bool IsUpdateTexture(SaveLoadData.TypePrefabs typePrefab)
     {
@@ -657,10 +657,10 @@ public static class Helper { //: MonoBehaviour {
         return Enum.GetNames(typeof(SaveLoadData.TypePrefabNPC)).Any(x => x.ToLower() == strType.ToLower());
     }
 
-    public static bool IsTypeTypePrefabObjects(string strType)
-    {
-        return Enum.GetNames(typeof(SaveLoadData.TypePrefabObjects)).Any(x => x.ToLower() == strType.ToLower());
-    }
+    //public static bool IsTypeTypePrefabObjects(string strType)
+    //{
+    //    return Enum.GetNames(typeof(SaveLoadData.TypePrefabObjects)).Any(x => x.ToLower() == strType.ToLower());
+    //}
 
 }
 

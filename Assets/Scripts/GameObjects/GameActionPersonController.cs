@@ -258,6 +258,21 @@ public class GameActionPersonController : MonoBehaviour
         return ListPersonActions;
     }
 
+    public static List<NameActionsPerson> GetActions(ModelNPC.PersonData dataNPC)
+    {
+        var ListPersonActions = new List<NameActionsPerson>();
+        if (dataNPC.PersonActions == null)
+            dataNPC.PersonActions = new string[] { };
+
+        for (int i = 0; i < dataNPC.PersonActions.Length; i++)
+        {
+            NameActionsPerson nextActon = (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.PersonActions[i].ToString()); ;
+            ListPersonActions.Add(nextActon);
+        }
+        return ListPersonActions;
+    }
+
+
     private void TestNextAction()
     {
         if (temp_ActionPerson != m_ActionPerson)
@@ -383,7 +398,7 @@ public class GameActionPersonController : MonoBehaviour
             if (distLock < minDistLck)
             {
                 ExecuteActionNPC(NameActionsPerson.MoveEnd);
-                Debug.Log("~~~ New Taget 1 " + this.gameObject.name);
+                //Debug.Log("~~~ New Taget 1 " + this.gameObject.name);
             }
             lastPositionForLock = transform.position;
             stepTest = 0;
@@ -394,7 +409,7 @@ public class GameActionPersonController : MonoBehaviour
             if (!string.IsNullOrEmpty(lastFieldForLock))
             {
                 ExecuteActionNPC(NameActionsPerson.MoveEnd);
-                Debug.Log("~~~ New Taget 2 " + this.gameObject.name);
+                //Debug.Log("~~~ New Taget 2 " + this.gameObject.name);
             }
             lastFieldForLock = Storage.Instance.SelectFieldPosHero;
             TimeInField = Time.time + limitLockInField;

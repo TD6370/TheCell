@@ -16098,13 +16098,13 @@ GameObject:
   - component: {fileID: 580250720}
   - component: {fileID: 580250719}
   - component: {fileID: 580250718}
-  - component: {fileID: 580250721}
   - component: {fileID: 580250722}
   - component: {fileID: 580250723}
   - component: {fileID: 580250724}
   - component: {fileID: 580250725}
   - component: {fileID: 580250726}
   - component: {fileID: 580250727}
+  - component: {fileID: 580250721}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -16180,10 +16180,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 580250717}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2d0e89d5aef244aa1448d7c7d1ce84, type: 3}
+  m_Script: {fileID: 11500000, guid: 79c4e67bc69d1fa46a69f1a8454d048b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabUfo: {fileID: 134454365}
+  ContainerPriority: {fileID: 11400000, guid: 9a551968dbe5bc04c8bfeb82df61a090, type: 2}
 --- !u!114 &580250722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41680,6 +41680,47 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1371507840}
   m_CullTransparentMesh: 0
+--- !u!1 &1372772690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1372772692}
+  - component: {fileID: 1372772691}
+  m_Layer: 0
+  m_Name: PanelEditPriorityFinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1372772691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372772690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34188902822190f4f8f67627ad14b37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ContainerPriority: {fileID: 0}
+--- !u!4 &1372772692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372772690}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 877.1131, y: 330.17596, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1374911292
 GameObject:
   m_ObjectHideFlags: 0

@@ -147,37 +147,64 @@ public class SaveLoadData : MonoBehaviour {
         Cloudwood
     }
 
-    public enum TypePrefabFloors
+    public enum TypePrefabFlore
     {
-        Boloto,
-        Chip,
-        Gecsagon,
         Kamish,
 
         Berry,
         Mashrooms,
-        Weed,
         Weedflower,
 
-        Kishka,
-        Nerv,
         Orbits,
         Shampinion,
 
         Corals,
-        Desert,
         Diods,
-        Parket,
     }
 
+    //public enum TypePrefabFloors
+    //{
+    //    Boloto,
+    //    Chip,
+    //    Gecsagon,
+    //    Kamish,
+
+    //    Berry,
+    //    Mashrooms,
+    //    Weed,
+    //    Weedflower,
+
+    //    Kishka,
+    //    Nerv,
+    //    Orbits,
+    //    Shampinion,
+
+    //    Corals,
+    //    Desert,
+    //    Diods,
+    //    Parket,
+    //}
+
+    public enum TypePrefabFloors
+    {
+        Swamp,
+        Chip,
+        Gecsagon,
+
+        Weed,
+
+        Kishka,
+        Nerv,
+
+        Desert,
+        Parket,
+    }
 
     public enum TypePrefabObjects
     {
         PrefabRock,
         PrefabVood,
         PrefabElka,
-        PrefabWallRock,
-        PrefabWallWood,
 
         Kolba,
         Lantern,
@@ -192,6 +219,35 @@ public class SaveLoadData : MonoBehaviour {
 
         Aracul,
         Cloudwood
+    }
+
+    //public enum TypePrefabObjects
+    //{
+    //    PrefabRock,
+    //    PrefabVood,
+    //    PrefabElka,
+    //    PrefabWallRock,
+    //    PrefabWallWood,
+
+    //    Kolba,
+    //    Lantern,
+
+    //    Bananas,
+    //    Cluben,
+    //    Chpok,
+    //    Pandora,
+
+    //    Nadmozg,
+    //    Triffid,
+
+    //    Aracul,
+    //    Cloudwood
+    //}
+
+    public enum TypePrefabWall
+    {
+        PrefabWallRock,
+        PrefabWallWood,
     }
 
     public enum TypePrefabNPC

@@ -171,6 +171,7 @@ public class ReaderScene //: UpdateData
         int startY = fieldPosit.y - distantion;
         int endX = fieldPosit.x + distantion;
         int endY = fieldPosit.y + distantion;
+        
 
         if (startX < 1)  startX = 1;
         if (startY < 1)  startY = 1;
@@ -184,33 +185,31 @@ public class ReaderScene //: UpdateData
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
                     string id = Helper.GetID(objData.NameObject);
-                    //finder.ListAll.Add(id);
-                    finder.ListObjData.Add(id, objData);
-                    // finder.StackAll.Enqueue(id);
+                    //finder.ListObjData.Add(id, objData);
+                   
+                    int power = GetPriorityPower(objData, priority);
+                    int powerDist = (distantion - Math.Max(Math.Abs(fieldPosit.x - x), Math.Abs(fieldPosit.y - y))) * 3;
 
-                    //SaveLoadData.TypePrefabs typeModel = objData.TypePrefab;
-                    //PoolGameObjects.TypePoolPrefabs typePool = objData.TypePoolPrefab;
-                    //TypesBiomNPC typeNPC = GetBiomByTypeModel(typeModel);
-
-                    //var caseID = new Dictionary<string, string> { { id, id } };
-                    //finder.ListTypesPrefabs.Add(typePool, caseID);
-                    //finder.ListTypesModels.Add(typeModel, caseID);
-                    //if (typeNPC != TypesBiomNPC.None)
-                    //    finder.ListBiomNPC.Add(typeNPC, caseID);
+                    if (finder.ResultPowerData.ContainsKey(id))
+                        Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
+                        //finder.ResultPowerData[id] += power;
+                    else
+                        finder.ResultPowerData.Add(id, power);
                 }
             }
         }
 
-        foreach (var item in finder.ListObjData)
-        {
-            var objData = item.Value;
-            string id = item.Key;
-            int power = GetPriorityPower(objData, priority);
-            if (finder.ResultPowerData.ContainsKey(id))
-                Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
-            else
-                finder.ResultPowerData.Add(id, power);
-        }
+        //foreach (var item in finder.ListObjData)
+        //{
+        //    var objData = item.Value;
+        //    string id = item.Key;
+        //    int power = GetPriorityPower(objData, priority);
+        //    if (finder.ResultPowerData.ContainsKey(id))
+        //        Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
+        //        //finder.ResultPowerData[id] += power;
+        //    else
+        //        finder.ResultPowerData.Add(id, power);
+        //}
 
         //return Storage.Instance.GridDataG.FieldsD.
         //    Select(x => x.Value).
@@ -257,8 +256,8 @@ public class ReaderScene //: UpdateData
 
         int slotPower = 3;
         int maxtPrioprity = 10;
-        maxtPrioprity = priority.PrioritysTypeModel.Count() * slotPower;
-        foreach (SaveLoadData.TypePrefabs itemModel in priority.PrioritysTypeModel)
+        maxtPrioprity = priority.GetPrioritysTypeModel().Count() * slotPower;
+        foreach (SaveLoadData.TypePrefabs itemModel in priority.GetPrioritysTypeModel())
         {
             if (itemModel == typeModel)
             {
@@ -308,11 +307,6 @@ public class ReaderScene //: UpdateData
             return TypesBiomNPC.Violet;
 
         return resType;
-    }
-
-    public static void GetZona()
-    {
-        
     }
 
     public class DataInfoFinder

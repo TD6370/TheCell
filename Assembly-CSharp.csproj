@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\EditPriorityFinderController.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Assets\Scripts\Storage\BilderGameDataObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\DiskData.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
+    <Compile Include="Assets\Scripts\Storage\GodsWorldSceneActions.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\PriorityFinder.cs" />

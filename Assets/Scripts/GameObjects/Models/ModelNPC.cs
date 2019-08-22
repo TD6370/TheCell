@@ -325,6 +325,7 @@ public class ModelNPC
         public string Id { get; set; }
 
         public string[] PersonActions { get; set; } //$$$
+        public string CurrentAction { get; set; }
 
         public PersonData()
             : base()
