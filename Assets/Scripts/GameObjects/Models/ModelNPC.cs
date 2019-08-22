@@ -70,10 +70,13 @@ public class ModelNPC
         [XmlIgnore]
         public bool IsReality = false;
 
+        public string Id { get; set; }
+
         public ObjectData()
         {
             TypePoolPrefabName = TypePoolPrefab.ToString();
             TypePrefabName = TypePrefab.ToString();
+            //Id = Guid.NewGuid().ToString();
         }
 
         public virtual void SetPosition(Vector3 newPosition)
@@ -322,7 +325,7 @@ public class ModelNPC
     {
         public override Vector3 TargetPosition { get; set; }
 
-        public string Id { get; set; }
+        //public string Id { get; set; }
 
         public string[] PersonActions { get; set; } //$$$
         public string CurrentAction { get; set; }
@@ -330,9 +333,8 @@ public class ModelNPC
         public PersonData()
             : base()
         {
-            Id = Guid.NewGuid().ToString();
+            //Id = Guid.NewGuid().ToString();
         }
-                
     }
 
     [XmlType("Ufo")]
@@ -518,7 +520,8 @@ public class ModelNPC
 
         private void InitColor()
         {
-            ColorRender = StoragePerson.GetColorsLevel[Level];
+            //ColorRender = StoragePerson.GetColorsLevel[Level];
+            ColorRender = Color.white;
         }
 
         public override void UpdateGameObject(GameObject objGame)
@@ -536,12 +539,12 @@ public class ModelNPC
                 objGame.name = nameObjData;
             }
 
-            if (ColorRender != StoragePerson.GetColorsLevel[Level])
-            {
-                ColorRender = StoragePerson.GetColorsLevel[Level];
-                isUpdateStyle = true;
-                //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
-            }
+            //if (ColorRender != StoragePerson.GetColorsLevel[Level])
+            //{
+            //    ColorRender = StoragePerson.GetColorsLevel[Level];
+            //    isUpdateStyle = true;
+            //    //Debug.Log(">>>>>>>>> colorStr ==" + ColorRender + "    Level:" + Level + "    GetColor:  " + GetColorsLevel[Level]);
+            //}
             string _nameSprite = "";
             Sprite spriteMe = Storage.Palette.GetSpriteBoss(Level, out _nameSprite);
             ModelView = _nameSprite;
@@ -664,6 +667,7 @@ public class ModelNPC
                     "Life: " + Life,
                     "Speed: " + Speed,
                     "Individ: " + ModelView,
+                    "Action: " + CurrentAction,
                    "Actions:",
                   };
 
@@ -672,7 +676,7 @@ public class ModelNPC
                 //    string.Empty :
                 //    "Actions:\n" + string.Join("\n", PersonActions);
                 list.AddRange(PersonActions);
-
+                
                 return list;
             }
         }

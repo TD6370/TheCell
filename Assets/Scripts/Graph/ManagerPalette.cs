@@ -193,7 +193,8 @@ public class ManagerPalette : MonoBehaviour {
 
         try
         {
-            spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            //spriteName = TypeBoss.Instance.GetNameSpriteForIndexLevel(index);
+            spriteName = "SpriteBossLizard";
             Sprite spriteBoss = Storage.Person.SpriteCollection[spriteName];
 
             return spriteBoss;

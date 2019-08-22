@@ -16184,6 +16184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContainerPriority: {fileID: 11400000, guid: 9a551968dbe5bc04c8bfeb82df61a090, type: 2}
+  m_IsRunSearching: 0
+  m_IsFilledSearchingCollection: 0
 --- !u!114 &580250722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16286,17 +16288,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
+  ContainerPriority: {fileID: 11400000, guid: 9a551968dbe5bc04c8bfeb82df61a090, type: 2}
   ColorSelectedCursorObject: {r: 0, g: 1, b: 1, a: 1}
   ColorFindCursorObject: {r: 1, g: 0, b: 1, a: 1}
-  PanelModelsViewNPC: {fileID: 0}
-  TextureBossRed: {fileID: 2800000, guid: 687b4e2bb49c2744aa02d92e70611f8a, type: 3}
-  TextureBossLizard: {fileID: 2800000, guid: 0116c4ac415e6fe44812c06fcc97a99a, type: 3}
-  TextureBossBandos: {fileID: 2800000, guid: 1309ca51336ae6d4390ed3435d898c5f, type: 3}
-  TextureBossBooble: {fileID: 2800000, guid: bf6c0f5dd9c0062439bb0cdde6231c3a, type: 3}
-  TextureAlienBoss: {fileID: 2800000, guid: 30be4682fe645b14cad7ffc0c7262619, type: 3}
-  TextureBossDroid: {fileID: 2800000, guid: 901998c2aca792b489c3d6451a479b21, type: 3}
-  TextureBossArm: {fileID: 2800000, guid: d39a41475546bf94fb5a9e336a48e159, type: 3}
-  TextureBoss: {fileID: 2800000, guid: e0bb43262f68c8842b68f1fc623082c1, type: 3}
   SpriteAtlasNPC: {fileID: 4343727234628468602, guid: 1b6c20b6303515945b4ce861c90403cf,
     type: 2}
   ModificatorPerson: 0

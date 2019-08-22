@@ -894,7 +894,7 @@ public class SaveLoadData : MonoBehaviour {
             //objPerson.Level = Storage.Instance._TypesBoss.Where(p => p.TextureMap == personType).Select(p => p.Level).FirstOrDefault(); ;
             if (!string.IsNullOrEmpty(personTextureName))
             {
-                objPerson.Level = TypeBoss.Instance._TypesBoss.Where(p => p.NameTextura2D == personTextureName).Select(p => p.Level).FirstOrDefault();
+                //objPerson.Level = TypeBoss.Instance._TypesBoss.Where(p => p.NameTextura2D == personTextureName).Select(p => p.Level).FirstOrDefault();
                 //objPerson.Init();
             }
         }

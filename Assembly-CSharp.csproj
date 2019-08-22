@@ -125,9 +125,9 @@
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Storage\BilderGameDataObjects.cs" />
+    <Compile Include="Assets\Scripts\Storage\DicpatcherWorldActions.cs" />
     <Compile Include="Assets\Scripts\Storage\DiskData.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
-    <Compile Include="Assets\Scripts\Storage\GodsWorldSceneActions.cs" />
     <Compile Include="Assets\Scripts\Storage\Helper.cs" />
     <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\PriorityFinder.cs" />

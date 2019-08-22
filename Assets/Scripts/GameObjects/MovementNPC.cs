@@ -8,7 +8,8 @@ public class MovementNPC : MonoBehaviour {
     public string MarkerDebug = "";
 
     protected Coroutine moveObject;
-    protected ModelNPC.GameDataNPC _dataNPC;
+    //protected ModelNPC.GameDataNPC _dataNPC;
+    protected ModelNPC.PersonData _dataNPC;
     protected string objID;
 
     private Material m_material;
@@ -23,7 +24,7 @@ public class MovementNPC : MonoBehaviour {
     private string testId;
     private string _resName = "";
     private int countUpdate = 0;
-    private float realtimeMoving = 0f;
+    //private float realtimeMoving = 0f;
     public bool isRunning = false;
 
     void Awake()
@@ -36,7 +37,7 @@ public class MovementNPC : MonoBehaviour {
     {
         InitNPC();
 
-        realtimeMoving =  Time.time + 3f;
+        //realtimeMoving =  Time.time + 3f;
     }
 
     public void InitNPC()
@@ -192,7 +193,10 @@ public class MovementNPC : MonoBehaviour {
 
         while (true)
         {
-            realtimeMoving = Time.time + 0.5f;
+            if(_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Move.ToString())
+                yield return null;
+
+            //realtimeMoving = Time.time + 0.5f;
             isRunning = true;
 
             if (this.name == MarkerDebug)
@@ -265,7 +269,7 @@ public class MovementNPC : MonoBehaviour {
             //    _dataNPC.SetTargetPosition();
             //}
 
-            realtimeMoving = Time.time + 1f;
+            //realtimeMoving = Time.time + 1f;
 
             yield return null;
             isRunning = false;
@@ -492,15 +496,26 @@ public class MovementNPC : MonoBehaviour {
         m_isTrack = !m_isTrack;
     }
 
-    protected virtual ModelNPC.GameDataNPC GetUpdateData(string callInfo = "GetInitData")
+    //protected virtual ModelNPC.GameDataNPC GetUpdateData(string callInfo = "GetInitData")
+    //{
+    //    var dataNPC = m_dataController.UpdateData(callInfo) as ModelNPC.GameDataNPC;
+    //    return dataNPC;
+    //}
+
+    //public virtual ModelNPC.GameDataNPC GetData(string callInfo = "GetInitData")
+    //{
+    //    return _dataNPC;
+    //}
+
+    protected virtual ModelNPC.PersonData GetUpdateData(string callInfo = "GetInitData")
     {
-        var dataNPC = m_dataController.UpdateData(callInfo) as ModelNPC.GameDataNPC;
+        var dataNPC = m_dataController.UpdateData(callInfo) as ModelNPC.PersonData;
         return dataNPC;
     }
 
-    public virtual ModelNPC.GameDataNPC GetData(string callInfo = "GetInitData")
+    public virtual ModelNPC.PersonData GetData(string callInfo = "GetInitData")
     {
-        return _dataNPC;
+        return _dataNPC as ModelNPC.PersonData;
     }
 
 }

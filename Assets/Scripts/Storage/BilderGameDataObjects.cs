@@ -185,6 +185,8 @@ public class BilderGameDataObjects //: MonoBehaviour
                 objGameBild = new ModelNPC.ObjectData();
                 break;
         }
+
+        objGameBild.Id = Guid.NewGuid().ToString();
         return objGameBild;
     }
 

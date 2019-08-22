@@ -10,39 +10,10 @@ public class StoragePerson : MonoBehaviour {
     public bool IsShowTittlePerson = false;
 
     public Vector3 PersonsTargetPosition { get; set; }
+    public ContainerPriorityFinder ContainerPriority;
 
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
-
-    public GameObject PanelModelsViewNPC;
-
-    public static Texture2D TextureBossRedMap;
-    public Texture2D TextureBossRed;
-    public static Texture2D TextureBossLizardMap;
-    public Texture2D TextureBossLizard;
-    public static Texture2D TextureBossBandosMap;
-    public Texture2D TextureBossBandos;
-    public static Texture2D TextureBossBoobleMap;
-    public Texture2D TextureBossBooble;
-    public static Texture2D TextureBossAlienMap;
-    public Texture2D TextureAlienBoss;
-    public static Texture2D TextureBossDroidMap;
-    public Texture2D TextureBossDroid;
-    public static Texture2D TextureBossArmMap;
-    public Texture2D TextureBossArm;
-    public static Texture2D TextureBossMap;
-    public Texture2D TextureBoss;
-    //public static Texture2D TextureBossMap;
-    //public Texture2D TextureBoss;
-
-    //new TypeBoss() { NameTextura2D = "SpriteBossLizard", Level = 1, },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBossRed", Level = 2, ColorTrack = ManagerPalette.ColorBossLizard, TextureMap = StoragePerson.TextureBossRedMap },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 3, ColorTrack = ManagerPalette.ColorBossBandos  },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 4, ColorTrack = ManagerPalette.ColorBossBooble  },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 5, ColorTrack = ManagerPalette.ColorBossAlien },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBossDroid", Level = 6, ColorTrack = ManagerPalette.ColorBossDroid },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 7, ColorTrack = ManagerPalette.ColorBossArm },
-    //                    new TypeBoss() { NameTextura2D = "SpriteBoss", Level = 8, ColorTrack = ManagerPalette.ColorBoss  },
 
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
@@ -84,25 +55,6 @@ public class StoragePerson : MonoBehaviour {
         }
     }
 
-    private static Dictionary<int, Color> _colorsPresent = null;
-    public static Dictionary<int, Color> GetColorsLevel
-    {
-        get
-        {
-            if (_colorsPresent == null)
-            {
-                _colorsPresent = new Dictionary<int, Color>();
-                foreach (var typeItem in TypeBoss.TypesBoss)
-                {
-                    _colorsPresent.Add(typeItem.Level, typeItem.ColorTrack);
-                }
-            }
-            return _colorsPresent;
-        }
-    }
-
-    //public Vector3 PersonsTargetPosition { get; set; }
-
     private ModelNPC.LevelData _personsData;
     public ModelNPC.LevelData PersonsData
     {
@@ -121,11 +73,7 @@ public class StoragePerson : MonoBehaviour {
 
     void Awake()
     {
-        
-
         PersonsDataInit();
-        LoadTexturesMap();
-        
     }
 
     // Use this for initialization
@@ -137,87 +85,6 @@ public class StoragePerson : MonoBehaviour {
     void Update() {
 
     }
-
-    private void LoadTexturesMap()
-    {
-        TextureBossRedMap = TextureBossRed;
-        TextureBossLizardMap = TextureBossLizard;
-        TextureBossBandosMap = TextureBossBandos;
-        TextureBossBoobleMap = TextureBossBooble;
-        TextureBossAlienMap = TextureAlienBoss;
-        TextureBossDroidMap = TextureBossDroid;
-        TextureBossArmMap = TextureBossArm;
-        TextureBossMap = TextureBoss;
-    }
-
-
-    //private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
-    //private void LoadModelsView()
-    //{
-    //    if (PanelModelsViewNPC == null)
-    //    {
-    //        Debug.Log("###### LoadModelsView  PanelModelsViewNPC == null");
-    //        return;
-    //    }
-
-    //    m_ListViewModels = new Dictionary<SaveLoadData.TypePrefabs, GameObject>();
-    //    var models = PanelModelsViewNPC.transform.GetChildCount();
-    //    //GameObject modelView = ListViewModels(typePrefabNPC);
-    //    //GameObject modelView = (GameObject)Instantiate(PrefabSpriteCellMap);
-    //    cellMap.transform.SetParent(this.gameObject.transform);
-    //    modelView.transform.SetParent(this.gameObject.transform);
-    //    //m_ListVie
-    //}
-
-    // public GameObject ListViewModels()
-    //{
-    //    return m_ListViewModels[]
-    //}
-
-    //private void LoadSprites()
-    //{
-    //    string indErr = "";
-    //    try
-    //    {
-    //        indErr = "start";
-    //        string pathSprites = "Textures/NPC/";
-    //        int colSprites = 0;
-
-    //        Debug.Log("Loading Sprites from Resources...");
-
-    //        SpriteCollection = new Dictionary<string, Sprite>();
-
-    //        foreach (string nameStrite in TypeBoss.TypesBoss.Select(p => p.NameTextura2D).Distinct())
-    //        {
-    //            Texture2D[] _texturesBoss = Resources.LoadAll<Texture2D>(pathSprites + nameStrite);
-
-    //            if (_texturesBoss == null || _texturesBoss.Length == 0)
-    //            {
-    //                Debug.Log("############# Not Texture2D " + pathSprites + nameStrite + " IN Resources");
-    //                continue;
-    //            }
-    //            Texture2D _texture = _texturesBoss[0];
-    //            //Debug.Log("@@@@@@ Texture2D " + pathSprites + nameStrite + " IN Resources   " + _texture.width + "x" + _texture.height);
-    //            Sprite spriteBoss = Sprite.Create(_texture, new Rect(0.0f, 0.0f, _texture.width, _texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-
-    //            if (!SpriteCollection.ContainsKey(nameStrite))
-    //            {
-    //                indErr = "6.";
-    //                SpriteCollection.Add(nameStrite, spriteBoss);
-    //                colSprites++;
-    //            }
-    //            else
-    //            {
-    //                Debug.Log("Sprite already exist in SpriteCollection  : " + nameStrite);
-    //            }
-    //        }
-    //        Debug.Log("Loaded Sprites Boss : " + colSprites);
-    //    }
-    //    catch (Exception x)
-    //    {
-    //        Debug.Log("################# GetSpriteBoss #" + indErr + "  : " + x.Message);
-    //    }
-    //}
 
     public Sprite[] GetSpritesAtlasNPC()
     {
@@ -878,15 +745,7 @@ public static class PersonsExtensions
         }
         bool isNPC = Helper.IsTypePrefabNPC(typePrefab);
         return isNPC;
-
-        //return Storage.Person.NamesPersons.Contains(typePrefab);
     }
-    //public static bool IsSpritePerson(this string typePrefab)
-    //{
-    //    return typePrefab.IndexOf("Boss") != -1 ||
-    //        typePrefab.IndexOf("Ufo") != -1; 
-    //    //return Storage.Person.NamesPersons.Contains(typePrefab);
-    //}
 
     public static MovementUfo GetMoveUfo(this GameObject gobj)
     {
@@ -940,14 +799,6 @@ public static class PersonsExtensions
         return null;
     }
 
-    //public static T GetDataModel(this GameObject gobj)
-    //{
-    //    var movNPC = gobj.GetMoveNPC();
-    //    if (movNPC != null)
-    //        return movNPC.GetData();
-    //    return null;
-    //}
-
     public static bool IsNPC(this GameObject gobj)
     {
         bool isNPC = false;
@@ -969,21 +820,6 @@ public static class PersonsExtensions
         }
 
         return isNPC;
-
-        //if (gobj = null)
-        //    return false;
-        //var movNPC = gobj.GetMoveNPC();
-        //if (movNPC == null)
-        //    return false;
-
-        //var dataNPC = movNPC.GetData();
-        //if (dataNPC == null)
-        //    return false;
-        //var dataObj = gobj.GetComponent<GameObjecDataController>();
-        //if (dataObj != null && dataObj.GetData() != null)
-        //    dataObj.GetData().IsReality = false;
-
-        //return true;
     }
 
     public static bool IsUFO(this GameObject gobj)
@@ -1017,92 +853,4 @@ public class FindPersonData
     public int Index { get; set; }
 }
 
-public class TypeBoss
-{
-    public List<TypeBoss> _TypesBoss;
 
-    public static List<TypeBoss> TypesBoss
-    {
-        get
-        {
-            return Instance._TypesBoss;
-        }
-    }
-
-    public TypeBoss() { }
-
-    private static TypeBoss _instance;
-    public static TypeBoss Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                        _instance = new TypeBoss();
-                _instance._TypesBoss = new List<TypeBoss>()
-                    {
-                         new TypeBoss(){ NameTextura2D= "SpriteBossLizard", Level=1, TextureMap= StoragePerson.TextureBossLizardMap},
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossRed", Level=2, ColorTrack=ManagerPalette.ColorBossLizard, TextureMap= StoragePerson.TextureBossRedMap },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBandos", Level=3, ColorTrack=ManagerPalette.ColorBossBandos,  TextureMap= StoragePerson.TextureBossBandosMap  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossBooble", Level=4, ColorTrack=ManagerPalette.ColorBossBooble,  TextureMap= StoragePerson.TextureBossBoobleMap  },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossAlien", Level=5, ColorTrack=ManagerPalette.ColorBossAlien,  TextureMap= StoragePerson.TextureBossAlienMap },
-                        new TypeBoss(){ NameTextura2D=  "SpriteBossDroid", Level=6, ColorTrack=ManagerPalette.ColorBossDroid,  TextureMap= StoragePerson.TextureBossDroidMap },
-                        new TypeBoss(){ NameTextura2D= "SpriteBossArm", Level=7, ColorTrack=ManagerPalette.ColorBossArm,  TextureMap= StoragePerson.TextureBossArmMap },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=8, ColorTrack=ManagerPalette.ColorBoss,  TextureMap= StoragePerson.TextureBossMap  },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=9, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=10, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=12, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=13, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=14, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=15, ColorTrack=ManagerPalette.ColorBoss },
-                        new TypeBoss(){ NameTextura2D= "SpriteBoss", Level=16, ColorTrack=ManagerPalette.ColorBoss },
-                    };
-            }
-            return _instance;
-        }
-    }
-
-    public string NameTextura2D { get; set; }
-    public int Level { get; set; }
-    public Color ColorTrack { get; set; }
-    public Texture2D TextureMap { get; set; }
-
-    public string GetNameSpriteForIndexLevel(int p_level)
-    {
-        if(!GetNamesSpritesNPC.ContainsKey(p_level))
-        {
-            Debug.Log("######### GetNameSpriteForIndexLevel not level " + p_level);
-            return "Error";
-        }
-        string spriteName = GetNamesSpritesNPC[p_level];
-        return spriteName;
-    }
-
-    private Dictionary<int, string> m_getNamesSpritesNPC = null;
-    public Dictionary<int, string> GetNamesSpritesNPC
-    {
-        get
-        {
-            if(m_getNamesSpritesNPC==null)
-            {
-                m_getNamesSpritesNPC = new Dictionary<int, string>();
-                foreach (var item in Instance._TypesBoss)
-                {
-                    m_getNamesSpritesNPC.Add(item.Level, item.NameTextura2D);
-                }
-
-            }
-            return m_getNamesSpritesNPC;
-        }
-    }
-
-    public Texture2D GetTextureMapForIndexLevel(int p_level)
-    {
-        Texture2D _texture = Instance._TypesBoss.Where(p => p.Level == p_level).Select(p => p.TextureMap).FirstOrDefault();
-        if(_texture==null)
-        {
-            Debug.Log("########### GetNameTextureMapForIndexLevel Not Texture in TypesBoss level = " + p_level);
-        }
-        return _texture;
-    }
-}

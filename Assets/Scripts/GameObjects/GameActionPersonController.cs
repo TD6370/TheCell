@@ -6,12 +6,18 @@ using UnityEngine;
 
 public class GameActionPersonController : MonoBehaviour
 {
-    public static bool IsGameActionPersons = true;
 
+    public enum NameActionsPerson
+    {
+        None, Idle, Move, Dead, Work, Attack, MoveEnd
+    };
+
+    public static bool IsGameActionPersons = true;
     public bool IsStartInit = false;
     private bool m_stateInit = false;
 
     public GameObject PanelModelsViewNPC;
+
     private GameObject m_MeModelView;
     public GameObject ModelView
     {
@@ -21,20 +27,16 @@ public class GameActionPersonController : MonoBehaviour
     public PlayerAnimation m_MeAnimation;
     private SpriteRenderer m_MeRender;
     private Vector2 m_MeMovement;
-    private NameActionsPerson m_ActionPerson = NameActionsPerson.Move;
+    private NameActionsPerson m_ActionPerson = NameActionsPerson.None;
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
     private ModelNPC.PersonData m_dataNPC;
-    //private List<NameActionsPerson> m_ListPersonActions;
     private MovementBoss m_meMovement;
     private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
     private ModelNPC.PersonData temp_dataNPC;
     private SaveLoadData.TypePrefabs temp_TypePrefab = SaveLoadData.TypePrefabs.PrefabField;
     private PositionRenderSorting m_sortiongLayer;
-
-    public enum NameActionsPerson
-    {
-        None, Idle, Move, Dead, Work, Attack, MoveEnd
-    };
+    private float m_timeWaitIdle = 5000f;
+    private float m_timeEndIdle;
 
     private void Awake()
     {
@@ -43,20 +45,13 @@ public class GameActionPersonController : MonoBehaviour
         LoadModelsView();
     }
 
-    // Use this for initialization
     void Start()
     {
-        //LoadModelsView();
-        //m_MeRender = gameObject.GetComponent<SpriteRenderer>();
-        //if (m_MeRender == null)
-        //    Debug.Log("###### GameActionPersonController.Start  m_MeRender == null");
-
         m_meMovement = gameObject.GetComponent<MovementBoss>();
         if (m_meMovement == null)
             Debug.Log("###### GameActionPersonController.Start  m_meMovement == null");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (m_meMovement == null)
@@ -68,46 +63,25 @@ public class GameActionPersonController : MonoBehaviour
 
     public void ChangeActions()
     {
-        //TEST $$$
-        //if (m_MeModelView != null)
-        //    return;
-
         if (m_meMovement == null)
             return;
 
-        //$$$LC.2
         CheckUpdateModelView();
         
         AnimatorMove();
 
-        //FixPositModelView();
-
-        TestNextAction();
+        CheckNextAction();
     }
-    
-    private void FixPositModelView()
-    {
-        //var posDef = new Vector3(0, 0, -1);
-        //if (m_MeModelView != null)
-        //{
-        //    if (m_MeModelView.transform.position != posDef)
-        //    {
-        //        m_MeModelView.transform.position = posDef;
-        //    }
-        //}
-    }
+   
     public void StartInit()
     {
         m_stateInit = false;
         IsStartInit = true;
         TimeInField = Time.time + limitLockInField;
     }
-
-
+    
     private void LoadModelsView()
     {
-        //bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.tag.ToString() == "PoolPerson";
-        //bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.tag.ToString() == "PoolPerson";
         //Skip prefab original
         bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.name == "PrefabPerson";
         
@@ -125,28 +99,7 @@ public class GameActionPersonController : MonoBehaviour
             m_ListViewModels = new Dictionary<SaveLoadData.TypePrefabs, GameObject>();
             if (isThisPrefab)
             {
-                //foreach (Transform child in PanelModelsViewNPC.transform)
-                //{
-                //    GameObject model = child.gameObject;
-                //    SaveLoadData.TypePrefabs typeModel = SaveLoadData.TypePrefabs.PrefabField;
-                //    string nameModelView = child.gameObject.name.Replace("ModelView", "");
-                //    try
-                //    {
-                //        typeModel = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), nameModelView);
-                //    }
-                //    catch (Exception x)
-                //    {
-                //        Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
-                //        continue;
-                //    }
-                //    Vector3 pos = new Vector3(0, 0, -1);
-                //    GameObject modelView = (GameObject)Instantiate(model, pos, Quaternion.identity);
-                //    modelView.name = typeModel.ToString();
-                //    modelView.transform.SetParent(this.gameObject.transform);
-                //    modelView.transform.position = pos;
-                //    modelView.SetActive(false);
-                //    m_ListViewModels.Add(typeModel, modelView);
-                //}
+                CreateViewNodelsPrefabs();
             }
             else
             {
@@ -169,6 +122,7 @@ public class GameActionPersonController : MonoBehaviour
             }
         }
     }
+     
 
     private void CheckUpdateModelView()
     {
@@ -272,32 +226,42 @@ public class GameActionPersonController : MonoBehaviour
         return ListPersonActions;
     }
 
-
-    private void TestNextAction()
+    private void InitCurrentAction()
     {
+        if (temp_ActionPerson == NameActionsPerson.None && temp_ActionPerson == m_ActionPerson && !string.IsNullOrEmpty(m_dataNPC.CurrentAction))
+        {
+            temp_ActionPerson = m_ActionPerson = (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), m_dataNPC.CurrentAction.ToString());
+            StartActionNPC(m_ActionPerson);
+        }
+    }
+
+
+    private void CheckNextAction()
+    {
+        InitCurrentAction();
+
+        if (Time.time > m_timeEndIdle && m_ActionPerson == NameActionsPerson.Idle)
+            RequestActionNPC(NameActionsPerson.Move);
+
         if (temp_ActionPerson != m_ActionPerson)
         {
             var m_ListPersonActions = GetActions();
 
             if (m_ListPersonActions.Count == 0)
-                ExecuteActionNPC(NameActionsPerson.Move);
+                RequestActionNPC(NameActionsPerson.Move);
 
             if (m_ListPersonActions.Count > 0)
             {
-                //if (m_ActionPerson == m_ListPersonActions[0])
-                //{
-
                 m_ActionPerson = m_ListPersonActions[0];
                 m_ListPersonActions.RemoveAt(0);
                 m_dataNPC.PersonActions = m_ListPersonActions.Select(p => p.ToString()).ToArray();// (p=>p.).ToArray();
-                //}
                 StartActionNPC(m_ActionPerson);
                 temp_ActionPerson = m_ActionPerson;
             }
         }
     }
 
-    public void ExecuteActionNPC(NameActionsPerson p_nameAction = NameActionsPerson.None, bool isForce = false)
+    public void RequestActionNPC(NameActionsPerson p_nameAction = NameActionsPerson.None, bool isForce = false)
     {
         if (isForce)
             temp_ActionPerson = NameActionsPerson.None;
@@ -326,15 +290,17 @@ public class GameActionPersonController : MonoBehaviour
     {
         if (p_nameAction != NameActionsPerson.None)
             m_ActionPerson = p_nameAction;
+        m_dataNPC.CurrentAction = m_ActionPerson.ToString();
 
         switch (m_ActionPerson)
         {
             case NameActionsPerson.Idle:
+                ActionIdle();
                 break;
             case NameActionsPerson.Move:
                 break;
             case NameActionsPerson.MoveEnd:
-                SetActionNewTargetMove();
+                ActionNewTargetMove();
                 break;
             case NameActionsPerson.Dead:
                 break;
@@ -381,7 +347,7 @@ public class GameActionPersonController : MonoBehaviour
         float dist = Vector3.Distance(targetPosition, transform.position);
         if (dist < minDist)
         {
-            ExecuteActionNPC(NameActionsPerson.MoveEnd);
+            RequestActionNPC(NameActionsPerson.MoveEnd);
         }
         //---------------
 
@@ -397,7 +363,7 @@ public class GameActionPersonController : MonoBehaviour
             float distLock = Vector3.Distance(lastPositionForLock, transform.position);
             if (distLock < minDistLck)
             {
-                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+                RequestActionNPC(NameActionsPerson.MoveEnd);
                 //Debug.Log("~~~ New Taget 1 " + this.gameObject.name);
             }
             lastPositionForLock = transform.position;
@@ -408,7 +374,7 @@ public class GameActionPersonController : MonoBehaviour
             //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
             if (!string.IsNullOrEmpty(lastFieldForLock))
             {
-                ExecuteActionNPC(NameActionsPerson.MoveEnd);
+                RequestActionNPC(NameActionsPerson.MoveEnd);
                 //Debug.Log("~~~ New Taget 2 " + this.gameObject.name);
             }
             lastFieldForLock = Storage.Instance.SelectFieldPosHero;
@@ -418,23 +384,24 @@ public class GameActionPersonController : MonoBehaviour
     }
 
 
-    private void SetActionNewTargetMove()
+    private void ActionNewTargetMove()
     {
         m_dataNPC.SetTargetPosition();
-        ExecuteActionNPC(NameActionsPerson.Move);
+        RequestActionNPC(NameActionsPerson.Move);
     }
 
-    private void SetActionIdle()
+    private void ActionIdle()
+    {
+        m_timeEndIdle = Time.time + m_timeWaitIdle;
+        //m_dataNPC.SetTargetPosition();
+    }
+
+    private void ActionMove()
     {
         //m_dataNPC.SetTargetPosition();
     }
 
-    private void SetActionMove()
-    {
-        //m_dataNPC.SetTargetPosition();
-    }
-
-    private void SetActionDead()
+    private void ActionDead()
     {
         //m_dataNPC.SetTargetPosition();
     }
@@ -442,5 +409,31 @@ public class GameActionPersonController : MonoBehaviour
     public void Kill()
     {
         Storage.Instance.AddDestroyGameObject(this.gameObject);
+    }
+
+    private void CreateViewNodelsPrefabs()
+    {
+        //foreach (Transform child in PanelModelsViewNPC.transform)
+        //{
+        //    GameObject model = child.gameObject;
+        //    SaveLoadData.TypePrefabs typeModel = SaveLoadData.TypePrefabs.PrefabField;
+        //    string nameModelView = child.gameObject.name.Replace("ModelView", "");
+        //    try
+        //    {
+        //        typeModel = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), nameModelView);
+        //    }
+        //    catch (Exception x)
+        //    {
+        //        Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
+        //        continue;
+        //    }
+        //    Vector3 pos = new Vector3(0, 0, -1);
+        //    GameObject modelView = (GameObject)Instantiate(model, pos, Quaternion.identity);
+        //    modelView.name = typeModel.ToString();
+        //    modelView.transform.SetParent(this.gameObject.transform);
+        //    modelView.transform.position = pos;
+        //    modelView.SetActive(false);
+        //    m_ListViewModels.Add(typeModel, modelView);
+        //}
     }
 }
