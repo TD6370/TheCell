@@ -83,7 +83,7 @@ public class GameActionPersonController : MonoBehaviour
         CheckUpdateModelView();
         
 
-        CheckComplitionActions(m_dataNPC, ActionPerson, this);
+        //CheckComplitionActions(m_dataNPC, ActionPerson, this);
 
         CheckNextAction(m_dataNPC, ActionPerson, this);
     }
@@ -255,6 +255,8 @@ public class GameActionPersonController : MonoBehaviour
         if (listPersonActions.Count == 0)
             AddActionNPC(dataNPC, NameActionsPerson.Move);
 
+        listPersonActions = GetActions(dataNPC);
+
         if (listPersonActions.Count > 0)
         {
             var actionPerson = listPersonActions[0];
@@ -380,7 +382,8 @@ public class GameActionPersonController : MonoBehaviour
     {
         Vector3 newCurrentPosition = GetAlienData(dataNPC).MovePosition;
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
-        if (dist < MinDistEndMove)
+        //End move to Target
+        if (dist < MinDistEndMove) 
         {
             RequestActionNPC(dataNPC, NameActionsPerson.MoveEnd, null);
         }
@@ -461,43 +464,31 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ActionMove(ModelNPC.PersonData dataNPC)
     {
-        Vector3 oldPosition = GetAlienData(dataNPC).Position;
+        Vector3 oldPosition = dataNPC.Position;
+        
         //(dataNPC.Position, dataNPC.TargetPosition);
         //float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
-        float step = dataNPC.Speed * Time.deltaTime;
+        float step = dataNPC.Speed;// / 3; // * Time.deltaTime;
+        if (step < 0.5f)
+            step = 0.5f;
+        if (step > 3f)
+            step = 3f;
+
         Vector3 targetPosition = dataNPC.TargetPosition;
         Vector3 newPosition = Vector3.MoveTowards(oldPosition, dataNPC.TargetPosition, step);
-        if (!Helper.IsValidPiontInZona(newPosition.x, newPosition.y))
+        newPosition = new Vector3(newPosition.x, newPosition.y, oldPosition.z);
+     
+        string fieldOld_Name = Helper.GetNameFieldByName(dataNPC.NameObject);
+        string fieldOld = Helper.GetNameFieldPosit(oldPosition.x, oldPosition.y);
+        string fieldNew = Helper.GetNameFieldPosit(newPosition.x, newPosition.y);
+        if(fieldOld_Name != fieldOld)
         {
-            Debug.Log("### ActionMove to not Valid position : " + dataNPC.NameObject);
-            //ActionNewTargetMove(dataNPC, null);
-            RequestActionNPC(dataNPC, NameActionsPerson.MoveEnd, null);
-            //RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
-            return;
+            Debug.Log("###### ActionMove = Field not correct " + fieldOld_Name + " <> " + fieldOld + " >>> " + dataNPC.NameObject);
+            fieldOld = fieldOld_Name;
         }
 
-        string fieldOld = Helper.GetNameField(oldPosition);
-        string fieldNew = Helper.GetNameField(newPosition);
         if (fieldOld != fieldNew)
         {
-            //-------------
-            //var objectsData = ReaderScene.GetObjectsDataFromGrid(fieldOld);
-            //string oldName = dataNPC.NameObject;
-            //          int index = objectsData.FindIndex(p => p.NameObject == dataNPC.NameObject);
-            //if (index == -1)
-            //{
-            //    Debug.Log("########### NOT FOUND IN OLD FIELD " + fieldOld + " -- " + dataNPC.NameObject);
-            //}
-
-            //string nameObject = Helper.CreateName(dataNPC.TypePrefabName, fieldNew, "", dataNPC.NameObject);
-            //dataNPC.SetNameObject(nameObject);
-            //dataNPC.SetPosition(newPosition);
-                        
-            //Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
-
-            //if (index != -1)
-            //    objectsData.RemoveAt(index);
-            //-----------------
             Storage.Person.UpdateGamePositionInDream(fieldOld, fieldNew, dataNPC, newPosition);
         }else
         {

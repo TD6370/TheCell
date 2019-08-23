@@ -462,6 +462,15 @@ public class StoragePerson : MonoBehaviour {
 
     public void UpdateGamePositionInDream(string fieldOld, string fieldNew,  ModelNPC.ObjectData dataNPC, Vector3 newPosition)
     {
+        if (!ReaderScene.IsGridDataFieldExist(fieldOld))
+            //SaveLoadData
+            Storage.Data.AddNewFieldInGrid(fieldOld, "UpdateGamePositionInDream");
+        //Storage.Data.AddDataObjectInGrid
+        if (!ReaderScene.IsGridDataFieldExist(fieldNew))
+            //SaveLoadData
+            Storage.Data.AddNewFieldInGrid(fieldNew, "UpdateGamePositionInDream");
+
+
         var objectsData = ReaderScene.GetObjectsDataFromGrid(fieldOld);
         string oldName = dataNPC.NameObject;
         //int index = objectsData.Find(p => p.NameObject == dataNPC.NameObject);
