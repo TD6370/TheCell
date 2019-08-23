@@ -756,7 +756,7 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
 
        
-        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjecsDataFromGrid(nameField))
+        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
         {
             //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
 

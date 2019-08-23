@@ -185,6 +185,11 @@ public static class Helper { //: MonoBehaviour {
     {
         return FieldKey + x + "x" + Mathf.Abs(y);
     }
+    public static string GetNameField(Vector2 pos)
+    {
+        return FieldKey + (int)pos.x + "x" + Mathf.Abs((int)pos.y);
+    }
+
 
     public static string GetNameField(System.Single x, System.Single y)
     {

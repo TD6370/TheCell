@@ -460,6 +460,27 @@ public class StoragePerson : MonoBehaviour {
         return obj;
     }
 
+    public void UpdateGamePositionInDream(string fieldOld, string fieldNew,  ModelNPC.ObjectData dataNPC, Vector3 newPosition)
+    {
+        var objectsData = ReaderScene.GetObjectsDataFromGrid(fieldOld);
+        string oldName = dataNPC.NameObject;
+        //int index = objectsData.Find(p => p.NameObject == dataNPC.NameObject);
+        int index = objectsData.FindIndex(p => p.NameObject == dataNPC.NameObject);
+        if (index == -1)
+        {
+            Debug.Log("########### NOT FOUND IN OLD FIELD " + fieldOld + " -- " + dataNPC.NameObject);
+        }
+
+        string nameObject = Helper.CreateName(dataNPC.TypePrefabName, fieldNew, "", dataNPC.NameObject);
+        dataNPC.SetNameObject(nameObject);
+        dataNPC.SetPosition(newPosition);
+
+        Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
+
+        if (index != -1)
+            objectsData.RemoveAt(index);
+    }
+
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
         
@@ -516,7 +537,7 @@ public class StoragePerson : MonoBehaviour {
         }
 
         List<GameObject> realObjectsOldField = Storage.Instance.GamesObjectsReal[p_OldField];
-        List<ModelNPC.ObjectData> dataObjectsOldField = ReaderScene.GetObjecsDataFromGrid(p_OldField);
+        List<ModelNPC.ObjectData> dataObjectsOldField = ReaderScene.GetObjectsDataFromGrid(p_OldField);
 
         if (realObjectsOldField == null)
         {
@@ -639,7 +660,7 @@ public class StoragePerson : MonoBehaviour {
         //if (IsGridDataFieldExist(p_NewField))
         if (ReaderScene.IsGridDataFieldExist(p_NewField))
         {
-            var indT1 = ReaderScene.GetObjecsDataFromGrid(p_NewField).FindIndex(p => p.NameObject == nameObjectTest);
+            var indT1 = ReaderScene.GetObjectsDataFromGrid(p_NewField).FindIndex(p => p.NameObject == nameObjectTest);
             if (indT1 != -1)
             {
                 Storage.Instance.SelectGameObjectID = Helper.GetID(nameObjectTest);

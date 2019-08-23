@@ -314,7 +314,7 @@ public class GenerateGridFields : MonoBehaviour {
                 return;
 
             indErr = "3.";
-            List<ModelNPC.ObjectData> listDataObjectInField = ReaderScene.GetObjecsDataFromGrid(p_nameField);
+            List<ModelNPC.ObjectData> listDataObjectInField = ReaderScene.GetObjectsDataFromGrid(p_nameField);
             indErr = "4.";
             List<GameObject> listGameObjectReal = new List<GameObject>();
 
@@ -550,7 +550,7 @@ public class GenerateGridFields : MonoBehaviour {
             return;
         }
 
-        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjecsDataFromGrid(p_nameField);
+        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjectsDataFromGrid(p_nameField);
         try
         {
             indErr = "1.";
@@ -576,7 +576,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
                     indData = 0;
                     bool isFind = false;
-                    foreach (var itemObj in ReaderScene.GetObjecsDataFromGrid(p_nameField))
+                    foreach (var itemObj in ReaderScene.GetObjectsDataFromGrid(p_nameField))
                     {
                         Debug.Log("[" + p_nameField + "] :: " + itemObj.NameObject);
                         if (itemObj.NameObject == gobj.name)
@@ -656,7 +656,7 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     else
                     {
-                        int indValid = ReaderScene.GetObjecsDataFromGrid(posFieldReal).FindIndex(p => p.NameObject == gobj.name);
+                        int indValid = ReaderScene.GetObjectsDataFromGrid(posFieldReal).FindIndex(p => p.NameObject == gobj.name);
                         if (indValid != -1)
                         {
                             Debug.Log("################# SaveListObjectsToData ))))))))))))))   Find " + gobj.name + "  in " + posFieldReal);
@@ -678,7 +678,7 @@ public class GenerateGridFields : MonoBehaviour {
                     //Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
                     if (ReaderScene.IsGridDataFieldExist(posFieldOld))
                     {
-                        int indLast = ReaderScene.GetObjecsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
+                        int indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
                         if (indLast == -1)
                             Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
                     }

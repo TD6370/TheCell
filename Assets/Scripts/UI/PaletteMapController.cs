@@ -2061,7 +2061,7 @@ public class PaletteMapController : MonoBehaviour {
 
             if (isTestExistMeType)
             {
-                var indTM = ReaderScene.GetObjecsDataFromGrid(nameField).FindIndex(p => p.TypePrefabName == itemTile.Tag);
+                var indTM = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.TypePrefabName == itemTile.Tag);
                 if (indTM != -1)
                     return true;
             }

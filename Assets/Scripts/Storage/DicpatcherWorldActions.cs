@@ -4,14 +4,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
-public class GodsWorldSceneActions : MonoBehaviour {
-    //float m_realtimeMoving = Time.time + 0.5f;
+public class GodsWorldSceneActions : MonoBehaviour
+{
     private bool m_IsRunSearching = false;
     private bool m_IsFilledSearchingCollection= false;
-
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
-
-    //private GameActionPersonController m_actionController;
 
     private void Awake()
     {
@@ -19,8 +16,8 @@ public class GodsWorldSceneActions : MonoBehaviour {
     }
 
     void Start () {
-        //StartCoroutine(NavigateWorldScne());
         //LoadPriorityPerson();
+        //StartCoroutine(NavigateWorldScne());
         //m_actionController = new GameActionPersonController();
     }
 	
@@ -37,12 +34,9 @@ public class GodsWorldSceneActions : MonoBehaviour {
         }
     }
 
-
     IEnumerator NavigateWorldScne()
     {
         Queue<string> colectionLivePerson = new Queue<string>();
-
-       
 
         while (true)
         {
@@ -70,9 +64,8 @@ public class GodsWorldSceneActions : MonoBehaviour {
             PersonWork(infoNPC);
 
             //ModelNPC.ObjectData dataNPC = infoNPC.Data;
-            //ctor2 observerFieldPos = Helper.GetPositByField(infoNPC.Field);
-
-
+            //Vector2 observerFieldPos = Helper.GetPositByField(infoNPC.Field);
+            
             yield return new WaitForSeconds(2f);
         }
     }

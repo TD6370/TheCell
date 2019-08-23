@@ -708,7 +708,7 @@ public class SaveLoadData : MonoBehaviour {
             //    //return new ModelNPC.ObjectData();
             //}
         }
-        List<ModelNPC.ObjectData> objects = ReaderScene.GetObjecsDataFromGrid(nameField);
+        List<ModelNPC.ObjectData> objects = ReaderScene.GetObjectsDataFromGrid(nameField);
         int index = objects.FindIndex(p => p.NameObject == nameGameObject);
         if (index == -1)
         {

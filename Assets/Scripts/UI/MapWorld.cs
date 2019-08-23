@@ -374,7 +374,7 @@ public class MapWorld : MonoBehaviour {
                         continue;
                     }
                     indErr = "9";
-                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjecsDataFromGrid(nameField))
+                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
                     {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
@@ -498,7 +498,7 @@ public class MapWorld : MonoBehaviour {
                         continue;
                     }
                     indErr = "9";
-                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjecsDataFromGrid(nameField))
+                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
                     {
                         indErr = "10";
                         //Debug.Log("++++++++ : " + datObjItem + " " + datObjItem.TagObject + " =" + datObjItem.TagObject.IsPerson());
@@ -577,7 +577,7 @@ public class MapWorld : MonoBehaviour {
                     string nameField = saveHeroPosField;
                     if (ReaderScene.IsGridDataFieldExist(nameField))
                     {
-                        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjecsDataFromGrid(nameField))
+                        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
                         {
                             if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
                             datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())
@@ -627,7 +627,7 @@ public class MapWorld : MonoBehaviour {
                 string nameField = saveHeroPosField;
                 if (ReaderScene.IsGridDataFieldExist(nameField))
                 {
-                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjecsDataFromGrid(nameField))
+                    foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
                     {
                         if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
                         datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString())

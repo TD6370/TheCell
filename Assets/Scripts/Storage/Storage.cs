@@ -883,7 +883,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("+++++ ------- DestroyRealObject ----- !GridData.FieldsD not field=" + nameField);
             return false;
         }
-        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjecsDataFromGrid(nameField);
+        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjectsDataFromGrid(nameField);
         int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
         if (!isCorrect)
         {

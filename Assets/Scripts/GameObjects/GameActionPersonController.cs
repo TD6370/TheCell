@@ -379,7 +379,6 @@ public class GameActionPersonController : MonoBehaviour
     public static void CheckComplitionMoveInDream(ModelNPC.PersonData dataNPC)
     {
         Vector3 newCurrentPosition = GetAlienData(dataNPC).MovePosition;
-
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
         if (dist < MinDistEndMove)
         {
@@ -462,6 +461,49 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ActionMove(ModelNPC.PersonData dataNPC)
     {
+        Vector3 oldPosition = GetAlienData(dataNPC).Position;
+        //(dataNPC.Position, dataNPC.TargetPosition);
+        //float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
+        float step = dataNPC.Speed * Time.deltaTime;
+        Vector3 targetPosition = dataNPC.TargetPosition;
+        Vector3 newPosition = Vector3.MoveTowards(oldPosition, dataNPC.TargetPosition, step);
+        if (!Helper.IsValidPiontInZona(newPosition.x, newPosition.y))
+        {
+            Debug.Log("### ActionMove to not Valid position : " + dataNPC.NameObject);
+            //ActionNewTargetMove(dataNPC, null);
+            RequestActionNPC(dataNPC, NameActionsPerson.MoveEnd, null);
+            //RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
+            return;
+        }
+
+        string fieldOld = Helper.GetNameField(oldPosition);
+        string fieldNew = Helper.GetNameField(newPosition);
+        if (fieldOld != fieldNew)
+        {
+            //-------------
+            //var objectsData = ReaderScene.GetObjectsDataFromGrid(fieldOld);
+            //string oldName = dataNPC.NameObject;
+            //          int index = objectsData.FindIndex(p => p.NameObject == dataNPC.NameObject);
+            //if (index == -1)
+            //{
+            //    Debug.Log("########### NOT FOUND IN OLD FIELD " + fieldOld + " -- " + dataNPC.NameObject);
+            //}
+
+            //string nameObject = Helper.CreateName(dataNPC.TypePrefabName, fieldNew, "", dataNPC.NameObject);
+            //dataNPC.SetNameObject(nameObject);
+            //dataNPC.SetPosition(newPosition);
+                        
+            //Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
+
+            //if (index != -1)
+            //    objectsData.RemoveAt(index);
+            //-----------------
+            Storage.Person.UpdateGamePositionInDream(fieldOld, fieldNew, dataNPC, newPosition);
+        }else
+        {
+            dataNPC.SetPosition(newPosition);
+        }
+        //GetAlienData(dataNPC).MovePosition = newPosition;
     }
 
     private void ActionDead()

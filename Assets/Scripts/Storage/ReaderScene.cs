@@ -138,7 +138,7 @@ public class ReaderScene //: UpdateData
         return Storage.Instance.GridDataG.FieldsD.ContainsKey(field);
     }
 
-    public static List<ModelNPC.ObjectData> GetObjecsDataFromGrid(string nameField)
+    public static List<ModelNPC.ObjectData> GetObjectsDataFromGrid(string nameField)
     {
         //if (!Storage.Instance.IsLoadingWorldThread)
         //{
@@ -148,14 +148,14 @@ public class ReaderScene //: UpdateData
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
     }
 
-    public static ModelNPC.ObjectData GetObjecDataFromGrid(string nameField, int index)
+    public static ModelNPC.ObjectData GetObjectDataFromGrid(string nameField, int index)
     {
         //if (!Storage.Instance.IsLoadingWorldThread)
         //{
         //if (!IsGridDataFieldExist(nameField))
         //    Storage.Data.AddNewFieldInGrid(nameField, "GetObjecDataFromGrid");
         //}
-        return GetObjecsDataFromGrid(nameField)[index];
+        return GetObjectsDataFromGrid(nameField)[index];
     }
 
     public static ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys)
@@ -181,7 +181,7 @@ public class ReaderScene //: UpdateData
             for (int x = startX; x < endX; x++)
             {
                 string field = Helper.GetNameField(x, y);
-                List<ModelNPC.ObjectData> objects = GetObjecsDataFromGrid(field);
+                List<ModelNPC.ObjectData> objects = GetObjectsDataFromGrid(field);
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
                     string id = Helper.GetID(objData.NameObject);

@@ -85,10 +85,10 @@ public class UpdateData {
         foreach (var item in _GridDataG.FieldsD)
         {
             string nameField = item.Key;
-            List<ModelNPC.ObjectData> resListData = ReaderScene.GetObjecsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
+            List<ModelNPC.ObjectData> resListData = ReaderScene.GetObjectsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; }).ToList();
             if (resListData != null)
             {
-                var resListDataTest = ReaderScene.GetObjecsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
+                var resListDataTest = ReaderScene.GetObjectsDataFromGrid(nameField).Where(p => { return p.NameObject.IndexOf(idObj) != -1; });
                 if (resListDataTest.Count() != resListData.Count())
                 {
                     Debug.Log("+++++ RemoveAllFindDataObject: resListDataTest.Count(" + resListDataTest.Count() + ") != resListData.Count(" + resListData.Count() + ")");
@@ -120,17 +120,17 @@ public class UpdateData {
     {
         if (!ReaderScene.IsGridDataFieldExist(nameField))
             Storage.Data.AddNewFieldInGrid(nameField, "SetObjecDataFromGrid");
-        ReaderScene.GetObjecsDataFromGrid(nameField)[index] = newData;
+        ReaderScene.GetObjectsDataFromGrid(nameField)[index] = newData;
     }
 
     public void ClearObjecsDataFromGrid(string nameField)
     {
-        ReaderScene.GetObjecsDataFromGrid(nameField).Clear();
+        ReaderScene.GetObjectsDataFromGrid(nameField).Clear();
     }
 
     public void RemoveObjecDataGridByIndex(string nameField, int index)
     {
-        ReaderScene.GetObjecsDataFromGrid(nameField).RemoveAt(index);
+        ReaderScene.GetObjectsDataFromGrid(nameField).RemoveAt(index);
     }
 
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc, bool isForce = false)
@@ -347,20 +347,20 @@ public class UpdateData {
     {
         ModelNPC.ObjectData histData = null;
         if (Storage.Log.IsSaveHistory)
-            histData = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
+            histData = ReaderScene.GetObjectsDataFromGrid(nameField)[index];
         if (isDebug)
             Debug.Log("****** RemoveDataObjectInGrid : start " + histData);
 
         if(dataObjDel!=null && dataObjDel.NameObject != histData.NameObject)
         {
-            index = ReaderScene.GetObjecsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
             if (index == -1)
             {
                 Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
                 Storage.Log.SaveHistory(histData.NameObject, "ERROR RemoveDataObjectInGrid", callFunc, nameField, "Conflict Name", dataObjDel, histData);
                 return;
             }
-            histData = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
+            histData = ReaderScene.GetObjectsDataFromGrid(nameField)[index];
             if(dataObjDel.NameObject != histData.NameObject)
             {
                 Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + histData.NameObject + "  ... NOT find in Field: " + nameField);
@@ -391,7 +391,7 @@ public class UpdateData {
         if (Storage.Log.IsSaveHistory)
         {
             //ModelNPC.ObjectData oldObj = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
-            ModelNPC.ObjectData oldObj = ReaderScene.GetObjecDataFromGrid(nameField, index);
+            ModelNPC.ObjectData oldObj = ReaderScene.GetObjectDataFromGrid(nameField, index);
             
             Storage.Log.SaveHistory(setObject.NameObject, "UpdateDataObect", callFunc, nameField, "", oldObj, setObject);
             Storage.Log.SaveHistory(oldObj.NameObject, "UpdateDataObect", callFunc, nameField, "RESAVE", oldObj, setObject);
