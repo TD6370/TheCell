@@ -15,7 +15,7 @@ public class DispatcherWorldActions : MonoBehaviour
         
     }
 
-    bool isInit = false;
+    public bool isInit = false;
 
     private void LateUpdate()
     {
@@ -51,8 +51,17 @@ public class DispatcherWorldActions : MonoBehaviour
         }
     }
 
+    public void ResetDispatcher()
+    {
+        //isInit = false;
+        StopCoroutine(NavigatorWorldScene());
+        StartCoroutine(NavigatorWorldScene());
+    }
+
     IEnumerator NavigatorWorldScene()
     {
+        var countP = 0;
+
         Queue<string> colectionLivePerson = new Queue<string>();
 
         while (true)
@@ -65,6 +74,8 @@ public class DispatcherWorldActions : MonoBehaviour
 
                 if (!m_IsFilledSearchingCollection)
                 {
+                    //TEST
+                    Storage.EventsUI.ListLogAdd = "<<< Is Filled Searching Collection >>>";
                     m_IsRunSearching = true;
                     //Storage.ReaderWorld.CollectionInfoID;
                     foreach (string id in Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key))
@@ -74,19 +85,38 @@ public class DispatcherWorldActions : MonoBehaviour
                     m_IsRunSearching = false;
                     m_IsFilledSearchingCollection = true;
                 }
-                yield return null;
+                //yield return null;
 
-                string nextPersonLiveID = colectionLivePerson.Dequeue();
-                ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
+                foreach (int nextI in Enumerable.Range(0, 100))
+                {
+                    if (colectionLivePerson.Count == 0)
+                        break;
 
-                yield return null;
+                    if (!Storage.Instance.ReaderSceneIsValid)
+                        break;
 
-                PersonWork(infoNPC);
+                    string nextPersonLiveID = colectionLivePerson.Dequeue();
+                    ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
+
+                    //yield return null;
+
+                    PersonWork(infoNPC, colectionLivePerson.Count);
+
+                    //if (countP != colectionLivePerson.Count())
+                    //{
+                    //    countP = colectionLivePerson.Count();
+                    //    Storage.EventsUI.ListLogAdd = "PESONS: " + colectionLivePerson.Count();
+                    //}
+                    if (colectionLivePerson.Count == 0)
+                        break;
+                }
 
                 //ModelNPC.ObjectData dataNPC = infoNPC.Data;
                 //Vector2 observerFieldPos = Helper.GetPositByField(infoNPC.Field);
 
-                yield return new WaitForSeconds(1f);
+                //float timeNext = Storage.Person.WaitTimeReaderScene; //Storage.Person.TestSpeed
+                //yield return new WaitForSeconds(timeNext);
+                yield return null;
             }
             else
             {
@@ -95,12 +125,15 @@ public class DispatcherWorldActions : MonoBehaviour
         }
     }
 
-    private void PersonWork(ReaderScene.DataObjectInfoID infoNPC)
+    private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {
         var persData = infoNPC.Data as ModelNPC.PersonData;
 
         if (persData.IsReality)
+        {
+            //Storage.EventsUI.ListLogAdd = "NO WORK: " + persData.NameObject + " on REAL";
             return;
+        }
 
         //persData.Id;
         List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
@@ -108,9 +141,48 @@ public class DispatcherWorldActions : MonoBehaviour
 
         //GameActionPersonController.CheckComplitionActions(persData, actionCurrent, null); //$$$
 
-        actonsNPC = GameActionPersonController.GetActions(persData);
+        //actonsNPC = GameActionPersonController.GetActions(persData);
         actionCurrent = GameActionPersonController.GetCurrentAction(persData);
 
         GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
+
+        //TEST
+        bool isLog = Storage.Person.IsLog;
+        if (isLog)
+            Storage.EventsUI.ListLogAdd =  count + " WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
+
+        //-------------------
+        string fieldInfo1 = infoNPC.Field;
+        string fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
+        string fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
+        if (fieldInfo1 != fieldPos1 || fieldInfo1 != fieldName1 || fieldPos1 != fieldName1)// || fieldInfo != fieldGO)
+        {
+            string strErr = "??? PersonWork name Field I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
+            Storage.EventsUI.ListLogAdd = strErr;
+        }
+        //-------------------
+
+        bool isZonaReal = Helper.IsValidPiontInZona(persData.Position.x, persData.Position.y);
+        if(!persData.IsReality && isZonaReal)
+        {
+            //TEST
+            Storage.EventsUI.ListLogAdd = "GOTO IN REAL WORLD: " + persData.NameObject;
+
+            string fieldInfo = infoNPC.Field;
+            string fieldPos = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
+            string fieldName = Helper.GetNameFieldByName(persData.NameObject);
+            
+            //string fieldGO = (infoNPC.Gobject == null) ? fieldInfo : Helper.GetNameFieldObject(infoNPC.Gobject);
+            //if(fieldInfo != fieldPos || fieldInfo != fieldName || fieldInfo != fieldGO)
+            if (fieldInfo != fieldPos || fieldInfo != fieldName || fieldPos != fieldName)// || fieldInfo != fieldGO)
+            {
+                string strErr = "??? PersonWork name Field I: " + fieldInfo + " P:" + fieldPos + " DN:" + fieldName;// + " GO:" + fieldGO;
+                Debug.Log(strErr);
+                //Storage.SetMessageAlert = strErr;
+                Storage.EventsUI.ListLogAdd = strErr;
+            }
+            Storage.GenGrid.LoadObjectToReal(fieldName);
+        }
+        else { }
     }
 }

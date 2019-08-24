@@ -9,6 +9,19 @@ public class StoragePerson : MonoBehaviour {
 
     public bool IsShowTittlePerson = false;
 
+    //[Header("Speed Person")]
+    [Range(1,10)]
+    ///[SerializeField]
+    public float SpeedMovePersonInDream = 1f;
+    //[Space(20)]
+    //[Header("Delay live")]
+    //[Range(0.0001f, 1)]
+    [Range(0, 1)]
+    //[SerializeField]
+    public float WaitTimeReaderScene = 0.5f;
+
+    public bool IsLog;
+
     public Vector3 PersonsTargetPosition { get; set; }
     public ContainerPriorityFinder ContainerPriority;
 
@@ -488,6 +501,8 @@ public class StoragePerson : MonoBehaviour {
 
         if (index != -1)
             objectsData.RemoveAt(index);
+
+        Storage.ReaderWorld.UpdateField(dataNPC, fieldNew);
     }
 
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)

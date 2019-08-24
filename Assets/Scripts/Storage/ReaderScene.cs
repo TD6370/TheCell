@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,13 @@ public class ReaderScene //: UpdateData
         InitCollectionID();
     }
 
-    private void InitCollectionID()
+    public void Clear()
+    {
+        if(CollectionInfoID!=null)
+            CollectionInfoID.Clear();
+    }
+
+    public void InitCollectionID()
     {
         string field = string.Empty;
         CollectionInfoID = new Dictionary<string, DataObjectInfoID>();
@@ -77,6 +83,8 @@ public class ReaderScene //: UpdateData
         if (false == CheckCollectionInfoID(id))
             return;
         CollectionInfoID[id].Gobject = newGobject;
+
+        
     }
 
     public void UpdateLinkData(ModelNPC.ObjectData newData)

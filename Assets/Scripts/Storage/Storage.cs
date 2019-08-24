@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 using System.IO;
 
-using UnityEditor;
+//using UnityEditor;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Linq;
@@ -50,6 +50,8 @@ public class Storage : MonoBehaviour {
         get { return gameObject; }
     }
 
+    private DispatcherWorldActions m_DispatcherWorldActions;
+
     //_scriptEvents = UIController.GetComponent<UIEvents>();
 
     public ZonaFieldLook ZonaField { get; private set; }
@@ -65,6 +67,15 @@ public class Storage : MonoBehaviour {
     public void IsTartgetPositionAllOn()
     {
         IsTartgetPositionAll = !IsTartgetPositionAll;
+    }
+
+    public static string SetMessageAlert
+    {
+        set{
+            EventsUI.SetMessageBox = value;
+            EventsUI.SetTittle = value;
+            EventsUI.ListLogAdd = value;
+        }
     }
 
     private DiskData _DiskData;
@@ -364,6 +375,14 @@ public class Storage : MonoBehaviour {
             return;
         }
 
+        m_DispatcherWorldActions = MainCamera.GetComponent<DispatcherWorldActions>();
+        if (m_DispatcherWorldActions == null)
+        {
+            Debug.Log("Storage.Start : DispatcherWorldActions not load !!!");
+            return;
+        }
+        
+
         //_scriptNPC = MainCamera.GetComponent<CreateNPC>();
         //if (_scriptNPC == null)
         //{
@@ -502,9 +521,15 @@ public class Storage : MonoBehaviour {
         DestroyAllGamesObjects();
 
         //@#FIX 
-        Storage.Pool.Restart();
+        Pool.Restart();
 
         InitObjectsGrid();
+
+        if (ReaderWorld != null)
+        {
+            ReaderWorld.Clear();
+            m_DispatcherWorldActions.ResetDispatcher();
+        }
     }
 
     public void CreateWorld(bool isGenNewWorld = false)
@@ -545,6 +570,13 @@ public class Storage : MonoBehaviour {
         }
 
         Map.RefreshFull();
+
+        if (ReaderWorld != null)
+        {
+            ReaderWorld.Clear();
+            ReaderWorld.InitCollectionID();
+            m_DispatcherWorldActions.ResetDispatcher();
+        }
     }
 
     private void LoadDefaultUI()
@@ -632,7 +664,7 @@ public class Storage : MonoBehaviour {
     {
         get
         {
-            return m_ReaderWorld !=null && m_ReaderWorld.IsLoaded;
+            return m_ReaderWorld !=null && m_ReaderWorld.IsLoaded && !IsLoadingWorld && !GamePause;
         }
     }
 

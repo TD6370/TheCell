@@ -193,7 +193,7 @@ public class MovementNPC : MonoBehaviour {
 
         while (true)
         {
-            if(_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Move.ToString())
+            if(_dataNPC != null && _dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Move.ToString())
                 yield return null;
 
             //realtimeMoving = Time.time + 0.5f;

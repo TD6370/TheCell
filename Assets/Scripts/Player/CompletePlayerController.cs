@@ -389,6 +389,7 @@ public class CompletePlayerController : MonoBehaviour {
         //LoadGridAllZoneLook();
     }
 
+    /*
     IEnumerator StartLoadGridLook()
     {
         while (true)
@@ -427,7 +428,8 @@ public class CompletePlayerController : MonoBehaviour {
         }
 
     }
-
+    */
+    /*
     private void LoadGridAllZoneLook()
     {
         //int CountAdd = 0;
@@ -441,7 +443,7 @@ public class CompletePlayerController : MonoBehaviour {
         }
         //Debug.Log("LoadGridLook CHECK FIELD COUNT: " + CountAdd);
     }
-    
+    */
 
     #endregion
 

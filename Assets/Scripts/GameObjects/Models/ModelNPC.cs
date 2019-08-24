@@ -83,7 +83,11 @@ public class ModelNPC
         {
             Position = new Vector3(newPosition.x, newPosition.y, Position.z);
             if (Storage.Instance.ReaderSceneIsValid)
+            {
                 Storage.ReaderWorld.UpdateLinkData(this);
+                string meField = Helper.GetNameField(Position);
+                Storage.ReaderWorld.UpdateField(this, meField);
+            }
             
         }
 

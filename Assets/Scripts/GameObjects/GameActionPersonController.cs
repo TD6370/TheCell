@@ -9,7 +9,7 @@ public class GameActionPersonController : MonoBehaviour
 
     public enum NameActionsPerson
     {
-        None, Idle, Move, Dead, Work, Attack, MoveEnd
+        None, Idle, Move, Dead, Work, Attack, Completion
     };
 
     public static bool IsGameActionPersons = true;
@@ -281,7 +281,7 @@ public class GameActionPersonController : MonoBehaviour
                 break;
             case NameActionsPerson.Attack:
             case NameActionsPerson.Dead:
-            case NameActionsPerson.MoveEnd:
+            case NameActionsPerson.Completion:
             case NameActionsPerson.Work:
                 break;
         }
@@ -350,7 +350,7 @@ public class GameActionPersonController : MonoBehaviour
                 if (controller == null)
                     ActionMove(dataNPC);
                 break;
-            case NameActionsPerson.MoveEnd:
+            case NameActionsPerson.Completion:
                 ActionNewTargetMove(dataNPC, controller);
                 break;
             case NameActionsPerson.Dead:
@@ -382,10 +382,18 @@ public class GameActionPersonController : MonoBehaviour
     {
         Vector3 newCurrentPosition = GetAlienData(dataNPC).MovePosition;
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
+        string nameFiledTarget = Helper.GetNameField(dataNPC.TargetPosition);
+        string nameFiledCurrent = Helper.GetNameField(newCurrentPosition);
+
         //End move to Target
-        if (dist < MinDistEndMove) 
+        bool trueDist = dist < MinDistEndMove;
+        bool trueField = dist < MinDistEndMove;
+
+        if (trueDist || trueField)  
         {
-            RequestActionNPC(dataNPC, NameActionsPerson.MoveEnd, null);
+            //TEST
+            //Storage.EventsUI.ListLogAdd = "..work INFO: " + dataNPC.NameObject + " is Move END DIST:" + trueDist + " FIELD:" + trueField;
+            RequestActionNPC(dataNPC, NameActionsPerson.Completion, null);
         }
     }
 
@@ -411,7 +419,7 @@ public class GameActionPersonController : MonoBehaviour
         float dist = Vector3.Distance(targetPosition, transform.position);
         if (dist < MinDistEndMove)
         {
-            RequestActionNPC(m_dataNPC, NameActionsPerson.MoveEnd, this);
+            RequestActionNPC(m_dataNPC, NameActionsPerson.Completion, this);
         }
 
         if (m_MeAnimation!=null)
@@ -426,7 +434,7 @@ public class GameActionPersonController : MonoBehaviour
             float distLock = Vector3.Distance(lastPositionForLock, transform.position);
             if (distLock < minDistLck)
             {
-                RequestActionNPC(m_dataNPC, NameActionsPerson.MoveEnd, this);
+                RequestActionNPC(m_dataNPC, NameActionsPerson.Completion, this);
                 //Debug.Log("~~~ New Taget 1 " + this.gameObject.name);
             }
             lastPositionForLock = transform.position;
@@ -437,7 +445,7 @@ public class GameActionPersonController : MonoBehaviour
             //Debug.Log("......... I AM LOCK IN FIELD : " + lastFieldForLock + "  " + this.name);
             if (!string.IsNullOrEmpty(lastFieldForLock))
             {
-                RequestActionNPC(m_dataNPC, NameActionsPerson.MoveEnd, this);
+                RequestActionNPC(m_dataNPC, NameActionsPerson.Completion, this);
                 //Debug.Log("~~~ New Taget 2 " + this.gameObject.name);
             }
             lastFieldForLock = Storage.Instance.SelectFieldPosHero;
@@ -468,11 +476,11 @@ public class GameActionPersonController : MonoBehaviour
         
         //(dataNPC.Position, dataNPC.TargetPosition);
         //float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
-        float step = dataNPC.Speed;// / 3; // * Time.deltaTime;
+        float step = dataNPC.Speed + Storage.Person.SpeedMovePersonInDream;// / 3; // * Time.deltaTime;
         if (step < 0.5f)
             step = 0.5f;
-        if (step > 3f)
-            step = 3f;
+        if (step > 10f)
+            step = 10f;
 
         Vector3 targetPosition = dataNPC.TargetPosition;
         Vector3 newPosition = Vector3.MoveTowards(oldPosition, dataNPC.TargetPosition, step);

@@ -19,6 +19,8 @@ public class EditPriorityFinderController : MonoBehaviour {
 		
 	}
 
+
+#if UNITY_EDITOR
     //[MenuItem("Assets/Create/Localization Data")]
     [MenuItem("Tools/Custom Tool/Create asset PriorityFinder")]
     public static void CreatePriorityFinderDataAsset()
@@ -45,11 +47,9 @@ public class EditPriorityFinderController : MonoBehaviour {
 
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
-
             EditorUtility.FocusProjectWindow();
-
             Selection.activeObject = asset;
         }
     }
-
+#endif
 }
