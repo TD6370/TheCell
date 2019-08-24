@@ -664,7 +664,12 @@ public class Storage : MonoBehaviour {
     {
         get
         {
-            return m_ReaderWorld !=null && m_ReaderWorld.IsLoaded && !IsLoadingWorld && !GamePause;
+            return m_ReaderWorld !=null 
+                && m_ReaderWorld.IsLoaded 
+                && !IsLoadingWorld 
+                && !GamePause
+                && Storage.ReaderWorld.CollectionInfoID != null 
+                && Storage.ReaderWorld.CollectionInfoID.Count > 0;
         }
     }
 

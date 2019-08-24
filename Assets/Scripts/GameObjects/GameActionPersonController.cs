@@ -387,7 +387,7 @@ public class GameActionPersonController : MonoBehaviour
 
         //End move to Target
         bool trueDist = dist < MinDistEndMove;
-        bool trueField = dist < MinDistEndMove;
+        bool trueField = nameFiledTarget == nameFiledCurrent;
 
         if (trueDist || trueField)  
         {

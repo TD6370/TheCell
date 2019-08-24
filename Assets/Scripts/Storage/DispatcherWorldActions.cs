@@ -75,7 +75,7 @@ public class DispatcherWorldActions : MonoBehaviour
                 if (!m_IsFilledSearchingCollection)
                 {
                     //TEST
-                    Storage.EventsUI.ListLogAdd = "<<< Is Filled Searching Collection >>>";
+                    //Storage.EventsUI.ListLogAdd = "<<< Is Filled Searching Collection >>>";
                     m_IsRunSearching = true;
                     //Storage.ReaderWorld.CollectionInfoID;
                     foreach (string id in Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key))
@@ -87,7 +87,7 @@ public class DispatcherWorldActions : MonoBehaviour
                 }
                 //yield return null;
 
-                foreach (int nextI in Enumerable.Range(0, 100))
+                foreach (int nextI in Enumerable.Range(0, 1))
                 {
                     if (colectionLivePerson.Count == 0)
                         break;
@@ -96,6 +96,11 @@ public class DispatcherWorldActions : MonoBehaviour
                         break;
 
                     string nextPersonLiveID = colectionLivePerson.Dequeue();
+                    if (!Storage.ReaderWorld.CollectionInfoID.ContainsKey(nextPersonLiveID))
+                    {
+                        Debug.Log("############## ReaderWorld.CollectionInfoID.ContainsKey Not found nextPersonLiveID ");
+                        continue;
+                    }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
 
                     //yield return null;
@@ -114,9 +119,9 @@ public class DispatcherWorldActions : MonoBehaviour
                 //ModelNPC.ObjectData dataNPC = infoNPC.Data;
                 //Vector2 observerFieldPos = Helper.GetPositByField(infoNPC.Field);
 
-                //float timeNext = Storage.Person.WaitTimeReaderScene; //Storage.Person.TestSpeed
-                //yield return new WaitForSeconds(timeNext);
-                yield return null;
+                float timeNext = Storage.Person.WaitTimeReaderScene; //Storage.Person.TestSpeed
+                yield return new WaitForSeconds(timeNext);
+                //yield return null;
             }
             else
             {
@@ -128,6 +133,23 @@ public class DispatcherWorldActions : MonoBehaviour
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {
         var persData = infoNPC.Data as ModelNPC.PersonData;
+
+        //TEST
+        string fieldInfo1 = infoNPC.Field;
+        string fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
+        string fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
+        if (fieldInfo1 != fieldPos1 || fieldInfo1 != fieldName1 || fieldPos1 != fieldName1)// || fieldInfo != fieldGO)
+        {
+            string strErr = infoNPC.Data.NameObject + " <Field_A> I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
+            Storage.EventsUI.ListLogAdd = strErr;
+        }
+
+        //TEST
+        //if ((infoNPC.Data as ModelNPC.PersonData).Equals(persData))
+        //{
+        //    string strErr = "NOT EQUALS INFO.D to DATAi";
+        //}
+
 
         if (persData.IsReality)
         {
@@ -146,34 +168,31 @@ public class DispatcherWorldActions : MonoBehaviour
 
         GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
 
-        //TEST
+        //TEST -------------------------
         bool isLog = Storage.Person.IsLog;
         if (isLog)
             Storage.EventsUI.ListLogAdd =  count + " WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
 
-        //-------------------
-        string fieldInfo1 = infoNPC.Field;
-        string fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
-        string fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
+        fieldInfo1 = infoNPC.Field;
+        fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
+        fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
+
         if (fieldInfo1 != fieldPos1 || fieldInfo1 != fieldName1 || fieldPos1 != fieldName1)// || fieldInfo != fieldGO)
         {
-            string strErr = "??? PersonWork name Field I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
-            Storage.EventsUI.ListLogAdd = strErr;
+            infoNPC.Field = fieldName1;
+                string strErr = infoNPC.Data.NameObject + " <Field_B> I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
+                Storage.EventsUI.ListLogAdd = strErr;
         }
         //-------------------
 
         bool isZonaReal = Helper.IsValidPiontInZona(persData.Position.x, persData.Position.y);
         if(!persData.IsReality && isZonaReal)
         {
-            //TEST
+            //TESTb ------------------------
             Storage.EventsUI.ListLogAdd = "GOTO IN REAL WORLD: " + persData.NameObject;
-
             string fieldInfo = infoNPC.Field;
             string fieldPos = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
             string fieldName = Helper.GetNameFieldByName(persData.NameObject);
-            
-            //string fieldGO = (infoNPC.Gobject == null) ? fieldInfo : Helper.GetNameFieldObject(infoNPC.Gobject);
-            //if(fieldInfo != fieldPos || fieldInfo != fieldName || fieldInfo != fieldGO)
             if (fieldInfo != fieldPos || fieldInfo != fieldName || fieldPos != fieldName)// || fieldInfo != fieldGO)
             {
                 string strErr = "??? PersonWork name Field I: " + fieldInfo + " P:" + fieldPos + " DN:" + fieldName;// + " GO:" + fieldGO;
@@ -181,6 +200,8 @@ public class DispatcherWorldActions : MonoBehaviour
                 //Storage.SetMessageAlert = strErr;
                 Storage.EventsUI.ListLogAdd = strErr;
             }
+            //-----------------------------
+
             Storage.GenGrid.LoadObjectToReal(fieldName);
         }
         else { }

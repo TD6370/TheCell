@@ -756,13 +756,8 @@ public class FrameMap : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         List<Texture2D> listPersonsMapTexture = new List<Texture2D>();
 
        
-        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGrid(nameField))
+        foreach (ModelNPC.ObjectData datObjItem in ReaderScene.GetObjectsDataFromGridTest(nameField))
         {
-            //Debug.Log("Selector Cell : " + datObjItem.NameObject + "  " + DateTime.Now);
-
-            //prefabType = SaveLoadData.TypePrefabs.PrefabField;
-            //Storage.Events.ListLogAdd = "Find: " + datObjItem.NameObject;
-
             if (datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabUfo.ToString() &&
                 datObjItem.TypePrefabName != SaveLoadData.TypePrefabs.PrefabBoss.ToString() && 
                 datObjItem.TypePoolPrefab != PoolGameObjects.TypePoolPrefabs.PoolPerson)

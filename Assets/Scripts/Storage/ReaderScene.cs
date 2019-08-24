@@ -61,7 +61,7 @@ public class ReaderScene //: UpdateData
                 {
                     var oldObj = CollectionInfoID[id];
                     string strOld = oldObj == null ? " none " : oldObj.Data.NameObject;
-                    string strNew = dataInfo == null ? " none " : dataInfo.Data.NameObject;
+                    string strNew = (dataInfo == null || dataInfo.Data == null) ? " none " : dataInfo.Data.NameObject;
                     Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew);
                     continue;
                 }
@@ -103,8 +103,8 @@ public class ReaderScene //: UpdateData
     {
         string id = Helper.GetID(newData.NameObject);
         var persData = newData as ModelNPC.PersonData;
-        if (persData != null)
-            id = persData.Id;
+        //if (persData != null)
+        //    id = persData.Id;
         return id;
     }
 
@@ -119,6 +119,11 @@ public class ReaderScene //: UpdateData
         string id = GetDataID(newData);
         if (false == CheckCollectionInfoID(id))
             return;
+
+        //TEST
+        var t1 = CollectionInfoID[id].Data;
+        var t2 = CollectionInfoID[id].Gobject;
+
         CollectionInfoID[id].Field = newField;
     }
 
@@ -144,6 +149,16 @@ public class ReaderScene //: UpdateData
     public static bool IsGridDataFieldExist(string field)
     {
         return Storage.Instance.GridDataG.FieldsD.ContainsKey(field);
+    }
+
+    public static List<ModelNPC.ObjectData> GetObjectsDataFromGridTest(string nameField)
+    {
+        //if (!Storage.Instance.IsLoadingWorldThread)
+        //{
+        if (!IsGridDataFieldExist(nameField))
+            Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
+        //}
+        return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
     }
 
     public static List<ModelNPC.ObjectData> GetObjectsDataFromGrid(string nameField)
