@@ -7,6 +7,7 @@ public class PlayerAnimation //: MonoBehaviour
 
     private Animator m_AnimatorHero;
     private SpriteRenderer m_spriteRendererHeroModel;
+    public string CurrentAnimationPlay = "";
 
     public PlayerAnimation(Animator p_AnimatorHero, SpriteRenderer p_spriteRendererHeroModel)
     {
@@ -56,6 +57,19 @@ public class PlayerAnimation //: MonoBehaviour
             return;
 
         m_AnimatorHero.SetBool("TriggerMove", isMoving);
+        if (isMoving)
+            CurrentAnimationPlay = "TriggerMove";
+        else
+            CurrentAnimationPlay = "";
+
         //m_AnimatorHero.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+    }
+    public void PersonIdle()
+    {
+        if (m_AnimatorHero == null)
+            return;
+
+        m_AnimatorHero.SetBool("TriggerMove", false);
+        CurrentAnimationPlay = "";
     }
 }

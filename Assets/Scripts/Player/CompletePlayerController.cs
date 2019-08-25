@@ -231,7 +231,6 @@ public class CompletePlayerController : MonoBehaviour {
         m_PlayerAnimation.PersonMove(m_IsHeroMoving);
     }
 
-
     public void Disable()
     {
         GetComponent<CapsuleCollider2D>().enabled = false;

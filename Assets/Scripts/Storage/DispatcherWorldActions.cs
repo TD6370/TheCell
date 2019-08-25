@@ -60,8 +60,6 @@ public class DispatcherWorldActions : MonoBehaviour
 
     IEnumerator NavigatorWorldScene()
     {
-        var countP = 0;
-
         Queue<string> colectionLivePerson = new Queue<string>();
 
         while (true)
@@ -74,10 +72,7 @@ public class DispatcherWorldActions : MonoBehaviour
 
                 if (!m_IsFilledSearchingCollection)
                 {
-                    //TEST
-                    //Storage.EventsUI.ListLogAdd = "<<< Is Filled Searching Collection >>>";
                     m_IsRunSearching = true;
-                    //Storage.ReaderWorld.CollectionInfoID;
                     foreach (string id in Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key))
                     {
                         colectionLivePerson.Enqueue(id);
@@ -85,9 +80,8 @@ public class DispatcherWorldActions : MonoBehaviour
                     m_IsRunSearching = false;
                     m_IsFilledSearchingCollection = true;
                 }
-                //yield return null;
 
-                foreach (int nextI in Enumerable.Range(0, 1))
+                foreach (int nextI in Enumerable.Range(0, 10))
                 {
                     if (colectionLivePerson.Count == 0)
                         break;
@@ -103,25 +97,14 @@ public class DispatcherWorldActions : MonoBehaviour
                     }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
 
-                    //yield return null;
-
                     PersonWork(infoNPC, colectionLivePerson.Count);
 
-                    //if (countP != colectionLivePerson.Count())
-                    //{
-                    //    countP = colectionLivePerson.Count();
-                    //    Storage.EventsUI.ListLogAdd = "PESONS: " + colectionLivePerson.Count();
-                    //}
                     if (colectionLivePerson.Count == 0)
                         break;
                 }
 
-                //ModelNPC.ObjectData dataNPC = infoNPC.Data;
-                //Vector2 observerFieldPos = Helper.GetPositByField(infoNPC.Field);
-
                 float timeNext = Storage.Person.WaitTimeReaderScene; //Storage.Person.TestSpeed
                 yield return new WaitForSeconds(timeNext);
-                //yield return null;
             }
             else
             {
@@ -134,75 +117,48 @@ public class DispatcherWorldActions : MonoBehaviour
     {
         var persData = infoNPC.Data as ModelNPC.PersonData;
 
-        //TEST
-        string fieldInfo1 = infoNPC.Field;
-        string fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
-        string fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
-        if (fieldInfo1 != fieldPos1 || fieldInfo1 != fieldName1 || fieldPos1 != fieldName1)// || fieldInfo != fieldGO)
-        {
-            string strErr = infoNPC.Data.NameObject + " <Field_A> I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
-            Storage.EventsUI.ListLogAdd = strErr;
-        }
-
-        //TEST
-        //if ((infoNPC.Data as ModelNPC.PersonData).Equals(persData))
-        //{
-        //    string strErr = "NOT EQUALS INFO.D to DATAi";
-        //}
-
-
         if (persData.IsReality)
-        {
-            //Storage.EventsUI.ListLogAdd = "NO WORK: " + persData.NameObject + " on REAL";
             return;
-        }
 
-        //persData.Id;
         List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
         GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
-
-        //GameActionPersonController.CheckComplitionActions(persData, actionCurrent, null); //$$$
-
-        //actonsNPC = GameActionPersonController.GetActions(persData);
         actionCurrent = GameActionPersonController.GetCurrentAction(persData);
-
         GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
-
-        //TEST -------------------------
-        bool isLog = Storage.Person.IsLog;
-        if (isLog)
-            Storage.EventsUI.ListLogAdd =  count + " WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
-
-        fieldInfo1 = infoNPC.Field;
-        fieldPos1 = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
-        fieldName1 = Helper.GetNameFieldByName(persData.NameObject);
-
-        if (fieldInfo1 != fieldPos1 || fieldInfo1 != fieldName1 || fieldPos1 != fieldName1)// || fieldInfo != fieldGO)
-        {
-            infoNPC.Field = fieldName1;
-                string strErr = infoNPC.Data.NameObject + " <Field_B> I: " + fieldInfo1 + " P:" + fieldPos1 + " DN:" + fieldName1;// + " GO:" + fieldGO;
-                Storage.EventsUI.ListLogAdd = strErr;
-        }
-        //-------------------
 
         bool isZonaReal = Helper.IsValidPiontInZona(persData.Position.x, persData.Position.y);
         if(!persData.IsReality && isZonaReal)
         {
-            //TESTb ------------------------
+            //TEST ------------------------
             Storage.EventsUI.ListLogAdd = "GOTO IN REAL WORLD: " + persData.NameObject;
             string fieldInfo = infoNPC.Field;
             string fieldPos = Helper.GetNameFieldPosit(persData.Position.x, persData.Position.y);
             string fieldName = Helper.GetNameFieldByName(persData.NameObject);
-            if (fieldInfo != fieldPos || fieldInfo != fieldName || fieldPos != fieldName)// || fieldInfo != fieldGO)
+            if (fieldInfo != fieldPos || fieldInfo != fieldName || fieldPos != fieldName)
             {
-                string strErr = "??? PersonWork name Field I: " + fieldInfo + " P:" + fieldPos + " DN:" + fieldName;// + " GO:" + fieldGO;
+                string strErr = "??? PersonWork name Field I: " + fieldInfo + " P:" + fieldPos + " DN:" + fieldName;
                 Debug.Log(strErr);
-                //Storage.SetMessageAlert = strErr;
                 Storage.EventsUI.ListLogAdd = strErr;
             }
             //-----------------------------
 
             Storage.GenGrid.LoadObjectToReal(fieldName);
+
+            //--- Debag
+            //Storage.Instance.SelectGameObjectID = Helper.GetID(persData.NameObject);
+            //Storage.EventsUI.ClearListExpandPersons();
+            //GameObject gobject = Storage.Instance.GamesObjectsReal[fieldPos].Find(p => p.name == persData.NameObject);
+            //if (gobject != null)
+            //{
+            //    Storage.EventsUI.AddMenuPerson(persData, gobject);
+            //    Storage.GamePause = true;
+            //}
+            //else
+            //{
+            //    string strErr = "####### Not n REAL : " + persData.NameObject;
+            //    Debug.Log(strErr);
+            //    Storage.EventsUI.ListLogAdd = strErr;
+            //}
+            //-----------------
         }
         else { }
     }

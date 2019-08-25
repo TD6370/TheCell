@@ -170,6 +170,7 @@ public class MovementNPC : MonoBehaviour {
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
         int speed = 1;
+        Vector2 veloccityStart = _rb2d.velocity;
         float step = 0;
         if (!Helper.IsDataInit(this.gameObject))
         {
@@ -183,94 +184,116 @@ public class MovementNPC : MonoBehaviour {
         if (_dataNPC != null)
         {
             speed = _dataNPC.Speed;
+            step = speed * Time.deltaTime;
         }
         else
         {
             Debug.Log("############# MoveObjectToPosition Not FIND dataNPC " + this.gameObject.name + "     tag:" + this.gameObject.tag);
         }
 
-        step = speed * Time.deltaTime;
+        bool actionIsMove = true;
 
         while (true)
         {
-            if(_dataNPC != null && _dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Move.ToString())
-                yield return null;
-
-            //realtimeMoving = Time.time + 0.5f;
-            isRunning = true;
-
-            if (this.name == MarkerDebug)
+            actionIsMove = true;
+            if (_dataNPC != null && _dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Move.ToString())
+                actionIsMove = false;
+            if(m_isPause)
+                actionIsMove = false;
+            if (actionIsMove)
             {
-                Debug.Log("OK");
-            }
+                //yield return null;
 
-            if (m_isPause)
-            {
-                //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
-                _rb2d.velocity = Vector3.zero;
-                while (m_isPause)
+                isRunning = true;
+
+                if (step == 0) //TEST
                 {
-                    //Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
+                    step = speed * Time.deltaTime;
+                    Storage.EventsUI.ListLogAdd = "Movement NPC step is zero!!!";
+                }
+                //realtimeMoving = Time.time + 0.5f;
+
+                //if (this.name == MarkerDebug)
+                //{
+                //    Debug.Log("OK");
+                //}
+
+                //if (m_isPause || actionNotMove)
+                //{
+                //    //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
+                //    veloccityStart = _rb2d.velocity;
+                //    _rb2d.velocity = Vector2.zero;
+                //    while (m_isPause || actionNotMove)
+                //    {
+                //        //Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
+                //        yield return null;
+                //    }
+                //    //step = speed * Time.deltaTime;
+                //    //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
+                //}
+                //else
+                //{
+                //    //if(_rb2d.velocity == Vector2.zero)
+                //    //    _rb2d.velocity = veloccityStart;
+                //}
+
+                if (Storage.Instance.IsLoadingWorld)
+                {
+                    Debug.Log("_______________ LOADING WORLD ....._______________");
                     yield return null;
                 }
-                Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
+
+                if (Storage.Instance.IsCorrectData)
+                {
+                    Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+                    yield return null;
+                }
+
+                if (_dataNPC == null)
+                {
+                    Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
+                    //Storage.Fix.CorrectData(null, this.gameObject, "MoveObjectToPosition");
+
+                    UpdateData("MoveObjectToPosition");
+                    isRunning = false;
+                    yield break;
+                }
+
+                //isRunning = true;
+
+                Vector3 targetPosition = _dataNPC.TargetPosition;
+                Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
+
+                if (_rb2d != null)
+                {
+                    _rb2d.MovePosition(pos);
+                }
+                else
+                {
+                    //Debug.Log("NPC MoveObjectToPosition Set position 2 original........");
+                    transform.position = pos;
+                }
+
+                //+++++++++++ RESAVE Next Position ++++++++++++
+                bool res = ResavePositionData<T>();
+
+                if (!res)
+                {
+                    Debug.Log("########### STOP MOVE ON ERROR MOVE");
+                    Destroy(this.gameObject);
+                    isRunning = false;
+                    yield break;
+                }
+
+                //$$$LC.4
+                //float dist = Vector3.Distance(targetPosition, transform.position);
+                //if (dist < minDist)
+                //{
+                //    _dataNPC.SetTargetPosition();
+                //}
+
+                //realtimeMoving = Time.time + 1f;
             }
-
-            if (Storage.Instance.IsLoadingWorld)
-            {
-                Debug.Log("_______________ LOADING WORLD ....._______________");
-                yield return null;
-            }
-
-            if (Storage.Instance.IsCorrectData)
-            {
-                Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
-                yield return null;
-            }
-
-            if (_dataNPC == null)
-            {
-                Debug.Log("########################## UFO MoveObjectToPosition dataUfo is EMPTY");
-                //Storage.Fix.CorrectData(null, this.gameObject, "MoveObjectToPosition");
-
-                UpdateData("MoveObjectToPosition");
-                isRunning = false;
-                yield break;
-            }
-
-            Vector3 targetPosition = _dataNPC.TargetPosition;
-            Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
-
-            if (_rb2d != null)
-            {
-                _rb2d.MovePosition(pos);
-            }
-            else
-            {
-                //Debug.Log("NPC MoveObjectToPosition Set position 2 original........");
-                transform.position = pos;
-            }
-
-            //+++++++++++ RESAVE Next Position ++++++++++++
-            bool res = ResavePositionData<T>();
-
-            if (!res)
-            {
-                Debug.Log("########### STOP MOVE ON ERROR MOVE");
-                Destroy(this.gameObject);
-                isRunning = false;
-                yield break;
-            }
-
-            //$$$LC.4
-            //float dist = Vector3.Distance(targetPosition, transform.position);
-            //if (dist < minDist)
-            //{
-            //    _dataNPC.SetTargetPosition();
-            //}
-
-            //realtimeMoving = Time.time + 1f;
-
             yield return null;
             isRunning = false;
         }
