@@ -9,7 +9,7 @@ public class GameActionPersonController : MonoBehaviour
 
     public enum NameActionsPerson
     {
-        None, Idle, Move, Dead, Work, Attack, Completed //, Completion
+        None, Idle, Move, Dead, Work, Attack, Completed, Target //, Completion
     };
 
     public static bool IsGameActionPersons = true;
@@ -220,6 +220,9 @@ public class GameActionPersonController : MonoBehaviour
             case NameActionsPerson.Work:
                 break;
         }
+
+        //Debug
+        Storage.SceneDebug.ViewPerson(dataNPC, p_nameAction);
     }
 
     public static void RequestActionNPC(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction, GameActionPersonController controller, bool isForce = false)

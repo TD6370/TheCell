@@ -49,7 +49,7 @@ public class Storage : MonoBehaviour {
     private GameObject DataStorage {
         get { return gameObject; }
     }
-
+    
     private DispatcherWorldActions m_DispatcherWorldActions;
 
     //_scriptEvents = UIController.GetComponent<UIEvents>();
@@ -75,6 +75,15 @@ public class Storage : MonoBehaviour {
             EventsUI.SetMessageBox = value;
             EventsUI.SetTittle = value;
             EventsUI.ListLogAdd = value;
+        }
+    }
+
+    private SceneDebuger _SceneDebuger;
+    public static SceneDebuger SceneDebug 
+    {
+        get
+        {
+            return Instance._SceneDebuger;
         }
     }
 
@@ -478,6 +487,14 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DiskData is Empty");
             return;
         }
+
+        _SceneDebuger = UIController.GetComponent<SceneDebuger>();
+        if (_SceneDebuger == null)
+        {
+            Debug.Log("########## InitComponents _SceneDebuger is Empty");
+            return;
+        }
+        
 
         //_PoolObgects
         //DrawGeometry 

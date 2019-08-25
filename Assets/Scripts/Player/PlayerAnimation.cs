@@ -61,6 +61,7 @@ public class PlayerAnimation //: MonoBehaviour
             CurrentAnimationPlay = "TriggerMove";
         else
             CurrentAnimationPlay = "";
+             
 
         //m_AnimatorHero.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
     }

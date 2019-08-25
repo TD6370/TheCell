@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\DialogSceneInfo.cs" />
     <Compile Include="Assets\EditPriorityFinderController.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
+    <Compile Include="Assets\SceneDebuger.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />

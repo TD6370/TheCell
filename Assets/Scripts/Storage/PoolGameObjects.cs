@@ -271,123 +271,41 @@ public class PoolGameObjects
         return poolObj;
     }
 
-    /*
-    public PoolGameObject AddPoolNewTypeObject2(SaveLoadData.TypePrefabs prefabType, bool isLog = false)
-    {
-        string prefabTag = prefabType.ToString();
-        GameObject newGO = Storage.GenGrid.FindPrefab(prefabTag, "");
-        PoolGameObject poolObj = new PoolGameObject();
-        poolObj.Name = "GameObjectPool " + indexPool++;
-        poolObj.Tag = prefabTag;
-        poolObj.Init(newGO);
-        //poolObj.Deactivate("Add " + poolObj.Name, true);
-        poolObj.Deactivate();
-
-        if (PoolGameObjects.IsUsePoolObjects)
-        {
-            var tagPrefab = Storage.GridData.GetTypePool(prefabTag);
-            if (tagPrefab == SaveLoadData.TypePrefabs.PrefabField.ToString())
-            {
-                ModelNPC.TerraData terrD = new ModelNPC.TerraData()
-                {
-                    ModelView = "Tundra"
-                };
-                //Update texture Object pool Field default
-                terrD.UpdateGameObject(newGO);
-            }
-        }
-
-        if (IsStack)
-        {
-            var stackPool = new Stack<PoolGameObject>();
-            if (!PoolGamesObjectsStack.ContainsKey(prefabTag))
-                PoolGamesObjectsStack.Add(prefabTag, stackPool);
-            else
-                stackPool = PoolGamesObjectsStack[prefabTag];
-
-            //#test
-            int countInPool = PoolGamesObjectsStack[prefabTag].Count;
-
-            stackPool.Push(poolObj);
-        }
-        else
-        {
-            PoolGamesObjects.Add(poolObj);
-        }
-        return poolObj;
-    }
-    */
-
-
     public GameObject GetPoolGameObject(string nameObject, string tagPool, Vector3 pos)
     {
         GameObject findGO = null;
 
-        //if (IsTestingDestroy)
-        //{
-        //    var destroyedPrefabsTest = PoolGamesObjects.Where(p => p.IsLock && p.GameObjectNext == null).ToList();
-        //    if (destroyedPrefabsTest.Count > 0)
-        //        Debug.Log("/////// Pool contains null object (" + destroyedPrefabsTest.Count + ")  " + destroyedPrefabsTest[0].ToString());
-        //}
-
-        //string tagPool = Storage.GridData.GetTypePool(tag);
-
         PoolGameObject findPoolGO = null;
         int contUnlockPools = 0;
-        //if (!IsStack)
-        //{
-        //    //findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tag);
-        //    findPoolGO = PoolGamesObjects.Find(p => p.IsLock == false && p.Tag == tagPool);
-        //    contUnlockPools = PoolGamesObjects.Count;
-        //}
-        //else
-        //{
-            //var stackPool = new Stack<PoolGameObject>();
-            if (PoolGamesObjectsStack.ContainsKey(tagPool))
+        
+        if (PoolGamesObjectsStack.ContainsKey(tagPool))
+        {
+            contUnlockPools = PoolGamesObjectsStack[tagPool].Count;
+            if (contUnlockPools > 0)
             {
-                contUnlockPools = PoolGamesObjectsStack[tagPool].Count;
-                if (contUnlockPools > 0)
+                //#TEST
+                int countInPool = PoolGamesObjectsStack[tagPool].Count;
+                    
+
+                if(countInPool==1)
                 {
-                    //-------------------------------------------------------------------------------
-                    //PoolGameObject returnPool =  PoolGamesObjectsStack[tagPool].Peek();
-                    ////#FIX ELKA
-                    //returnPool.Tag = tagPool;
-
-                    //if (returnPool==null)
-                    //{
-                    //    Debug.Log("######## returnPool==null");
-                    //}
-                    //if (returnPool.GameObjectNext == null)
-                    //{
-                    //    Debug.Log("######## returnPool.GameObjectNext==null");
-                    //}
-                    //-------------------------------------------------------------------------------
-
-                    //#TEST
-                    int countInPool = PoolGamesObjectsStack[tagPool].Count;
-                    
-
-                    if(countInPool==1)
-                    {
-                        AddPoolNewTypeObject(tagPool, false);
-                    }
-
-                    findPoolGO = PoolGamesObjectsStack[tagPool].Pop();
-                    findPoolGO.Tag = tagPool;//$$$$ //#FIX ELKA
-
-                    if(findPoolGO == null)
-                    {
-                        Debug.Log("######## findPoolGO==null");
-                    }
-                    if (findPoolGO.GameObjectNext == null)
-                    {
-                        Debug.Log("######## findPoolGO.GameObjectNext==null");
-                    }
-                    
+                    AddPoolNewTypeObject(tagPool, false);
                 }
-            }
 
-        //}
+                findPoolGO = PoolGamesObjectsStack[tagPool].Pop();
+                findPoolGO.Tag = tagPool;//$$$$ //#FIX ELKA
+
+                if(findPoolGO == null)
+                {
+                    Debug.Log("######## findPoolGO==null");
+                }
+                if (findPoolGO.GameObjectNext == null)
+                {
+                    Debug.Log("######## findPoolGO.GameObjectNext==null");
+                }
+                    
+            }
+        }
 
         if (findPoolGO == null)
         {

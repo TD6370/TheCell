@@ -199,4 +199,5 @@ public class StorageLog //: MonoBehaviour
             //return base.ToString();
         }
     }
+        
 }

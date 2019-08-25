@@ -539,6 +539,13 @@ public class UIEvents : MonoBehaviour {
             case "NextDayOfTime":
                 Storage.SceneLight.NextTimeOfDay();
                 break;
+            case "DebugPersonInfo":
+                Storage.SceneDebug.RefreshDialogs();
+                break;
+            case "ClearSceneDebug":
+                Storage.SceneDebug.DialogsClear();
+                break;
+                
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;

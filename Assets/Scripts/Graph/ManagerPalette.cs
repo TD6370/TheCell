@@ -24,6 +24,7 @@ public class ManagerPalette : MonoBehaviour {
     public Dictionary<string, Sprite> SpritesWorldPrefabs = new Dictionary<string, Sprite>();
     public Dictionary<string, Texture2D> TexturesMaps = new Dictionary<string, Texture2D>();
     public Dictionary<string, Sprite> SpritesInventory = new Dictionary<string, Sprite>();
+    public Dictionary<string, Sprite> SpritesUI = new Dictionary<string, Sprite>();
     //private Dictionary<string, Texture2D> m_TexturesMaps;
     private Dictionary<string, Sprite> m_SpritesMaps = null;
 
@@ -31,6 +32,7 @@ public class ManagerPalette : MonoBehaviour {
     public SpriteAtlas SpriteAtlasPrefabWorld;
     public SpriteAtlas SpriteAtlasMapPrefab;
     public SpriteAtlas SpriteAtlasInventory;
+    public SpriteAtlas SpriteAtlasUI;
 
     private void Awake()
     {
@@ -60,7 +62,10 @@ public class ManagerPalette : MonoBehaviour {
         {
             SpritesInventory.Add(sprt.name, sprt);
         }
-
+        foreach (Sprite sprt in GetSpritesAtlasUI())
+        {
+            SpritesUI.Add(sprt.name, sprt);
+        }
         //{ "PrefabVood",ColorVood },
         //{ "PrefabRock",ColorRock },
     }
@@ -187,6 +192,12 @@ public class ManagerPalette : MonoBehaviour {
         return spritesAtlas;
     }
 
+    public Sprite[] GetSpritesAtlasUI()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasUI.spriteCount];
+        SpriteAtlasUI.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
 
     public Sprite GetSpriteBoss(int index, out string spriteName)
     {
