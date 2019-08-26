@@ -848,6 +848,7 @@ public class SaveLoadData : MonoBehaviour {
 
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
         ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, false);
+        objDataSave.CreateID(nameObject);
         string typePool = objDataSave.TypePoolPrefabName; //test
 
         objDataSave.SetNameObject(nameObject);

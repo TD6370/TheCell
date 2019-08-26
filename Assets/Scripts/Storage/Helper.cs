@@ -129,7 +129,6 @@ public static class Helper { //: MonoBehaviour {
 
         if (id == "-1")
         {
-            //id = Guid.NewGuid().ToString().Substring(1, 4);
             id = Guid.NewGuid().ToString().Substring(1, 7);
         }
 

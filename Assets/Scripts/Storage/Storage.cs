@@ -78,6 +78,16 @@ public class Storage : MonoBehaviour {
         }
     }
 
+    
+    private MovementCamera _MoveCamera;
+    public static MovementCamera MoveCamera
+    {
+        get
+        {
+            return Instance._MoveCamera;
+        }
+    }
+
     private SceneDebuger _SceneDebuger;
     public static SceneDebuger SceneDebug 
     {
@@ -242,7 +252,7 @@ public class Storage : MonoBehaviour {
             return Instance.m_ReaderWorld;
         }
     }
-
+    
     private ModelNPC.GridData _GridDataG = null;
     public ModelNPC.GridData GridDataG
     {
@@ -492,6 +502,12 @@ public class Storage : MonoBehaviour {
         if (_SceneDebuger == null)
         {
             Debug.Log("########## InitComponents _SceneDebuger is Empty");
+            return;
+        }
+        _MoveCamera = UIController.GetComponent<MovementCamera>();
+        if (_MoveCamera == null)
+        {
+            Debug.Log("########## InitComponents _MoveCamera is Empty");
             return;
         }
         

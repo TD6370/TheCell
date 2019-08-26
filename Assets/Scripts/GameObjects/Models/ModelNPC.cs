@@ -76,7 +76,13 @@ public class ModelNPC
         {
             TypePoolPrefabName = TypePoolPrefab.ToString();
             TypePrefabName = TypePrefab.ToString();
-            //Id = Guid.NewGuid().ToString();
+        }
+
+        public void CreateID(string name)
+        {
+            Id = Helper.GetID(name);
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkData(this);
         }
 
         public virtual void SetPosition(Vector3 newPosition)
@@ -96,6 +102,7 @@ public class ModelNPC
             NameObject = newNameObject;
             if (Storage.Instance.ReaderSceneIsValid)
                 Storage.ReaderWorld.UpdateLinkData(this);
+            //CreateID(NameObject);
         }
 
         public virtual void Init()
@@ -337,7 +344,6 @@ public class ModelNPC
         public PersonData()
             : base()
         {
-            //Id = Guid.NewGuid().ToString();
         }
     }
 
@@ -659,6 +665,9 @@ public class ModelNPC
                 Debug.Log("############## NOT Update new Sprite " + NameObject + "   ???????????????");
                 objGame.GetComponent<SpriteRenderer>().color = Color.red;
             }
+
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkData(this);
         }
 
         [XmlIgnore]
@@ -909,8 +918,6 @@ public class ModelNPC
         [XmlIgnore]
         private bool IsLoadad { get; set; }
 
-        private string idTerra = "?";
-
         [XmlIgnore]
         private bool isUseAtlas = true; //false;//
 
@@ -925,7 +932,6 @@ public class ModelNPC
 
         public void Init()
         {
-            idTerra = Guid.NewGuid().ToString().Substring(0, 4);
             bool isGen = true;
 
             IsLoadad = true;
@@ -959,6 +965,8 @@ public class ModelNPC
                 else
                     ModelView = Storage.TilesManager.ListTexturs[0].name;
             }
+            //if (Storage.Instance.ReaderSceneIsValid)
+            //    Storage.ReaderWorld.UpdateLinkData(this);
         }
 
         public override void UpdateGameObject(GameObject objGame)
@@ -992,6 +1000,9 @@ public class ModelNPC
                 }
             //}
             //-------------------------
+
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkData(this);
         }
     }
 

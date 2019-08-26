@@ -541,9 +541,11 @@ public class UIEvents : MonoBehaviour {
                 break;
             case "DebugPersonInfo":
                 Storage.SceneDebug.RefreshDialogs();
+                Storage.MoveCamera.MoveOnDebugSceneInfo();
                 break;
             case "ClearSceneDebug":
                 Storage.SceneDebug.DialogsClear();
+                Storage.MoveCamera.ResetPosition();
                 break;
                 
             default:

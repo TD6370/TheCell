@@ -75,6 +75,11 @@ public class GameActionPersonController : MonoBehaviour
             return;
 
         CheckUpdateModelView();
+
+        //TEST
+        if (m_dataNPC.ModelView == null)
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### ChangeActions dataNPC.ModelView is Null >> " + m_dataNPC.NameObject);
+
         CheckNextAction(m_dataNPC, ActionPerson, this);
     }
 
@@ -222,7 +227,8 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //Debug
-        Storage.SceneDebug.ViewPerson(dataNPC, p_nameAction);
+        if(controller == null)
+            Storage.SceneDebug.ViewPerson(dataNPC, p_nameAction);
     }
 
     public static void RequestActionNPC(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction, GameActionPersonController controller, bool isForce = false)

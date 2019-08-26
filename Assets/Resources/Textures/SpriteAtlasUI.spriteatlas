@@ -45,6 +45,6 @@ SpriteAtlas:
   - ActionIconMove
   - DialogIcon
   - ActionIconWork
-  - ActionIconFind
+  - ActionIconTarget
   m_Tag: SpriteAtlasUI
   m_IsVariant: 0

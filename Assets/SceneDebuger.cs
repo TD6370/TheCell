@@ -61,12 +61,21 @@ public class SceneDebuger : MonoBehaviour {
 
     public void ViewPerson(ModelNPC.PersonData dataNPC, GameActionPersonController.NameActionsPerson p_nameAction)
     {
+        if (dataNPC.IsReality)
+            return;
+
+        //TEST
+        //if(dataNPC.ModelView==null)
+        //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### ViewPerson dataNPC.ModelView is Null >> " + dataNPC.NameObject);
+
         m_collectionPersonData.Enqueue(new SceneDialogPerson()
         {
-             NameAction = p_nameAction,
-             Position = dataNPC.Position,
-             TargetPosition = dataNPC.TargetPosition,
-             Data = dataNPC
+            NameAction = p_nameAction,
+            Position = dataNPC.Position,
+            TargetPosition = dataNPC.TargetPosition,
+            ID = dataNPC.Id != null ? dataNPC.Id : Helper.GetID(dataNPC.NameObject)
+
+            //Data = dataNPC
         });
         if(m_collectionPersonData.Count > m_maxPoolDialogs)
         {
@@ -76,6 +85,9 @@ public class SceneDebuger : MonoBehaviour {
 
     public void FillDialogsFromData()
     {
+        if (!IsAutoRefresh)
+            Storage.EventsUI.ListLogAdd = "IN DEBUG COUNT >>  "  + m_collectionPersonData.Count;
+
         while(m_collectionPersonData.Count>0)
         {
             var data = m_collectionPersonData.Dequeue();
@@ -84,10 +96,14 @@ public class SceneDebuger : MonoBehaviour {
                 caseDialog = GetFreeDialog(isForce: true);
             if (caseDialog == null)
             {
+                Storage.EventsUI.ListLogAdd = "#### CASE DEBUG -- EMPTY";
                 Debug.Log("######### FillDialogsFromData m_poolDialogPersonPrefabs is empty");
                 break;
             }
             caseDialog.Activate(data);
+
+            if (!IsAutoRefresh)
+                Storage.EventsUI.ListLogAdd = "DEBUG ++ >> " + data.Data.NameObject;
         }
     }
 
@@ -130,11 +146,17 @@ public class SceneDebuger : MonoBehaviour {
             findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).FirstOrDefault();
         }
         else {
-            if(p_Data!=null)
+            if (p_Data != null)
+            {
+                //findCase = m_poolDialogPersonPrefabs.Find(
+                //    p => p.Person != null &&
+                //    p.Person.Data != null &&
+                //    p.Person.Data.NameObject == p_Data.Data.NameObject);
                 findCase = m_poolDialogPersonPrefabs.Find(
-                    p => p.Person != null && 
-                    p.Person.Data != null && 
-                    p.Person.Data.NameObject == p_Data.Data.NameObject);
+                        p => p.Person != null &&
+                        p.Person.Data != null &&
+                        p.ID == p_Data.Data.Id);
+            }
             if (findCase == null)
                 findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
         }
@@ -144,6 +166,7 @@ public class SceneDebuger : MonoBehaviour {
     #region CaseSceneDialogPerson
     public class CaseSceneDialogPerson
     {
+        public string ID;
         public GameObject Dialog;
         public SceneDialogPerson Person;
         public bool IsLock;
@@ -155,6 +178,8 @@ public class SceneDebuger : MonoBehaviour {
         public void Activate(SceneDialogPerson p_Data)
         {
             Person = p_Data;
+            //ID = Helper.GetID(p_Data.Data.NameObject);
+            ID = p_Data.Data.Id;
             if (Dialog != null)
             {
                 Dialog.transform.position = p_Data.Position;
@@ -183,8 +208,23 @@ public class SceneDebuger : MonoBehaviour {
         public Vector2 Position;
         public Vector2 TargetPosition;
         public GameActionPersonController.NameActionsPerson NameAction;
-        public ModelNPC.PersonData Data;
+        public string ID;
+        //public ModelNPC.PersonData Data;
         private string m_MessageInfo;
+
+        public ModelNPC.PersonData Data {
+            get
+            {
+                //TEST
+                if(!Storage.ReaderWorld.CollectionInfoID.ContainsKey(ID))
+                {
+                    Storage.EventsUI.ListLogAdd = "IN DEBUG Data  ID not found  ";
+                    return null;
+                }
+                var data = Storage.ReaderWorld.CollectionInfoID[ID];
+                return data.Data as ModelNPC.PersonData;
+            }
+        }
 
         public SceneDialogPerson() { }
     }

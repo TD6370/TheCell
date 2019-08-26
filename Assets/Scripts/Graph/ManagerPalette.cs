@@ -60,11 +60,13 @@ public class ManagerPalette : MonoBehaviour {
         };
         foreach(Sprite sprt in  GetSpritesAtlasInventory())
         {
-            SpritesInventory.Add(sprt.name, sprt);
+            string name = sprt.name.Replace("(Clone)", "");
+            SpritesInventory.Add(name, sprt);
         }
         foreach (Sprite sprt in GetSpritesAtlasUI())
         {
-            SpritesUI.Add(sprt.name, sprt);
+            string name = sprt.name.Replace("(Clone)", "");
+            SpritesUI.Add(name, sprt);
         }
         //{ "PrefabVood",ColorVood },
         //{ "PrefabRock",ColorRock },

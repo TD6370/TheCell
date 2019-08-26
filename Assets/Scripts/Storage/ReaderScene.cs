@@ -89,7 +89,7 @@ public class ReaderScene //: UpdateData
 
     public void UpdateLinkData(ModelNPC.ObjectData newData)
     {
-        if (newData == null)
+        if (newData == null || newData.NameObject == null)
         {
             //Debug.Log("### UpdateLinkGobject.newData is null");
             return;
@@ -97,8 +97,23 @@ public class ReaderScene //: UpdateData
         string id = GetDataID(newData);
         if (false == CheckCollectionInfoID(id))
             return;
+
+        //newData = UpdateFix(newData);
         CollectionInfoID[id].Data = newData;
+        UpdateFix(id, newData);
     }
+
+    private void UpdateFix(string id, ModelNPC.ObjectData newData)
+    {
+        //TEST
+        if (newData.ModelView == null)
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ModelView is Null >> " + newData.NameObject);
+
+        CollectionInfoID[id].Data.ModelView = newData.ModelView;
+        CollectionInfoID[id].Data.Id = newData.Id;
+    }
+
+
     private string GetDataID(ModelNPC.ObjectData newData)
     {
         string id = Helper.GetID(newData.NameObject);
@@ -111,7 +126,7 @@ public class ReaderScene //: UpdateData
     public void UpdateField(ModelNPC.ObjectData newData, string newField)
     {
 
-        if (newField == null)
+        if (newField == null || newData == null || newData.NameObject == null)
         {
             //Debug.Log("### UpdateField.newField is null");
             return;
@@ -149,6 +164,14 @@ public class ReaderScene //: UpdateData
     public static bool IsGridDataFieldExist(string field)
     {
         return Storage.Instance.GridDataG.FieldsD.ContainsKey(field);
+    }
+
+    public static List<ModelNPC.ObjectData> GetObjectsDataFromGridContinue(string nameField)
+    {
+        if (!IsGridDataFieldExist(nameField))
+            return null;
+
+        return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
     }
 
     public static List<ModelNPC.ObjectData> GetObjectsDataFromGridTest(string nameField)

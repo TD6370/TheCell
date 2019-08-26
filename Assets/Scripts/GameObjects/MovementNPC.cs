@@ -50,6 +50,7 @@ public class MovementNPC : MonoBehaviour {
             objID = "Empty";
             return;
         }
+        //p_Data.Data.NameObject
         InitData();
 
         isRunning = false;

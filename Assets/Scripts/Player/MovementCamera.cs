@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class MovementCamera : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    private float temp_size = 0;
+    [Range(-200,200)]
+    public float SizeOnDebug = -150f;
+
+    // Use this for initialization
+    void Start () {
 		//StartGen();
 	}
 	
@@ -13,5 +17,27 @@ public class MovementCamera : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    Camera temp_cam;
+
+    public void MoveOnDebugSceneInfo()
+    {
+        if (!Storage.Instance.MainCamera.enabled)
+            return;
+
+        if(temp_size == 0)
+            temp_size = Storage.Instance.MainCamera.orthographicSize;
+
+        Storage.Instance.MainCamera.orthographicSize = SizeOnDebug;
+
+        //temp_cam = Storage.Instance.MainCamera;
+    }
+
+    public void ResetPosition()
+    {
+        if (temp_size != 0)
+            Storage.Instance.MainCamera.orthographicSize = temp_size;
+        temp_size = 0;
+    }
 
 }

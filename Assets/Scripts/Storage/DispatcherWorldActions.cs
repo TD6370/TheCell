@@ -81,7 +81,7 @@ public class DispatcherWorldActions : MonoBehaviour
                     m_IsFilledSearchingCollection = true;
                 }
 
-                foreach (int nextI in Enumerable.Range(0, 10))
+                foreach (int nextI in Enumerable.Range(0, 1))
                 {
                     if (colectionLivePerson.Count == 0)
                         break;
@@ -96,6 +96,9 @@ public class DispatcherWorldActions : MonoBehaviour
                         continue;
                     }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
+                    //TEST
+                    if (infoNPC.Data.ModelView == null)
+                        Debug.Log(Storage.EventsUI.ListLogAdd = "#### NavigatorWorldScene dataNPC.ModelView is Null >> " + infoNPC.Data.NameObject);
 
                     PersonWork(infoNPC, colectionLivePerson.Count);
 
@@ -120,10 +123,17 @@ public class DispatcherWorldActions : MonoBehaviour
         if (persData.IsReality)
             return;
 
+        //TEST
+        //if (persData.ModelView == null)
+        //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### PersonWork persData.ModelView is Null >> " + persData.NameObject);
+
         List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
         GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
         actionCurrent = GameActionPersonController.GetCurrentAction(persData);
         GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
+
+        if (Storage.Person.IsLog)
+            Storage.EventsUI.ListLogAdd = "WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
 
         bool isZonaReal = Helper.IsValidPiontInZona(persData.Position.x, persData.Position.y);
         if(!persData.IsReality && isZonaReal)

@@ -29,9 +29,15 @@ public class DialogSceneInfo : MonoBehaviour {
         var data = p_caseDialogPerson.Person.Data;
         CaseDialogPerson = p_caseDialogPerson;
         string modelView = data.ModelView;
+        if(modelView == null)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView modelView is Null >> " + data.NameObject);
+            return;
+        }
+
         if (!Storage.Palette.SpritesPrefabs.ContainsKey(modelView))
         {
-            Debug.Log("########## InitDialogView Not found modelView = " + modelView);
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelView = " + modelView);
             DialogIcon.GetComponent<SpriteRenderer>().sprite = null;
         }
         else
@@ -41,9 +47,10 @@ public class DialogSceneInfo : MonoBehaviour {
         }
 
         string spriteNameAction = "ActionIcon" + data.CurrentAction.ToString();
+        //"ActionIconMove"
         if (!Storage.Palette.SpritesUI.ContainsKey(spriteNameAction))
         {
-            Debug.Log("########## InitDialogView Not found spriteNameAction = " + spriteNameAction);
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found spriteNameAction = " + spriteNameAction);
             DialogIconAction.GetComponent<SpriteRenderer>().sprite = null;
         }
         else
@@ -53,12 +60,37 @@ public class DialogSceneInfo : MonoBehaviour {
         }
 
         string fieldTarget = Helper.GetNameFieldPosit(data.TargetPosition.x, data.TargetPosition.y);
-        foreach (var objData in ReaderScene.GetObjectsDataFromGrid(fieldTarget))
+        if(fieldTarget == null)
         {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### fieldTarget is null ");
+            return;
+        }
+        var objectsGrid = ReaderScene.GetObjectsDataFromGridContinue(fieldTarget);
+        if (objectsGrid == null)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### objectsGrid is null from " + fieldTarget);
+            return;
+        }
+
+
+        foreach (var objData in objectsGrid)
+        {
+            if (objData == null)
+            {
+                Storage.EventsUI.ListLogAdd = "### TARGET ReaderScene NOT FIELD: " + fieldTarget;
+                continue;
+            }
+
             string modelViewTarget = objData.ModelView;
+            if(modelViewTarget == null)
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget is null >> " + objData.NameObject);
+                continue;
+            }
+
             if (!Storage.Palette.SpritesPrefabs.ContainsKey(modelViewTarget))
             {
-                Debug.Log("########## InitDialogView Not found modelViewTarget = " + modelViewTarget);
+                Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget = " + modelViewTarget);
                 DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
             }
             else
@@ -74,7 +106,7 @@ public class DialogSceneInfo : MonoBehaviour {
     void OnGUI()
     {
         // Make a text field that modifies stringToEdit.
-        GUI.TextField(new Rect(10, 10, 200, 20), m_info, 25);
+        //GUI.TextField(new Rect(10, 10, 200, 20), m_info, 25);
     }
 
 }
