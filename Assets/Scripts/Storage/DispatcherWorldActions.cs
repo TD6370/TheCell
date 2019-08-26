@@ -9,6 +9,7 @@ public class DispatcherWorldActions : MonoBehaviour
     private bool m_IsRunSearching = false;
     private bool m_IsFilledSearchingCollection= false;
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
+       
 
     private void Awake()
     {
@@ -61,25 +62,40 @@ public class DispatcherWorldActions : MonoBehaviour
     IEnumerator NavigatorWorldScene()
     {
         Queue<string> colectionLivePerson = new Queue<string>();
+        Queue<string> colectionLivePersonVIP = new Queue<string>();
+        List<string> listNPC;
 
         while (true)
         {
-
             if (Storage.Instance.ReaderSceneIsValid)
             {
+                //---Init---
                 if (colectionLivePerson.Count == 0)
                     m_IsFilledSearchingCollection = false;
 
                 if (!m_IsFilledSearchingCollection)
                 {
                     m_IsRunSearching = true;
-                    foreach (string id in Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key))
+                    listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
+                    List<Shuffle> listNPC_Rnd = new List<Shuffle>();
+                    foreach (string id in listNPC)
+                    {
+                        int indRnd = Random.Range(1, listNPC.Count());
+                        listNPC_Rnd.Add( new Shuffle() { ID = id, Index = indRnd } );
+                    }
+                    //Randomize list
+                    listNPC = listNPC_Rnd.OrderBy(p => p.Index).Select(p => p.ID).ToList();
+
+                    foreach (string id in listNPC)
                     {
                         colectionLivePerson.Enqueue(id);
                     }
                     m_IsRunSearching = false;
                     m_IsFilledSearchingCollection = true;
                 }
+                //----
+                //---Init VIP---
+                //----
 
                 foreach (int nextI in Enumerable.Range(0, 1))
                 {
@@ -96,9 +112,6 @@ public class DispatcherWorldActions : MonoBehaviour
                         continue;
                     }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
-                    //TEST
-                    if (infoNPC.Data.ModelView == null)
-                        Debug.Log(Storage.EventsUI.ListLogAdd = "#### NavigatorWorldScene dataNPC.ModelView is Null >> " + infoNPC.Data.NameObject);
 
                     PersonWork(infoNPC, colectionLivePerson.Count);
 
@@ -122,10 +135,6 @@ public class DispatcherWorldActions : MonoBehaviour
 
         if (persData.IsReality)
             return;
-
-        //TEST
-        //if (persData.ModelView == null)
-        //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### PersonWork persData.ModelView is Null >> " + persData.NameObject);
 
         List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
         GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
@@ -171,5 +180,12 @@ public class DispatcherWorldActions : MonoBehaviour
             //-----------------
         }
         else { }
+    }
+
+    public class Shuffle
+    {
+        public string ID;
+        public int Index;
+        public Shuffle() { }
     }
 }

@@ -84,6 +84,13 @@ public class ModelNPC
             if (Storage.Instance.ReaderSceneIsValid)
                 Storage.ReaderWorld.UpdateLinkData(this);
         }
+        public void CreateID()
+        {
+            Id = Helper.GetID(NameObject);
+            //error stackowerflow
+            //if (Storage.Instance.ReaderSceneIsValid)
+            //    Storage.ReaderWorld.UpdateLinkData(this);
+        }
 
         public virtual void SetPosition(Vector3 newPosition)
         {

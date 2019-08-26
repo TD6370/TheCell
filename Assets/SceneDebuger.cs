@@ -7,17 +7,32 @@ using UnityEngine;
 public class SceneDebuger : MonoBehaviour {
 
     public static bool IsDebugOn = false;
+    
     public GameObject DialogPersonPrefab;
     public GameObject PanelDialogPrefabs;
 
     public bool IsAutoRefresh = false;
+    public bool IsRealDebug = false;
     [Range(0.3f,10)]
     public float TimeRefresh = 1;
+    [Range(1, 10)]
+    public float TimeClearTemplate = 3f;
+    public bool IsClearTemplate = false;
+
+    private float m_waitClearTemplate = 0;
     private float m_waitRefresh = 0;
 
     private List<CaseSceneDialogPerson> m_poolDialogPersonPrefabs;
     private int m_maxPoolDialogs = 200;
     private Queue<SceneDialogPerson> m_collectionPersonData;
+
+    public string VipID
+    {
+        get
+        {
+            return Storage.Instance.SelectGameObjectID;
+        }
+    }
 
     void Start () {
         LoadDialogs();
@@ -31,6 +46,12 @@ public class SceneDebuger : MonoBehaviour {
                 FillDialogsFromData();
                 m_waitRefresh += TimeRefresh;
             }
+            if(IsClearTemplate && Time.time > m_waitRefresh)
+            {
+                ClearTemplate();
+                m_waitRefresh += TimeClearTemplate;
+            }
+
         }
 	}
 
@@ -50,6 +71,7 @@ public class SceneDebuger : MonoBehaviour {
             dialog.transform.position = new Vector3(0, 0, 0);
             dialog.transform.SetParent(null);
             dialog.SetActive(false);
+            dialog.name = "DialogPerson_" + i;
 
             CaseSceneDialogPerson caseDialog = new CaseSceneDialogPerson()
             {
@@ -64,18 +86,12 @@ public class SceneDebuger : MonoBehaviour {
         if (dataNPC.IsReality)
             return;
 
-        //TEST
-        //if(dataNPC.ModelView==null)
-        //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### ViewPerson dataNPC.ModelView is Null >> " + dataNPC.NameObject);
-
         m_collectionPersonData.Enqueue(new SceneDialogPerson()
         {
             NameAction = p_nameAction,
             Position = dataNPC.Position,
             TargetPosition = dataNPC.TargetPosition,
-            ID = dataNPC.Id != null ? dataNPC.Id : Helper.GetID(dataNPC.NameObject)
-
-            //Data = dataNPC
+            NameObject = dataNPC.NameObject
         });
         if(m_collectionPersonData.Count > m_maxPoolDialogs)
         {
@@ -90,14 +106,20 @@ public class SceneDebuger : MonoBehaviour {
 
         while(m_collectionPersonData.Count>0)
         {
-            var data = m_collectionPersonData.Dequeue();
+            SceneDialogPerson data = m_collectionPersonData.Dequeue();
+            if(data == null)
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "#### FillDialogsFromData -- data is EMPTY");
+                break;
+            }
+
             CaseSceneDialogPerson caseDialog = GetFreeDialog(data);
             if(caseDialog == null)
                 caseDialog = GetFreeDialog(isForce: true);
             if (caseDialog == null)
             {
                 Storage.EventsUI.ListLogAdd = "#### CASE DEBUG -- EMPTY";
-                Debug.Log("######### FillDialogsFromData m_poolDialogPersonPrefabs is empty");
+                Debug.Log("######### FillDialogsFromData caseDialog is empty");
                 break;
             }
             caseDialog.Activate(data);
@@ -106,6 +128,24 @@ public class SceneDebuger : MonoBehaviour {
                 Storage.EventsUI.ListLogAdd = "DEBUG ++ >> " + data.Data.NameObject;
         }
     }
+
+    public CaseSceneDialogPerson CreateTargetDialog(SceneDialogPerson data, string modelViewTarget)
+    {
+        //CaseSceneDialogPerson caseDialog = GetFreeDialog(new SceneDialogPerson());
+        CaseSceneDialogPerson caseDialog = GetFreeDialog(null);
+        if (caseDialog == null)
+            caseDialog = GetFreeDialog(isForce: true);
+        if (caseDialog == null)
+        {
+            Storage.EventsUI.ListLogAdd = "#### CASE DEBUG -- EMPTY";
+            Debug.Log("######### FillDialogsFromData caseDialog is empty");
+            return null;
+        }
+        caseDialog.ModelViewTarget = modelViewTarget;
+        caseDialog.Activate(data, true);
+        return caseDialog;
+    }
+
 
     public void DialogsClear()
     {
@@ -121,7 +161,7 @@ public class SceneDebuger : MonoBehaviour {
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return;
 
-        DialogsClear();
+        //DialogsClear();
         FillDialogsFromData();
     }
 
@@ -129,8 +169,8 @@ public class SceneDebuger : MonoBehaviour {
     {
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return;
-
-        foreach (var caseDlg in m_poolDialogPersonPrefabs.Where(p => p.TimeCreate > Time.time - 10f))
+        float timeLive = Time.time - TimeClearTemplate;
+        foreach (var caseDlg in m_poolDialogPersonPrefabs.Where(p => p.IsLock && p.TimeCreate < timeLive))
         {
             caseDlg.Deactivate();
         }
@@ -141,63 +181,117 @@ public class SceneDebuger : MonoBehaviour {
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return null;
 
+        string _vip = VipID ?? "?";
+
         CaseSceneDialogPerson findCase = null;
         if (isForce) {
-            findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).FirstOrDefault();
+            findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault();
         }
         else {
             if (p_Data != null)
             {
-                //findCase = m_poolDialogPersonPrefabs.Find(
-                //    p => p.Person != null &&
-                //    p.Person.Data != null &&
-                //    p.Person.Data.NameObject == p_Data.Data.NameObject);
                 findCase = m_poolDialogPersonPrefabs.Find(
                         p => p.Person != null &&
                         p.Person.Data != null &&
-                        p.ID == p_Data.Data.Id);
+                        p.Person.ID == p_Data.ID &&
+                        p.Person.ID != _vip &&
+                        p.ModeInfo != DialogSceneInfo.ModeInfo.Target);
             }
             if (findCase == null)
-                findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
+            {
+                //findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
+                findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock &&
+                                                            p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault();
+            }
+
+            if (findCase != null && findCase.Person != null && findCase.Person.ID == _vip)
+                return m_poolDialogPersonPrefabs.Where(p => !p.IsLock && p.Person.ID != _vip).FirstOrDefault();
+
+            if (findCase == null)//force
+            {
+                //findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault(); ;
+                findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip &&
+                                                                p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault(); ;
+            }
         }
+
+        if (findCase != null && findCase.IsLock)
+            findCase.Deactivate();
+
         return findCase;
     }
    
     #region CaseSceneDialogPerson
     public class CaseSceneDialogPerson
     {
-        public string ID;
+        //public string ID;
+        public string ModelViewTarget;
         public GameObject Dialog;
         public SceneDialogPerson Person;
         public bool IsLock;
         public float TimeCreate;
         public CaseSceneDialogPerson() { }
+        public DialogSceneInfo.ModeInfo ModeInfo;
 
         private DialogSceneInfo m_dialogView;
 
-        public void Activate(SceneDialogPerson p_Data)
+        public void Activate(SceneDialogPerson p_Data, bool isTarget = false)
         {
             Person = p_Data;
-            //ID = Helper.GetID(p_Data.Data.NameObject);
-            ID = p_Data.Data.Id;
             if (Dialog != null)
             {
-                Dialog.transform.position = p_Data.Position;
+                if(isTarget)
+                    Dialog.transform.position = p_Data.TargetPosition;
+                else
+                    Dialog.transform.position = p_Data.Position;
 
 
                 Dialog.SetActive(true);
-                if(m_dialogView == null)
+                if (isTarget)
+                    Dialog.name = "Dialog_Target_" + ModelViewTarget + "_" + p_Data.NameObject;
+                else
+                    Dialog.name = "Dialog_" + p_Data.NameObject;
+
+                if (m_dialogView == null)
                     m_dialogView = Dialog.GetComponent<DialogSceneInfo>();
 
-                m_dialogView.InitDialogView(this);
+                ModeInfo = isTarget ? DialogSceneInfo.ModeInfo.Target : DialogSceneInfo.ModeInfo.Person;
+                m_dialogView.DialogModelViewTarget = ModelViewTarget;
+                IsLock = true;
+                m_dialogView.InitDialogView(this, ModeInfo);
             }
             TimeCreate = Time.time;
+            IsLock = true;
         }
+
         public void Deactivate()
         {
+            if (ModeInfo == DialogSceneInfo.ModeInfo.Person)
+            {
+                //m_dialogView = Dialog.GetComponent<DialogSceneInfo>();
+                var caseTarget = m_dialogView.CaseDialogTarget;
+                if (caseTarget != null && caseTarget.IsLock)
+                {
+                    //Debug.Log(Storage.EventsUI.ListLogAdd = "+++ Deactivate ...." + caseTarget.ModelViewTarget);
+
+                    caseTarget.ModeInfo = DialogSceneInfo.ModeInfo.Target;
+                    caseTarget.Deactivate();
+                }
+                //TEST
+                //if (caseTarget == null)
+                //{
+                //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### Deactivate() CaseDialogTarget -- EMPTY");
+                //}
+            }
+
             if (Dialog != null)
+            {
+                Dialog.name = "DialogPerson_empty";
                 Dialog.transform.position = Vector3.zero;
                 Dialog.SetActive(false);
+            }
+            ModeInfo = DialogSceneInfo.ModeInfo.Person;
+            IsLock = false;
         }
     }
     #endregion
@@ -205,12 +299,41 @@ public class SceneDebuger : MonoBehaviour {
     #region SceneDialogPerson
     public class SceneDialogPerson
     {
+        public string NameObject = "";
         public Vector2 Position;
         public Vector2 TargetPosition;
         public GameActionPersonController.NameActionsPerson NameAction;
-        public string ID;
-        //public ModelNPC.PersonData Data;
         private string m_MessageInfo;
+
+        private string _id;
+        public string ID
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id))
+                {
+                    _id = Helper.GetID(NameObject);
+                }
+                if (string.IsNullOrEmpty(_id))
+                    return "?";
+                return _id;
+            }
+        }
+        private string _ModelView;
+        public string ModelView
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_ModelView))
+                {
+                    if (Data != null)
+                    {
+                        _ModelView = (Data.ModelView == null) ? Data.TypePrefabName : Data.ModelView;
+                    }
+                }
+                return _ModelView;
+            }
+        }
 
         public ModelNPC.PersonData Data {
             get

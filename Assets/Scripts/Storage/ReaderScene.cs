@@ -22,6 +22,36 @@ public class ReaderScene //: UpdateData
         public string Field { get; set; }
         public ModelNPC.ObjectData Data { get; set; }
         public GameObject Gobject { get; set; }
+        private string _id;
+        public string ID
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id))
+                {
+                    if (Data != null)
+                    {
+                        _id = (Data.Id == null) ? Helper.GetID(Data.NameObject) : Data.Id;
+                    }
+                }
+                return _id;
+            }
+        }
+        private string _ModelView;
+        public string ModelView
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_ModelView))
+                {
+                    if (Data != null)
+                    {
+                        _ModelView = (Data.ModelView == null) ? Data.TypePrefabName : Data.ModelView;
+                    }
+                }
+                return _ModelView;
+            }
+        }
 
         public DataObjectInfoID()
         { }
@@ -100,17 +130,22 @@ public class ReaderScene //: UpdateData
 
         //newData = UpdateFix(newData);
         CollectionInfoID[id].Data = newData;
-        UpdateFix(id, newData);
+        
+        //TEST
+        //UpdateFix(id, newData);
     }
 
     private void UpdateFix(string id, ModelNPC.ObjectData newData)
     {
         //TEST
-        if (newData.ModelView == null)
-            Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ModelView is Null >> " + newData.NameObject);
-
-        CollectionInfoID[id].Data.ModelView = newData.ModelView;
-        CollectionInfoID[id].Data.Id = newData.Id;
+        //if (newData.ModelView != null)
+            //CollectionInfoID[id].Data.ModelView = newData.ModelView;
+        //Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ModelView is Null >> " + newData.NameObject);
+        //if (newData.Id != null)
+        //    CollectionInfoID[id].Data.Id = newData.Id;
+        //else
+        //    CollectionInfoID[id].Data.CreateID();
+        //Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ID is Null >> " + newData.NameObject);
     }
 
 

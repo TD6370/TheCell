@@ -9,7 +9,7 @@ public class GameActionPersonController : MonoBehaviour
 
     public enum NameActionsPerson
     {
-        None, Idle, Move, Dead, Work, Attack, Completed, Target //, Completion
+        None, Idle, Move, Dead, Work, Attack, Completed //, Target //, Completion
     };
 
     public static bool IsGameActionPersons = true;
@@ -133,7 +133,7 @@ public class GameActionPersonController : MonoBehaviour
     {
         if(string.IsNullOrEmpty(dataNPC.CurrentAction))
         {
-            Debug.Log("####### GetCurrentAction dataNPC.CurrentAction is null");
+            //Debug.Log("####### GetCurrentAction dataNPC.CurrentAction is null");
             dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
         }
         return (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.CurrentAction); ;
@@ -227,7 +227,7 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //Debug
-        if(controller == null)
+        if(controller == null || Storage.SceneDebug.IsRealDebug || Storage.SceneDebug.VipID == dataNPC.Id)
             Storage.SceneDebug.ViewPerson(dataNPC, p_nameAction);
     }
 
