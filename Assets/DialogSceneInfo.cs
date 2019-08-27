@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DialogSceneInfo : MonoBehaviour {
 
-    public enum ModeInfo { Person, Target }
+    public enum ModeInfo { Person, Target, None }
 
     public SceneDebuger.CaseSceneDialogPerson CaseDialogPerson;
     public GameObject DialogIcon;
@@ -174,6 +174,12 @@ public class DialogSceneInfo : MonoBehaviour {
 
     public void Deactivate()
     {
+        //DialogIcon.GetComponent<SpriteRenderer>().sprite = null;
+        //DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
+        //m_renderer.enabled = false;
+        //m_renderer.color = "#9900ff".ToColor();
+        //BorderIconTarget.SetActive(false);
+        //BorderIconAction.SetActive(false);
         RayTargetClear();
     }
 

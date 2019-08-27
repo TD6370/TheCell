@@ -132,7 +132,7 @@ public class SceneDebuger : MonoBehaviour {
     public CaseSceneDialogPerson CreateTargetDialog(SceneDialogPerson data, string modelViewTarget)
     {
         //CaseSceneDialogPerson caseDialog = GetFreeDialog(new SceneDialogPerson());
-        CaseSceneDialogPerson caseDialog = GetFreeDialog(null);
+        CaseSceneDialogPerson caseDialog = GetFreeDialog(data, isTarget: true);
         if (caseDialog == null)
             caseDialog = GetFreeDialog(isForce: true);
         if (caseDialog == null)
@@ -176,7 +176,86 @@ public class SceneDebuger : MonoBehaviour {
         }
     }
 
-    private CaseSceneDialogPerson GetFreeDialog(SceneDialogPerson p_Data = null, bool isForce = false)
+    //private CaseSceneDialogPerson GetFreeDialog(SceneDialogPerson p_Data = null, bool isForce = false)
+    //{
+    //    if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
+    //        return null;
+
+    //    string _vip = VipID ?? "?";
+
+    //    CaseSceneDialogPerson findCase = null;
+    //    if (isForce) {
+    //        Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog isForce");
+    //        findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault();
+    //    }
+    //    else {
+    //        if (p_Data != null)
+    //        {
+    //            //findCase = m_poolDialogPersonPrefabs.Find(
+    //            //        p => p.Person != null &&
+    //            //        p.Person.Data != null &&
+    //            //        p.Person.ID == p_Data.ID &&
+    //            //        p.Person.ID != _vip &&
+    //            //        p.ModeInfo != DialogSceneInfo.ModeInfo.Target);
+
+    //            //findCase = m_poolDialogPersonPrefabs.Find(
+    //            //        p => p.Person != null &&
+    //            //        p.Person.Data != null &&
+    //            //        p.Person.ID == p_Data.ID &&
+    //            //        p.Person.ID != _vip &&
+    //            //        p.ModeInfo != DialogSceneInfo.ModeInfo.Target);
+
+
+
+    //            var poolCases = m_poolDialogPersonPrefabs.Where(
+    //                    p => p.Person != null &&
+    //                    p.Person.Data != null &&
+    //                    p.Person.ID == p_Data.ID &&
+    //                    p.Person.ID != _vip &&
+    //                    p.ModeInfo != DialogSceneInfo.ModeInfo.Target);
+
+    //            if(poolCases.Count()>1)
+    //                Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog poolCases.Count()>1");
+
+    //            bool isInit = false;
+    //            foreach (var item in poolCases)
+    //            {
+    //                if (!isInit)
+    //                {
+    //                    isInit = true;
+    //                    findCase = item;
+    //                    continue;
+    //                }
+    //                item.Deactivate();
+    //            }
+
+    //        }
+    //        if (findCase == null)
+    //        {
+    //            //findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
+    //            findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock &&
+    //                                                        p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault();
+    //        }
+
+    //        if (findCase != null && findCase.Person != null && findCase.Person.ID == _vip)
+    //            return m_poolDialogPersonPrefabs.Where(p => !p.IsLock && p.Person.ID != _vip).FirstOrDefault();
+
+    //        if (findCase == null)//force
+    //        {
+    //            Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog isForce on time");
+    //            //findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault(); ;
+    //            findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip &&
+    //                                                            p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault(); ;
+    //        }
+    //    }
+
+    //    if (findCase != null && findCase.IsLock)
+    //        findCase.Deactivate();
+
+    //    return findCase;
+    //}
+
+    private CaseSceneDialogPerson GetFreeDialog(SceneDialogPerson p_Data = null, bool isForce = false, bool thisIsTarget = false, DialogSceneInfo.ModeInfo filerNot = DialogSceneInfo.ModeInfo.Target, bool isTarget = false)
     {
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return null;
@@ -184,24 +263,65 @@ public class SceneDebuger : MonoBehaviour {
         string _vip = VipID ?? "?";
 
         CaseSceneDialogPerson findCase = null;
-        if (isForce) {
+        if (isForce)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog isForce");
             findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault();
         }
-        else {
+        else
+        {
             if (p_Data != null)
             {
-                findCase = m_poolDialogPersonPrefabs.Find(
-                        p => p.Person != null &&
-                        p.Person.Data != null &&
-                        p.Person.ID == p_Data.ID &&
-                        p.Person.ID != _vip &&
-                        p.ModeInfo != DialogSceneInfo.ModeInfo.Target);
+                //Find Exist
+                if (!isTarget)
+                {
+                    findCase = m_poolDialogPersonPrefabs.Find(
+                            p => p.Person != null &&
+                            p.Person.Data != null &&
+                            p.Person.ID == p_Data.ID &&
+                            p.ModeInfo != filerNot);
+                }
+                else
+                {
+                    //find last view case 
+                    findCase = m_poolDialogPersonPrefabs.Find(
+                            p => p.Person != null &&
+                            p.Person.Data != null &&
+                            p.Person.ID == p_Data.ID &&
+                            p.ModeInfo != DialogSceneInfo.ModeInfo.Person);
+                }
+
+                //var poolCases = m_poolDialogPersonPrefabs.Where(
+                //        p => p.Person != null &&
+                //        p.Person.Data != null &&
+                //        p.Person.ID == p_Data.ID &&
+                //        p.Person.ID != _vip &&
+                //        p.ModeInfo != filerNot);
+
+                //if (poolCases.Count() > 1)
+                //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog poolCases.Count()>1");
+
+                //bool isInit = false;
+                //foreach (var item in poolCases)
+                //{
+                //    if (!isInit)
+                //    {
+                //        isInit = true;
+                //        findCase = item;
+                //        continue;
+                //    }
+                //    item.Deactivate();
+                //}
+
             }
+            //if (isTarget)
+            //    filerNot = DialogSceneInfo.ModeInfo.None;
+
             if (findCase == null)
             {
                 //findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
                 findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock &&
-                                                            p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault();
+                                                            p.ModeInfo != filerNot).FirstOrDefault();
             }
 
             if (findCase != null && findCase.Person != null && findCase.Person.ID == _vip)
@@ -209,9 +329,10 @@ public class SceneDebuger : MonoBehaviour {
 
             if (findCase == null)//force
             {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "#### GetFreeDialog isForce on time");
                 //findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip).FirstOrDefault(); ;
                 findCase = m_poolDialogPersonPrefabs.OrderBy(p => p.TimeCreate).Where(p => p.Person.ID != _vip &&
-                                                                p.ModeInfo != DialogSceneInfo.ModeInfo.Target).FirstOrDefault(); ;
+                                                                p.ModeInfo != filerNot).FirstOrDefault(); ;
             }
         }
 
@@ -220,7 +341,7 @@ public class SceneDebuger : MonoBehaviour {
 
         return findCase;
     }
-   
+
     #region CaseSceneDialogPerson
     public class CaseSceneDialogPerson
     {
@@ -282,7 +403,7 @@ public class SceneDebuger : MonoBehaviour {
                     caseTarget.Deactivate();
                     
                 }
-                m_dialogView.Deactivate();
+                //m_dialogView.Deactivate();
 
                 //TEST
                 //if (caseTarget == null)
@@ -290,6 +411,7 @@ public class SceneDebuger : MonoBehaviour {
                 //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### Deactivate() CaseDialogTarget -- EMPTY");
                 //}
             }
+            m_dialogView.Deactivate();
 
             if (Dialog != null)
             {
@@ -301,7 +423,7 @@ public class SceneDebuger : MonoBehaviour {
             {
                 Debug.Log(Storage.EventsUI.ListLogAdd = "#### Deactivate Dialog -- EMPTY");
             }
-
+            
 
             ModeInfo = DialogSceneInfo.ModeInfo.Person;
             IsLock = false;
