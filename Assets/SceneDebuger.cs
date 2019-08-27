@@ -237,6 +237,7 @@ public class SceneDebuger : MonoBehaviour {
 
         public void Activate(SceneDialogPerson p_Data, bool isTarget = false)
         {
+            IsLock = true;
             Person = p_Data;
             if (Dialog != null)
             {
@@ -257,11 +258,14 @@ public class SceneDebuger : MonoBehaviour {
 
                 ModeInfo = isTarget ? DialogSceneInfo.ModeInfo.Target : DialogSceneInfo.ModeInfo.Person;
                 m_dialogView.DialogModelViewTarget = ModelViewTarget;
-                IsLock = true;
+                //IsLock = true;
                 m_dialogView.InitDialogView(this, ModeInfo);
             }
+            else{
+                Debug.Log("######### CaseSceneDialogPerson Dialog is NULL");
+            }
             TimeCreate = Time.time;
-            IsLock = true;
+            //IsLock = true;
         }
 
         public void Deactivate()
@@ -276,7 +280,10 @@ public class SceneDebuger : MonoBehaviour {
 
                     caseTarget.ModeInfo = DialogSceneInfo.ModeInfo.Target;
                     caseTarget.Deactivate();
+                    
                 }
+                m_dialogView.Deactivate();
+
                 //TEST
                 //if (caseTarget == null)
                 //{
@@ -290,6 +297,12 @@ public class SceneDebuger : MonoBehaviour {
                 Dialog.transform.position = Vector3.zero;
                 Dialog.SetActive(false);
             }
+            else
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "#### Deactivate Dialog -- EMPTY");
+            }
+
+
             ModeInfo = DialogSceneInfo.ModeInfo.Person;
             IsLock = false;
         }

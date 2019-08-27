@@ -21,12 +21,15 @@ public class DialogSceneInfo : MonoBehaviour {
     private ModeInfo ModeViewInfo = ModeInfo.Person;
     private string m_info = "";
     private SpriteRenderer m_renderer;
+    private LineRenderer m_lineRenderer;
 
     private void Awake()
     {
         m_renderer = this.gameObject.GetComponent<SpriteRenderer>();
         if (m_renderer == null)
             Debug.Log(Storage.EventsUI.ListLogAdd = "#### DialogSceneInfo.Awake m_renderer is null ");
+
+        m_lineRenderer = GetComponent<LineRenderer>();
     }
 
     // Use this for initialization
@@ -130,6 +133,8 @@ public class DialogSceneInfo : MonoBehaviour {
                     DialogIconTarget.GetComponent<SpriteRenderer>().sprite = spriteTarget;
 
                     CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
+
+                    DrawRayTarget();
                     break;
                 }
             }
@@ -149,7 +154,7 @@ public class DialogSceneInfo : MonoBehaviour {
         switch (ModeViewInfo)
         {
             case ModeInfo.Person:
-                Debug.Log("TEST MSetMode : Person " + m_info);
+                //Debug.Log("TEST MSetMode : Person " + m_info);
                 BorderIconTarget.SetActive(true);
                 BorderIconAction.SetActive(true);
                 m_renderer.enabled = true;
@@ -157,30 +162,123 @@ public class DialogSceneInfo : MonoBehaviour {
                 break;
             case ModeInfo.Target:
                 //TEST
-                Debug.Log("TEST MSetMode : Target " + m_info);
+                RayTargetClear();
+                //Debug.Log("TEST MSetMode : Target " + m_info);
                 m_renderer.enabled = false;
-                m_renderer.color = Color.red;
+                m_renderer.color = "#9900ff".ToColor();
                 BorderIconTarget.SetActive(false);
                 BorderIconAction.SetActive(false);
                 break;
         }
     }
 
-    //void OnGUI()
-    //{
-    //    // Make a text field that modifies stringToEdit.
-    //    //GUI.TextField(new Rect(10, 10, 200, 20), m_info, 25);
-    //}
+    public void Deactivate()
+    {
+        RayTargetClear();
+    }
+
+    public void RayTargetClear()
+    {
+        m_lineRenderer.positionCount = 0;
+    }
+
+    private void DrawRayTarget()
+    {
+        var target = CaseDialogTarget.Person;
+
+        var pointsRay = new Vector2[]{
+            transform.position,
+            target.TargetPosition
+        };
+        //DrawPolyline(pointsRay, "#0000ff".ToColor(), 1f);
+        DrawPolyline(pointsRay, new Color(20,100,40), 0.3f);
+    }
+
+    public void DrawPolyline(Vector2[] points, Color color, float width = 0.2f)
+    {
+        //return;
+
+        if (m_lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        var colorKeys = new GradientColorKey[] { new GradientColorKey() { color = color } };
+        //m_lineRenderer.SetColors(color, color);
+        m_lineRenderer.colorGradient = new Gradient() { colorKeys = colorKeys };
+        m_lineRenderer.SetWidth(width, width);
+        int size = points.Length;
+        m_lineRenderer.SetVertexCount(size);
+        for (int i = 0; i < points.Length; i++)
+        {
+            Vector3 posPoint = new Vector3(points[i].x, points[i].y, -2);
+            m_lineRenderer.SetPosition(i, posPoint);
+        }
+    }
+
+    void OnGUI()
+    {
+        // Make a text field that modifies stringToEdit.
+        //GUI.TextField(new Rect(10, 10, 200, 20), m_info, 25);
+        //GUI.TextField(new Rect(10, 10, 200, 20), m_info, 25);
+        //GUI.TextField(new Rect(0, 0, 500, 50), "TEST TEST TEST MESSAGE !!!!!!", 25);
+
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 25;
+        style.fontStyle = FontStyle.Bold;
+        style.normal.textColor = Color.yellow;
+
+        if (Camera.main == null)
+            return;
+
+        m_info = "TEST TEST MESSAGE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        Rect position1 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 30, 300, 100);
+        GUI.Label(position1, m_info, style);
+        Rect position2 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 70, 300, 100);
+        GUI.TextField(position2, m_info, 25);
+
+        //Handles.DrawLine(center, t.GameObjects[i].transform.position);
+
+    }
+
+
+    private void DrawGizmosLine(Vector3 pos1, Vector3 pos2, Color color)
+    {
+        Gizmos.color = color;
+        Gizmos.DrawLine(pos1, pos2);
+    }
+
+    private void OnDrawGizmos()
+    {
+        //if (ModeViewInfo == ModeInfo.Person && 
+        //    CaseDialogTarget != null && 
+        //    CaseDialogTarget.Person != null && 
+        //    m_lineRenderer.positionCount > 0)
+        //{
+        //    var targetPosition = CaseDialogTarget.Person.TargetPosition;
+        //    Gizmos.DrawLine(transform.position, targetPosition);
+        //    DrawGizmosLine(transform.position, targetPosition, "#8533ff".ToColor());
+        //}
+    }
 
     public float explosionRadius = 0.5f;
-       
-    
 
-    //void OnDrawGizmosSelected()
-    //{
-    //    // Display the explosion radius when selected
-    //    Gizmos.color = new Color(50, 0, 50, 0.5F);
-    //    Gizmos.DrawSphere(transform.position, explosionRadius);
-    //}
+    void OnDrawGizmosSelected()
+    {
+        // Display the explosion radius when selected
+        //Gizmos.color = new Color(50, 0, 50, 0.5F);
+        //Gizmos.DrawSphere(transform.position, explosionRadius);
+
+        //if (ModeViewInfo ==  ModeInfo.Person && CaseDialogTarget != null && CaseDialogTarget.Person != null)
+        //{
+        //    // Draws a blue line from this transform to the target
+        //    var target = CaseDialogTarget.Person;
+        //    Gizmos.color = Color.blue;
+        //    Gizmos.DrawLine(transform.position, target.Position);
+        //}
+    }
 
 }
