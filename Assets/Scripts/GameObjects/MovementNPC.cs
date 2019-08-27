@@ -105,7 +105,7 @@ public class MovementNPC : MonoBehaviour {
 
     void OnGUI()
     {
-        if (Storage.Person.IsShowTittlePerson)
+        if (Storage.SceneDebug.SettingsScene.IsShowTittlePerson)
         {
             GUIStyle style = new GUIStyle();
             style.fontSize = 13;

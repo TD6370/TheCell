@@ -227,7 +227,7 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //Debug
-        if(controller == null || Storage.SceneDebug.IsRealDebug || Storage.SceneDebug.VipID == dataNPC.Id)
+        if(controller == null || Storage.SceneDebug.SettingsScene.RealDebugOn || Storage.SceneDebug.VipID == dataNPC.Id)
             Storage.SceneDebug.ViewPerson(dataNPC, p_nameAction);
     }
 
@@ -406,7 +406,7 @@ public class GameActionPersonController : MonoBehaviour
     {
         Vector3 oldPosition = dataNPC.Position;
 
-        float step = dataNPC.Speed + Storage.Person.SpeedMovePersonInDream;// / 3; // * Time.deltaTime;
+        float step = dataNPC.Speed + Storage.SceneDebug.SettingsScene.SpeedMovePersonInDream;// / 3; // * Time.deltaTime;
         if (step < 0.5f)
             step = 0.5f;
         if (step > 10f)

@@ -61,8 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\DialogSceneInfo.cs" />
-    <Compile Include="Assets\EditPriorityFinderController.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -108,9 +106,11 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\SceneDebuger.cs" />
+    <Compile Include="Assets\ScriptableData\Settings\PriorityFinder.cs" />
+    <Compile Include="Assets\ScriptableData\Settings\SettingsSceneDebug.cs" />
+    <Compile Include="Assets\Scripts\Engine\Helper.cs" />
+    <Compile Include="Assets\Scripts\Engine\Serializator.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
-    <Compile Include="Assets\Scripts\GameObjects\CreateNPC.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameActionPersonController.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameObjecDataController.cs" />
@@ -121,25 +121,22 @@
     <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\Graph\SceneLighting.cs" />
+    <Compile Include="Assets\Scripts\Managers\DispatcherWorldActions.cs" />
+    <Compile Include="Assets\Scripts\Managers\MovementCamera.cs" />
+    <Compile Include="Assets\Scripts\Managers\PlayerAnimation.cs" />
+    <Compile Include="Assets\Scripts\Managers\PoolGameObjects.cs" />
+    <Compile Include="Assets\Scripts\Managers\ReaderScene.cs" />
+    <Compile Include="Assets\Scripts\Managers\StoragePerson.cs" />
     <Compile Include="Assets\Scripts\Player\CompletePlayerController.cs" />
-    <Compile Include="Assets\Scripts\Player\MovementCamera.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Storage\BilderGameDataObjects.cs" />
     <Compile Include="Assets\Scripts\Storage\DiskData.cs" />
-    <Compile Include="Assets\Scripts\Storage\DispatcherWorldActions.cs" />
     <Compile Include="Assets\Scripts\Storage\GenerateGridFields.cs" />
-    <Compile Include="Assets\Scripts\Storage\Helper.cs" />
-    <Compile Include="Assets\Scripts\Storage\PoolGameObjects.cs" />
-    <Compile Include="Assets\Scripts\Storage\PriorityFinder.cs" />
-    <Compile Include="Assets\Scripts\Storage\ReaderScene.cs" />
     <Compile Include="Assets\Scripts\Storage\SaveLoadData.cs" />
-    <Compile Include="Assets\Scripts\Storage\Serializator.cs" />
     <Compile Include="Assets\Scripts\Storage\Storage.cs" />
     <Compile Include="Assets\Scripts\Storage\StorageCorrect.cs" />
     <Compile Include="Assets\Scripts\Storage\StorageLog.cs" />
-    <Compile Include="Assets\Scripts\Storage\StoragePerson.cs" />
     <Compile Include="Assets\Scripts\Storage\UpdateData.cs" />
     <Compile Include="Assets\Scripts\Temp.cs" />
     <Compile Include="Assets\Scripts\TileGen.cs" />
@@ -149,6 +146,10 @@
     <Compile Include="Assets\Scripts\UI\CellGridMapController.cs" />
     <Compile Include="Assets\Scripts\UI\CellPrefabPaletteMapControl.cs" />
     <Compile Include="Assets\Scripts\UI\DataObjectInventory.cs" />
+    <Compile Include="Assets\Scripts\UI\Debug\DialogSceneInfo.cs" />
+    <Compile Include="Assets\Scripts\UI\Debug\SceneDebuger.cs" />
+    <Compile Include="Assets\Scripts\UI\Editors\EditPriorityFinderController.cs" />
+    <Compile Include="Assets\Scripts\UI\Editors\SceneDebugerEditor.cs" />
     <Compile Include="Assets\Scripts\UI\ExpandControl.cs" />
     <Compile Include="Assets\Scripts\UI\FrameMap.cs" />
     <Compile Include="Assets\Scripts\UI\InventoryController.cs" />

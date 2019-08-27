@@ -7981,7 +7981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5804041}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.8400097, y: -1}
+  m_AnchoredPosition: {x: -1.8400116, y: -1}
   m_SizeDelta: {x: -2.4099998, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &312878481
@@ -12046,7 +12046,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.000015686108}
+  m_AnchoredPosition: {x: 8.5, y: -0.000045776367}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -16708,10 +16708,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55323638b2e9ebc4497833043c79ad51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsShowTittlePerson: 0
-  SpeedMovePersonInDream: 2
-  WaitTimeReaderScene: 0
-  IsLog: 0
   ContainerPriority: {fileID: 11400000, guid: 9a551968dbe5bc04c8bfeb82df61a090, type: 2}
   ColorSelectedCursorObject: {r: 0, g: 1, b: 1, a: 1}
   ColorFindCursorObject: {r: 1, g: 0, b: 1, a: 1}
@@ -20337,7 +20333,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.6105007, y: 0.047204603}
   m_AnchorMax: {x: 0.73600006, y: 0.15927465}
-  m_AnchoredPosition: {x: -0.05999756, y: -0.29999733}
+  m_AnchoredPosition: {x: -0.05999756, y: -0.29999924}
   m_SizeDelta: {x: 0.6199999, y: 0.39999998}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &692985347
@@ -26323,8 +26319,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1384420415}
   m_HandleRect: {fileID: 1384420414}
   m_Direction: 2
-  m_Value: 0.9999996
-  m_Size: 0.64618486
+  m_Value: 0.9999993
+  m_Size: 0.6324159
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -34281,7 +34277,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.036000002}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 0.45732725}
-  m_AnchoredPosition: {x: -1.8400002, y: 0.7590065}
+  m_AnchoredPosition: {x: -1.8399963, y: 0.7590065}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1075322314
@@ -34690,7 +34686,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.4799843, y: 0}
+  m_AnchoredPosition: {x: 2.4799805, y: 0}
   m_SizeDelta: {x: -4.96, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1085248247
@@ -36183,7 +36179,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 0.46226868}
-  m_AnchoredPosition: {x: -1.8400097, y: 0.7590027}
+  m_AnchoredPosition: {x: -1.8400116, y: 0.7590027}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1130822277
@@ -44883,7 +44879,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.54267275}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.8399925, y: -0.5}
+  m_AnchoredPosition: {x: -1.8399887, y: -0.5}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1448596505
@@ -57448,7 +57444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.00000042732123}
+  m_AnchoredPosition: {x: 8.5, y: 0.000015258789}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -58440,7 +58436,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 105.3884}
+  m_AnchoredPosition: {x: 0.3, y: 99.21602}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -59009,7 +59005,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1804064629}
   m_HandleRect: {fileID: 1804064628}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -60482,13 +60478,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f258e0a667925349b7f61a775cd245a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SettingsScene: {fileID: 11400000, guid: 096c6603f971a8e46b360fca4fb47628, type: 2}
+  LivePersonsCount: 0
   DialogPersonPrefab: {fileID: 391326146}
   PanelDialogPrefabs: {fileID: 1615042226}
-  IsAutoRefresh: 0
-  IsRealDebug: 0
-  TimeRefresh: 1
-  TimeClearTemplate: 3
-  IsClearTemplate: 0
 --- !u!114 &1932370254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60500,7 +60493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12f7234985f3301478a115b7516a43a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SizeOnDebug: 20
+  SizeOnDebug: 0
 --- !u!1 &1932854699
 GameObject:
   m_ObjectHideFlags: 0
@@ -61422,7 +61415,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1626462184}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
