@@ -172,6 +172,7 @@ public class SceneDebuger : MonoBehaviour {
 
     private CaseSceneDialogPerson GetFreeDialog(SceneDialogPerson p_Data = null, bool isForce = false, bool thisIsTarget = false, DialogSceneInfo.ModeInfo filerNot = DialogSceneInfo.ModeInfo.Target, bool isTarget = false)
     {
+        bool isFindedMe = false;
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return null;
 
@@ -207,7 +208,9 @@ public class SceneDebuger : MonoBehaviour {
                 }
             }
 
-            if (findCase == null)
+            if (findCase != null)
+                isFindedMe = true;
+            else
             {
                 //findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock).FirstOrDefault();
                 findCase = m_poolDialogPersonPrefabs.Where(p => !p.IsLock &&
@@ -227,7 +230,7 @@ public class SceneDebuger : MonoBehaviour {
             }
         }
 
-        if (findCase != null && findCase.IsLock)
+        if (findCase != null && findCase.IsLock && isFindedMe == false)
             findCase.Deactivate();
 
         return findCase;

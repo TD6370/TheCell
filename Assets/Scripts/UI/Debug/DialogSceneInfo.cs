@@ -40,18 +40,18 @@ public class DialogSceneInfo : MonoBehaviour {
 
 
         //TEST
-        if (CaseDialogTarget != null && CaseDialogTarget.Dialog != null && CaseDialogTarget.Dialog.active)
-        {
-            if(CaseDialogTarget.Person != null && ModeViewInfo == ModeInfo.Person)
-            {
-                // && CaseDialogTarget.Person.TargetPosition
-                Vector3 targetPosition = CaseDialogTarget.Dialog.transform.position;// .TargetPosition;    step = speed * Time.deltaTime;
-                Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, 1 * Time.deltaTime);
-                transform.position = pos;
+        //if (CaseDialogTarget != null && CaseDialogTarget.Dialog != null && CaseDialogTarget.Dialog.active)
+        //{
+        //    if(CaseDialogTarget.Person != null && ModeViewInfo == ModeInfo.Person)
+        //    {
+        //        // && CaseDialogTarget.Person.TargetPosition
+        //        Vector3 targetPosition = CaseDialogTarget.Dialog.transform.position;// .TargetPosition;    step = speed * Time.deltaTime;
+        //        Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, 1 * Time.deltaTime);
+        //        transform.position = pos;
 
-                //DrawRayTarget();
-            }
-        }
+        //        //DrawRayTarget();
+        //    }
+        //}
         //-------------
 
     }
