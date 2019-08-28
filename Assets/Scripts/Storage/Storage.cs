@@ -887,8 +887,10 @@ public class Storage : MonoBehaviour {
         if (nameField == null)
             return false;
 
+        ReaderWorld.RemoveGobject(setName.GetID());
+
         //#FIX
-        if(!_GamesObjectsReal.ContainsKey(nameField))
+        if (!_GamesObjectsReal.ContainsKey(nameField))
         {
             Debug.Log("####### DestroyFullObject not field : " + nameField);
             return false;

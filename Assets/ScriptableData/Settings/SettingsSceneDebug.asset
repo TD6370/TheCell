@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Name: SettingsSceneDebug
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
+  IsShowTittleInfoPerson: 1
   IsLog: 0
-  AutoRefreshOn: 1
+  AutoRefreshOn: 0
   RealDebugOn: 0
   SpeedMovePersonInDream: 1
   TimeRelax: 0

@@ -40,9 +40,11 @@ public class GameActionPersonController : MonoBehaviour
     private Vector2 m_MeMovement;
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
     private ModelNPC.PersonData m_dataNPC;
-    private MovementBoss m_meMovement;
-    private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
     private ModelNPC.PersonData temp_dataNPC;
+    //private MovementBoss m_meMovement;
+    private MovementNPC m_meMovement; //@@$$
+    
+    private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
     private SaveLoadData.TypePrefabs temp_TypePrefab = SaveLoadData.TypePrefabs.PrefabField;
     private PositionRenderSorting m_sortiongLayer;
 
@@ -67,6 +69,60 @@ public class GameActionPersonController : MonoBehaviour
 
         if (IsStartInit)
             ChangeActions();
+    }
+
+    void OnGUI()
+    {
+        if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
+        {
+            if (DataAlien == null)
+                return;
+
+            string objID = DataAlien.Id; // ModelView
+            if (objID == null)
+                return;
+
+            float distan = Vector2.Distance(DataAlien.Position, DataAlien.TargetPosition);
+
+            string animationInfo = "";
+            if(m_MeAnimation != null)
+            {
+                animationInfo = "\n Play : " + m_MeAnimation.CurrentAnimationPlay;
+            }
+
+            string actionList = "";
+            foreach(var item in DataAlien.PersonActions)
+            {
+                actionList += "\n" + item;
+            }
+            if(DataAlien.PersonActions.Length>0)
+                actionList = "\n Commands : " + actionList;
+
+            string messageInfo =
+                "Action  :" + DataAlien.CurrentAction + "  (" + DataAlien.PersonActions.Length + ")"
+                + "\nTimeWork  : " + DataAlien.TimeEndCurrentAction
+                + "\nTarget : " + Helper.GetNameField(DataAlien.TargetPosition)
+                + "\nDistan : " + distan
+                + animationInfo;
+
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 16;
+            style.fontStyle = FontStyle.Bold;
+            style.normal.textColor = Color.yellow;
+
+
+            if (Camera.main == null)
+                return;
+
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            //Rect positionRect= new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 150, 300, 100);
+            Rect positionRect = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 200, 400, 100);
+            //Rect positionRect2 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 300, 300, 100);
+
+            GUI.Label(positionRect, messageInfo, style);
+
+            //GUI.TextField(positionRect, messageInfo, 25, style);
+        }
     }
 
     public void ChangeActions()
@@ -270,6 +326,7 @@ public class GameActionPersonController : MonoBehaviour
         float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
         if (Time.time > timeWait && p_nameAction == NameActionsPerson.Idle)
         {
+            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
             RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
         }
     }

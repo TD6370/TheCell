@@ -8,6 +8,8 @@ public class SettingsSceneDebug : ScriptableObject {
 
     [SerializeField, Tooltip("Show tittle scene perons")]
     public bool IsShowTittlePerson = false;
+    [SerializeField, Tooltip("Show tittle full info scene perons")]
+    public bool IsShowTittleInfoPerson = false;
     [SerializeField, Tooltip("Write Debug in log list")]
     public bool IsLog = false;
 

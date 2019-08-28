@@ -27,6 +27,7 @@ public class SceneDebugerEditor : Editor
     private SerializedProperty LivePersonsCount;
     private SerializedProperty TimeWorkAction;
     private SerializedProperty TimeLimitResetNavigator;
+    private SerializedProperty IsShowTittleInfoPerson;
 
     private SerializedObject newSO;
 
@@ -49,6 +50,7 @@ public class SceneDebugerEditor : Editor
         TimeClearTemplate = newSO.FindProperty("TimeClearTemplate");
         TimeWorkAction = newSO.FindProperty("TimeWorkAction");
         TimeLimitResetNavigator = newSO.FindProperty("TimeLimitResetNavigator");
+        IsShowTittleInfoPerson = newSO.FindProperty("IsShowTittleInfoPerson");
 
         ResetPropertyEditor();
     }
@@ -67,10 +69,6 @@ public class SceneDebugerEditor : Editor
             EditorGUILayout.HelpBox("Property: SceneDebuger is empty! 1", MessageType.Error);
             return;
         }
-
-
-        bool stateAutoRefresh = AutoRefreshOn.boolValue;
-
         newSO.Update();
 
         //EditorGUI.BeginChangeCheck();
@@ -99,9 +97,18 @@ public class SceneDebugerEditor : Editor
 
         IsLog.boolValue = EditorGUILayout.Toggle("Show log actions", IsLog.boolValue);
         IsShowTittlePerson.boolValue = EditorGUILayout.Toggle("Show tittle Person", IsShowTittlePerson.boolValue);
+        IsShowTittleInfoPerson.boolValue = EditorGUILayout.Toggle("Show tittle Person Info action", IsShowTittleInfoPerson.boolValue);
 
         EditorGUILayout.Space();
+        //@@$$
+        //AutoRefreshOn.boolValue = EditorGUILayout.Toggle("Auto Refresh", AutoRefreshOn.boolValue);
+
+        EditorGUI.BeginChangeCheck(); //@@$$
         AutoRefreshOn.boolValue = EditorGUILayout.Toggle("Auto Refresh", AutoRefreshOn.boolValue);
+        if (EditorGUI.EndChangeCheck()) {
+            Storage.SceneDebug.DialogsClear();
+        }
+
         RealDebugOn.boolValue = EditorGUILayout.Toggle("Real actions debug", RealDebugOn.boolValue);
 
         EditorGUILayout.Space();
@@ -130,8 +137,9 @@ public class SceneDebugerEditor : Editor
 
         newSO.ApplyModifiedProperties();
 
-        if(!AutoRefreshOn.boolValue && stateAutoRefresh != AutoRefreshOn.boolValue)
-            Storage.SceneDebug.DialogsClear();
+        //@@$$
+        //if(!AutoRefreshOn.boolValue && stateAutoRefresh != AutoRefreshOn.boolValue)
+        //    Storage.SceneDebug.DialogsClear();
     }
 }
 

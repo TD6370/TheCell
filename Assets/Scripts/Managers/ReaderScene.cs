@@ -187,6 +187,16 @@ public class ReaderScene //: UpdateData
         CollectionInfoID[id].Field = newField;
     }
 
+    public void RemoveGobject(string p_id)
+    {
+        if (false == CheckCollectionInfoID(p_id))
+        {
+            Debug.Log("RemoveGobject  CollectionInfo  ID not found = " + p_id);
+            return;
+        }
+        CollectionInfoID.Remove(p_id);
+    }
+
 
     private bool CheckCollectionInfoID(string id)
     {
