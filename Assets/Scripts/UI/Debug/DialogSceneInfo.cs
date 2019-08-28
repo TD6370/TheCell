@@ -22,8 +22,11 @@ public class DialogSceneInfo : MonoBehaviour {
     private SpriteRenderer m_renderer;
     private LineRenderer m_lineRenderer;
 
+    private Vector3 targetPositionRayDrawTest = new Vector3();
+
     private void Awake()
     {
+        targetPositionRayDrawTest = Vector3.zero;
         m_renderer = this.gameObject.GetComponent<SpriteRenderer>();
         if (m_renderer == null)
             Debug.Log(Storage.EventsUI.ListLogAdd = "#### DialogSceneInfo.Awake m_renderer is null ");
@@ -40,23 +43,37 @@ public class DialogSceneInfo : MonoBehaviour {
 
 
         //TEST
-        //if (CaseDialogTarget != null && CaseDialogTarget.Dialog != null && CaseDialogTarget.Dialog.active)
-        //{
-        //    if(CaseDialogTarget.Person != null && ModeViewInfo == ModeInfo.Person)
-        //    {
-        //        // && CaseDialogTarget.Person.TargetPosition
-        //        Vector3 targetPosition = CaseDialogTarget.Dialog.transform.position;// .TargetPosition;    step = speed * Time.deltaTime;
-        //        Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, 1 * Time.deltaTime);
-        //        transform.position = pos;
+        if (CaseDialogTarget != null && CaseDialogTarget.IsLock && CaseDialogTarget.Dialog != null && CaseDialogTarget.Dialog.activeSelf)
+        {
+            if (CaseDialogPerson.IsLock && CaseDialogPerson.Person != null && ModeViewInfo == ModeInfo.Person)
+            {
 
-        //        //DrawRayTarget();
-        //    }
+                // && CaseDialogTarget.Person.TargetPosition
+                //Vector3 targetPosition = CaseDialogTarget.Dialog.transform.position;// .TargetPosition;    step = speed * Time.deltaTime;
+                Vector3 targetPosition = targetPositionRayDrawTest = CaseDialogPerson.Person.TargetPosition;
+                Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, 1 * Time.deltaTime);
+                transform.position = pos;
+
+                //CaseDialogTarget.Dialog.GetComponent<SpriteRenderer>().enabled = true;
+                //DrawRayTarget();
+            }
+        }
+
+        //if (CaseDialogTarget !=null && CaseDialogTarget.IsLock &&  CaseDialogPerson.IsLock && CaseDialogPerson.Person != null && ModeViewInfo == ModeInfo.Target)
+        //{
+        //    Vector3 targetPosition = CaseDialogTarget.Person.Position;
+        //    //DrawRayTarget();
+        //    RayTargetClear();
+        //    var pointsRay = new Vector2[]{
+        //        transform.position, targetPosition };
+
+        //    DrawPolyline(pointsRay, new Color(20, 100, 40), 0.3f);
         //}
         //-------------
 
     }
 
-    
+
     public void InitDialogView(SceneDebuger.CaseSceneDialogPerson p_caseDialogPerson, ModeInfo p_mode = ModeInfo.Person)
     {
         if (DialogIcon == null)
@@ -104,50 +121,54 @@ public class DialogSceneInfo : MonoBehaviour {
                 return;
             }
             var objectsGrid = ReaderScene.GetObjectsDataFromGridContinue(fieldTarget);
-            if (objectsGrid == null)
+            if (objectsGrid != null)
             {
                 //Debug.Log(Storage.EventsUI.ListLogAdd = "#### objectsGrid is null from " + fieldTarget);
-                return;
-            }
-
-
-            foreach (var objData in objectsGrid)
-            {
-                if (objData == null)
+                //return;
+                foreach (var objData in objectsGrid)
                 {
-                    Storage.EventsUI.ListLogAdd = "### TARGET ReaderScene NOT FIELD: " + fieldTarget;
-                    continue;
-                }
+                    if (objData == null)
+                    {
+                        Storage.EventsUI.ListLogAdd = "### TARGET ReaderScene NOT FIELD: " + fieldTarget;
+                        continue;
+                    }
 
-                string modelViewTarget = objData.ModelView;
-                if (modelViewTarget == null)
-                    modelViewTarget = objData.TypePrefabName;
+                    string modelViewTarget = objData.ModelView;
+                    if (modelViewTarget == null)
+                        modelViewTarget = objData.TypePrefabName;
 
-                if (modelViewTarget == null)
-                {
-                    Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget is null >> " + objData.NameObject);
-                    continue;
-                }
+                    if (modelViewTarget == null)
+                    {
+                        Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget is null >> " + objData.NameObject);
+                        continue;
+                    }
 
-                if (!Storage.Palette.SpritesPrefabs.ContainsKey(modelViewTarget))
-                {
-                    Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget = " + modelViewTarget);
-                    DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
-                }
-                else
-                {
-                    Sprite spriteTarget = Storage.Palette.SpritesPrefabs[modelViewTarget];
-                    DialogIconTarget.GetComponent<SpriteRenderer>().sprite = spriteTarget;
+                    if (!Storage.Palette.SpritesPrefabs.ContainsKey(modelViewTarget))
+                    {
+                        Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found modelViewTarget = " + modelViewTarget);
+                        DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
+                    }
+                    else
+                    {
+                        Sprite spriteTarget = Storage.Palette.SpritesPrefabs[modelViewTarget];
+                        DialogIconTarget.GetComponent<SpriteRenderer>().sprite = spriteTarget;
 
-                    CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
+                        if (CaseDialogTarget != null && CaseDialogTarget.IsLock && CaseDialogTarget.Person != null && CaseDialogTarget.Person.ID == p_caseDialogPerson.Person.ID)
+                        {
+                            Storage.SceneDebug.UpdateTargetDialog(CaseDialogTarget, p_caseDialogPerson.Person, modelViewTarget);
+                        }
+                        else
+                            CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
 
-                    DrawRayTarget(); //!!!!!!!!!!!!!!!!!!!!!!
-                    break;
+                        DrawRayTarget(); //!!!!!!!!!!!!!!!!!!!!!!
+                        break;
+                    }
                 }
             }
         }
         else
         {
+            CaseDialogPerson = p_caseDialogPerson;
             DialogIcon.GetComponent<SpriteRenderer>().sprite = Storage.Palette.SpritesPrefabs[DialogModelViewTarget]; 
         }
         m_info = data.NameObject;
@@ -164,15 +185,17 @@ public class DialogSceneInfo : MonoBehaviour {
                 //Debug.Log("TEST MSetMode : Person " + m_info);
                 BorderIconTarget.SetActive(true);
                 BorderIconAction.SetActive(true);
-                m_renderer.enabled = true;
-                m_renderer.color = Color.white;
+                //m_renderer.enabled = true;
+                //m_renderer.color = Color.white;
+                BorderIconAction.GetComponent<SpriteRenderer>().color = Color.white;
                 break;
             case ModeInfo.Target:
                 //TEST
                 RayTargetClear();
                 //Debug.Log("TEST MSetMode : Target " + m_info);
-                m_renderer.enabled = false;
-                m_renderer.color = "#9900ff".ToColor();
+                //m_renderer.enabled = false;
+                //m_renderer.color = "#9900ff".ToColor();
+                BorderIconAction.GetComponent<SpriteRenderer>().color = Color.yellow;
                 BorderIconTarget.SetActive(false);
                 BorderIconAction.SetActive(false);
                 break;
@@ -183,13 +206,15 @@ public class DialogSceneInfo : MonoBehaviour {
     {
         DialogIcon.GetComponent<SpriteRenderer>().sprite = null;
         DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
-        m_renderer.enabled = false;
-        m_renderer.color = "#9900ff".ToColor();
+        BorderIconAction.GetComponent<SpriteRenderer>().color = Color.white;
+        //m_renderer.enabled = false;
+        //m_renderer.color = "#9900ff".ToColor();
         BorderIconTarget.SetActive(false);
         BorderIconAction.SetActive(false);
 
         //ModeViewInfo = ModeInfo.None;
         RayTargetClear();
+        targetPositionRayDrawTest = Vector3.zero;
     }
 
     public void RayTargetClear()
@@ -199,6 +224,8 @@ public class DialogSceneInfo : MonoBehaviour {
 
     private void DrawRayTarget()
     {
+        RayTargetClear();
+
         var target = CaseDialogTarget.Person;
 
         var pointsRay = new Vector2[]{
@@ -271,9 +298,14 @@ public class DialogSceneInfo : MonoBehaviour {
         //    var targetPosition = CaseDialogTarget.Person.TargetPosition;
         //    //var targetPosition = CaseDialogTarget.Person.Position;
         //    //var targetPosition = CaseDialogTarget.Dialog.transform.position;
-        //    Gizmos.DrawLine(transform.position, targetPosition);
+        //    //Gizmos.DrawLine(transform.position, targetPosition);
         //    DrawGizmosLine(transform.position, targetPosition, "#8533ff".ToColor());
         //}
+
+        if(targetPositionRayDrawTest != Vector3.zero)
+        {
+            DrawGizmosLine(transform.position, targetPositionRayDrawTest, "#8533ff".ToColor());
+        }
     }
 
     public float explosionRadius = 0.5f;
@@ -291,6 +323,11 @@ public class DialogSceneInfo : MonoBehaviour {
         //    Gizmos.color = Color.blue;
         //    Gizmos.DrawLine(transform.position, target.Position);
         //}
+    }
+
+    private void OnDisable()
+    {
+        targetPositionRayDrawTest = Vector3.zero;
     }
 
 }

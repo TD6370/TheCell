@@ -113,8 +113,9 @@ public class DispatcherWorldActions : MonoBehaviour
                 if (!m_IsFilledSearchingCollection)
                 {
                     string message = "Search dreamworkers...";
+                    float timeStartSearch = Time.time;
                     Storage.EventsUI.ListLogAdd = "~~~~~~~~~~" + message;
-                    Storage.EventsUI.SetTittle = message;
+                    //Storage.EventsUI.SetTittle = message;
                     m_IsRunSearching = true;
                     listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
                     List<Shuffle> listNPC_Rnd = new List<Shuffle>();
@@ -137,9 +138,10 @@ public class DispatcherWorldActions : MonoBehaviour
                     //Next time reset
                     timeLive = Time.time + timeLimitResetNavigator;
                     isTimeOfClear = false;
-                    if(Storage.EventsUI.SetTittle == message)
-                    //Storage.EventsUI.SetTittle = "";
-                    Storage.EventsUI.ListLogAdd = "...Search dreamworkers end";
+                    //if(Storage.EventsUI.SetTittle == message)
+                        //Storage.EventsUI.SetTittle = "";
+                    Storage.EventsUI.ListLogAdd = "...Search dreamworkers end : " + (Time.time - timeStartSearch)  ;
+
                 }
                 //----
                 //---Init VIP---

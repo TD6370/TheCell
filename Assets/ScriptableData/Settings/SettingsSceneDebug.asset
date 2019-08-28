@@ -21,4 +21,4 @@ MonoBehaviour:
   TimeLimitResetNavigator: 1
   TimeRefreshDebugScene: 0.1
   IsClearTemplate: 0
-  TimeClearTemplate: 1
+  TimeClearTemplate: 3.42

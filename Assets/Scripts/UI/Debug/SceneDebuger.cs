@@ -140,6 +140,13 @@ public class SceneDebuger : MonoBehaviour {
         return caseDialog;
     }
 
+    public void UpdateTargetDialog(CaseSceneDialogPerson caseDialog, SceneDialogPerson data, string modelViewTarget)
+    {
+        Storage.EventsUI.ListLogAdd = "UpdateTargetDialog...........";
+        caseDialog.ModelViewTarget = modelViewTarget;
+        caseDialog.Activate(data, true);
+    }
+
 
     public void DialogsClear()
     {
@@ -268,7 +275,7 @@ public class SceneDebuger : MonoBehaviour {
                 else
                     Dialog.name = "Dialog_" + p_Data.NameObject;
 
-                if (m_dialogView == null)
+                //if (m_dialogView == null)
                     m_dialogView = Dialog.GetComponent<DialogSceneInfo>();
 
                 ModeInfo = isTarget ? DialogSceneInfo.ModeInfo.Target : DialogSceneInfo.ModeInfo.Person;
