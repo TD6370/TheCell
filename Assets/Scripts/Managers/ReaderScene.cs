@@ -22,6 +22,9 @@ public class ReaderScene //: UpdateData
         public string Field { get; set; }
         public ModelNPC.ObjectData Data { get; set; }
         public GameObject Gobject { get; set; }
+        //public float TimeStartWork { get; set; }
+        //public float TimeStartDreamWork { get; set; }
+
         private string _id;
         public string ID
         {
@@ -73,6 +76,8 @@ public class ReaderScene //: UpdateData
 
     public void InitCollectionID()
     {
+        string message = "   Init CollectionID...";
+        Storage.EventsUI.SetTittle += message;
         string field = string.Empty;
         CollectionInfoID = new Dictionary<string, DataObjectInfoID>();
         foreach (var item in Storage.Instance.GridDataG.FieldsD)
@@ -100,6 +105,8 @@ public class ReaderScene //: UpdateData
             }
         }
         IsLoaded = true;
+        //if(Storage.EventsUI.SetTittle == message)
+        //    Storage.EventsUI.SetTittle = "";
     }
 
     public void UpdateLinkGobject(GameObject newGobject)

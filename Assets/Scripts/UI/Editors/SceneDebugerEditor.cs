@@ -20,11 +20,13 @@ public class SceneDebugerEditor : Editor
     private SerializedProperty AutoRefreshOn;
     private SerializedProperty RealDebugOn;
     private SerializedProperty SpeedMovePersonInDream;
-    private SerializedProperty WaitTimeReaderScene;
+    private SerializedProperty TimeRelax;
     private SerializedProperty TimeRefreshDebugScene;
     private SerializedProperty IsClearTemplate;
     private SerializedProperty TimeClearTemplate;
     private SerializedProperty LivePersonsCount;
+    private SerializedProperty TimeWorkAction;
+    private SerializedProperty TimeLimitResetNavigator;
 
     private SerializedObject newSO;
 
@@ -41,10 +43,12 @@ public class SceneDebugerEditor : Editor
         AutoRefreshOn = newSO.FindProperty("AutoRefreshOn");
         RealDebugOn = newSO.FindProperty("RealDebugOn");
         SpeedMovePersonInDream = newSO.FindProperty("SpeedMovePersonInDream");
-        WaitTimeReaderScene = newSO.FindProperty("WaitTimeReaderScene");
+        TimeRelax = newSO.FindProperty("TimeRelax");
         TimeRefreshDebugScene = newSO.FindProperty("TimeRefreshDebugScene");
         IsClearTemplate = newSO.FindProperty("IsClearTemplate");
         TimeClearTemplate = newSO.FindProperty("TimeClearTemplate");
+        TimeWorkAction = newSO.FindProperty("TimeWorkAction");
+        TimeLimitResetNavigator = newSO.FindProperty("TimeLimitResetNavigator");
 
         ResetPropertyEditor();
     }
@@ -63,6 +67,9 @@ public class SceneDebugerEditor : Editor
             EditorGUILayout.HelpBox("Property: SceneDebuger is empty! 1", MessageType.Error);
             return;
         }
+
+
+        bool stateAutoRefresh = AutoRefreshOn.boolValue;
 
         newSO.Update();
 
@@ -99,8 +106,12 @@ public class SceneDebugerEditor : Editor
 
         EditorGUILayout.Space();
         SpeedMovePersonInDream.floatValue = EditorGUILayout.Slider("Speed move Person in Dream",SpeedMovePersonInDream.floatValue, 1, 10);
-        WaitTimeReaderScene.floatValue = EditorGUILayout.Slider("Delay find actions", WaitTimeReaderScene.floatValue, 0, 1);
+        TimeRelax.floatValue = EditorGUILayout.Slider("Time of Relax", TimeRelax.floatValue, 0, 1);
         TimeRefreshDebugScene.floatValue = EditorGUILayout.Slider("Delay update screen actions", TimeRefreshDebugScene.floatValue, 0.1f, 10);
+
+        EditorGUILayout.Space();
+        TimeWorkAction.floatValue = EditorGUILayout.Slider("Time working", TimeWorkAction.floatValue, 1, 60);
+        TimeLimitResetNavigator.floatValue = EditorGUILayout.Slider("Dispatcher time reset", TimeLimitResetNavigator.floatValue, 1, 60);
 
         EditorGUILayout.Space();
         IsClearTemplate.boolValue = EditorGUILayout.Toggle("Clear template", IsClearTemplate.boolValue);
@@ -118,6 +129,9 @@ public class SceneDebugerEditor : Editor
         EditorGUILayout.EndVertical();
 
         newSO.ApplyModifiedProperties();
+
+        if(!AutoRefreshOn.boolValue && stateAutoRefresh != AutoRefreshOn.boolValue)
+            Storage.SceneDebug.DialogsClear();
     }
 }
 

@@ -48,7 +48,7 @@ public class SceneDebuger : MonoBehaviour {
 
         }
 	}
-
+    
     private void LoadDialogs()
     {
         m_collectionPersonData = new Queue<SceneDialogPerson>();

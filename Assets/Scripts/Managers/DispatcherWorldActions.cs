@@ -59,14 +59,51 @@ public class DispatcherWorldActions : MonoBehaviour
         StartCoroutine(NavigatorWorldScene());
     }
 
+    public class CaseDreamWorker
+    {
+        //private float timePause = 2f;
+        private float _timeWorkAction  {
+            get {
+                return Storage.SceneDebug.SettingsScene.TimeWorkAction;
+            }
+        }
+
+        private string _id;
+        public string ID { get { return _id; } }
+
+        private float _timeStartDreamWork;
+        public float TimeStartDreamWork { get { return _timeStartDreamWork; } }
+
+        public CaseDreamWorker(string p_id, float p_timeCreate) {
+            _timeStartDreamWork = p_timeCreate;
+            _id = p_id;
+         }
+        public CaseDreamWorker(string p_id)
+        {
+            _timeStartDreamWork = Time.time + _timeWorkAction;
+            _id = p_id;
+        }
+        public void NextTimeWorker()
+        {
+            _timeStartDreamWork = Time.time + _timeWorkAction;
+        }
+    }
+
+
     IEnumerator NavigatorWorldScene()
     {
-        Queue<string> colectionLivePerson = new Queue<string>();
-        Queue<string> colectionLivePersonVIP = new Queue<string>();
+        bool isTimeOfClear = false;
+        float timeLimitResetNavigator = 10f;
+        float timeLive = Time.time + timeLimitResetNavigator;
+
+        Queue<CaseDreamWorker> colectionLivePerson = new Queue<CaseDreamWorker>();
+        Queue<CaseDreamWorker> colectionLivePersonVIP = new Queue<CaseDreamWorker>();
         List<string> listNPC;
 
         while (true)
         {
+            timeLimitResetNavigator = Storage.SceneDebug.SettingsScene.TimeLimitResetNavigator;
+
             if (Storage.Instance.ReaderSceneIsValid)
             {
                 //---Init---
@@ -75,6 +112,9 @@ public class DispatcherWorldActions : MonoBehaviour
 
                 if (!m_IsFilledSearchingCollection)
                 {
+                    string message = "Search dreamworkers...";
+                    Storage.EventsUI.ListLogAdd = "~~~~~~~~~~" + message;
+                    Storage.EventsUI.SetTittle = message;
                     m_IsRunSearching = true;
                     listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
                     List<Shuffle> listNPC_Rnd = new List<Shuffle>();
@@ -88,14 +128,29 @@ public class DispatcherWorldActions : MonoBehaviour
 
                     foreach (string id in listNPC)
                     {
-                        colectionLivePerson.Enqueue(id);
+                        //colectionLivePerson.Enqueue(new CaseDreamWorker(id));
+                        //var item = new CaseDreamWorker(id);
+                        colectionLivePerson.Enqueue(new CaseDreamWorker(id));
                     }
                     m_IsRunSearching = false;
                     m_IsFilledSearchingCollection = true;
+                    //Next time reset
+                    timeLive = Time.time + timeLimitResetNavigator;
+                    isTimeOfClear = false;
+                    if(Storage.EventsUI.SetTittle == message)
+                    //Storage.EventsUI.SetTittle = "";
+                    Storage.EventsUI.ListLogAdd = "...Search dreamworkers end";
                 }
                 //----
                 //---Init VIP---
                 //----
+                //End time 
+                if(timeLive < Time.time && !isTimeOfClear) //timeLimitResetNavigator;
+                {
+                    //Start clear
+                    Storage.EventsUI.ListLogAdd = "~~~~~~~~~~ DREAMWORKER: TimeOfClear";
+                    isTimeOfClear = true;
+                }
 
                 foreach (int nextI in Enumerable.Range(0, 1))
                 {
@@ -105,15 +160,45 @@ public class DispatcherWorldActions : MonoBehaviour
                     if (!Storage.Instance.ReaderSceneIsValid)
                         break;
 
-                    string nextPersonLiveID = colectionLivePerson.Dequeue();
+                    //CaseDreamWorker dreamworker = colectionLivePerson.Peek();
+                    CaseDreamWorker dreamworker = colectionLivePerson.Dequeue();
+
+                    //Continue on time work ...
+                    if (dreamworker.TimeStartDreamWork >= Time.time)
+                    {
+                        Storage.EventsUI.ListLogAdd = "~~~~~~~Continue on time work ..." + dreamworker.ID;
+
+                        //Back to Live collection
+                        colectionLivePerson.Enqueue(dreamworker);
+                        continue;
+                    }
+
+                    //Remove on Live collection
+                    //if (isTimeOfClear)
+                    //    dreamworker = colectionLivePerson.Dequeue();
+                    //Back to Live collection
+                    if (isTimeOfClear == false)
+                    {
+                        colectionLivePerson.Enqueue(dreamworker);
+                    }
+
+                    string nextPersonLiveID = dreamworker.ID;
+
                     if (!Storage.ReaderWorld.CollectionInfoID.ContainsKey(nextPersonLiveID))
                     {
                         Debug.Log("############## ReaderWorld.CollectionInfoID.ContainsKey Not found nextPersonLiveID ");
                         continue;
                     }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];
+                    if(infoNPC.Data == null)
+                    {
+                        Storage.EventsUI.ListLogAdd = "### NavigatorWorldScene InfoNPC.Data is EMPTY";
+                        continue;
+                    }
 
                     PersonWork(infoNPC, colectionLivePerson.Count);
+
+                    dreamworker.NextTimeWorker();
 
                     if (colectionLivePerson.Count == 0)
                         break;
@@ -123,7 +208,7 @@ public class DispatcherWorldActions : MonoBehaviour
                 Storage.SceneDebug.LivePersonsCount = colectionLivePerson.Count;
 #endif
 
-                float timeNext = Storage.SceneDebug.SettingsScene.WaitTimeReaderScene; //Storage.Person.TestSpeed
+                float timeNext = Storage.SceneDebug.SettingsScene.TimeRelax; //Storage.Person.TestSpeed
                 yield return new WaitForSeconds(timeNext);
             }
             else
@@ -136,7 +221,8 @@ public class DispatcherWorldActions : MonoBehaviour
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {
         var persData = infoNPC.Data as ModelNPC.PersonData;
-
+        //if (persData == null)
+        //    return;
         if (persData.IsReality)
             return;
 

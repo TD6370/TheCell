@@ -13,10 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
   IsLog: 0
-  AutoRefreshOn: 0
+  AutoRefreshOn: 1
   RealDebugOn: 0
   SpeedMovePersonInDream: 1
-  WaitTimeReaderScene: 0
+  TimeRelax: 0
+  TimeWorkAction: 14.4
+  TimeLimitResetNavigator: 30.5
   TimeRefreshDebugScene: 0.1
   IsClearTemplate: 0
-  TimeClearTemplate: 3
+  TimeClearTemplate: 1

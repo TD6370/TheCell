@@ -13,6 +13,8 @@ public class SettingsSceneDebug : ScriptableObject {
 
     [SerializeField, Tooltip("Enable auto debug screen dialogs")]
     public bool AutoRefreshOn = false;
+    //Storage.SceneDebug.DialogsClear();
+
     [SerializeField, Tooltip("Include in debug screen Reals gobjects")]
     public bool RealDebugOn = false;
     
@@ -20,9 +22,14 @@ public class SettingsSceneDebug : ScriptableObject {
     [SerializeField, Range(1, 10), Tooltip("Speed move persons in dream")]
     public float SpeedMovePersonInDream = 1f;
     //[Range(0, 1)]
-    [SerializeField, Range(0, 1), Tooltip("Time delay searching info actions")]
-    public float WaitTimeReaderScene = 0.5f;
-
+    [SerializeField, Range(0, 1), Tooltip("Time delay searching for work")]
+    //public float WaitTimeReaderScene = 0.5f;
+    public float TimeRelax = 0.5f;
+    [SerializeField, Range(1, 60), Tooltip("Time working action")]
+    public float TimeWorkAction = 2f;
+    [SerializeField, Range(1, 60), Tooltip("Time Reset Dispatcher acions")]
+    public float TimeLimitResetNavigator = 10f;
+    //Storage.SceneDebug.DialogsClear();
     //[Range(0.3f, 10)]
     [SerializeField, Range(0.3f, 10), Tooltip("Time deley refresh draw screen")]
     public float TimeRefreshDebugScene = 1;

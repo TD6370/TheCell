@@ -547,6 +547,8 @@ public class Storage : MonoBehaviour {
 
     public void StopGame()
     {
+        //bool temp_autoRefreshOn = SceneDebug.SettingsScene.AutoRefreshOn;
+        SceneDebug.SettingsScene.AutoRefreshOn = false;
         //if (_scriptNPC != null)
         //    _scriptNPC.StopCrateNPC();
 
