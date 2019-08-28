@@ -37,8 +37,24 @@ public class DialogSceneInfo : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+
+        //TEST
+        if (CaseDialogTarget != null && CaseDialogTarget.Dialog != null && CaseDialogTarget.Dialog.active)
+        {
+            if(CaseDialogTarget.Person != null && ModeViewInfo == ModeInfo.Person)
+            {
+                // && CaseDialogTarget.Person.TargetPosition
+                Vector3 targetPosition = CaseDialogTarget.Dialog.transform.position;// .TargetPosition;    step = speed * Time.deltaTime;
+                Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, 1 * Time.deltaTime);
+                transform.position = pos;
+
+                //DrawRayTarget();
+            }
+        }
+        //-------------
+
+    }
 
     
     public void InitDialogView(SceneDebuger.CaseSceneDialogPerson p_caseDialogPerson, ModeInfo p_mode = ModeInfo.Person)
@@ -125,7 +141,7 @@ public class DialogSceneInfo : MonoBehaviour {
 
                     CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
 
-                    DrawRayTarget();
+                    DrawRayTarget(); //!!!!!!!!!!!!!!!!!!!!!!
                     break;
                 }
             }
@@ -165,12 +181,14 @@ public class DialogSceneInfo : MonoBehaviour {
 
     public void Deactivate()
     {
-        //DialogIcon.GetComponent<SpriteRenderer>().sprite = null;
-        //DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
-        //m_renderer.enabled = false;
-        //m_renderer.color = "#9900ff".ToColor();
-        //BorderIconTarget.SetActive(false);
-        //BorderIconAction.SetActive(false);
+        DialogIcon.GetComponent<SpriteRenderer>().sprite = null;
+        DialogIconTarget.GetComponent<SpriteRenderer>().sprite = null;
+        m_renderer.enabled = false;
+        m_renderer.color = "#9900ff".ToColor();
+        BorderIconTarget.SetActive(false);
+        BorderIconAction.SetActive(false);
+
+        //ModeViewInfo = ModeInfo.None;
         RayTargetClear();
     }
 
@@ -244,12 +262,15 @@ public class DialogSceneInfo : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        //if (ModeViewInfo == ModeInfo.Person && 
-        //    CaseDialogTarget != null && 
-        //    CaseDialogTarget.Person != null && 
+        //TEST
+        //if (ModeViewInfo == ModeInfo.Person &&
+        //    CaseDialogTarget != null &&
+        //    CaseDialogTarget.Person != null &&
         //    m_lineRenderer.positionCount > 0)
         //{
         //    var targetPosition = CaseDialogTarget.Person.TargetPosition;
+        //    //var targetPosition = CaseDialogTarget.Person.Position;
+        //    //var targetPosition = CaseDialogTarget.Dialog.transform.position;
         //    Gizmos.DrawLine(transform.position, targetPosition);
         //    DrawGizmosLine(transform.position, targetPosition, "#8533ff".ToColor());
         //}
