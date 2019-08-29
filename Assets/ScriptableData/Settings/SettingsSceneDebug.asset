@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4cf689ba65af8d4297518764c766d47, type: 3}
   m_Name: SettingsSceneDebug
   m_EditorClassIdentifier: 
-  IsShowTittlePerson: 1
-  IsShowTittleInfoPerson: 1
+  IsShowTittlePerson: 0
+  IsShowTittleInfoPerson: 0
   IsLog: 0
   AutoRefreshOn: 0
-  RealDebugOn: 1
+  RealDebugOn: 0
   SpeedMovePersonInDream: 1
   TimeRelax: 0
   TimeWorkAction: 1

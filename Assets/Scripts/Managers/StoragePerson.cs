@@ -446,7 +446,7 @@ public class StoragePerson : MonoBehaviour {
             obj = new ModelNPC.GameDataAlienMecha();
         if (TypeAlien == SaveLoadData.TypePrefabNPC.Dendroid.ToString())
             obj = new ModelNPC.GameDataAlienDendroid();
-        if (TypeAlien == SaveLoadData.TypePrefabNPC.Garry.ToString())
+        if (TypeAlien == SaveLoadData.TypePrefabNPC.Gary.ToString())
             obj = new ModelNPC.GameDataAlienGarry();
         if (TypeAlien == SaveLoadData.TypePrefabNPC.Lollipop.ToString())
             obj = new ModelNPC.GameDataAlienLollipop();
@@ -791,6 +791,12 @@ public class StoragePerson : MonoBehaviour {
 
     public ModelNPC.ObjectData GetAlienNextTargetObject(ModelNPC.GameDataAlien dataAlien)
     {
+        if(!PersonPriority.ContainsKey(dataAlien.TypePrefab))
+        {
+            Debug.Log("######### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
+            return null;
+        }
+
         //string typeAlien = dataAlien.TypePrefabName;
         //Storage.ReaderWorld
         PriorityFinder prioritys = PersonPriority[dataAlien.TypePrefab];

@@ -188,7 +188,7 @@ public class DispatcherWorldActions : MonoBehaviour
 
                     if (!Storage.ReaderWorld.CollectionInfoID.ContainsKey(nextPersonLiveID))
                     {
-                        Debug.Log("############## ReaderWorld.CollectionInfoID.ContainsKey Not found nextPersonLiveID ");
+                        //Debug.Log("############## ReaderWorld.CollectionInfoID.ContainsKey Not found nextPersonLiveID ");
                         continue;
                     }
                     ReaderScene.DataObjectInfoID infoNPC = Storage.ReaderWorld.CollectionInfoID[nextPersonLiveID];

@@ -260,7 +260,7 @@ public class SaveLoadData : MonoBehaviour {
         Mecha,
 
         Dendroid,
-        Garry,
+        Gary,
         Lollipop,
 
         Blastarr,

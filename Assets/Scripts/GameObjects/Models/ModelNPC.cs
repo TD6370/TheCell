@@ -692,12 +692,7 @@ public class ModelNPC
 
         public override GameActionPersonController.NameActionsPerson SetTargetPosition()
         {
-            //Helper.ValidPiontInZonaWorld(ref xT, ref yT, distX);
-            //TargetPosition = new Vector3(xT, yT, -1);
 
-            //TargetPosition = Storage.Person.GetAlienNextTarget(this);
-            //if (TargetPosition == Vector3.zero)
-            //    base.SetTargetPosition();
 
             bool isOrevTarget = false;
             if (!string.IsNullOrEmpty(TargetID))
