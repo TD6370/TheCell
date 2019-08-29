@@ -22,6 +22,15 @@ public class ReaderScene //: UpdateData
         public string Field { get; set; }
         public ModelNPC.ObjectData Data { get; set; }
         public GameObject Gobject { get; set; }
+
+        public Vector2 FiledPos
+        {
+            get
+            {
+                return Helper.GetPositByField(Field);
+            }
+        }
+
         //public float TimeStartWork { get; set; }
         //public float TimeStartDreamWork { get; set; }
 
@@ -261,25 +270,7 @@ public class ReaderScene //: UpdateData
 
     //===============================================================================
 
-    public static ModelNPC.ObjectData FindFromLocation(Vector2 Position, int distantion, PriorityFinder prioritys, string id_Observer)
-    {
-
-        //string fieldName = Helper.GetNameField(Position);
-        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
-        Vector2 posField = Helper.GetPositByField(fieldName);
-        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-
-        DataInfoFinder finder = GetDataInfoLocation(posFieldInt, distantion,  prioritys, id_Observer);
-        return finder.ResultData;
-    }
-
-    public static ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys, string id_Observer)
-    {
-        DataInfoFinder finder = GetDataInfoLocation(fieldPosit, distantion,  prioritys, id_Observer);
-        return finder.ResultData;
-    }
-
-    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer)
+    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
     {
         DataInfoFinder finder = new DataInfoFinder();
         int startX = fieldPosit.x - distantion;
@@ -296,44 +287,26 @@ public class ReaderScene //: UpdateData
             for (int x = startX; x < endX; x++)
             {
                 string field = Helper.GetNameField(x, y);
-                //List<ModelNPC.ObjectData> objects = GetObjectsDataFromGrid(field);
                 List<ModelNPC.ObjectData> objects = GetObjectsDataFromGridTest(field); //TEST
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
                     string id = Helper.GetID(objData.NameObject);
                     if (id == id_Observer)
                         continue;
-                    //finder.ListObjData.Add(id, objData);
-                   
-                    int power = GetPriorityPower(objData, priority);
+
+                    //int power = Storage.Person.GetPriorityPower(objData, priority);
+                    int power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
                     int powerDist = (distantion - Math.Max(Math.Abs(fieldPosit.x - x), Math.Abs(fieldPosit.y - y))) * 3;
 
-                    if (finder.ResultPowerData.ContainsKey(id))
-                        Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
-                        //finder.ResultPowerData[id] += power;
-                    else
+                    //if (finder.ResultPowerData.ContainsKey(id))
+                    //Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
+                    //else
+                    if (!finder.ResultPowerData.ContainsKey(id))
                         finder.ResultPowerData.Add(id, power);
                 }
             }
         }
-
-        //foreach (var item in finder.ListObjData)
-        //{
-        //    var objData = item.Value;
-        //    string id = item.Key;
-        //    int power = GetPriorityPower(objData, priority);
-        //    if (finder.ResultPowerData.ContainsKey(id))
-        //        Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
-        //        //finder.ResultPowerData[id] += power;
-        //    else
-        //        finder.ResultPowerData.Add(id, power);
-        //}
-
-        //return Storage.Instance.GridDataG.FieldsD.
-        //    Select(x => x.Value).
-        //    SelectMany(x => x.Objects).
-        //    .ToList();
-
+      
         int priorityIndex = 0;
         string selId = string.Empty;
         foreach (var item in finder.ResultPowerData)
@@ -346,7 +319,6 @@ public class ReaderScene //: UpdateData
         }
         if (!string.IsNullOrEmpty(selId))
         {
-            //finder.ListObjData[selId];
             if (Storage.Instance.ReaderSceneIsValid)
             {
                 if(Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
@@ -356,81 +328,75 @@ public class ReaderScene //: UpdateData
         return finder;
     }
 
-    public static int GetPriorityPower(string id, PriorityFinder priority)
+
+    public static bool IsUseCashFinderPriorityNPC = false;
+
+    public static DataInfoFinder GetDataInfoLocationFromID(Vector2Int fieldPosit, int distantion, SaveLoadData.TypePrefabs typeObserver, string id_Observer)
     {
-        if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(id))
+        int distantionLocalObjects = 50;
+        DataInfoFinder finder = new DataInfoFinder();
+
+        //---------------------------- CASH
+        if (IsUseCashFinderPriorityNPC)
         {
-            Debug.Log("######### Error GetPrioriryPower=" + id);
+            var listFindedLocalObjectsID = Storage.ReaderWorld.CollectionInfoID
+               .Where(p =>
+               {
+                   Vector2 posT = p.Value.Data.Position;
+                   int distToTatget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y));
+                   return distToTatget <= distantionLocalObjects;
+               })
+               .Select(p => p.Key)
+               .ToList();
         }
+        //-----------------------------------
 
-        int power = 0;
+        var listPowers = Storage.ReaderWorld.CollectionInfoID
+            .Where(p => {
+                Vector2 posT = p.Value.Data.Position;
+                int distToTatget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y));
+                return distToTatget <= distantion;
+            })
+            .Select(p => {
+                Vector2 posT = p.Value.Data.Position;
+                DataInfoFinder resFinder = new DataInfoFinder()
+                {
+                    DistantionToTarget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y)),
+                    ResultData = p.Value.Data,
+                    PowerTarget = Storage.Person.GetPriorityPowerByJoin(typeObserver, p.Value.Data.TypePrefab)
+            };
+                return resFinder;
+            })
+            .ToList();
+        foreach (DataInfoFinder objDataPower in listPowers)
+        {
+            string id = Helper.GetID(objDataPower.ResultData.NameObject);
+            if (id == id_Observer)
+                continue;
 
-        var objData = Storage.ReaderWorld.CollectionInfoID[id].Data;
-        return GetPriorityPower(objData, priority);
+            int power = objDataPower.PowerTarget;
+            int powerDist = (distantion - objDataPower.DistantionToTarget) * 3;
+
+            if (finder.ResultPowerData.ContainsKey(id))
+                Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
+            else
+                finder.ResultPowerData.Add(id, power);
+        }
+        return finder;
     }
+
+    
+
+
+   
+
 
     //public static int GetPrioriryPower(DataInfoFinder finder, string id, PriorityPerson priority)
-    public static int GetPriorityPower(ModelNPC.ObjectData objData, PriorityFinder priority)
-    {
-        int power = 0;
-        SaveLoadData.TypePrefabs typeModel = objData.TypePrefab;
-        PoolGameObjects.TypePoolPrefabs typePool = objData.TypePoolPrefab;
-        TypesBiomNPC biomNPC = GetBiomByTypeModel(typeModel);
 
-        int slotPower = 3;
-        int maxtPrioprity = 10;
-        maxtPrioprity = priority.GetPrioritysTypeModel().Count() * slotPower;
-        foreach (SaveLoadData.TypePrefabs itemModel in priority.GetPrioritysTypeModel())
-        {
-            if (itemModel == typeModel)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-        maxtPrioprity = priority.PrioritysTypeBiomNPC.Count() * slotPower;
-        foreach (TypesBiomNPC itemBiom in priority.PrioritysTypeBiomNPC)
-        {
-            if (itemBiom == biomNPC)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-        maxtPrioprity = priority.PrioritysTypeBiomNPC.Count() * slotPower;
-        foreach (PoolGameObjects.TypePoolPrefabs itemPool in priority.PrioritysTypePool)
-        {
-            if (itemPool == typePool)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-
-        return power;
-    }
     //public List<PriorityPerson> GetPrioritys()
     //{
     //    return new List<PriorityPerson>();
     //}
-
-    public static TypesBiomNPC GetBiomByTypeModel(SaveLoadData.TypePrefabs typeModel)
-    {
-        TypesBiomNPC resType = TypesBiomNPC.None;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomBlue), typeModel.ToString()))
-            return TypesBiomNPC.Blue;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomGreen), typeModel.ToString()))
-            return TypesBiomNPC.Green;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomRed), typeModel.ToString()))
-            return TypesBiomNPC.Red;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomViolet), typeModel.ToString()))
-            return TypesBiomNPC.Violet;
-
-        return resType;
-    }
 
     public class DataInfoFinder
     {
@@ -447,6 +413,9 @@ public class ReaderScene //: UpdateData
 
         public Dictionary<string, int> ResultPowerData = new Dictionary<string, int>();
         public ModelNPC.ObjectData ResultData;
+        public int DistantionToTarget = 0;
+        public int PowerTarget = 0;
+
         public DataInfoFinder(){}
     }
 

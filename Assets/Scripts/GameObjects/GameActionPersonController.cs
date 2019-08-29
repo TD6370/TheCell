@@ -342,10 +342,34 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
+        string tempID = dataNPC.TargetID;
+        bool isLocalWay = controller != null ? controller.IsLocked : false;
+
         GetAlienData(dataNPC).OnTargetCompleted();
-        NameActionsPerson nextAction = dataNPC.SetTargetPosition();
-        //RequestActionNPC(dataNPC, NameActionsPerson.Move, controller);
+
+        if (controller != null )
+        {
+            bool isReloadBaseTarget = !string.IsNullOrEmpty(controller.TempLockedTargetID);
+            if (isReloadBaseTarget)
+            {
+                //Load ID
+                dataNPC.TargetID = controller.TempLockedTargetID;
+                controller.TempLockedTargetID = string.Empty;
+                isLocalWay = false;
+            }
+            else if (isLocalWay) 
+            {
+                //Save ID
+                controller.TempLockedTargetID = tempID; // dataNPC.TargetID;
+            }
+        }
+
+        NameActionsPerson nextAction = dataNPC.SetTargetPosition(isLocalWay);
+        
         RequestActionNPC(dataNPC, nextAction, controller);
+
+        if (isLocalWay)
+            controller.IsLocked = false;
     }
 
     public static bool ActionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
@@ -371,6 +395,8 @@ public class GameActionPersonController : MonoBehaviour
     private float TimeInField;
     private float minDistLck = 0.0005f;
     private Vector3 lastPositionForLock;
+    public bool IsLocked = false;
+    public string TempLockedTargetID;
 
     public static void CheckComplitionMoveInDream(ModelNPC.PersonData dataNPC)
     {
@@ -408,7 +434,11 @@ public class GameActionPersonController : MonoBehaviour
 
         bool isCompletedMoving = false;
         isCompletedMoving = TestMoveTargetLock();
-        if (!isCompletedMoving)
+        if(isCompletedMoving)
+        {
+            IsLocked = true;
+        }
+        else
         {
             float dist = Vector3.Distance(targetPosition, transform.position);
             if (dist < MinDistEndMove)

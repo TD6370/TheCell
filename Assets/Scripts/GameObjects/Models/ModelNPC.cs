@@ -194,7 +194,7 @@ public class ModelNPC
         }
                
 
-        public virtual GameActionPersonController.NameActionsPerson SetTargetPosition()
+        public virtual GameActionPersonController.NameActionsPerson SetTargetPosition(bool isLocalWay = false)
         {
             var _position = Position;
 
@@ -684,38 +684,54 @@ public class ModelNPC
                 Storage.ReaderWorld.UpdateLinkData(this);
         }
 
+        //public void OnTargetCompleted(bool isCompletedLockWay = false)
         public void OnTargetCompleted()
         {
+            //if(!isCompletedLockWay)
             TargetID = string.Empty;
             TargetPosition = Vector3.zero;
         }
 
-        public override GameActionPersonController.NameActionsPerson SetTargetPosition()
+        public override GameActionPersonController.NameActionsPerson SetTargetPosition(bool isLocalWay = false)
         {
+            if (isLocalWay)
+            {
+                return base.SetTargetPosition();
+            }
+            //return GameActionPersonController.NameActionsPerson.Move;
 
-
-            bool isOrevTarget = false;
+            bool isPrevousTarget = false;
             if (!string.IsNullOrEmpty(TargetID))
             {
                 if (Storage.Instance.ReaderSceneIsValid)
                 {
                     if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(TargetID))
                     {
+                        Storage.EventsUI.ListLogAdd = "*** " + this.NameObject + " PREVOUS ==> " + TargetID;
                         Vector2 targPos = Storage.ReaderWorld.CollectionInfoID[TargetID].Data.Position;
                         Helper.ValidPiontInZonaWorld(ref targPos.x, ref targPos.y, 0f);
                         TargetPosition = new Vector3(targPos.x, targPos.y, -1);
-                        isOrevTarget = true;
+                        isPrevousTarget = true;
                     }
                 }
             }
 
-            if (!isOrevTarget)
+            if (!isPrevousTarget)
             {
                 ObjectData TargetObject = null;
-                if (Storage.Instance.ReaderSceneIsValid && TimeEndCurrentAction < Time.time)
+                //if (Storage.Instance.ReaderSceneIsValid && TimeEndCurrentAction < Time.time)
+                if (Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
                 {
-                    TargetObject = Storage.Person.GetAlienNextTargetObject(this);
-                    TimeEndCurrentAction = Time.time + TimeTargetPriorityWait;
+                    int rndVal = UnityEngine.Random.Range(1, 3);
+                    bool isFinding = rndVal == 2;
+                    if (isFinding)
+                    {
+                        TargetObject = Storage.Person.GetAlienNextTargetObject(this);
+                        //test
+                        string log = TargetObject == null ? " empty " : TargetObject.NameObject;
+                        Storage.EventsUI.ListLogAdd = "*** " + this.NameObject + " ==> " + log;
+                    }
+                    //TimeEndCurrentAction = Time.time + TimeTargetPriorityWait;
                 }
 
                 if (TargetObject == null)

@@ -189,7 +189,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Vector3 pos = new Vector3(x, y * (-1), 1) * Spacing;
                     pos.z = 0;
 
-                    GameObject newField = GetPrefabField(pos, nameField);
+                    GameObject newField = GetPrefabFieldFloor(pos, nameField);
                     newField.name = nameField;
                     Storage.Instance.Fields.Add(nameField, newField);
                     if (!isOnlyField)
@@ -264,7 +264,7 @@ public class GenerateGridFields : MonoBehaviour {
                     Vector3 pos = new Vector3(x, y * (-1), 1) * Spacing;
                     pos.z = 0;
 
-                    GameObject newField = GetPrefabField(pos, nameField);
+                    GameObject newField = GetPrefabFieldFloor(pos, nameField);
                     newField.name = nameField;
                     Storage.Instance.Fields.Add(nameField, newField);
                     if (!isOnlyField)
@@ -860,7 +860,7 @@ public class GenerateGridFields : MonoBehaviour {
     }
 
     //static Type CompType;
-    private GameObject GetPrefabField(Vector3 pos, string nameFieldNew)
+    private GameObject GetPrefabFieldFloor(Vector3 pos, string nameFieldNew)
     {
         GameObject resGO;
         resGO = Storage.Pool.InstantiatePool(prefabField, pos, nameFieldNew);
