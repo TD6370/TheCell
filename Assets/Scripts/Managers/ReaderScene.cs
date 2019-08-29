@@ -259,13 +259,27 @@ public class ReaderScene //: UpdateData
         return GetObjectsDataFromGrid(nameField)[index];
     }
 
-    public static ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys)
+    //===============================================================================
+
+    public static ModelNPC.ObjectData FindFromLocation(Vector2 Position, int distantion, PriorityFinder prioritys, string id_Observer)
     {
-        DataInfoFinder finder = GetDataInfoLocation(fieldPosit, distantion,  prioritys);
+
+        //string fieldName = Helper.GetNameField(Position);
+        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
+        Vector2 posField = Helper.GetPositByField(fieldName);
+        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+
+        DataInfoFinder finder = GetDataInfoLocation(posFieldInt, distantion,  prioritys, id_Observer);
         return finder.ResultData;
     }
 
-    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority)
+    public static ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys, string id_Observer)
+    {
+        DataInfoFinder finder = GetDataInfoLocation(fieldPosit, distantion,  prioritys, id_Observer);
+        return finder.ResultData;
+    }
+
+    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer)
     {
         DataInfoFinder finder = new DataInfoFinder();
         int startX = fieldPosit.x - distantion;
@@ -282,10 +296,13 @@ public class ReaderScene //: UpdateData
             for (int x = startX; x < endX; x++)
             {
                 string field = Helper.GetNameField(x, y);
-                List<ModelNPC.ObjectData> objects = GetObjectsDataFromGrid(field);
+                //List<ModelNPC.ObjectData> objects = GetObjectsDataFromGrid(field);
+                List<ModelNPC.ObjectData> objects = GetObjectsDataFromGridTest(field); //TEST
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
                     string id = Helper.GetID(objData.NameObject);
+                    if (id == id_Observer)
+                        continue;
                     //finder.ListObjData.Add(id, objData);
                    
                     int power = GetPriorityPower(objData, priority);
@@ -327,9 +344,14 @@ public class ReaderScene //: UpdateData
                 selId = item.Key;
             }
         }
-        if (string.IsNullOrEmpty(selId))
+        if (!string.IsNullOrEmpty(selId))
         {
-            finder.ResultData = finder.ListObjData[selId];
+            //finder.ListObjData[selId];
+            if (Storage.Instance.ReaderSceneIsValid)
+            {
+                if(Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
+                    finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
+            }
         }
         return finder;
     }
@@ -421,13 +443,11 @@ public class ReaderScene //: UpdateData
         //public Dictionary<SaveLoadData.TypePrefabs, Dictionary<string, string>> ListTypesModels = new Dictionary<SaveLoadData.TypePrefabs, Dictionary<string, string>>();
 
         //public List<string> ListAll = new List<string>();
-        public Dictionary<string, int> ResultPowerData = new Dictionary<string, int>();
-        public Dictionary<string, ModelNPC.ObjectData> ListObjData = new Dictionary<string, ModelNPC.ObjectData>();
-        public ModelNPC.ObjectData ResultData;
+        //public Dictionary<string, ModelNPC.ObjectData> ListObjData = new Dictionary<string, ModelNPC.ObjectData>();
 
-        public DataInfoFinder()
-        {
-        }
+        public Dictionary<string, int> ResultPowerData = new Dictionary<string, int>();
+        public ModelNPC.ObjectData ResultData;
+        public DataInfoFinder(){}
     }
 
     //public class PriorityFinder

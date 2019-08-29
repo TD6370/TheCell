@@ -8,7 +8,7 @@ public class DispatcherWorldActions : MonoBehaviour
 {
     private bool m_IsRunSearching = false;
     private bool m_IsFilledSearchingCollection= false;
-    public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
+    //public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
        
 
     private void Awake()
@@ -27,7 +27,7 @@ public class DispatcherWorldActions : MonoBehaviour
         if (isInit)
             return;
 
-        LoadPriorityPerson();
+        
         StartCoroutine(NavigatorWorldScene());
 
         //m_actionController = new GameActionPersonController();
@@ -43,14 +43,14 @@ public class DispatcherWorldActions : MonoBehaviour
 		
 	}
 
-    private void LoadPriorityPerson()
-    {
-        PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
-        foreach(var prior in Storage.Person.ContainerPriority.CollectionPriorityFinder)
-        {
-            PersonPriority.Add(prior.TypeObserver, prior);
-        }
-    }
+    //private void LoadPriorityPerson()
+    //{
+    //    PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
+    //    foreach(var prior in Storage.Person.ContainerPriority.CollectionPriorityFinder)
+    //    {
+    //        PersonPriority.Add(prior.TypeObserver, prior);
+    //    }
+    //}
 
     public void ResetDispatcher()
     {

@@ -149,6 +149,8 @@ public class ModelNPC
         [XmlIgnore]
         public virtual Vector3 TargetPosition { get; set; }
 
+        public string TargetID { get; set; }
+
         [XmlIgnore]
         public int Speed { get; set; }
 
@@ -161,10 +163,7 @@ public class ModelNPC
             get { return m_Position; }
             set
             {
-
                 m_Position = value;
-
-
                 if (IsCanSetTargetPosition && IsReality)
                     SetTargetPosition();
             }
@@ -193,8 +192,9 @@ public class ModelNPC
             TargetPosition = p_SetTarget;
             return;
         }
+               
 
-        public void SetTargetPosition()
+        public virtual GameActionPersonController.NameActionsPerson SetTargetPosition()
         {
             var _position = Position;
 
@@ -205,6 +205,8 @@ public class ModelNPC
 
             Helper.ValidPiontInZonaWorld(ref xT, ref yT, distX);
             TargetPosition = new Vector3(xT, yT, -1);
+
+            return GameActionPersonController.NameActionsPerson.Move;
         }
 
         [XmlIgnore]
@@ -342,7 +344,7 @@ public class ModelNPC
     public class PersonData : GameDataNPC
     {
         public override Vector3 TargetPosition { get; set; }
-
+        
         //public string Id { get; set; }
 
         public string[] PersonActions { get; set; } //$$$
@@ -618,10 +620,15 @@ public class ModelNPC
         public float TimeEndCurrentAction = -1f;
         //[XmlIgnore]
         //public Vector3 MovePosition;
+        [XmlIgnore]
+        public float TimeTargetPriorityWait = 3f;
+
 
         public GameDataAlien() : base()
         {
         }
+
+
 
         public override void Init()
         {
@@ -639,8 +646,8 @@ public class ModelNPC
             if (IsCanSetTargetPosition && IsReality)
                 SetTargetPosition();
 
-            if(PersonActions == null)
-                PersonActions =  new string[]{};
+            if (PersonActions == null)
+                PersonActions = new string[] { };
             IsLoadad = true;
         }
 
@@ -653,7 +660,7 @@ public class ModelNPC
 
             bool isUpdateStyle = false;
 
-            
+
             if (NameObject != objGame.name)
             {
                 objGame.name = NameObject;
@@ -675,6 +682,62 @@ public class ModelNPC
 
             if (Storage.Instance.ReaderSceneIsValid)
                 Storage.ReaderWorld.UpdateLinkData(this);
+        }
+
+        public void OnTargetCompleted()
+        {
+            TargetID = string.Empty;
+            TargetPosition = Vector3.zero;
+        }
+
+        public override GameActionPersonController.NameActionsPerson SetTargetPosition()
+        {
+            //Helper.ValidPiontInZonaWorld(ref xT, ref yT, distX);
+            //TargetPosition = new Vector3(xT, yT, -1);
+
+            //TargetPosition = Storage.Person.GetAlienNextTarget(this);
+            //if (TargetPosition == Vector3.zero)
+            //    base.SetTargetPosition();
+
+            bool isOrevTarget = false;
+            if (!string.IsNullOrEmpty(TargetID))
+            {
+                if (Storage.Instance.ReaderSceneIsValid)
+                {
+                    if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(TargetID))
+                    {
+                        Vector2 targPos = Storage.ReaderWorld.CollectionInfoID[TargetID].Data.Position;
+                        Helper.ValidPiontInZonaWorld(ref targPos.x, ref targPos.y, 0f);
+                        TargetPosition = new Vector3(targPos.x, targPos.y, -1);
+                        isOrevTarget = true;
+                    }
+                }
+            }
+
+            if (!isOrevTarget)
+            {
+                ObjectData TargetObject = null;
+                if (Storage.Instance.ReaderSceneIsValid && TimeEndCurrentAction < Time.time)
+                {
+                    TargetObject = Storage.Person.GetAlienNextTargetObject(this);
+                    TimeEndCurrentAction = Time.time + TimeTargetPriorityWait;
+                }
+
+                if (TargetObject == null)
+                    base.SetTargetPosition();
+                else
+                {
+                    if (TargetObject.Id == Id)
+                        base.SetTargetPosition();
+                    else
+                    {
+                        TargetPosition = TargetObject.Position;
+                        TargetID = TargetObject.Id;
+                    }
+                }
+            }
+
+            return GameActionPersonController.NameActionsPerson.Move;
         }
 
         [XmlIgnore]

@@ -153,6 +153,9 @@ public class SceneDebuger : MonoBehaviour {
         if (m_poolDialogPersonPrefabs == null || m_poolDialogPersonPrefabs.Count == 0)
             return;
 
+        if (!Storage.Instance.ReaderSceneIsValid)
+            return;
+
         foreach (var itemCase in m_poolDialogPersonPrefabs)
             itemCase.Deactivate();
     }

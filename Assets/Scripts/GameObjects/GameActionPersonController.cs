@@ -98,12 +98,21 @@ public class GameActionPersonController : MonoBehaviour
             if(DataAlien.PersonActions.Length>0)
                 actionList = "\n Commands : " + actionList;
 
+            string TargetName = "";
+            if (Storage.Instance.ReaderSceneIsValid)
+            {
+                if (DataAlien.TargetID != null && Storage.ReaderWorld.CollectionInfoID.ContainsKey(DataAlien.TargetID))
+                    TargetName += "\nTarget Name: " + Storage.ReaderWorld.CollectionInfoID[DataAlien.TargetID].Data.NameObject;
+            }
+
             string messageInfo =
                 "Action  :" + DataAlien.CurrentAction + "  (" + DataAlien.PersonActions.Length + ")"
-                + "\nTimeWork  : " + DataAlien.TimeEndCurrentAction
+                + "\nTimeWork  : " + (Time.time - DataAlien.TimeEndCurrentAction)
+                + animationInfo
+                + "\nDistan : "
+                + distan
                 + "\nTarget : " + Helper.GetNameField(DataAlien.TargetPosition)
-                + "\nDistan : " + distan
-                + animationInfo;
+                + TargetName;
 
             GUIStyle style = new GUIStyle();
             style.fontSize = 16;
@@ -333,8 +342,10 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
-        dataNPC.SetTargetPosition();
-        RequestActionNPC(dataNPC, NameActionsPerson.Move, controller);
+        GetAlienData(dataNPC).OnTargetCompleted();
+        NameActionsPerson nextAction = dataNPC.SetTargetPosition();
+        //RequestActionNPC(dataNPC, NameActionsPerson.Move, controller);
+        RequestActionNPC(dataNPC, nextAction, controller);
     }
 
     public static bool ActionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)

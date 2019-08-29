@@ -13,6 +13,8 @@ public class StoragePerson : MonoBehaviour {
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
 
+    public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
+
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
 
@@ -77,11 +79,21 @@ public class StoragePerson : MonoBehaviour {
     // Use this for initialization
     void Start() {
         LoadSprites();
+        LoadPriorityPerson();
     }
 
     // Update is called once per frame
     void Update() {
 
+    }
+
+    private void LoadPriorityPerson()
+    {
+        PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
+        foreach (var prior in ContainerPriority.CollectionPriorityFinder)
+        {
+            PersonPriority.Add(prior.TypeObserver, prior);
+        }
     }
 
     public Sprite[] GetSpritesAtlasNPC()
@@ -759,6 +771,34 @@ public class StoragePerson : MonoBehaviour {
         Storage.Data.UpdatingLocationPersonLocal--;
 
         return gobj.name;
+    }
+
+
+    public Vector3 GetAlienNextTarget(ModelNPC.GameDataAlien dataAlien)
+    {
+        //string typeAlien = dataAlien.TypePrefabName;
+        //Storage.ReaderWorld
+        PriorityFinder prioritys = PersonPriority[dataAlien.TypePrefab];
+        int distantionFind = UnityEngine.Random.Range(2, 15);
+
+        ModelNPC.ObjectData result = ReaderScene.FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id);
+
+        if (result == null)
+            return Vector3.zero;
+
+        return result.Position;
+    }
+
+    public ModelNPC.ObjectData GetAlienNextTargetObject(ModelNPC.GameDataAlien dataAlien)
+    {
+        //string typeAlien = dataAlien.TypePrefabName;
+        //Storage.ReaderWorld
+        PriorityFinder prioritys = PersonPriority[dataAlien.TypePrefab];
+        int distantionFind = UnityEngine.Random.Range(2, 15);
+
+        ModelNPC.ObjectData result = ReaderScene.FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id);
+
+        return result;
     }
 
 }
