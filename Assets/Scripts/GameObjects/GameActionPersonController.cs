@@ -6,10 +6,13 @@ using UnityEngine;
 
 public class GameActionPersonController : MonoBehaviour
 {
+    public static float TimeIdleLock = 1f;
+    public static int LimitListCommandActions = 3;
 
     public enum NameActionsPerson
     {
-        None, Idle, Move, Dead, Work, Attack, Completed //, Target //, Completion
+        //None, Idle, Move, Dead, Work, Attack, Completed //, Target //, Completion
+        None, Idle, IdleLock, Move, Target, TargetLocal, TargetBackToBase, Dead, Work, Attack, Completed //, Target //, Completion
     };
 
     public static bool IsGameActionPersons = true;
@@ -32,8 +35,7 @@ public class GameActionPersonController : MonoBehaviour
     }
 
     public static float TimeWaitIdle = 5f;
-    //public static float MinDistEndMove = 1f;
-    public static float MinDistEndMove = 0.8f;
+    public static float MinDistEndMove = 1.2f;
     public NameActionsPerson ActionPerson = NameActionsPerson.None;
 
     private SpriteRenderer m_MeRender;
@@ -41,7 +43,6 @@ public class GameActionPersonController : MonoBehaviour
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
     private ModelNPC.PersonData m_dataNPC;
     private ModelNPC.PersonData temp_dataNPC;
-    //private MovementBoss m_meMovement;
     private MovementNPC m_meMovement; //@@$$
     
     private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
@@ -71,6 +72,25 @@ public class GameActionPersonController : MonoBehaviour
             ChangeActions();
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
+        {
+            if (m_dataNPC != null && m_dataNPC.TargetPosition != Vector3.zero)
+            {
+                DrawGizmosLine(transform.position, m_dataNPC.TargetPosition, "#8533ff".ToColor());
+            }
+        }
+    }
+#endif
+
+    private void DrawGizmosLine(Vector3 pos1, Vector3 pos2, Color color)
+    {
+        Gizmos.color = color;
+        Gizmos.DrawLine(pos1, pos2);
+    }
+
     void OnGUI()
     {
         if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
@@ -84,6 +104,11 @@ public class GameActionPersonController : MonoBehaviour
 
             Color tittleColor = "#FFE881".ToColor();
             float distan = Vector2.Distance(DataAlien.Position, DataAlien.TargetPosition);
+
+//#if UNITY_EDITOR
+
+//            UnityEditor.Handles.DrawLine(transform.position, m_dataNPC.TargetPosition);
+//#endif
 
             string animationInfo = "";
             if (m_MeAnimation != null)
@@ -118,8 +143,6 @@ public class GameActionPersonController : MonoBehaviour
                     TargetName += "\nTarget Name: " + Storage.ReaderWorld.CollectionInfoID[DataAlien.TargetID].Data.NameObject;
                 }
             }
-            
-                
 
             string messageInfo =
                 "Action  :" + DataAlien.CurrentAction + "  (" + DataAlien.PersonActions.Length + ")"
@@ -142,12 +165,8 @@ public class GameActionPersonController : MonoBehaviour
                 return;
 
             Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-            //Rect positionRect= new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 150, 300, 100);
             Rect positionRect = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 200, 400, 100);
-            //Rect positionRect2 = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 300, 300, 100);
-
             GUI.Label(positionRect, messageInfo, style);
-
             //GUI.TextField(positionRect, messageInfo, 25, style);
         }
     }
@@ -251,10 +270,14 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void CheckCompletionActions(ModelNPC.PersonData dataNPC, NameActionsPerson actionPerson, GameActionPersonController controller)
     {
+        //dleLock, Move, Target, TargetLocal, TargetBackToBase
         switch (actionPerson)
         {
             case NameActionsPerson.Idle:
-                CheckComplitionIdle(dataNPC, actionPerson, controller);
+                CheckComplitionIdle(dataNPC, controller);
+                break;
+            case NameActionsPerson.IdleLock:
+                CheckComplitionIdleLock(dataNPC, controller);
                 break;
             case NameActionsPerson.Move:
                 if (controller != null)
@@ -266,6 +289,10 @@ public class GameActionPersonController : MonoBehaviour
                 if (controller != null)
                     controller.ActionPerson = NameActionsPerson.Idle;
                 dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
+                break;
+            case NameActionsPerson.Target:
+            case NameActionsPerson.TargetLocal:
+            case NameActionsPerson.TargetBackToBase:
                 break;
             case NameActionsPerson.Attack:
             case NameActionsPerson.Dead:
@@ -294,6 +321,9 @@ public class GameActionPersonController : MonoBehaviour
             case NameActionsPerson.Idle:
                 ActionIdle(dataNPC, controller);
                 break;
+            case NameActionsPerson.IdleLock:
+                ActionIdleLock(dataNPC, controller);
+                break;
             case NameActionsPerson.Move:
                 if (controller == null)
                     ActionMove(dataNPC);
@@ -307,6 +337,15 @@ public class GameActionPersonController : MonoBehaviour
                 break;
             case NameActionsPerson.Work:
                 break;
+            case NameActionsPerson.Target:
+                ActionTarget(dataNPC, controller);
+                break;
+            case NameActionsPerson.TargetLocal:
+                ActionTargetLocal(dataNPC, controller);
+                break;
+            case NameActionsPerson.TargetBackToBase:
+                ActionTargetBackToBase(dataNPC, controller);
+                break;
         }
 
         //Debug
@@ -319,26 +358,49 @@ public class GameActionPersonController : MonoBehaviour
         if (isForce)
             controller.ResetAction();
 
-        AddActionNPC(dataNPC, p_nameAction);
+        if(p_nameAction != NameActionsPerson.Completed)
+            AddActionNPC(dataNPC, p_nameAction);
         
         if (controller != null)
             controller.ActionPerson = NameActionsPerson.Completed;
 
         dataNPC.CurrentAction = NameActionsPerson.Completed.ToString();
     }
-    
+
+    public static void ExecuteActionNPC(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction, GameActionPersonController controller, bool isForce = false)
+    {
+        if (isForce)
+            controller.ResetAction();
+
+        if (controller != null)
+            controller.ActionPerson = p_nameAction;
+
+        dataNPC.CurrentAction = p_nameAction.ToString();
+    }
+
+    public static void EndAction(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        if (controller != null)
+            controller.ActionPerson = NameActionsPerson.Completed;
+        dataNPC.CurrentAction = NameActionsPerson.Completed.ToString();
+    }
+
 
     public static void AddActionNPC(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction = NameActionsPerson.None)
     {
-        var m_ListPersonActions = GetActions(dataNPC);
-        if (m_ListPersonActions.Count > 0)
+        var listPersonActions = GetActions(dataNPC);
+
+        if (listPersonActions.Count() > LimitListCommandActions)
+            return;
+        
+        if (listPersonActions.Count > 0)
         {
-            var lastAction = m_ListPersonActions[m_ListPersonActions.Count - 1];
+            var lastAction = listPersonActions[listPersonActions.Count - 1];
             if (lastAction == p_nameAction) // repeat
                 return;
         }
-        m_ListPersonActions.Add(p_nameAction);
-        dataNPC.PersonActions = m_ListPersonActions.Select(p => p.ToString()).ToArray();
+        listPersonActions.Add(p_nameAction);
+        dataNPC.PersonActions = listPersonActions.Select(p => p.ToString()).ToArray();
     }
 
     public void SetAction(NameActionsPerson p_nameAction)
@@ -348,56 +410,103 @@ public class GameActionPersonController : MonoBehaviour
 
     #region Checked and run actions
 
-    public static void CheckComplitionIdle(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction, GameActionPersonController controller)
+    public static void CheckComplitionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
         float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
-        if (Time.time > timeWait && p_nameAction == NameActionsPerson.Idle)
+        if (Time.time > timeWait)
         {
             GetAlienData(dataNPC).TimeEndCurrentAction = -1;
             RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            //IdleLock
         }
     }
 
+    public static void CheckComplitionIdleLock(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        if (controller == null)
+        {
+            //TEST
+            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            return;
+        }
 
-    //private string m_prevousTargetID = "";
+        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
+        //if (Time.time > controller.TimeIdleLock && p_nameAction == NameActionsPerson.Idle)
+        if (Time.time > timeWait)
+        {
+            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
+            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            //IdleLock
+        }
+    }
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
+        if (!Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
+            return;
+
         string tempID = dataNPC.TargetID;
-        bool isLocalWay = controller != null ? controller.IsLocked : false;
+        GetAlienData(dataNPC).OnTargetCompleted();
+        ModelNPC.ObjectData TargetObject = null;
+        TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+
+        //test
+        string log = TargetObject == null ? " empty " : TargetObject.NameObject;
+        Storage.EventsUI.ListLogAdd = "*** " + dataNPC.NameObject + " ==> " + log;
+            
+        if (TargetObject == null)
+            GetAlienData(dataNPC).SetTargetPosition();
+        else
+        {
+            var targetPosition = TargetObject.Position;
+            dataNPC.TargetID = TargetObject.Id;
+            dataNPC.SetTargetPosition(targetPosition);
+        }
+    
+        ExecuteActionNPC(dataNPC, NameActionsPerson.Move, controller);
+    }
+
+    public static void ActionTargetLocal(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        string tempID = dataNPC.TargetID;
 
         GetAlienData(dataNPC).OnTargetCompleted();
-
-        if (controller != null )
+        if (controller != null && string.IsNullOrEmpty(controller.TempLockedTargetID))
         {
-            bool isReloadBaseTarget = !string.IsNullOrEmpty(controller.TempLockedTargetID);
-            if (isReloadBaseTarget)
-            {
-                //Load ID
-                dataNPC.TargetID = controller.TempLockedTargetID;
-                controller.TempLockedTargetID = string.Empty;
-                isLocalWay = false;
-            }
-            else if (isLocalWay) 
-            {
-                //Save ID
-                controller.TempLockedTargetID = tempID; // dataNPC.TargetID;
-            }
+            //Save ID
+            controller.TempLockedTargetID = tempID; // dataNPC.TargetID;
         }
 
-        NameActionsPerson nextAction = dataNPC.SetTargetPosition(isLocalWay);
-        
-        RequestActionNPC(dataNPC, nextAction, controller);
-
-        if (isLocalWay)
-            controller.IsLocked = false;
+        dataNPC.SetTargetPosition();
+        ExecuteActionNPC(dataNPC, NameActionsPerson.Move, controller);
     }
+
+    public static void ActionTargetBackToBase(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        GetAlienData(dataNPC).OnTargetCompleted();
+
+        if (controller != null)
+        {
+            dataNPC.TargetID = controller.TempLockedTargetID;
+            controller.TempLockedTargetID = string.Empty;
+        }
+        RequestActionNPC(dataNPC, NameActionsPerson.Move, controller);
+    }
+ 
 
     public static bool ActionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
         float tilme = GetAlienData(dataNPC).TimeEndCurrentAction;
         if(tilme == -1)
             GetAlienData(dataNPC).TimeEndCurrentAction = Time.time + TimeWaitIdle;
+        return false;
+    }
+
+    public static bool ActionIdleLock(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        float tilme = GetAlienData(dataNPC).TimeEndCurrentAction;
+        if (tilme == -1)
+            GetAlienData(dataNPC).TimeEndCurrentAction = Time.time + TimeIdleLock;
         return false;
     }
 
@@ -416,7 +525,7 @@ public class GameActionPersonController : MonoBehaviour
     private float TimeInField;
     private float minDistLck = 0.0005f;
     private Vector3 lastPositionForLock;
-    public bool IsLocked = false;
+    //public bool IsLocked = false;
     public string TempLockedTargetID;
 
     public static void CheckComplitionMoveInDream(ModelNPC.PersonData dataNPC)
@@ -449,34 +558,48 @@ public class GameActionPersonController : MonoBehaviour
             if (m_MeMovement.x != 0)
             {
                 bool isRight = m_MeMovement.x > 0;
+                //<<ANIMATION>>
                 m_MeAnimation.PersonLook(isRight);
             }
         }
 
         bool isCompletedMoving = false;
         isCompletedMoving = TestMoveTargetLock();
-        if(isCompletedMoving)
+        if(isCompletedMoving) //LOCK
         {
-            IsLocked = true;
+            RequestActionNPC(m_dataNPC, NameActionsPerson.IdleLock, this);
+            int colWay = UnityEngine.Random.Range(1,4);
+            foreach(int i in Enumerable.Range(0,colWay))
+            {
+                RequestActionNPC(m_dataNPC, NameActionsPerson.TargetLocal, this);
+            }
+            RequestActionNPC(m_dataNPC, NameActionsPerson.TargetBackToBase, this);
         }
         else
         {
             float dist = Vector3.Distance(targetPosition, transform.position);
-            if (dist < MinDistEndMove)
+            isCompletedMoving = dist < MinDistEndMove;
+            if (isCompletedMoving) //END WAY TO BASE TARGET
             {
                 RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                RequestActionNPC(m_dataNPC, NameActionsPerson.Target, this);
                 isCompletedMoving = true;
             }
         }
 
         bool isAnimateMove = (ActionPerson == NameActionsPerson.Move) && isCompletedMoving == false;
 
+        //<<ANIMATION>>
         if (m_MeAnimation != null)
             m_MeAnimation.PersonMove(isAnimateMove);
     }
 
+    
     private bool TestMoveTargetLock()
     {
+        ////TEST#
+        //return false;
+
         bool isLock = false;
 
         float distLock = Vector3.Distance(lastPositionForLock, transform.position);
@@ -485,9 +608,6 @@ public class GameActionPersonController : MonoBehaviour
             stepTest++;
             if (stepTest > stepLimitTest)
             {
-                //RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
-                RequestActionNPC(m_dataNPC, NameActionsPerson.Completed, this);
-                
                 isLock = true;
                 stepTest = 0;
             }
@@ -509,8 +629,6 @@ public class GameActionPersonController : MonoBehaviour
                 {
                     if (!string.IsNullOrEmpty(lastFieldForLock))
                     {
-                        //RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
-                        RequestActionNPC(m_dataNPC, NameActionsPerson.Completed, this);
                         isLock = true;
                         TimeInField = -1f;
                     }
@@ -519,7 +637,6 @@ public class GameActionPersonController : MonoBehaviour
                 TimeInField = -1f;
 
             lastFieldForLock = currentField;
-            //TimeInField = Time.time + limitLockInField;
         }
         return isLock;
     }

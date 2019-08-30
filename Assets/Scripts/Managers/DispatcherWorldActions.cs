@@ -168,7 +168,7 @@ public class DispatcherWorldActions : MonoBehaviour
                     //Continue on time work ...
                     if (dreamworker.TimeStartDreamWork >= Time.time)
                     {
-                        Storage.EventsUI.ListLogAdd = "~~~~~~~Continue on time work ..." + dreamworker.ID;
+                        //Storage.EventsUI.ListLogAdd = "~~~~~~~Continue on time work ..." + dreamworker.ID;
 
                         //Back to Live collection
                         colectionLivePerson.Enqueue(dreamworker);

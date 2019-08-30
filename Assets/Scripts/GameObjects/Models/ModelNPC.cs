@@ -208,19 +208,19 @@ public class ModelNPC
         }
                
 
-        public virtual GameActionPersonController.NameActionsPerson SetTargetPosition(bool isLocalWay = false)
+        public virtual void SetTargetPosition()
         {
             var _position = Position;
 
-            int distX = UnityEngine.Random.Range(-15, 15);
-            int distY = UnityEngine.Random.Range(-15, 15);
+            //int distX = UnityEngine.Random.Range(-15, 15);
+            //int distY = UnityEngine.Random.Range(-15, 15);
+            int distX = UnityEngine.Random.Range(-6, 6);
+            int distY = UnityEngine.Random.Range(-6, 6);
             float xT = _position.x + distX;
             float yT = _position.y + distY;
 
             Helper.ValidPiontInZonaWorld(ref xT, ref yT, distX);
             TargetPosition = new Vector3(xT, yT, -1);
-
-            return GameActionPersonController.NameActionsPerson.Move;
         }
 
         [XmlIgnore]
@@ -639,12 +639,9 @@ public class ModelNPC
         [XmlIgnore]
         public string PrevousTargetID = "";
 
-
         public GameDataAlien() : base()
         {
         }
-
-
 
         public override void Init()
         {
@@ -700,82 +697,10 @@ public class ModelNPC
                 Storage.ReaderWorld.UpdateLinkData(this);
         }
 
-        //public void OnTargetCompleted(bool isCompletedLockWay = false)
         public void OnTargetCompleted()
         {
-            //if(!isCompletedLockWay)
             TargetID = string.Empty;
             TargetPosition = Vector3.zero;
-        }
-
-        private string m_prevousTargetID = "";
-
-        public override GameActionPersonController.NameActionsPerson SetTargetPosition(bool isLocalWay = false)
-        {
-            if (isLocalWay)
-            {
-                int rndValLocal = UnityEngine.Random.Range(1, 3);
-                if (rndValLocal == 2)
-                {
-                    return base.SetTargetPosition();
-                }
-            }
-            //if (isLocalWay)
-            //{
-            //    return base.SetTargetPosition();
-            //}
-            //return GameActionPersonController.NameActionsPerson.Move;
-
-            bool isBaseTarget = false;
-            if (!string.IsNullOrEmpty(TargetID))
-            {
-                if (Storage.Instance.ReaderSceneIsValid)
-                {
-                    if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(TargetID))
-                    {
-                        Storage.EventsUI.ListLogAdd = "*** " + this.NameObject + " PREVOUS ==> " + TargetID;
-                        Vector2 targPos = Storage.ReaderWorld.CollectionInfoID[TargetID].Data.Position;
-                        Helper.ValidPiontInZonaWorld(ref targPos.x, ref targPos.y, 0f);
-                        TargetPosition = new Vector3(targPos.x, targPos.y, -1);
-                        isBaseTarget = true;
-                    }
-                }
-            }
-
-            if (!isBaseTarget)
-            {
-                ObjectData TargetObject = null;
-                //if (Storage.Instance.ReaderSceneIsValid && TimeEndCurrentAction < Time.time)
-                if (Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
-                {
-                    int rndVal = UnityEngine.Random.Range(1, 3);
-                    //bool isFinding = rndVal == 2;
-                    bool isFinding = true;
-                    if (isFinding)
-                    {
-                        TargetObject = Storage.Person.GetAlienNextTargetObject(this);
-                        //test
-                        string log = TargetObject == null ? " empty " : TargetObject.NameObject;
-                        Storage.EventsUI.ListLogAdd = "*** " + this.NameObject + " ==> " + log;
-                    }
-                    //TimeEndCurrentAction = Time.time + TimeTargetPriorityWait;
-                }
-
-                if (TargetObject == null)
-                    base.SetTargetPosition();
-                else
-                {
-                    if (TargetObject.Id == Id)
-                        base.SetTargetPosition();
-                    else
-                    {
-                        TargetPosition = TargetObject.Position;
-                        TargetID = TargetObject.Id;
-                    }
-                }
-            }
-
-            return GameActionPersonController.NameActionsPerson.Move;
         }
 
         [XmlIgnore]
