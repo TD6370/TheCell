@@ -110,6 +110,9 @@ public class ModelNPC
             if (Storage.Instance.ReaderSceneIsValid)
                 Storage.ReaderWorld.UpdateLinkData(this);
             //CreateID(NameObject);
+
+            if (Id == null)
+                CreateID();
         }
 
         public virtual void Init()
@@ -156,6 +159,17 @@ public class ModelNPC
 
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPerson; } }
+
+        public string GetId
+        {
+            get
+            {
+                if (Id == null)
+                    CreateID();
+                return Id;
+            }
+        }
+
 
         private Vector3 m_Position = new Vector3(0, 0, 0);
         public override Vector3 Position
@@ -622,6 +636,8 @@ public class ModelNPC
         //public Vector3 MovePosition;
         [XmlIgnore]
         public float TimeTargetPriorityWait = 3f;
+        [XmlIgnore]
+        public string PrevousTargetID = "";
 
 
         public GameDataAlien() : base()
@@ -692,15 +708,25 @@ public class ModelNPC
             TargetPosition = Vector3.zero;
         }
 
+        private string m_prevousTargetID = "";
+
         public override GameActionPersonController.NameActionsPerson SetTargetPosition(bool isLocalWay = false)
         {
             if (isLocalWay)
             {
-                return base.SetTargetPosition();
+                int rndValLocal = UnityEngine.Random.Range(1, 3);
+                if (rndValLocal == 2)
+                {
+                    return base.SetTargetPosition();
+                }
             }
+            //if (isLocalWay)
+            //{
+            //    return base.SetTargetPosition();
+            //}
             //return GameActionPersonController.NameActionsPerson.Move;
 
-            bool isPrevousTarget = false;
+            bool isBaseTarget = false;
             if (!string.IsNullOrEmpty(TargetID))
             {
                 if (Storage.Instance.ReaderSceneIsValid)
@@ -711,19 +737,20 @@ public class ModelNPC
                         Vector2 targPos = Storage.ReaderWorld.CollectionInfoID[TargetID].Data.Position;
                         Helper.ValidPiontInZonaWorld(ref targPos.x, ref targPos.y, 0f);
                         TargetPosition = new Vector3(targPos.x, targPos.y, -1);
-                        isPrevousTarget = true;
+                        isBaseTarget = true;
                     }
                 }
             }
 
-            if (!isPrevousTarget)
+            if (!isBaseTarget)
             {
                 ObjectData TargetObject = null;
                 //if (Storage.Instance.ReaderSceneIsValid && TimeEndCurrentAction < Time.time)
                 if (Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
                 {
                     int rndVal = UnityEngine.Random.Range(1, 3);
-                    bool isFinding = rndVal == 2;
+                    //bool isFinding = rndVal == 2;
+                    bool isFinding = true;
                     if (isFinding)
                     {
                         TargetObject = Storage.Person.GetAlienNextTargetObject(this);

@@ -797,7 +797,8 @@ public class StoragePerson : MonoBehaviour {
 
         //v.1
         if (versionSearching == 1)
-            result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
+            //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
+            result = FindFromLocation(dataAlien, distantionFind);
         //v.2
         if (versionSearching == 2)
         {
@@ -810,6 +811,8 @@ public class StoragePerson : MonoBehaviour {
 
         return result;
     }
+
+
 
 
     //public Vector3 GetAlienNextTarget(ModelNPC.GameDataAlien dataAlien)
@@ -826,25 +829,40 @@ public class StoragePerson : MonoBehaviour {
 
     //    return result.Position;
     //}
-
-
-    public  ModelNPC.ObjectData FindFromLocation(Vector2 Position, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
+    public ModelNPC.ObjectData FindFromLocation(ModelNPC.GameDataAlien dataAlien, int distantion)
     {
+        Vector2 Position = dataAlien.Position;
+        string id_Observer = dataAlien.Id;
+        string id_PrevousTarget = dataAlien.PrevousTargetID;
+        SaveLoadData.TypePrefabs typeObserver = dataAlien.TypePrefab;
 
         //string fieldName = Helper.GetNameField(Position);
         string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
         Vector2 posField = Helper.GetPositByField(fieldName);
         Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
 
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, prioritys, id_Observer, typeObserver);
+        //ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, prioritys, id_Observer, typeObserver, id_PrevousTarget);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget);
         return finder.ResultData;
     }
 
-    public ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
-    {
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(fieldPosit, distantion, prioritys, id_Observer, typeObserver);
-        return finder.ResultData;
-    }
+    //public  ModelNPC.ObjectData FindFromLocation(Vector2 Position, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
+    //{
+
+    //    //string fieldName = Helper.GetNameField(Position);
+    //    string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
+    //    Vector2 posField = Helper.GetPositByField(fieldName);
+    //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+
+    //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, prioritys, id_Observer, typeObserver);
+    //    return finder.ResultData;
+    //}
+
+    //public ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
+    //{
+    //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(fieldPosit, distantion, prioritys, id_Observer, typeObserver);
+    //    return finder.ResultData;
+    //}
     
     [Header("Count Prioritys Join ID")]
     public int CountPrioritysJoinID = 0;

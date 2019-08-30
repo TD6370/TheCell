@@ -78,32 +78,48 @@ public class GameActionPersonController : MonoBehaviour
             if (DataAlien == null)
                 return;
 
-            string objID = DataAlien.Id; // ModelView
+            string objID = DataAlien.GetId; // ModelView
             if (objID == null)
                 return;
 
+            Color tittleColor = "#FFE881".ToColor();
             float distan = Vector2.Distance(DataAlien.Position, DataAlien.TargetPosition);
 
             string animationInfo = "";
-            if(m_MeAnimation != null)
+            if (m_MeAnimation != null)
             {
                 animationInfo = "\n Play : " + m_MeAnimation.CurrentAnimationPlay;
             }
 
             string actionList = "";
-            foreach(var item in DataAlien.PersonActions)
+            foreach (var item in DataAlien.PersonActions)
             {
                 actionList += "\n" + item;
             }
-            if(DataAlien.PersonActions.Length>0)
+            if (DataAlien.PersonActions.Length > 0)
                 actionList = "\n Commands : " + actionList;
+
+            Color colorGreen = "#9FFF00".ToColor();
+            Color colorBlue = "#8BD6FF".ToColor();
+            Color colorOrange = "#FFD600".ToColor();
+
+            if (DataAlien.CurrentAction == NameActionsPerson.Idle.ToString())
+                tittleColor = colorGreen;
+
+            if (DataAlien.CurrentAction == NameActionsPerson.Move.ToString())
+                tittleColor = colorBlue;
 
             string TargetName = "";
             if (Storage.Instance.ReaderSceneIsValid)
             {
                 if (DataAlien.TargetID != null && Storage.ReaderWorld.CollectionInfoID.ContainsKey(DataAlien.TargetID))
+                {
+                    tittleColor = colorOrange;
                     TargetName += "\nTarget Name: " + Storage.ReaderWorld.CollectionInfoID[DataAlien.TargetID].Data.NameObject;
+                }
             }
+            
+                
 
             string messageInfo =
                 "Action  :" + DataAlien.CurrentAction + "  (" + DataAlien.PersonActions.Length + ")"
@@ -113,11 +129,13 @@ public class GameActionPersonController : MonoBehaviour
                 + distan
                 + "\nTarget : " + Helper.GetNameField(DataAlien.TargetPosition)
                 + TargetName;
+            
+            //string messageInfo = "TEST";
 
-            GUIStyle style = new GUIStyle();
+           GUIStyle style = new GUIStyle();
             style.fontSize = 16;
             style.fontStyle = FontStyle.Bold;
-            style.normal.textColor = Color.yellow;
+            style.normal.textColor = tittleColor; // Color.yellow;
 
 
             if (Camera.main == null)
@@ -340,6 +358,9 @@ public class GameActionPersonController : MonoBehaviour
         }
     }
 
+
+    //private string m_prevousTargetID = "";
+
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
         string tempID = dataNPC.TargetID;
@@ -391,7 +412,7 @@ public class GameActionPersonController : MonoBehaviour
     private int stepTest = 0;
     private int stepLimitTest = 10;
     private string lastFieldForLock = "";
-    private float limitLockInField = 3f;
+    private float limitLockInField = 5f; //3f;
     private float TimeInField;
     private float minDistLck = 0.0005f;
     private Vector3 lastPositionForLock;
@@ -464,7 +485,9 @@ public class GameActionPersonController : MonoBehaviour
             stepTest++;
             if (stepTest > stepLimitTest)
             {
-                RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                //RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                RequestActionNPC(m_dataNPC, NameActionsPerson.Completed, this);
+                
                 isLock = true;
                 stepTest = 0;
             }
@@ -486,7 +509,8 @@ public class GameActionPersonController : MonoBehaviour
                 {
                     if (!string.IsNullOrEmpty(lastFieldForLock))
                     {
-                        RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                        //RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                        RequestActionNPC(m_dataNPC, NameActionsPerson.Completed, this);
                         isLock = true;
                         TimeInField = -1f;
                     }
@@ -617,7 +641,7 @@ public class GameActionPersonController : MonoBehaviour
             m_stateInit = IsStartInit;
             m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.PersonData;
             InitCurrentAction();
-            bool isNewModel = temp_TypePrefab != m_dataNPC.TypePrefab;
+            bool isNewModel = temp_TypePrefab != m_dataNPC.TypePrefab; //??? Error NullReferenceException
             if (isNewModel)
             {
                 //temp_dataNPC = m_dataNPC;

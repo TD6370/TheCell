@@ -308,7 +308,7 @@ public class DialogSceneInfo : MonoBehaviour {
         }
     }
 
-    public float explosionRadius = 0.5f;
+    //public float explosionRadius = 0.5f;
 
     void OnDrawGizmosSelected()
     {

@@ -270,14 +270,18 @@ public class ReaderScene //: UpdateData
 
     //===============================================================================
 
-    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
+    //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
+    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
     {
         DataInfoFinder finder = new DataInfoFinder();
+
+        if (!Storage.Instance.ReaderSceneIsValid)
+            return finder;
+        
         int startX = fieldPosit.x - distantion;
         int startY = fieldPosit.y - distantion;
         int endX = fieldPosit.x + distantion;
         int endY = fieldPosit.y + distantion;
-        
 
         if (startX < 1)  startX = 1;
         if (startY < 1)  startY = 1;
@@ -291,13 +295,13 @@ public class ReaderScene //: UpdateData
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
                     string id = Helper.GetID(objData.NameObject);
-                    if (id == id_Observer)
+                    if (id == id_Observer || id == id_PrevousTarget)
                         continue;
 
                     //int power = Storage.Person.GetPriorityPower(objData, priority);
                     int power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
                     int powerDist = (distantion - Math.Max(Math.Abs(fieldPosit.x - x), Math.Abs(fieldPosit.y - y))) * 3;
-
+                    power += powerDist;
                     //if (finder.ResultPowerData.ContainsKey(id))
                     //Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
                     //else
@@ -309,21 +313,33 @@ public class ReaderScene //: UpdateData
       
         int priorityIndex = 0;
         string selId = string.Empty;
-        foreach (var item in finder.ResultPowerData)
+        //------------------------
+        //foreach (var item in finder.ResultPowerData)
+        //{
+        //    if (priorityIndex < item.Value) 
+        //    {
+                
+        //        priorityIndex = item.Value; //only star
+        //        selId = item.Key;
+
+        //    }
+        //}
+        //------------------------
+        int top = 10;
+        List<string> listTopId = new List<string>();
+        foreach (var item in finder.ResultPowerData.OrderByDescending(p=>p.Value))
         {
-            if (priorityIndex < item.Value)
-            {
-                priorityIndex = item.Value;
-                selId = item.Key;
-            }
+            listTopId.Add(item.Key);
+            if (listTopId.Count > top) //top
+                break;
         }
+        int indRnd = UnityEngine.Random.Range(0, listTopId.Count());
+        selId = listTopId[indRnd];
+        //--------------------------
         if (!string.IsNullOrEmpty(selId))
         {
-            if (Storage.Instance.ReaderSceneIsValid)
-            {
-                if(Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
-                    finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
-            }
+            if(Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
+                finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
         }
         return finder;
     }
@@ -353,12 +369,13 @@ public class ReaderScene //: UpdateData
 
         var listPowers = Storage.ReaderWorld.CollectionInfoID
             .Where(p => {
-                Vector2 posT = p.Value.Data.Position;
+                //Vector2 posT = p.Value.Data.Position;
+                Vector2 posT = p.Value.FiledPos;
                 int distToTatget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y));
                 return distToTatget <= distantion;
             })
             .Select(p => {
-                Vector2 posT = p.Value.Data.Position;
+                Vector2 posT = p.Value.FiledPos;
                 DataInfoFinder resFinder = new DataInfoFinder()
                 {
                     DistantionToTarget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y)),
@@ -371,17 +388,37 @@ public class ReaderScene //: UpdateData
         foreach (DataInfoFinder objDataPower in listPowers)
         {
             string id = Helper.GetID(objDataPower.ResultData.NameObject);
+            //string id = objDataPower.ResultData;
             if (id == id_Observer)
                 continue;
 
             int power = objDataPower.PowerTarget;
             int powerDist = (distantion - objDataPower.DistantionToTarget) * 3;
+            power += powerDist;
 
             if (finder.ResultPowerData.ContainsKey(id))
                 Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
             else
                 finder.ResultPowerData.Add(id, power);
         }
+
+        int priorityIndex = 0;
+        string selId = string.Empty;
+        foreach (var item in finder.ResultPowerData)
+        {
+            if (priorityIndex < item.Value)
+            {
+                priorityIndex = item.Value;
+                selId = item.Key;
+            }
+        }
+        if (!string.IsNullOrEmpty(selId))
+        {
+            if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
+                finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
+        }
+
+
         return finder;
     }
 

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4cf689ba65af8d4297518764c766d47, type: 3}
   m_Name: SettingsSceneDebug
   m_EditorClassIdentifier: 
-  IsShowTittlePerson: 1
+  IsShowTittlePerson: 0
   IsShowTittleInfoPerson: 1
   IsLog: 0
   AutoRefreshOn: 0
@@ -21,5 +21,5 @@ MonoBehaviour:
   TimeWorkAction: 1
   TimeLimitResetNavigator: 1
   TimeRefreshDebugScene: 0.1
-  IsClearTemplate: 0
-  TimeClearTemplate: 3.42
+  IsClearTemplate: 1
+  TimeClearTemplate: 10

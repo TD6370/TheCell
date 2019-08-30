@@ -295,6 +295,11 @@ public class SceneDebuger : MonoBehaviour {
 
         public void Deactivate()
         {
+            if (!IsLock)
+                return;
+            //if (m_dialogView == null)
+            //    return;
+
             if (ModeInfo == DialogSceneInfo.ModeInfo.Person)
             {
                 //m_dialogView = Dialog.GetComponent<DialogSceneInfo>();
