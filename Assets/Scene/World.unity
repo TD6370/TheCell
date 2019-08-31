@@ -43235,7 +43235,6 @@ MonoBehaviour:
   IsStartInit: 0
   PanelModelsViewNPC: {fileID: 972312081}
   ActionPerson: 0
-  TempLockedTargetID: 
 --- !u!1 &1393102735
 GameObject:
   m_ObjectHideFlags: 0
@@ -44465,7 +44464,98 @@ MonoBehaviour:
   IsStartInit: 0
   PanelModelsViewNPC: {fileID: 972312081}
   ActionPerson: 0
-  TempLockedTargetID: 
+--- !u!120 &1432524902
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1432524893}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 2
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
 --- !u!1 &1434991560
 GameObject:
   m_ObjectHideFlags: 0
@@ -48385,6 +48475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb610113923a2ea42a0ad1d6a747b0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DrawPolylineColor: {r: 1, g: 0.9128469, b: 0, a: 1}
   SceneSkyColor: {r: 0.0283464, g: 0.06856644, b: 0.46226418, a: 1}
   SceneEquatorColor: {r: 0.044455323, g: 0.088934824, b: 0.254717, a: 1}
   SceneGroundColor: {r: 0.07261195, g: 0.063412234, b: 0.14150941, a: 1}
@@ -49318,7 +49409,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bc3a43c4abc7a9c4189654df6d21f358, type: 3}
-  m_Color: {r: 1, g: 0.9085699, b: 0.504717, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -50470,12 +50561,12 @@ Prefab:
     - target: {fileID: 212241007436070400, guid: c3cd4f6b5cb82464985fa58bd6ae30a2,
         type: 2}
       propertyPath: m_Color.g
-      value: 0.9085699
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 212241007436070400, guid: c3cd4f6b5cb82464985fa58bd6ae30a2,
         type: 2}
       propertyPath: m_Color.b
-      value: 0.504717
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 212241007436070400, guid: c3cd4f6b5cb82464985fa58bd6ae30a2,
         type: 2}
@@ -52916,7 +53007,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.37300003, y: 0.7342735}
   m_AnchorMax: {x: 0.44330215, y: 0.8473773}
-  m_AnchoredPosition: {x: 0.4840088, y: 0.86499023}
+  m_AnchoredPosition: {x: 0.4840088, y: 0.8650055}
   m_SizeDelta: {x: 0.5100002, y: -0.27000046}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1729620370
@@ -55092,7 +55183,7 @@ Prefab:
     - target: {fileID: 50464271455216320, guid: d0ac89d6ebfbf3543a6c35518cfa2a2b,
         type: 2}
       propertyPath: m_Mass
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 58920752332719314, guid: d0ac89d6ebfbf3543a6c35518cfa2a2b, type: 2}
@@ -57271,7 +57362,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2093528016}
   m_HandleRect: {fileID: 2093528015}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -57466,7 +57557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0}
+  m_AnchoredPosition: {x: 8.5, y: 0.000015258789}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -58458,7 +58549,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 105.10782}
+  m_AnchoredPosition: {x: 0.3, y: 105.107834}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -60461,6 +60552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ded33204d1311d842b51a0fa41512935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectedExpandMenuAlienID: 
   IsCursorVisible: 1
   IsTrackPointsVisible: 0
   LimitLogView: 15

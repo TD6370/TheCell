@@ -638,9 +638,16 @@ public class ModelNPC
         public float TimeTargetPriorityWait = 3f;
         [XmlIgnore]
         public string PrevousTargetID = "";
+        [XmlIgnore]
+        public string BaseLockedTargetID;
 
         public GameDataAlien() : base()
         {
+        }
+
+        public void ReturnBaseTarget()
+        {
+            TargetID = BaseLockedTargetID;
         }
 
         public override void Init()

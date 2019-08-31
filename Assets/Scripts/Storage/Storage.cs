@@ -321,7 +321,8 @@ public class Storage : MonoBehaviour {
 
                 if (OnSelectGameObjectID != null)
                     OnSelectGameObjectID(value);
-                Person.SelectedID(value);//m_SelectGameObjectID
+                Person.SelectedID(value);
+                SetTargetID_ObservableAlien(value);
             }
             m_SelectGameObjectID = value;
             if (value == null)
@@ -330,6 +331,8 @@ public class Storage : MonoBehaviour {
             }
         }
     }
+
+    
       
     //public static Storage Instance { get; private set; }
     public void Awake()
@@ -453,6 +456,15 @@ public class Storage : MonoBehaviour {
         }
         _Palette.LoadSpritePrefabs();
 
+        //111111111
+        _SceneDebuger = UIController.GetComponent<SceneDebuger>();
+        if (_SceneDebuger == null)
+        {
+            Debug.Log("########## InitComponents _SceneDebuger is Empty");
+            return;
+        }
+
+
         _PlayerManager = GetComponent<PlayerManager>();
         if (_PlayerManager==null)
         {
@@ -498,12 +510,7 @@ public class Storage : MonoBehaviour {
             return;
         }
 
-        _SceneDebuger = UIController.GetComponent<SceneDebuger>();
-        if (_SceneDebuger == null)
-        {
-            Debug.Log("########## InitComponents _SceneDebuger is Empty");
-            return;
-        }
+        
         _MoveCamera = UIController.GetComponent<MovementCamera>();
         if (_MoveCamera == null)
         {
@@ -775,6 +782,43 @@ public class Storage : MonoBehaviour {
     {
         _GridDataG = new ModelNPC.GridData();
     }
+
+    public void SetTargetField_ObservableAlien(string p_field)
+    {
+        if (!ReaderSceneIsValid)
+            return;
+
+        var info = ReaderScene.GetObjectDataFromGridContinue(p_field, 0);
+        if(info!=null)
+        {
+            SetTargetID_ObservableAlien(info.Id);
+        }
+    }
+
+    private void SetTargetID_ObservableAlien(string p_targetID)
+    {
+        if (!ReaderSceneIsValid)
+            return;
+        string observableId = EventsUI.SelectedExpandMenuAlienID;
+        if (string.IsNullOrEmpty(observableId) || p_targetID == null)
+            return;
+
+        bool existTarget = ReaderWorld.CollectionInfoID.ContainsKey(p_targetID);
+        bool existObservable = ReaderWorld.CollectionInfoID.ContainsKey(observableId);
+        if (existTarget && existObservable)
+        {
+            var infoTarget = ReaderWorld.CollectionInfoID[p_targetID];
+            var dataNPC = ReaderWorld.CollectionInfoID[observableId];
+            var alien = dataNPC.Data as ModelNPC.GameDataAlien;
+            alien.TargetID = p_targetID;
+            alien.TargetPosition = infoTarget.Data.Position;
+            alien.BaseLockedTargetID = p_targetID;
+            alien.PersonActions = new string[] { };
+            alien.CurrentAction = "Move";
+            alien.TimeTargetPriorityWait = -1;
+        }
+    }
+
 
     #region Destroy
 

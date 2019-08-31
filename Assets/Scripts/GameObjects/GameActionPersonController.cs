@@ -20,6 +20,7 @@ public class GameActionPersonController : MonoBehaviour
     private bool m_stateInit = false;
     private bool m_isMeHero = false;
 
+
     public GameObject PanelModelsViewNPC;
     public PlayerAnimation m_MeAnimation;
 
@@ -38,6 +39,8 @@ public class GameActionPersonController : MonoBehaviour
     public static float MinDistEndMove = 1.2f;
     public NameActionsPerson ActionPerson = NameActionsPerson.None;
 
+    private LineRenderer m_lineRenderer;
+
     private SpriteRenderer m_MeRender;
     private Vector2 m_MeMovement;
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
@@ -52,6 +55,7 @@ public class GameActionPersonController : MonoBehaviour
     private void Awake()
     {
         m_sortiongLayer = GetComponent<PositionRenderSorting>();
+        m_lineRenderer = GetComponent<LineRenderer>();
 
         LoadModelsView();
     }
@@ -72,23 +76,25 @@ public class GameActionPersonController : MonoBehaviour
             ChangeActions();
     }
 
-#if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
-        if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
-        {
-            if (m_dataNPC != null && m_dataNPC.TargetPosition != Vector3.zero)
-            {
-                DrawGizmosLine(transform.position, m_dataNPC.TargetPosition, "#8533ff".ToColor());
-            }
-        }
+        //if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
+        //{
+        //    if (m_dataNPC != null && m_dataNPC.TargetPosition != Vector3.zero)
+        //    {
+        //        DrawGizmosLine(transform.position, m_dataNPC.TargetPosition, "#8533ff".ToColor());
+        //    }
+        //}
     }
-#endif
+
 
     private void DrawGizmosLine(Vector3 pos1, Vector3 pos2, Color color)
     {
+#if UNITY_EDITOR
         Gizmos.color = color;
         Gizmos.DrawLine(pos1, pos2);
+#endif
     }
 
     void OnGUI()
@@ -445,6 +451,8 @@ public class GameActionPersonController : MonoBehaviour
         if (!Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
             return;
 
+        
+
         string tempID = dataNPC.TargetID;
         GetAlienData(dataNPC).OnTargetCompleted();
         ModelNPC.ObjectData TargetObject = null;
@@ -464,6 +472,9 @@ public class GameActionPersonController : MonoBehaviour
         }
     
         ExecuteActionNPC(dataNPC, NameActionsPerson.Move, controller);
+
+        if(controller!=null)
+            controller.DrawRayTarget(); //TEST
     }
 
     public static void ActionTargetLocal(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
@@ -471,14 +482,22 @@ public class GameActionPersonController : MonoBehaviour
         string tempID = dataNPC.TargetID;
 
         GetAlienData(dataNPC).OnTargetCompleted();
-        if (controller != null && string.IsNullOrEmpty(controller.TempLockedTargetID))
+
+        string id = GetAlienData(dataNPC).BaseLockedTargetID;
+        bool isNotBaseLocked = string.IsNullOrEmpty(id);
+        //if (controller != null && string.IsNullOrEmpty(controller.TempLockedTargetID))
+        if (controller != null && isNotBaseLocked)
         {
             //Save ID
-            controller.TempLockedTargetID = tempID; // dataNPC.TargetID;
+            //controller.TempLockedTargetID = tempID; // dataNPC.TargetID;
+            GetAlienData(dataNPC).BaseLockedTargetID = tempID;
         }
 
         dataNPC.SetTargetPosition();
         ExecuteActionNPC(dataNPC, NameActionsPerson.Move, controller);
+
+        if (controller != null)
+            controller.DrawRayTarget(); //TEST
     }
 
     public static void ActionTargetBackToBase(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
@@ -487,10 +506,15 @@ public class GameActionPersonController : MonoBehaviour
 
         if (controller != null)
         {
-            dataNPC.TargetID = controller.TempLockedTargetID;
-            controller.TempLockedTargetID = string.Empty;
+            //dataNPC.TargetID = controller.TempLockedTargetID;
+            GetAlienData(dataNPC).ReturnBaseTarget();
+            //GetAlienData(dataNPC).BaseLockedTargetID
+            GetAlienData(dataNPC).BaseLockedTargetID = string.Empty;
         }
         RequestActionNPC(dataNPC, NameActionsPerson.Move, controller);
+
+        if (controller != null)
+            controller.DrawRayTarget(); //TEST
     }
  
 
@@ -526,7 +550,7 @@ public class GameActionPersonController : MonoBehaviour
     private float minDistLck = 0.0005f;
     private Vector3 lastPositionForLock;
     //public bool IsLocked = false;
-    public string TempLockedTargetID;
+    //public string TempLockedTargetID;
 
     public static void CheckComplitionMoveInDream(ModelNPC.PersonData dataNPC)
     {
@@ -757,6 +781,11 @@ public class GameActionPersonController : MonoBehaviour
         {
             m_stateInit = IsStartInit;
             m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.PersonData;
+            if(m_dataNPC== null)
+            {
+                Debug.Log("########### ERROR CheckUpdateModelView  m_dataNPC is null");
+                return;
+            }
             InitCurrentAction();
             bool isNewModel = temp_TypePrefab != m_dataNPC.TypePrefab; //??? Error NullReferenceException
             if (isNewModel)
@@ -827,4 +856,49 @@ public class GameActionPersonController : MonoBehaviour
         m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
     }
     #endregion
+
+    public void RayTargetClear()
+    {
+        m_lineRenderer.positionCount = 0;
+    }
+
+    private void DrawRayTarget()
+    {
+        if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
+        {
+            if (m_dataNPC != null && m_dataNPC.TargetPosition != Vector3.zero)
+            {
+                RayTargetClear();
+                var pointsRay = new Vector2[]{
+                    transform.position,
+                    m_dataNPC.TargetPosition
+                };
+                //DrawPolyline(pointsRay, "#0000ff".ToColor(), 1f);
+                DrawPolyline(pointsRay, Storage.Palette.DrawPolylineColor, 0.1f);
+            }
+        }
+    }
+
+    public void DrawPolyline(Vector2[] points, Color color, float width = 0.2f)
+    {
+        //return;
+
+        if (m_lineRenderer == null)
+        {
+            Debug.Log("LineRenderer is null !!!!");
+            return;
+        }
+
+        var colorKeys = new GradientColorKey[] { new GradientColorKey() { color = color } };
+        //m_lineRenderer.SetColors(color, color);
+        m_lineRenderer.colorGradient = new Gradient() { colorKeys = colorKeys };
+        m_lineRenderer.SetWidth(width, width);
+        int size = points.Length;
+        m_lineRenderer.SetVertexCount(size);
+        for (int i = 0; i < points.Length; i++)
+        {
+            Vector3 posPoint = new Vector3(points[i].x, points[i].y, -2);
+            m_lineRenderer.SetPosition(i, posPoint);
+        }
+    }
 }

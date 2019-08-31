@@ -7,6 +7,8 @@ using UnityEngine.U2D;
 
 public class ManagerPalette : MonoBehaviour {
 
+    public Color DrawPolylineColor = Color.green;
+
     public Color SceneSkyColor = Color.white;
     public Color SceneEquatorColor = Color.white;
     public Color SceneGroundColor = Color.white;

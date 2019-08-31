@@ -25,7 +25,7 @@ using UnityEngine.UI;
 
 public class UIEvents : MonoBehaviour {
 
-    //public static bool IsCursorVisible = true;
+    public string SelectedExpandMenuAlienID;
     public bool IsCursorVisible = true;
     public bool IsTrackPointsVisible = false;
     public int LimitLogView = 10;
@@ -610,6 +610,14 @@ public class UIEvents : MonoBehaviour {
                 }
                 Storage.Player.TeleportHero((int)posTeleport.x, (int)posTeleport.y);
                 break;
+            case "SetTarget":
+                if (dataNPC == null)
+                {
+                    ListLogAdd = "######### SetTarget: Observable DATA NPC is Empty";
+                    return;
+                }
+                SelectedExpandMenuAlienID = dataNPC.GetId;
+                break;
             default:
                 Debug.Log("################ EMPTY COMMAND : " + selectCommand);
                 break;
@@ -625,6 +633,8 @@ public class UIEvents : MonoBehaviour {
 
         if (Storage.Instance.IsTartgetPositionAll)
             Storage.Person.SetTartgetPositionAll(posCursorToField);
+
+        Storage.Instance.SetTargetField_ObservableAlien(_fieldCursor);
     }
 
     public void CursorClickAction(string _fieldCursor, string _infoPoint = "")
@@ -1079,7 +1089,7 @@ public class UIEvents : MonoBehaviour {
     {
         AddExpandPerson(_dataNPC.NameObject,
             _dataNPC.GetParams,
-            new List<string> { "GoTo", "Kill", "Pause", "StartTrack" },
+            new List<string> { "GoTo", "Kill", "Pause", "StartTrack", "SetTarget" },
             gobjObservable: gobj);
     }
 

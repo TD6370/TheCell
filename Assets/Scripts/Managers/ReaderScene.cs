@@ -230,6 +230,13 @@ public class ReaderScene //: UpdateData
         return Storage.Instance.GridDataG.FieldsD.ContainsKey(field);
     }
 
+    public static bool IsGridDataFieldFilled(string field)
+    {
+        if(!Storage.Instance.GridDataG.FieldsD.ContainsKey(field))
+            return false;
+        return Storage.Instance.GridDataG.FieldsD[field].Objects.Count > 0;
+    }
+
     public static List<ModelNPC.ObjectData> GetObjectsDataFromGridContinue(string nameField)
     {
         if (!IsGridDataFieldExist(nameField))
@@ -250,21 +257,21 @@ public class ReaderScene //: UpdateData
 
     public static List<ModelNPC.ObjectData> GetObjectsDataFromGrid(string nameField)
     {
-        //if (!Storage.Instance.IsLoadingWorldThread)
-        //{
-        //if (!IsGridDataFieldExist(nameField))
-        //    Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
-        //}
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+    }
+
+    public static ModelNPC.ObjectData GetObjectDataFromGridContinue(string nameField, int index)
+    {
+        if (!IsGridDataFieldExist(nameField))
+            return null;
+        if (!IsGridDataFieldFilled(nameField))
+            return null;
+
+        return GetObjectsDataFromGrid(nameField)[index];
     }
 
     public static ModelNPC.ObjectData GetObjectDataFromGrid(string nameField, int index)
     {
-        //if (!Storage.Instance.IsLoadingWorldThread)
-        //{
-        //if (!IsGridDataFieldExist(nameField))
-        //    Storage.Data.AddNewFieldInGrid(nameField, "GetObjecDataFromGrid");
-        //}
         return GetObjectsDataFromGrid(nameField)[index];
     }
 
@@ -333,8 +340,11 @@ public class ReaderScene //: UpdateData
             if (listTopId.Count > top) //top
                 break;
         }
-        int indRnd = UnityEngine.Random.Range(0, listTopId.Count());
-        selId = listTopId[indRnd];
+        if (listTopId.Count() > 0)
+        {
+            int indRnd = UnityEngine.Random.Range(0, listTopId.Count() - 1);
+            selId = listTopId[indRnd];
+        }
         //--------------------------
         if (!string.IsNullOrEmpty(selId))
         {
