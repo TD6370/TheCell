@@ -51,6 +51,10 @@ public class Serializator
         typeof(ModelNPC.Diods),
         typeof(ModelNPC.Parket),
 
+        typeof(ModelNPC.Ground05), typeof(ModelNPC.Ground04), typeof(ModelNPC.Ground03), typeof(ModelNPC.Ground02), typeof(ModelNPC.Ground),
+        typeof(ModelNPC.GrassSmall), typeof(ModelNPC.GrassMedium), typeof(ModelNPC.Grass),
+        typeof(ModelNPC.Iris), typeof(ModelNPC.Osoka), typeof(ModelNPC.Tussok),
+
         typeof(ModelNPC.GameDataAlienInspector),
         typeof(ModelNPC.GameDataAlienMachinetool),
         typeof(ModelNPC.GameDataAlienMecha),
@@ -67,6 +71,8 @@ public class Serializator
         typeof(ModelNPC.GameDataAlienFantom),
         typeof(ModelNPC.GameDataAlienMask),
         typeof(ModelNPC.GameDataAlienVhailor),
+
+        typeof(ModelNPC.GameDataAlienEj),
 
         typeof(ModelNPC.Kolba),
         typeof(ModelNPC.Lantern),
@@ -87,6 +93,14 @@ public class Serializator
         typeof(ModelNPC.Rock),
         typeof(ModelNPC.WallRock),
         typeof(ModelNPC.WallWood),
+                       
+        typeof(ModelNPC.RockDark),
+        typeof(ModelNPC.RockValun),
+        typeof(ModelNPC.RockBrow),
+        typeof(ModelNPC.Klen),
+        typeof(ModelNPC.Iva),
+        typeof(ModelNPC.Sosna),
+        typeof(ModelNPC.BlueBerry) 
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)

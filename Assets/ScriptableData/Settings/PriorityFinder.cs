@@ -90,4 +90,5 @@ public enum TypesBiomNPC
     Blue,
     Green,
     Violet,
+    Gray
 }

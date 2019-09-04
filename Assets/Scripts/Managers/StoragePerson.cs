@@ -981,7 +981,8 @@ public class StoragePerson : MonoBehaviour {
             return TypesBiomNPC.Red;
         if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomViolet), typeModel.ToString()))
             return TypesBiomNPC.Violet;
-
+        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomGray), typeModel.ToString()))
+            return TypesBiomNPC.Gray;
         return resType;
     }
 

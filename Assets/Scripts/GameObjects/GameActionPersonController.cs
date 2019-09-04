@@ -185,7 +185,9 @@ public class GameActionPersonController : MonoBehaviour
         CheckUpdateModelView();
 
         //TEST
-        if (m_dataNPC.ModelView == null)
+        if (m_dataNPC == null)
+            Debug.Log(Storage.EventsUI.ListLogAdd = "#### ChangeActions dataNPC  is Null >> " + gameObject.name);
+        if (m_dataNPC != null && m_dataNPC.ModelView == null)
             Debug.Log(Storage.EventsUI.ListLogAdd = "#### ChangeActions dataNPC.ModelView is Null >> " + m_dataNPC.NameObject);
 
         CheckNextAction(m_dataNPC, ActionPerson, this);
@@ -418,6 +420,15 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void CheckComplitionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
+        if(dataNPC == null)
+        {
+            string strErr = "########## CheckComplitionIdle dataNPC == null ";
+            if (controller != null)
+                strErr += controller.gameObject.name;
+            Debug.Log(strErr);
+            return;
+        }
+
         float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
         if (Time.time > timeWait)
         {

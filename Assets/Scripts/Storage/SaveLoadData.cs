@@ -61,7 +61,7 @@ public class SaveLoadData : MonoBehaviour {
             return list;
         }
     }
-
+    
     public enum TypePrefabsLegacy
     {
         PrefabField,
@@ -94,6 +94,19 @@ public class SaveLoadData : MonoBehaviour {
         PrefabFloor,
         //-------------- Floor and Flore
 
+        Grass,
+        GrassMedium,
+        GrassSmall,
+        Ground,
+        Ground02,
+        Ground03,
+        Ground04,
+        Ground05,
+
+        Iris,
+        Osoka,
+        Tussok,
+
         Swamp,
         Chip,
         Gecsagon,
@@ -114,6 +127,9 @@ public class SaveLoadData : MonoBehaviour {
         Diods,
         Parket,
         //----- NPC
+
+        Ej,
+
         Inspector,
         Machinetool,
         Mecha,
@@ -131,6 +147,15 @@ public class SaveLoadData : MonoBehaviour {
         Mask,
         Vhailor,
         //--------- Wall
+
+        Sosna,
+        Klen,
+        Iva,
+        BlueBerry,
+        RockBrow,
+        RockValun,
+        RockDark,
+
         Kolba,
         Lantern,
 
@@ -146,7 +171,7 @@ public class SaveLoadData : MonoBehaviour {
         Aracul,
         Cloudwood
     }
-
+    
     public enum TypePrefabFlore
     {
         Kamish,
@@ -160,6 +185,10 @@ public class SaveLoadData : MonoBehaviour {
 
         Corals,
         Diods,
+
+        Iris,
+        Osoka,
+        Tussok
     }
 
     //public enum TypePrefabFloors
@@ -198,8 +227,17 @@ public class SaveLoadData : MonoBehaviour {
 
         Desert,
         Parket,
-    }
 
+        Ground05,
+        Ground04,
+        Ground03,
+        Ground02,
+        Ground,
+        GrassSmall,
+        GrassMedium,
+        Grass
+    }
+    
     public enum TypePrefabObjects
     {
         PrefabRock,
@@ -218,7 +256,15 @@ public class SaveLoadData : MonoBehaviour {
         Triffid,
 
         Aracul,
-        Cloudwood
+        Cloudwood,
+
+        RockDark,
+        RockValun,
+        RockBrow,
+          Klen,
+          Iva,
+          Sosna,
+             BlueBerry
     }
 
     //public enum TypePrefabObjects
@@ -249,7 +295,7 @@ public class SaveLoadData : MonoBehaviour {
         PrefabWallRock,
         PrefabWallWood,
     }
-
+    
     public enum TypePrefabNPC
     {
         PrefabUfo,
@@ -271,6 +317,8 @@ public class SaveLoadData : MonoBehaviour {
         Fantom,
         Mask,
         Vhailor,
+
+        Ej
     }
 
     public enum TypesBiomBlue
@@ -363,6 +411,38 @@ public class SaveLoadData : MonoBehaviour {
         Parket,
     }
 
+    public enum TypesBiomGray
+    {
+        //----- NPC
+        Ej,
+        //--------- Wall
+
+        //--------- Wood
+        Ground05,
+        Ground04,
+        Ground03,
+        Ground02,
+        Ground,
+        GrassSmall,
+        GrassMedium,
+        Grass,
+
+        //--------- Flore
+        Iris,
+        Osoka,
+        Tussok,
+
+        //--------- Floor
+        RockDark,
+        RockValun,
+        RockBrow,
+        Klen,
+        Iva,
+        Sosna, 
+        BlueBerry
+    }
+    //
+
     public enum TypeInventoryObjects
     {
         PrefabField,
@@ -424,7 +504,12 @@ public class SaveLoadData : MonoBehaviour {
         Triffid,
 
         Aracul,
-        Cloudwood
+        Cloudwood,
+
+        //--------Gray
+        WoodBranchInv,
+        BlueBerryInv,
+        GrassInv,
     }
 
     private void Awake()

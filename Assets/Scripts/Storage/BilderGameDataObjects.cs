@@ -180,6 +180,65 @@ public class BilderGameDataObjects //: MonoBehaviour
             case SaveLoadData.TypePrefabs.Cloudwood:
                 objGameBild = new ModelNPC.Cloudwood();
                 break;
+            case SaveLoadData.TypePrefabs.BlueBerry:
+                objGameBild = new ModelNPC.BlueBerry();
+                break;
+            case SaveLoadData.TypePrefabs.Sosna:
+                objGameBild = new ModelNPC.Sosna();
+                break;
+            case SaveLoadData.TypePrefabs.Iva:
+                objGameBild = new ModelNPC.Iva();
+                break;
+            case SaveLoadData.TypePrefabs.Klen:
+                objGameBild = new ModelNPC.Klen();
+                break;
+            case SaveLoadData.TypePrefabs.RockBrow:
+                objGameBild = new ModelNPC.RockBrow();
+                break;
+            case SaveLoadData.TypePrefabs.RockValun:
+                objGameBild = new ModelNPC.RockValun();
+                break;
+            case SaveLoadData.TypePrefabs.RockDark:
+                objGameBild = new ModelNPC.RockDark();
+                break;
+            case SaveLoadData.TypePrefabs.Grass:
+                objGameBild = new ModelNPC.Grass();
+                break;
+            case SaveLoadData.TypePrefabs.GrassMedium:
+                objGameBild = new ModelNPC.GrassMedium();
+                break;
+            case SaveLoadData.TypePrefabs.GrassSmall:
+                objGameBild = new ModelNPC.GrassSmall();
+                break;
+            case SaveLoadData.TypePrefabs.Ground:
+                objGameBild = new ModelNPC.Ground();
+                break;
+            case SaveLoadData.TypePrefabs.Ground02:
+                objGameBild = new ModelNPC.Ground02();
+                break;
+            case SaveLoadData.TypePrefabs.Ground03:
+                objGameBild = new ModelNPC.Ground03();
+                break;
+            case SaveLoadData.TypePrefabs.Ground04:
+                objGameBild = new ModelNPC.Ground04();
+                break;
+            case SaveLoadData.TypePrefabs.Ground05:
+                objGameBild = new ModelNPC.Ground05();
+                break;
+            case SaveLoadData.TypePrefabs.Tussok:
+                objGameBild = new ModelNPC.Tussok();
+                break;
+            case SaveLoadData.TypePrefabs.Osoka:
+                objGameBild = new ModelNPC.Osoka();
+                break;
+            case SaveLoadData.TypePrefabs.Iris:
+                objGameBild = new ModelNPC.Iris();
+                break;
+            case SaveLoadData.TypePrefabs.Ej:
+                objGameBild = new ModelNPC.GameDataAlienEj();
+                break;
+
+            
 
             default:
                 objGameBild = new ModelNPC.ObjectData();

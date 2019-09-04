@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ModelNPC
 {
-
+    //Ej Iris Osoka Tussok Ground05 Ground04 Ground03 Ground02 Ground GrassSmall GrassMedium Grass RockDark RockValun RockBrow Klen Iva Sosna BlueBerry 
     [XmlRoot("Level")]
     [XmlInclude(typeof(PersonData))]
     public class LevelData
@@ -937,6 +937,21 @@ public class ModelNPC
             TypePrefabName = TypePrefab.ToString();
         }
     }
+
+
+    [XmlType("Ej")]
+    public class GameDataAlienEj : GameDataAlien
+    {
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ej; } }
+        public override int Life { get { return 20; } set { } }
+        public override int Level { get { return 1; } set { } }
+        public override void Init()
+        {
+            base.Init();
+            TypePrefabName = TypePrefab.ToString();
+        }
+    }
     //--------------------------------------------------- TERRA ------------------------------
 
     [XmlType("Terra")]
@@ -1188,7 +1203,76 @@ public class ModelNPC
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cloudwood; } }
         public Cloudwood() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
-    
+
+    [XmlType("BlueBerry")]
+    public class BlueBerry : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.BlueBerry; } }
+        public BlueBerry() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Sosna")]
+    public class Sosna : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Sosna; } }
+        public Sosna() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Iva")]
+    public class Iva : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Iva; } }
+        public Iva() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Klen")]
+    public class Klen : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Klen; } }
+        public Klen() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("RockBrow")]
+    public class RockBrow : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockBrow; } }
+        public RockBrow() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("RockValun")]
+    public class RockValun : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockValun; } }
+        public RockValun() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("RockDark")]
+    public class RockDark : WoodData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockDark; } }
+        public RockDark() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
     //----------------------------------------------
 
     [XmlType("Chip")]
@@ -1354,6 +1438,112 @@ public class ModelNPC
         public Diods() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
 
+    [XmlType("Grass")]
+    public class Grass : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Grass; } }
+        public Grass() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    [XmlType("GrassMedium")]
+    public class GrassMedium : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.GrassMedium; } }
+        public GrassMedium() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    [XmlType("GrassSmall")]
+    public class GrassSmall : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.GrassSmall; } }
+        public GrassSmall() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Ground")]
+    public class Ground : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ground; } }
+        public Ground() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    [XmlType("Ground02")]
+    public class Ground02 : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ground02; } }
+        public Ground02() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    [XmlType("Ground03")] 
+    public class Ground03 : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ground03; } }
+        public Ground03() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    
+    [XmlType("Ground04")]
+    public class Ground04 : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ground04; } }
+        public Ground04() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    [XmlType("Ground05")]
+    public class Ground05 : FloorData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ground05; } }
+        public Ground05() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+   
+    [XmlType("Tussok")]
+    public class Tussok : FloreData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Tussok; } }
+        public Tussok() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Osoka")]
+    public class Osoka : FloreData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Osoka; } }
+        public Osoka() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+
+    [XmlType("Iris")]
+    public class Iris : FloreData
+    {
+        public override int Defence { get { return 10; } }
+        public override int HP { get { return 10; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Iris; } }
+        public Iris() : base() { TypePrefabName = TypePrefab.ToString(); }
+    }
+    
     //LagcyObjects ---------------------------
     public class Rock : WoodData
     {
@@ -1386,6 +1576,6 @@ public class ModelNPC
         public WallWood() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
     //------------------------------------------
-
+    
 }
 
