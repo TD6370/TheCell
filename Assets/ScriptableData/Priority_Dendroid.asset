@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Dendroid
   m_EditorClassIdentifier: 
-  TypeObserver: 30
+  TypeObserver: 42
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 06000000070000000e00000003000000
   PrioritysTypeModelFloor: 030000000200000006000000

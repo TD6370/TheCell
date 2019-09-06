@@ -202,7 +202,7 @@ public class ModelNPC
         public void SetTargetPosition(Vector3 p_SetTarget)
         {
             //#TARGET
-            Debug.Log("^^^^^  Set Target + " + p_SetTarget + "    Name  " + NameObject);
+            //Debug.Log("^^^^^  Set Target + " + p_SetTarget + "    Name  " + NameObject);
             TargetPosition = p_SetTarget;
             return;
         }
@@ -246,7 +246,7 @@ public class ModelNPC
             }
             if (!IsReality)
             {
-                Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");
+                Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");  //!@#$
                 return "Update";
             }
 

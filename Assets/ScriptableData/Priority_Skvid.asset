@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Skvid
   m_EditorClassIdentifier: 
-  TypeObserver: 36
+  TypeObserver: 48
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 0b0000000a000000090000000e0000000c0000000d000000
   PrioritysTypeModelFloor: 04000000050000000100000007000000

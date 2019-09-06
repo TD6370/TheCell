@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Pavuk
   m_EditorClassIdentifier: 
-  TypeObserver: 35
+  TypeObserver: 47
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 0b0000000a0000000600000007000000020000000d000000
   PrioritysTypeModelFloor: 0400000005000000

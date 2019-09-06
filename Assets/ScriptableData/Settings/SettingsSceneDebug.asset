@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: SettingsSceneDebug
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
-  IsShowTittleInfoPerson: 1
+  IsShowTittleInfoPerson: 0
   IsLog: 0
   AutoRefreshOn: 0
   RealDebugOn: 0

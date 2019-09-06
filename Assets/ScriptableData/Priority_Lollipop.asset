@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Lollipop
   m_EditorClassIdentifier: 
-  TypeObserver: 32
+  TypeObserver: 44
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 010000000700000006000000050000000d00000000000000
   PrioritysTypeModelFloor: 03000000040000000500000006000000

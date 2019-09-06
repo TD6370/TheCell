@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Vhailor
   m_EditorClassIdentifier: 
-  TypeObserver: 39
+  TypeObserver: 51
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 030000000c0000000b0000000400000005000000
   PrioritysTypeModelFloor: 070000000200000000000000

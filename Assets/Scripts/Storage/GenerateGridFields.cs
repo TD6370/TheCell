@@ -360,7 +360,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                     }
                     //fix @KOSTIL@
-                    listDataObjectInField.RemoveAt(i);
+                    listDataObjectInField.RemoveAt(i); ////!@#$
                     continue;
                 }
                 //--------------
