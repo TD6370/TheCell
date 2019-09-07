@@ -3966,6 +3966,126 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: root
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: root
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: root
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
     path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1/boneHead2
     classID: 4
     script: {fileID: 0}
@@ -3996,7 +4116,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
+    path: root/boneTail/boneTail_13/boneTail_14
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4006,7 +4126,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
+    path: root/boneTail/boneTail_13/boneTail_14
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4016,7 +4136,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
+    path: root/boneTail/boneTail_13/boneTail_14
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4026,7 +4146,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4036,7 +4156,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4046,7 +4166,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4116,7 +4236,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4126,7 +4246,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4136,127 +4256,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: root
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: root
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: root
+    path: root/boneTail/boneTail_13/boneTail_14/boneTail_15/boneTail_16/boneTail_17/boneTail_18/boneTail_19/boneHead1
     classID: 4
     script: {fileID: 0}
   - curve:

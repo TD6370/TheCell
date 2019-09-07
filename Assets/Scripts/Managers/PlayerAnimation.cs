@@ -21,25 +21,10 @@ public class PlayerAnimation //: MonoBehaviour
         if (m_AnimatorHero == null)
             Debug.Log("############ Hero Animator Component is empty");
 
-        //m_spriteRendererHeroModel = Storage.Instance.HeroModel.GetComponent<SpriteRenderer>();
         if (m_AnimatorHero == null)
             Debug.Log("############ Hero SpriteRender Component is empty");
-        //AnimationMoveHero
-        //AnimatorTransitionInfo transInfo = m_AnimatorHero.GetAnimatorTransitionInfo(0);
-        //AnimatorClipInfo[] clipInfo = m_AnimatorHero.GetCurrentAnimatorClipInfo(0);
-        //AnimatorStateInfo stateInfo = m_AnimatorHero.GetCurrentAnimatorStateInfo(0);
+       
     }
-
-
-    //private void SetAnimator(Animator _animator = null)
-    //{
-    //    if(_animator != null)
-    //        m_AnimatorHero = _animator;
-    //    if (m_AnimatorHero == null)
-    //        m_AnimatorHero = Storage.Instance.HeroModel.GetComponent<Animator>();
-    //    if (m_AnimatorHero == null)
-    //        Debug.Log("############ Hero Animator Component is empty");
-    //}
 
     // Update is called once per frame
     void Update () {
@@ -49,6 +34,29 @@ public class PlayerAnimation //: MonoBehaviour
     public void PersonLook(bool isRight)
     {
         m_spriteRendererHeroModel.flipX = isRight;
+
+        if (m_AnimatorHero == null)
+            return;
+    }
+
+    private void Test()
+    {
+        //AnimationMoveHero
+        //AnimatorTransitionInfo transInfo = m_AnimatorHero.GetAnimatorTransitionInfo(0);
+        //AnimatorClipInfo[] clipInfo = m_AnimatorHero.GetCurrentAnimatorClipInfo(0);
+        //AnimatorStateInfo stateInfo = m_AnimatorHero.GetCurrentAnimatorStateInfo(0);
+        //var anim = m_AnimatorHero.GetAnimatorTransitionInfo(0);
+
+        //FIXANIM
+        //int intMove = isRight ? -1 : 0;
+        //m_AnimatorHero.SetFloat("root", -1);
+        //m_AnimatorHero.rootPosition.Set(m_AnimatorHero.rootPosition.x * intMove, m_AnimatorHero.rootPosition.y * intMove, m_AnimatorHero.rootPosition.z);
+
+        //TEST-----------
+        //AnimatorStateInfo stateInfo = m_AnimatorHero.GetCurrentAnimatorStateInfo(0);
+        //var m_AnimatorClipInfo = m_AnimatorHero.GetCurrentAnimatorClipInfo(0);
+        //Debug.Log("Starting clip : " + m_AnimatorClipInfo[0].clip);
+        //--------------
     }
 
     public void PersonMove(bool isMoving)
@@ -71,6 +79,10 @@ public class PlayerAnimation //: MonoBehaviour
             return;
 
         m_AnimatorHero.SetBool("TriggerMove", false);
-        CurrentAnimationPlay = "";
+        m_AnimatorHero.SetBool("TriggerIdle", true);
+        //CurrentAnimationPlay = "";
+        CurrentAnimationPlay = "TriggerIdle";
     }
+
+
 }

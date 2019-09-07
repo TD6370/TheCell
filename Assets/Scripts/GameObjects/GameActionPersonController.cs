@@ -186,7 +186,10 @@ public class GameActionPersonController : MonoBehaviour
 
         //TEST
         if (m_dataNPC == null)
+        {
             Debug.Log(Storage.EventsUI.ListLogAdd = "#### ChangeActions dataNPC  is Null >> " + gameObject.name);
+            return;
+        }
         if (m_dataNPC != null && m_dataNPC.ModelView == null)
             Debug.Log(Storage.EventsUI.ListLogAdd = "#### ChangeActions dataNPC.ModelView is Null >> " + m_dataNPC.NameObject);
 
@@ -436,6 +439,10 @@ public class GameActionPersonController : MonoBehaviour
             RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
             //IdleLock
         }
+
+        //FIXANIM
+        if(controller!=null)
+            controller.PlayAnimationIdle();
     }
 
     public static void CheckComplitionIdleLock(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
@@ -455,6 +462,10 @@ public class GameActionPersonController : MonoBehaviour
             RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
             //IdleLock
         }
+
+        //FIXANIM
+        if (controller != null)
+            controller.PlayAnimationIdle();
     }
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
