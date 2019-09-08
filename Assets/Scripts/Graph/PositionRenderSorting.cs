@@ -24,6 +24,7 @@ public class PositionRenderSorting : MonoBehaviour {
         else
         {
             rendererSort = gameObject.GetComponent<Renderer>();
+           
         }
         FixedOverlapSprites();
     }
@@ -58,7 +59,7 @@ public class PositionRenderSorting : MonoBehaviour {
     void Update () {
     }
 
-    Renderer m_rendererSortBoss;
+    Renderer m_rendererSortOther;
 
     private void FixedUpdate()
     {
@@ -68,8 +69,8 @@ public class PositionRenderSorting : MonoBehaviour {
         //rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap;
         rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap + (Offset*100);
         //Legacy code
-        if (m_rendererSortBoss != null)
-            m_rendererSortBoss.sortingOrder = rendererSort.sortingOrder;
+        if (m_rendererSortOther != null)
+            m_rendererSortOther.sortingOrder = rendererSort.sortingOrder + 1;
     }
 
     public void UpdateOrderingLayer(Renderer rend = null) 
@@ -77,7 +78,16 @@ public class PositionRenderSorting : MonoBehaviour {
         if (rend != null)
         {
             rendererSort = rend;
-            m_rendererSortBoss = gameObject.GetComponent<Renderer>();
+            m_rendererSortOther = gameObject.GetComponent<Renderer>();
+        }
+    }
+
+    public void UpdateOrderingLayer(Renderer rendBack = null, Renderer rendFront = null)
+    {
+        if (rendBack != null)
+        {
+            rendererSort = rendBack;
+            m_rendererSortOther = rendFront;
         }
     }
 }

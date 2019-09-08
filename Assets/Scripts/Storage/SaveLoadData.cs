@@ -878,7 +878,9 @@ public class SaveLoadData : MonoBehaviour {
 
     public static GameObject CopyGameObject(GameObject defObj)
     {
-        return Instantiate(defObj);
+        //GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
+        //return Instantiate(defObj);
+        return Instantiate(defObj, parent: Storage.GenGrid.PanelPool.transform); //SPEEDFIX
     }
   
     public bool AddConstructInGridData(string nameField, DataTile itemTile, bool isClaerField)

@@ -523,6 +523,8 @@ public class PoolGameObject
 
         GameObjectNext = newGO;
         GameObjectNext.name = Name + "_Empty" + Tag;
+
+        //SPEEDFIX
         GameObjectNext.transform.SetParent(Storage.GenGrid.PanelPool.transform);
 
         //#TEST

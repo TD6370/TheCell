@@ -39,6 +39,8 @@ TagManager:
   - PoolFlore
   - PoolFloor
   - InventoryCase
+  - BackAnimationModel
+  - FrontAnimationModel
   layers:
   - Default
   - TransparentFX

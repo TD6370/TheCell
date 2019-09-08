@@ -4,26 +4,45 @@ using UnityEngine;
 
 public class PlayerAnimation //: MonoBehaviour 
 {
-
+    private bool m_isMultiAnimation = false;
     private Animator m_AnimatorHero;
+    private Animator m_AnimatorBack;
+    private Animator m_AnimatorFront;
+
     private SpriteRenderer m_spriteRendererHeroModel;
+    private SpriteRenderer m_spriteRendererBack;
+    private SpriteRenderer m_spriteRendererFront;
+
     public string CurrentAnimationPlay = "";
 
     public PlayerAnimation(Animator p_AnimatorHero, SpriteRenderer p_spriteRendererHeroModel)
     {
+        m_isMultiAnimation = false;
         m_AnimatorHero = p_AnimatorHero;
         m_spriteRendererHeroModel = p_spriteRendererHeroModel;
+        Init();
+    }
+    public PlayerAnimation(Animator p_AnimatorBack, Animator p_AnimatorFront, SpriteRenderer p_spriteRendererBack, SpriteRenderer p_spriteRendererFront)
+    {
+        m_isMultiAnimation = true;
+        m_AnimatorBack = p_AnimatorBack;
+        m_AnimatorFront = p_AnimatorFront;
+        m_spriteRendererBack = p_spriteRendererBack;
+        m_spriteRendererFront = p_spriteRendererFront;
         Init();
     }
 
     void Init()
     {
-        if (m_AnimatorHero == null)
+        if (!m_isMultiAnimation &&  m_AnimatorHero == null)
             Debug.Log("############ Hero Animator Component is empty");
 
-        if (m_AnimatorHero == null)
+        if(m_spriteRendererHeroModel == null)
             Debug.Log("############ Hero SpriteRender Component is empty");
-       
+
+        if (m_isMultiAnimation == true && (m_AnimatorBack == null || m_AnimatorFront == null))
+            Debug.Log("############ Hero Animators Component is empty");
+
     }
 
     // Update is called once per frame
@@ -33,10 +52,25 @@ public class PlayerAnimation //: MonoBehaviour
 
     public void PersonLook(bool isRight)
     {
-        m_spriteRendererHeroModel.flipX = isRight;
+        if (!m_isMultiAnimation)
+        {
+            m_spriteRendererHeroModel.flipX = isRight;
+        }
+        else
+        {
+            m_spriteRendererBack.flipX = isRight;
+            m_spriteRendererFront.flipX = isRight;
+        }
+    }
 
-        if (m_AnimatorHero == null)
-            return;
+    private bool isValidAnimation()
+    {
+        if (!m_isMultiAnimation && m_AnimatorHero == null)
+            return false;
+        if (m_isMultiAnimation == true && (m_AnimatorBack == null || m_AnimatorFront == null))
+            return false;
+
+        return true;
     }
 
     private void Test()
@@ -61,10 +95,19 @@ public class PlayerAnimation //: MonoBehaviour
 
     public void PersonMove(bool isMoving)
     {
-        if (m_AnimatorHero == null)
+        if (!isValidAnimation())
             return;
 
-        m_AnimatorHero.SetBool("TriggerMove", isMoving);
+        if (!m_isMultiAnimation)
+        {
+            m_AnimatorHero.SetBool("TriggerMove", isMoving);
+        }
+        else
+        {
+            m_AnimatorBack.SetBool("TriggerMove", isMoving);
+            m_AnimatorFront.SetBool("TriggerMove", isMoving);
+        }
+
         if (isMoving)
             CurrentAnimationPlay = "TriggerMove";
         else
@@ -75,11 +118,23 @@ public class PlayerAnimation //: MonoBehaviour
     }
     public void PersonIdle()
     {
-        if (m_AnimatorHero == null)
+        if (!isValidAnimation())
             return;
 
-        m_AnimatorHero.SetBool("TriggerMove", false);
-        m_AnimatorHero.SetBool("TriggerIdle", true);
+        if (!m_isMultiAnimation)
+        {
+            m_AnimatorHero.SetBool("TriggerMove", false);
+            m_AnimatorHero.SetBool("TriggerIdle", true);
+        }
+        else
+        {
+            m_AnimatorBack.SetBool("TriggerMove", false);
+            m_AnimatorBack.SetBool("TriggerIdle", true);
+            m_AnimatorFront.SetBool("TriggerMove", false);
+            m_AnimatorFront.SetBool("TriggerIdle", true);
+        }
+
+
         //CurrentAnimationPlay = "";
         CurrentAnimationPlay = "TriggerIdle";
     }

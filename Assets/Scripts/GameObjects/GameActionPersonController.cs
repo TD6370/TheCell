@@ -22,7 +22,7 @@ public class GameActionPersonController : MonoBehaviour
 
 
     public GameObject PanelModelsViewNPC;
-    public PlayerAnimation m_MeAnimation;
+    private PlayerAnimation m_MeAnimation;
 
     private GameObject m_MeModelView;
     public GameObject ModelView
@@ -42,6 +42,9 @@ public class GameActionPersonController : MonoBehaviour
     private LineRenderer m_lineRenderer;
 
     private SpriteRenderer m_MeRender;
+    private SpriteRenderer renderBack = null;
+    private SpriteRenderer renderFront = null;
+
     private Vector2 m_MeMovement;
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
     private ModelNPC.PersonData m_dataNPC;
@@ -866,16 +869,47 @@ public class GameActionPersonController : MonoBehaviour
             var render = GetComponent<SpriteRenderer>();
             render.enabled = false;
         }
+        InitAnimator();
+    }
 
-        m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
-        if (m_MeRender == null)
-        {
-            Debug.Log("###### GameActionPersonController.UpdateMeModelView  m_MeRender == null");
-            return;
-        }
-
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    private void InitAnimator()
+    {
         var meAnimator = m_MeModelView.GetComponent<Animator>();
-        m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
+        if (meAnimator.enabled)
+        {
+            m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
+            if (m_MeRender == null)
+            {
+                Debug.Log("###### GameActionPersonController.UpdateMeModelView  m_MeRender == null");
+                return;
+            }
+            m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
+        }
+        else
+        {
+            Animator backAnimator = null;
+            Animator frontAnimator = null;
+            foreach (Transform child in m_MeModelView.transform)
+            {
+                GameObject modelAnimation = child.gameObject;
+                if (modelAnimation.tag == "BackAnimationModel")
+                {
+                    backAnimator = modelAnimation.GetComponent<Animator>();
+                    renderBack = modelAnimation.GetComponent<SpriteRenderer>();
+                }
+                if (modelAnimation.tag == "FrontAnimationModel")
+                {
+                    frontAnimator = modelAnimation.GetComponent<Animator>();
+                    renderFront = modelAnimation.GetComponent<SpriteRenderer>();
+                }
+            }
+            if (backAnimator != null && frontAnimator != null && renderBack != null && renderFront != null)
+            {
+                m_MeAnimation = new PlayerAnimation(backAnimator, frontAnimator, renderBack, renderFront);
+                m_sortiongLayer.UpdateOrderingLayer(renderBack, renderFront);
+            }
+        }
     }
     #endregion
 

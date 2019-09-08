@@ -25,7 +25,7 @@ SpriteAtlas:
       m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
       m_TextureFormat: -1
-      m_TextureCompression: 2
+      m_TextureCompression: 1
       m_CompressionQuality: 50
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
@@ -55,6 +55,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 8bd23b515d669b4428f7301d706cb850, type: 3}
   - {fileID: 21300000, guid: 33eaa861f26e37945a85923256d90be9, type: 3}
   - {fileID: 21300000, guid: 928ce732bd93d6947a70363ed5463a52, type: 3}
+  - {fileID: 21300000, guid: 45181592bbfa6e44c82b26ae164fb78a, type: 3}
   - {fileID: 21300000, guid: 78501ea2c95be6c44a378454a1f031eb, type: 3}
   - {fileID: 21300000, guid: 741c3bb220588cc428b90a108df90f81, type: 3}
   - {fileID: 21300000, guid: 672f90033263846499f88bd938194436, type: 3}
@@ -62,11 +63,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f225fa23e72f68a4a920892c07795476, type: 3}
   - {fileID: 21300000, guid: 7e963543ac31a61459b0ff12757ecd12, type: 3}
   - {fileID: 21300000, guid: 3b614a63d63a2594eb0483d40399e58c, type: 3}
+  - {fileID: 21300000, guid: fce867d3ae855eb4a9dee9279dc95b91, type: 3}
   - {fileID: 21300000, guid: fc0bb5e3024ee4249b18d65c0139aeb6, type: 3}
   - {fileID: 21300000, guid: 0b1d47e3301fbb541ab9fde8ffa7cf05, type: 3}
   - {fileID: 21300000, guid: 1985e1f34e2088148bfe2d886659afcd, type: 3}
   - {fileID: 21300000, guid: a69ac635557b4a144af8b1063d6255c7, type: 3}
   - {fileID: 21300000, guid: 3765ecc50f0ac2a43863b6e77864a2a6, type: 3}
+  - {fileID: 21300000, guid: 135822d510a6eba4eac60a22cb2b73ef, type: 3}
   - {fileID: 21300000, guid: 8364ea36a5e59fa48b1f2da4d51e6bb4, type: 3}
   - {fileID: 21300000, guid: b4d2f846b20104143a1b262ec28c5d05, type: 3}
   - {fileID: 21300000, guid: cb4ead6619099944b91ce57d72e3682c, type: 3}
@@ -91,12 +94,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 480b68a8720f07c4c95ddcd8a8aad0ff, type: 3}
   - {fileID: 21300000, guid: d76134694484d744593b1843107ff7d0, type: 3}
   - {fileID: 21300000, guid: 00bdfc790d9a50e479d9bae70ed8f1cd, type: 3}
+  - {fileID: 21300000, guid: 20acccd968fdb8d4ea1eca6e38aa9135, type: 3}
   - {fileID: 21300000, guid: a58e5e0a39e35c941a85b79b25f538f9, type: 3}
   - {fileID: 21300000, guid: f6473c3a10c04604e9a4acf5c21f13d7, type: 3}
   - {fileID: 21300000, guid: 3677457aa3380ed42b86a950f048e182, type: 3}
   - {fileID: 21300000, guid: 233860aa2a50c0a43991969d4508e7ba, type: 3}
   - {fileID: 21300000, guid: 0a51fe3b5f974b845af48a24de7cc2bd, type: 3}
   - {fileID: 21300000, guid: 0933b74b439529144a08f57f8a676244, type: 3}
+  - {fileID: 21300000, guid: 32d9dc9b744885d4c97654f73f5b023c, type: 3}
   - {fileID: 21300000, guid: 06ce72bb731558840844c608a31c413a, type: 3}
   - {fileID: 21300000, guid: 348b35bbd1aab534f9e54148a7862f07, type: 3}
   - {fileID: 21300000, guid: 6715b6bb1caa9774dae52b7ef501b305, type: 3}
@@ -115,11 +120,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 6e697fbd81c4cfd4cb2c3ab5ff8badc0, type: 3}
   - {fileID: 21300000, guid: 6ae9efbdba8dc1d409c9808cacae3eb0, type: 3}
   - {fileID: 21300000, guid: a560160ef64d85f47ab93862eb6e5ca4, type: 3}
+  - {fileID: 21300000, guid: 7a5d8b0e436eb9f458c3699f8b88f62d, type: 3}
   - {fileID: 21300000, guid: b7b4204ec1802dc4da555cc93bf2dc04, type: 3}
+  - {fileID: 21300000, guid: d22e0ebeecc406c4db25d6d5fd904d51, type: 3}
   - {fileID: 21300000, guid: edc7fc1fc7d5dad41bbbeabfe1f7089b, type: 3}
   - {fileID: 21300000, guid: 6651e24fe9dd8a549b9592aab3252f72, type: 3}
   - {fileID: 21300000, guid: 13008c6f4202d674a987504176ee1380, type: 3}
   - {fileID: 21300000, guid: 468504af917c4a147a23b6470a63015c, type: 3}
+  - {fileID: 21300000, guid: 51159bef07a5cf143887e4adbe62f794, type: 3}
   m_PackedSpriteNamesToIndex:
   - FantomDetails
   - MachinetoolDetails
@@ -132,6 +140,7 @@ SpriteAtlas:
   - Kamish
   - Vhailor
   - Orbits
+  - DendroidDetailsBack
   - HeroAnim
   - ZergonDetails
   - Triffid
@@ -139,11 +148,13 @@ SpriteAtlas:
   - Ground02
   - Dendroid
   - Mask
+  - VhailorDetailsBack
   - HeroDetails
   - Shampinion
   - Inspector
   - RockDark
   - Tussock
+  - MechaDetailsFront
   - Blastarr
   - BlueBerry
   - Pandora
@@ -168,12 +179,14 @@ SpriteAtlas:
   - RockValun
   - GrassMedium
   - Cluben
+  - VhailorDetailsFront
   - Ej
   - Weedflower
   - Machinetool
   - Diods
   - LolipopDetails
   - Mecha
+  - GaryDetailsFront
   - Klen
   - Grass
   - BlastarrDetails
@@ -192,10 +205,13 @@ SpriteAtlas:
   - Lollipop
   - PavukDetails
   - Bananas
+  - GaryDetailsBack
   - Gecsagon
+  - DendroidDetailsFront
   - Fangs
   - Kolba
   - MechaDetails
   - Berry
+  - MechaDetailsBack
   m_Tag: SpriteAtlasWorld
   m_IsVariant: 0
