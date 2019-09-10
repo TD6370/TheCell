@@ -5,8 +5,11 @@ using UnityEngine;
 public class PositionRenderSorting : MonoBehaviour {
 
     public bool IsHero;
+    public GameObject BoneRoorAnimation;
+
     private int SortingBase = 5000;
     private Renderer rendererSort;
+    private List<Renderer> renderersSort;
     [SerializeField]
     private int Offset = 0;
     [SerializeField]
@@ -17,17 +20,43 @@ public class PositionRenderSorting : MonoBehaviour {
 
     private void Awake()
     {
+        renderersSort = new List<Renderer>();
         if (IsHero)
         {
+            
             rendererSort = Storage.Instance.HeroModel.GetComponent<Renderer>();
+            renderersSort.Add(rendererSort);
         }
         else
         {
             rendererSort = gameObject.GetComponent<Renderer>();
-           
+            renderersSort.Add(rendererSort);
         }
         FixedOverlapSprites();
+        InitLayersDetailsAnimation();
     }
+
+    private void InitLayersDetailsAnimation()
+    {
+        if(BoneRoorAnimation!=null)
+        {
+            var rootRenderer = BoneRoorAnimation.GetComponent<Renderer>();
+
+            renderersSort = new List<Renderer>();
+            renderersSort.Add(rootRenderer);
+
+            foreach (Transform child in BoneRoorAnimation.transform)
+            {
+                GameObject modelAnimation = child.gameObject;
+                if (modelAnimation.tag == "BoneModelAnimation")
+                {
+                    var renderNext = modelAnimation.GetComponent<SpriteRenderer>();
+                    renderersSort.Add(renderNext);
+                }
+            }
+        }
+    }
+
     void FixedOverlapSprites()
     {
         m_offsetOverlap = Random.Range(0, 50);
@@ -66,28 +95,50 @@ public class PositionRenderSorting : MonoBehaviour {
         float offsetCalculate = SortingBase - gameObject.transform.position.y; // - Offset; //@@+ fix
         offsetCalculate = (float)System.Math.Round(offsetCalculate, 2);
         offsetCalculate *= 100;
-        //rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap;
-        rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap + (Offset*100);
-        //Legacy code
-        if (m_rendererSortOther != null)
-            m_rendererSortOther.sortingOrder = rendererSort.sortingOrder + 1;
+        
+        //rendererSort.sortingOrder = (int)offsetCalculate + m_offsetOverlap + (Offset*100);
+        ////Legacy code
+        //if (m_rendererSortOther != null)
+        //    m_rendererSortOther.sortingOrder = rendererSort.sortingOrder + 1;
+
+        int order = (int)offsetCalculate + m_offsetOverlap + (Offset * 100);
+
+        foreach(Renderer renderer in renderersSort)
+        {
+            if(renderer!=null)
+                renderer.sortingOrder = order++;
+        }
     }
 
     public void UpdateOrderingLayer(Renderer rend = null) 
     {
         if (rend != null)
         {
-            rendererSort = rend;
+            //rendererSort = rend;
             m_rendererSortOther = gameObject.GetComponent<Renderer>();
+            renderersSort = new List<Renderer>();
+            renderersSort.Add(rend);
+
+            if(m_rendererSortOther!=null)
+                renderersSort.Add(m_rendererSortOther);
         }
+        //if (rend != null && !rend.isVisible)
+        //{
+        //    this.enabled = false;
+        //    Debug.Log("## UpdateOrderingLayer DISABLED >> " + this.gameObject.name);
+        //}
     }
 
     public void UpdateOrderingLayer(Renderer rendBack = null, Renderer rendFront = null)
     {
         if (rendBack != null)
         {
-            rendererSort = rendBack;
-            m_rendererSortOther = rendFront;
+            //rendererSort = rendBack;
+            //m_rendererSortOther = rendFront;
+
+            renderersSort = new List<Renderer>();
+            renderersSort.Add(rendBack);
+            renderersSort.Add(rendFront);
         }
     }
 }

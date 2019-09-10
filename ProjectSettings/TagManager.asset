@@ -41,6 +41,8 @@ TagManager:
   - InventoryCase
   - BackAnimationModel
   - FrontAnimationModel
+  - BoneModelAnimation
+  - RootBoneModelAnimation
   layers:
   - Default
   - TransparentFX

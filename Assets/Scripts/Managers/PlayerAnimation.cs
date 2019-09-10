@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimation //: MonoBehaviour 
 {
     private bool m_isMultiAnimation = false;
+    private bool m_isMultiSprite = false;
     private Animator m_AnimatorHero;
     private Animator m_AnimatorBack;
     private Animator m_AnimatorFront;
@@ -13,7 +14,18 @@ public class PlayerAnimation //: MonoBehaviour
     private SpriteRenderer m_spriteRendererBack;
     private SpriteRenderer m_spriteRendererFront;
 
+    private GameObject m_modelView;
+
     public string CurrentAnimationPlay = "";
+
+    public PlayerAnimation(Animator p_AnimatorHero, GameObject p_modelView)
+    {
+        Debug.Log(">>>>>>>> IsMultiSprite " + p_modelView.name);
+        m_isMultiSprite = true;
+        m_AnimatorHero = p_AnimatorHero;
+        m_modelView = p_modelView;
+        Init();
+    }
 
     public PlayerAnimation(Animator p_AnimatorHero, SpriteRenderer p_spriteRendererHeroModel)
     {
@@ -52,7 +64,21 @@ public class PlayerAnimation //: MonoBehaviour
 
     public void PersonLook(bool isRight)
     {
-        if (!m_isMultiAnimation)
+        if(m_isMultiSprite)
+        {
+            float x = m_modelView.transform.localScale.x;
+            if ((x > 0 && isRight) || (x < 0 && !isRight))
+            {
+                x *= -1;
+                if (m_modelView != null)
+                {
+                    m_modelView.transform.localScale = new Vector3(x
+                        , m_modelView.transform.localScale.y,
+                        m_modelView.transform.localScale.z);
+                }
+            }
+        }
+        else if (!m_isMultiAnimation)
         {
             m_spriteRendererHeroModel.flipX = isRight;
         }

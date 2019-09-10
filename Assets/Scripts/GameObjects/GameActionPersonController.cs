@@ -53,11 +53,11 @@ public class GameActionPersonController : MonoBehaviour
     
     private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
     private SaveLoadData.TypePrefabs temp_TypePrefab = SaveLoadData.TypePrefabs.PrefabField;
-    private PositionRenderSorting m_sortiongLayer;
+    private PositionRenderSorting m_sortingLayer;
 
     private void Awake()
     {
-        m_sortiongLayer = GetComponent<PositionRenderSorting>();
+        m_sortingLayer = GetComponent<PositionRenderSorting>();
         m_lineRenderer = GetComponent<LineRenderer>();
 
         LoadModelsView();
@@ -835,7 +835,7 @@ public class GameActionPersonController : MonoBehaviour
             if (itemModel.Key == typeMePrefabNPC)
             {
                 m_MeModelView = itemModel.Value;
-                m_sortiongLayer.UpdateOrderingLayer(m_MeModelView.GetComponent<Renderer>());
+                m_sortingLayer.UpdateOrderingLayer(m_MeModelView.GetComponent<Renderer>());
             }
         }
 
@@ -879,12 +879,15 @@ public class GameActionPersonController : MonoBehaviour
         if (meAnimator.enabled)
         {
             m_MeRender = m_MeModelView.GetComponent<SpriteRenderer>();
-            if (m_MeRender == null)
-            {
-                Debug.Log("###### GameActionPersonController.UpdateMeModelView  m_MeRender == null");
-                return;
-            }
-            m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
+            //if (m_MeRender == null)
+            //{
+            //    Debug.Log("###### GameActionPersonController.UpdateMeModelView  m_MeRender == null");
+            //    return;
+            //}
+            if (m_MeRender != null && m_MeRender.enabled)
+                m_MeAnimation = new PlayerAnimation(meAnimator, m_MeRender);
+            else
+                m_MeAnimation = new PlayerAnimation(meAnimator, m_MeModelView);
         }
         else
         {
@@ -907,7 +910,7 @@ public class GameActionPersonController : MonoBehaviour
             if (backAnimator != null && frontAnimator != null && renderBack != null && renderFront != null)
             {
                 m_MeAnimation = new PlayerAnimation(backAnimator, frontAnimator, renderBack, renderFront);
-                m_sortiongLayer.UpdateOrderingLayer(renderBack, renderFront);
+                m_sortingLayer.UpdateOrderingLayer(renderBack, renderFront);
             }
         }
     }
