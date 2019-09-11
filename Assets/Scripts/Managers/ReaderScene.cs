@@ -85,8 +85,9 @@ public class ReaderScene //: UpdateData
 
     public void InitCollectionID()
     {
-        //string message = "   Init CollectionID...";
-        //Storage.EventsUI.SetTittle += message;
+        string message = "   Init CollectionID...";
+        Storage.EventsUI.SetTittle += message;
+
         string field = string.Empty;
         CollectionInfoID = new Dictionary<string, DataObjectInfoID>();
         foreach (var item in Storage.Instance.GridDataG.FieldsD)

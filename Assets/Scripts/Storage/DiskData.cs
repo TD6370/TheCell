@@ -151,6 +151,7 @@ public class DiskData : MonoBehaviour
             //yield return new WaitForSeconds(0.3f);
         }
 
+        Storage.EventsUI.ListLogAdd = "....CompletedLoadWorld:";
         Storage.Data.CompletedLoadWorld();
 
         float loadingTime = Time.time - LoadingWordlTimer;

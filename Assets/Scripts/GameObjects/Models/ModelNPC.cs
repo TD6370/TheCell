@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ModelNPC
 {
-    //Ej Iris Osoka Tussok Ground05 Ground04 Ground03 Ground02 Ground GrassSmall GrassMedium Grass RockDark RockValun RockBrow Klen Iva Sosna BlueBerry 
+    //Ej Iris Osoka Tussok Ground05 Ground04 Ground03 Ground02 Ground GrassSmall GrassMedium Grass RockDark RockValun RockBrown Klen Iva Sosna BlueBerry 
     [XmlRoot("Level")]
     [XmlInclude(typeof(PersonData))]
     public class LevelData
@@ -1245,13 +1245,13 @@ public class ModelNPC
     }
 
     [XmlType("RockBrow")]
-    public class RockBrow : WoodData
+    public class RockBrown : WoodData
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockBrow; } }
-        public RockBrow() : base() { TypePrefabName = TypePrefab.ToString(); }
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockBrown; } }
+        public RockBrown() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
 
     [XmlType("RockValun")]

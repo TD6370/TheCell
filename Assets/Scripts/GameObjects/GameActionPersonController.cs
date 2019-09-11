@@ -473,15 +473,31 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
+        //Storage.EventsUI.ListLogAdd = "ActionTarget .... ReaderSceneIsValid=" + Storage.Instance.ReaderSceneIsValid;
+
+
         if (!Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
+        {
+            ActionTargetLocal(dataNPC, controller); 
             return;
+        }
 
-        
+        Storage.EventsUI.ListLogAdd = "ActionTarget ....!!!";
 
-        string tempID = dataNPC.TargetID;
-        GetAlienData(dataNPC).OnTargetCompleted();
+        //string tempID = dataNPC.TargetID;
+        string indErr = "0";
         ModelNPC.ObjectData TargetObject = null;
-        TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+        try {
+            indErr = "1";
+            GetAlienData(dataNPC).OnTargetCompleted();
+            indErr = "2";
+            TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+        }
+        catch (Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### ActionTarget " + ex.Message;
+            return;
+        }
 
         //test
         string log = TargetObject == null ? " empty " : TargetObject.NameObject;

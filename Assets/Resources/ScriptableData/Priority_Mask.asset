@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
+  m_Name: Priority_Mask
+  m_EditorClassIdentifier: 
+  TypeObserver: 50
+  PrioritysTypeModelAll: 
+  PrioritysTypeModelNPC: 0300000005000000090000000c000000060000000a000000
+  PrioritysTypeModelFloor: 
+  PrioritysTypeModelFlore: 
+  PrioritysTypeModelWood: 040000000b0000000c00000003000000
+  PrioritysTypeModelWall: 
+  PrioritysTypePool: 020000000400000003000000
+  PrioritysTypeBiomNPC: 040000000200000001000000

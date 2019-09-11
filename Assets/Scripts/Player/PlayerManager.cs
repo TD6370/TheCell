@@ -202,19 +202,19 @@ public class PlayerManager : MonoBehaviour {
             Debug.Log("############## LoadPlayerData is empty");
         }
 
-        Debug.Log("Teleporting Hero....");
+        //Debug.Log("Teleporting Hero....");
         Storage.Instance.StopGame();
-        Debug.Log("Teleporting Hero run test....1");
+        //Debug.Log("Teleporting Hero run test....1");
         Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
-        Debug.Log("Teleporting Hero run test....2");
+        //Debug.Log("Teleporting Hero run test....2");
         //Storage.PlayerController.FindFieldCurrent();
             Storage.PlayerController.FindFieldCurrent(false);
-        Debug.Log("Teleporting Hero run test....3");
+        //Debug.Log("Teleporting Hero run test....3");
         Storage.GenGrid.StartGenGrigField(true);
-        Debug.Log("Teleporting Hero run test....4");
+        //Debug.Log("Teleporting Hero run test....4");
         Storage.GenGrid.LoadObjectsNearHero();
-        Debug.Log("Teleporting Hero run test....5");
-        Debug.Log("Teleported Hero ))");
+        //Debug.Log("Teleporting Hero run test....5");
+        //Debug.Log("Teleported Hero ))");
     }
 
     public void RestructGrid()

@@ -96,7 +96,7 @@ public class Serializator
                        
         typeof(ModelNPC.RockDark),
         typeof(ModelNPC.RockValun),
-        typeof(ModelNPC.RockBrow),
+        typeof(ModelNPC.RockBrown),
         typeof(ModelNPC.Klen),
         typeof(ModelNPC.Iva),
         typeof(ModelNPC.Sosna),

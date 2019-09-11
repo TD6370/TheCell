@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 1710980343
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cafa756ec0447aafb530cca03adad93b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 83059ae72d4f61734e96e4ac8ab0a8d0
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/AssetBundles/ScriptableData/Priority_Mecha.asset
+- Assets/AssetBundles/ScriptableData/Priority_Mask.asset
+- Assets/AssetBundles/ScriptableData/Priority_Lollipop.asset
+- Assets/AssetBundles/ScriptableData/Priority_Ej.asset
+- Assets/AssetBundles/ScriptableData/Priority_Machineool.asset
+- Assets/AssetBundles/ScriptableData/Priority_Fantom.asset
+- Assets/AssetBundles/ScriptableData/Priority_Garry.asset
+- Assets/AssetBundles/ScriptableData/Priority_Pavuk.asset
+- Assets/AssetBundles/ScriptableData/Priority_Inspector.asset
+- Assets/AssetBundles/ScriptableData/Priority_Hydragon.asset
+- Assets/AssetBundles/ScriptableData/Priority_Skvid.asset
+- Assets/AssetBundles/ScriptableData/ContainerPriorityFinder.asset
+- Assets/AssetBundles/ScriptableData/Priority_Vhailor.asset
+- Assets/AssetBundles/ScriptableData/Priority_Dendroid.asset
+Dependencies: []

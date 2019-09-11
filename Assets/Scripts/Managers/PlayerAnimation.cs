@@ -20,11 +20,11 @@ public class PlayerAnimation //: MonoBehaviour
 
     public PlayerAnimation(Animator p_AnimatorHero, GameObject p_modelView)
     {
-        Debug.Log(">>>>>>>> IsMultiSprite " + p_modelView.name);
+        //Debug.Log(">>>>>>>> IsMultiSprite " + p_modelView.name);
         m_isMultiSprite = true;
         m_AnimatorHero = p_AnimatorHero;
         m_modelView = p_modelView;
-        Init();
+        //Init();
     }
 
     public PlayerAnimation(Animator p_AnimatorHero, SpriteRenderer p_spriteRendererHeroModel)

@@ -192,8 +192,8 @@ public class BilderGameDataObjects //: MonoBehaviour
             case SaveLoadData.TypePrefabs.Klen:
                 objGameBild = new ModelNPC.Klen();
                 break;
-            case SaveLoadData.TypePrefabs.RockBrow:
-                objGameBild = new ModelNPC.RockBrow();
+            case SaveLoadData.TypePrefabs.RockBrown:
+                objGameBild = new ModelNPC.RockBrown();
                 break;
             case SaveLoadData.TypePrefabs.RockValun:
                 objGameBild = new ModelNPC.RockValun();

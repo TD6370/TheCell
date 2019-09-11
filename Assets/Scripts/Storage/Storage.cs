@@ -446,6 +446,7 @@ public class Storage : MonoBehaviour {
 
         //Reinit Component
         _StoragePerson = MainCamera.GetComponent<StoragePerson>();
+        _StoragePerson.Init();
         _StoragePerson.PersonsDataInit();
 
         _Palette = DataStorage.GetComponent<ManagerPalette>();
@@ -656,12 +657,13 @@ public class Storage : MonoBehaviour {
 
     public void LoadData()
     {
-
+        Storage.EventsUI.ListLogAdd = "LoadPathDatab...";
         Storage.EventsUI.SetTittle = "##### LoadPathData";
         //string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelDataPart1x1.xml";
         if (File.Exists(_datapathLevel))
         {
+            Storage.EventsUI.ListLogAdd = "LoadGridXml...";
             Storage.Instance.IsLoadingWorldThread = true;
 
             _GridDataG = Serializator.LoadGridXml(_datapathLevel);

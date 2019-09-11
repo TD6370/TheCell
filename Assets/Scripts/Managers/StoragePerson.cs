@@ -8,7 +8,9 @@ using UnityEngine.U2D;
 public class StoragePerson : MonoBehaviour {
 
     public Vector3 PersonsTargetPosition { get; set; }
-    public ContainerPriorityFinder ContainerPriority;
+
+    [SerializeField]
+    public ContainerPriorityFinder ContainerPrioritys;
 
     public Color ColorSelectedCursorObject = Color.cyan;
     public Color ColorFindCursorObject = Color.magenta;
@@ -80,6 +82,12 @@ public class StoragePerson : MonoBehaviour {
     // Use this for initialization
     void Start() {
         LoadSprites();
+        //LoadPriorityPerson();
+    }
+
+    public void Init()
+    {
+        //LoadSprites();
         LoadPriorityPerson();
     }
 
@@ -90,12 +98,34 @@ public class StoragePerson : MonoBehaviour {
 
     private void LoadPriorityPerson()
     {
-        PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
-        foreach (var prior in ContainerPriority.CollectionPriorityFinder)
+        try
         {
-            PersonPriority.Add(prior.TypeObserver, prior);
+            Storage.EventsUI.ListLogAdd = "...LoadPriorityPerson....";
+            if(ContainerPrioritys == null)
+            {
+                ContainerPrioritys = CreateAssetBundles.LoadContainerPriorityFinder;
+                if (ContainerPrioritys == null)
+                {
+                    Storage.EventsUI.ListLogAdd = "ContainerPriority is null";
+                    return;
+                }
+            }
+            if (ContainerPrioritys.CollectionPriorityFinder == null)
+            {
+                Storage.EventsUI.ListLogAdd = "ContainerPriority.CollectionPriorityFinder is null";
+                return;
+            }
+            Storage.EventsUI.ListLogAdd = "CollectionPriorityFinder Count = " + ContainerPrioritys.CollectionPriorityFinder.Count();
+            PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
+            foreach (var prior in ContainerPrioritys.CollectionPriorityFinder)
+            {
+                PersonPriority.Add(prior.TypeObserver, prior);
+            }
+            FillAllPriority();
+        }catch(Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### LoadPriorityPerson : " + ex.Message;
         }
-        FillAllPriority();
     }
 
     public Sprite[] GetSpritesAtlasNPC()
@@ -112,6 +142,7 @@ public class StoragePerson : MonoBehaviour {
             Debug.Log("########### SpriteAtlasNPCis empty");
             return;
         }
+        var load = SpriteCollection;
     }
 
     public IEnumerable<GameObject> GetAllRealPersons()
@@ -782,9 +813,28 @@ public class StoragePerson : MonoBehaviour {
     {
         int versionSearching = 1;
 
+        if (PersonPriority == null)
+        {
+            Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> PersonPriority is null";
+            LoadPriorityPerson();
+            return null;
+        }
+        if (dataAlien == null)
+        {
+            Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> dataAlien is null";
+            return null;
+        }
+
         if (!PersonPriority.ContainsKey(dataAlien.TypePrefab))
         {
-            Debug.Log("######### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
+            if (PersonPriority.Count == 0)
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority count = 0");
+                LoadPriorityPerson();
+            }
+            else
+                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
+            
             return null;
         }
 
@@ -927,6 +977,43 @@ public class StoragePerson : MonoBehaviour {
         return Storage.Person.CollectionPowerAllTypes[keyJoinNPC];
     }
 
+   
+    public List<SaveLoadData.TypePrefabs> GetPrioritysTypeModel(PriorityFinder priority)
+    {
+        List<SaveLoadData.TypePrefabs> getPrioritysTypeModel = new List<SaveLoadData.TypePrefabs>();
+        getPrioritysTypeModel.AddRange(priority.PrioritysTypeModelAll);
+
+        foreach (var item in priority.PrioritysTypeModelNPC)
+        {
+            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
+            getPrioritysTypeModel.Add(prioriT);
+        }
+        foreach (var item in priority.PrioritysTypeModelFloor)
+        {
+            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
+            getPrioritysTypeModel.Add(prioriT);
+        }
+        foreach (var item in priority.PrioritysTypeModelFlore)
+        {
+            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
+            getPrioritysTypeModel.Add(prioriT);
+        }
+        foreach (var item in priority.PrioritysTypeModelWood)
+        {
+            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
+            getPrioritysTypeModel.Add(prioriT);
+        }
+        foreach (var item in priority.PrioritysTypeModelWall)
+        {
+            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
+            getPrioritysTypeModel.Add(prioriT);
+        }
+
+
+        return getPrioritysTypeModel;
+    }
+   
+
     public int GetPriorityPower(ModelNPC.ObjectData objData, PriorityFinder priority)
     {
         int power = 0;
@@ -936,8 +1023,10 @@ public class StoragePerson : MonoBehaviour {
 
         int slotPower = 3;
         int maxtPrioprity = 10;
-        maxtPrioprity = priority.GetPrioritysTypeModel().Count() * slotPower;
-        foreach (SaveLoadData.TypePrefabs itemModel in priority.GetPrioritysTypeModel())
+        //maxtPrioprity = priority.GetPrioritysTypeModel().Count() * slotPower;
+        maxtPrioprity = GetPrioritysTypeModel(priority).Count() * slotPower;
+        //foreach (SaveLoadData.TypePrefabs itemModel in priority.GetPrioritysTypeModel())
+        foreach (SaveLoadData.TypePrefabs itemModel in GetPrioritysTypeModel(priority))
         {
             if (itemModel == typeModel)
             {

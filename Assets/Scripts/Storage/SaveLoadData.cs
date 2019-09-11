@@ -152,7 +152,7 @@ public class SaveLoadData : MonoBehaviour {
         Klen,
         Iva,
         BlueBerry,
-        RockBrow,
+        RockBrown,
         RockValun,
         RockDark,
 
@@ -260,7 +260,7 @@ public class SaveLoadData : MonoBehaviour {
 
         RockDark,
         RockValun,
-        RockBrow,
+        RockBrownn,
           Klen,
           Iva,
           Sosna,
@@ -435,7 +435,7 @@ public class SaveLoadData : MonoBehaviour {
         //--------- Floor
         RockDark,
         RockValun,
-        RockBrow,
+        RockBrown,
         Klen,
         Iva,
         Sosna, 

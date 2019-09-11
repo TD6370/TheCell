@@ -107,10 +107,12 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\ScriptableData\Settings\PriorityFinder.cs" />
-    <Compile Include="Assets\ScriptableData\Settings\SettingsSceneDebug.cs" />
+    <Compile Include="Assets\Scripts\Engine\ContainerPriorityFinder.cs" />
     <Compile Include="Assets\Scripts\Engine\Helper.cs" />
+    <Compile Include="Assets\Scripts\Engine\PriorityFinder.cs" />
+    <Compile Include="Assets\Scripts\Engine\ScriptableObjectUtility.cs" />
     <Compile Include="Assets\Scripts\Engine\Serializator.cs" />
+    <Compile Include="Assets\Scripts\Engine\SettingsSceneDebug.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />
     <Compile Include="Assets\Scripts\GameObjects\GameActionPersonController.cs" />
