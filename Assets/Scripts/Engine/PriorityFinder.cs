@@ -5,7 +5,8 @@ using System;
 
 //ScriptableObjectUtility.CreateAsset<YourClass>();
 
-[CreateAssetMenu(menuName = "Custom Tool/Create Priority Finder", fileName = "Priority_")]
+[CreateAssetMenu(menuName = "Custom Tool/Create Priority Finder %&h", fileName = "Priority_" )]
+
 //[Serializable]
 //[Serializable]
 public class PriorityFinder : ScriptableObject
