@@ -105,7 +105,7 @@ public class SaveLoadData : MonoBehaviour {
 
         Iris,
         Osoka,
-        Tussok,
+        Tussock,
 
         Swamp,
         Chip,
@@ -188,7 +188,7 @@ public class SaveLoadData : MonoBehaviour {
 
         Iris,
         Osoka,
-        Tussok
+        Tussock
     }
 
     //public enum TypePrefabFloors
@@ -430,7 +430,7 @@ public class SaveLoadData : MonoBehaviour {
         //--------- Flore
         Iris,
         Osoka,
-        Tussok,
+        Tussock,
 
         //--------- Floor
         RockDark,

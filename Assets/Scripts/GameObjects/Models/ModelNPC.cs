@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ModelNPC
 {
-    //Ej Iris Osoka Tussok Ground05 Ground04 Ground03 Ground02 Ground GrassSmall GrassMedium Grass RockDark RockValun RockBrown Klen Iva Sosna BlueBerry 
+    //Ej Iris Osoka Tussock Ground05 Ground04 Ground03 Ground02 Ground GrassSmall GrassMedium Grass RockDark RockValun RockBrown Klen Iva Sosna BlueBerry 
     [XmlRoot("Level")]
     [XmlInclude(typeof(PersonData))]
     public class LevelData
@@ -1514,14 +1514,14 @@ public class ModelNPC
     }
 
    
-    [XmlType("Tussok")]
-    public class Tussok : FloreData
+    [XmlType("Tussock")]
+    public class Tussock : FloreData
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }
         [XmlIgnore]
-        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Tussok; } }
-        public Tussok() : base() { TypePrefabName = TypePrefab.ToString(); }
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Tussock; } }
+        public Tussock() : base() { TypePrefabName = TypePrefab.ToString(); }
     }
 
     [XmlType("Osoka")]

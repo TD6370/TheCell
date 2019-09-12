@@ -5,10 +5,12 @@ using System;
 
 public static class ScriptableObjectUtility
 {
-    /// <summary>
-    //	This makes it easy to create, name and place unique new ScriptableObject asset files.
-    /// </summary>
-    #if UNITY_EDITOR
+    public static AssetBundle loadedAssetBundle;
+
+    private static string m_name = "bundlecell";
+    public static string AssetBundleDirectory = "Assets/AssetBundles";
+
+#if UNITY_EDITOR
     public static void CreateAsset<T>() where T : ScriptableObject
     {
         T asset = ScriptableObject.CreateInstance<T>();
@@ -23,9 +25,7 @@ public static class ScriptableObjectUtility
             path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
         }
 
-        //string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/Asset" + typeof(T).ToString() + ".asset");
-        //string assetPathAndName = CreateAssetBundles.AssetBundleDirectory + "/" + path + "/Asset" + typeof(T).ToString() + ".asset";
-        string assetPathAndName = CreateAssetBundles.AssetBundleDirectory +  "/Asset" + typeof(T).ToString() + ".asset";
+        string assetPathAndName = AssetBundleDirectory +  "/Asset" + typeof(T).ToString() + ".asset";
 
         AssetDatabase.CreateAsset(asset, assetPathAndName);
 
@@ -34,52 +34,16 @@ public static class ScriptableObjectUtility
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = asset;
     }
-    #endif
-}
+#endif
 
-
-public class CreateAssetBundles
-{
-    public static AssetBundle loadedAssetBundle;
-
-    public static string AssetBundleDirectory = "Assets/AssetBundles";
-    public static ContainerPriorityFinder LoadContainerPriorityFinder
+    public static ContainerPriorityFinder LoadContainerPriorityFinderByResource
     {
         get {
             string strErr = "0";
             try
             {
                 ContainerPriorityFinder container = null;
-                //string name = "ContainerPriorityFinder.asset";
-                //string pathPriorityContainer = m_assetBundleDirectory + "/ScriptableData/" + name;
-                //var loadedAssetBundle = AssetBundle.LoadFromFile(pathPriorityContainer);
-
-                //var loadedAssetBundle = AssetBundle.LoadFromFile(m_assetBundleDirectory);
-                //if (loadedAssetBundle != null)
-                //    cpf = loadedAssetBundle.LoadAsset<ContainerPriorityFinder>("ContainerPriorityFinder");
-
-                //--------------
-                //string name = "ContainerPriorityFinder.asset";
-                //string pathPriorityContainer = Path.Combine(AssetBundleDirectory, "ScriptableData");
-                //string path1 = Path.Combine(pathPriorityContainer, name);
-                //string path = "Assets/AssetBundles/ScriptableData/ContainerPriorityFinder.asset";
-
-                //strErr = "1";
-                //AssetBundle loadedAssetBundle = AssetBundle.LoadFromFile(path);
-                //if (loadedAssetBundle == null)
-                //{
-                //    Debug.Log(Storage.EventsUI.ListLogAdd = "Failed to load AssetBundle! " + pathPriorityContainer);
-                //    return container;
-                //}
-                //strErr = "2";
-                //container = loadedAssetBundle.LoadAsset<ContainerPriorityFinder>("ContainerPriorityFinder");
-                //if (container == null)
-                //{
-                //    Debug.Log(Storage.EventsUI.ListLogAdd = "Failed to load ContainerPriorityFinder!");
-                //    return container;
-                //}
-
-                //-------------------
+                
                 strErr = "1";
                 var findContainerPriorityFinder = Resources.FindObjectsOfTypeAll(typeof(ContainerPriorityFinder));
                 strErr = "2";
@@ -119,6 +83,84 @@ public class CreateAssetBundles
         }
     }
 
+
+    public static void LoadAssetBundleCell()
+    {
+      
+        string strErr = "0";
+        try
+        {
+            ContainerPriorityFinder container = null;
+
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("load AssetBundle... " + m_name);
+                AssetBundle.UnloadAllAssetBundles(false);
+                loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + m_name);
+            }
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("Failed to load AssetBundle! ");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+        }
+    }
+
+    public static ContainerPriorityFinder LoadContainerPriorityFinder
+    {
+        get
+        {
+            string strErr = "0";
+            try
+            {
+                ContainerPriorityFinder container = null;
+
+                if (loadedAssetBundle == null)
+                {
+                    Debug.Log("load AssetBundle... " + m_name);
+                    AssetBundle.UnloadAllAssetBundles(false);
+                    loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + m_name);
+                }
+                if (loadedAssetBundle == null)
+                {
+                    Debug.Log("Failed to load AssetBundle! ");
+                    return null;
+                }
+                var bundle = loadedAssetBundle;
+
+                ContainerPriorityFinder containerObj = null;
+                ContainerPriorityFinder[] containerObjs = bundle.LoadAllAssets<ContainerPriorityFinder>();
+
+                if (containerObjs == null)
+                    Debug.Log("containerObjs - null");
+                if (containerObjs != null && containerObjs.Length == 0)
+                    Debug.Log("containerObjs count = 0");
+
+                if (containerObjs != null && containerObjs.Length != 0)
+                    containerObj = containerObjs[0];
+
+                if (containerObj != null)
+                    Debug.Log("ContainerPriorityFinder >> " + containerObj.name);
+
+                container = containerObj as ContainerPriorityFinder;
+                if (container == null)
+                {
+                    Debug.Log("Failed to load ContainerPriorityFinder ! ");
+                }
+
+                return container;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+            }
+            return null;
+        }
+    }
+
 #if UNITY_EDITOR
 
     public static void LoadContainerPriorityFinderEditor()
@@ -140,7 +182,7 @@ public class CreateAssetBundles
     [MenuItem("Assets/Data/Create Asset Prioritys finders")]
     static void CreateAssetContainerPriorityFinder()
     {
-        ScriptableObjectUtility.CreateAsset<ContainerPriorityFinder>();
+        CreateAsset<ContainerPriorityFinder>();
     }
 
     //[CreateAssetMenu(menuName = "Custom Tool/Create Container Priority", fileName = "ContainerPriorityFinder")]
@@ -162,123 +204,55 @@ public class CreateAssetBundles
     [MenuItem("Assets/Load Data/Load Prioritys finders")]
     static void LoadPriotitysFinders()
     {
-        //Debug.ClearDeveloperConsole();
-
-        //var findContainerPriorityFinder = AssetBundle.FindObjectsOfTypeAll(typeof(ContainerPriorityFinder));
-        //foreach (var obj in findContainerPriorityFinder)
-        //{
-        //    Debug.Log("Finded container: " + obj.name);
-        //    var containerFind = obj as ContainerPriorityFinder;
-        //    if (containerFind != null)
-        //    {
-        //        Debug.Log("Finded container: " + obj.name + " count=" + containerFind.CollectionPriorityFinder.Length);
-        //    }
-        //}
-
-        //return;
-        //--------------------
-
-        //string name1 = "ContainerPriorityFinder.asset";
-        string name = "bundlecell";
-        //string pathPriorityContainer = m_assetBundleDirectory + "/ScriptableData/" + name1;
-        //string pathPriorityContainer = m_assetBundleDirectory + "/" + name1;
-
-
-        //string str1 = Path.Combine(pathPriorityContainer, name);
-        //string str = "Assets/AssetBundles/ScriptableData/ContainerPriorityFinder.asset";
-        //string str = "Assets/AssetBundles/ContainerPriorityFinder.asset";
-        //string str = AssetDatabase.GetAssetPath(Selection.activeObject);
-
-        //AssetBundle.UnloadAllAssetBundles(true);
-        if (loadedAssetBundle == null)
+        
+        if (ScriptableObjectUtility.loadedAssetBundle == null)
         {
-            Debug.Log("load AssetBundle... " + name);
+            Debug.Log("load AssetBundle... " + m_name);
             AssetBundle.UnloadAllAssetBundles(false);
-
-            ///AssetBundle loadedAssetBundle = null;
-            loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + name);
-            //AssetBundle loadedAssetBundle = AssetBundle.LoadFromFile(str);
-
-            //FIX----
-            ///var findContainerPriorityFinder = AssetBundle.FindObjectsOfTypeAll(typeof(ContainerPriorityFinder));
-            //----
-            //var loadedAssetBundles = AssetBundle.FindObjectsOfTypeAll(typeof(AssetBundle));
+            loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + m_name);
         }
-        //var loadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "ContainerPriorityFinder"));
-        //if (loadedAssetBundle == null)
-        //{
-        //    Debug.Log("Failed to load AssetBundle!");
-        //    return;
-        //}
-
-        //AssetBundle loadedAssetBundle = AssetBundle.LoadFromFile("Assets/AssetBundles/");
-
-        if (loadedAssetBundle == null)
+        if (ScriptableObjectUtility.loadedAssetBundle == null)
         {
-            Debug.Log("Failed to load AssetBundle! ");// + pathPriorityContainer);
+            Debug.Log("Failed to load AssetBundle! ");
             return;
         }
-        string str1 = "assets/assetbundles/scriptabledata/containerpriorityfinder.asset";
-        string str2 = "assets/assetbundles/scriptabledata/containerpriorityfinder";
-        string str3 = "scriptabledata/containerpriorityfinder";
-        string str4 = "containerpriorityfinder";
-        string str5= "containerpriorityfinder.asset";
-        string str6 = "ContainerPriorityFinder.asset";
-        string str7 = "ContainerPriorityFinder";
-
-        string pathPriorityFinder = str7;
-        //string pathPriorityFinder = "Assets/AssetBundles/ScriptableData/ContainerPriorityFinder.asset";
-        //string pathPriorityFinder = "Assets/AssetBundles/ScriptableData/ContainerPriorityFinder";
-        //string pathPriorityFinder = "ScriptableData/ContainerPriorityFinder";
-        //string pathPriorityFinder = "ContainerPriorityFinder.asset";
-        //string pathPriorityFinder = AssetDatabase.GetAssetPath(Selection.activeObject);
-        //ContainerPriorityFinder container = loadedAssetBundle.LoadAsset<ContainerPriorityFinder>("ContainerPriorityFinder");
-
-        var namesAssets = loadedAssetBundle.AllAssetNames();
+        var bundle = loadedAssetBundle;
+        var namesAssets = bundle.GetAllAssetNames();
         if (namesAssets.Length == 0)
             Debug.Log("loadedAssetBundle.AllAssetNames = 0");
-        string assetFirts = "";
-        foreach (var nameAss in namesAssets)
-        {
-            assetFirts = nameAss;
-            Debug.Log(nameAss);
-            break;
-        }
-        if(loadedAssetBundle.Contains(assetFirts))
-        {
-            Debug.Log("Exist assetFirts = " + assetFirts);
-            //pathPriorityFinder = assetFirts;
-        }
+        //string assetFirts = "";
+        //foreach (var nameAss in namesAssets)
+        //{
+        //    assetFirts = nameAss;
+        //    Debug.Log(nameAss);
+        //    break;
+        //}
+        //if(bundle.Contains(assetFirts))
+        //{
+        //    Debug.Log("Exist assetFirts = " + assetFirts);
+        //}
 
-        //var container = loadedAssetBundle.LoadAsset("ContainerPriorityFinder") ;
-        //var containerObj = loadedAssetBundle.LoadAsset("ContainerPriorityFinder");
-        //var containerObj = loadedAssetBundle.LoadAsset(pathPriorityFinder);
-        var containerObj = loadedAssetBundle.LoadAsset<ContainerPriorityFinder>(pathPriorityFinder);
-        //var containerObj = loadedAssetBundle.LoadAsset("ContainerPriorityFinder", typeof(ContainerPriorityFinder));
-        //var containerObj = loadedAssetBundle.LoadAsset("ContainerPriorityFinder", typeof(ContainerPriorityFinder));
-        //var containerObj = loadedAssetBundle.LoadAsset(pathPriorityFinder, typeof(ContainerPriorityFinder));
+        ContainerPriorityFinder containerObj = null;
+        ContainerPriorityFinder[] containerObjs = bundle.LoadAllAssets<ContainerPriorityFinder>();
 
-        //var t1 = loadedAssetBundle.LoadAsset(str1);
-        //var t2 = loadedAssetBundle.LoadAsset(str2);
-        //var t3 = loadedAssetBundle.LoadAsset(str3);
-        //var t4 = loadedAssetBundle.LoadAsset(str4);
-        //var t5 = loadedAssetBundle.LoadAsset(str5);
-        //var t6 = loadedAssetBundle.LoadAsset(str6);
-        //var t7 = loadedAssetBundle.LoadAsset(str7);
+        if (containerObjs == null)
+            Debug.Log("containerObjs - null");
+        if (containerObjs != null && containerObjs.Length == 0)
+            Debug.Log("containerObjs count = 0");
+
+        if (containerObjs != null && containerObjs.Length != 0)
+            containerObj = containerObjs[0];
 
         if (containerObj != null)
             Debug.Log("ContainerPriorityFinder >> " + containerObj.name);
 
         ContainerPriorityFinder container = containerObj as ContainerPriorityFinder;
-
-
-        //ContainerPriorityFinder container = loadedAssetBundle.LoadAsset<ContainerPriorityFinder>(pathPriorityFinder);
         if (container == null)
         {
-            Debug.Log("Failed to load ContainerPriorityFinder ! " + pathPriorityFinder);
+            Debug.Log("Failed to load ContainerPriorityFinder ! ");
             return;
         }
-        Debug.Log("Load ContainerPriorityFinder OK ! size :" + container.CollectionPriorityFinder.Length + "   =" + pathPriorityFinder);
+        Debug.Log("Load ContainerPriorityFinder OK ! size :" + container.CollectionPriorityFinder.Length);
     }
 
     [MenuItem("Assets/Data/Log Prioritys finders")]

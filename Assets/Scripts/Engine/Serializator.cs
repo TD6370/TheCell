@@ -53,7 +53,7 @@ public class Serializator
 
         typeof(ModelNPC.Ground05), typeof(ModelNPC.Ground04), typeof(ModelNPC.Ground03), typeof(ModelNPC.Ground02), typeof(ModelNPC.Ground),
         typeof(ModelNPC.GrassSmall), typeof(ModelNPC.GrassMedium), typeof(ModelNPC.Grass),
-        typeof(ModelNPC.Iris), typeof(ModelNPC.Osoka), typeof(ModelNPC.Tussok),
+        typeof(ModelNPC.Iris), typeof(ModelNPC.Osoka), typeof(ModelNPC.Tussock),
 
         typeof(ModelNPC.GameDataAlienInspector),
         typeof(ModelNPC.GameDataAlienMachinetool),

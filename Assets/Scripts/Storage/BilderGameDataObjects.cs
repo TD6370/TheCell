@@ -225,8 +225,8 @@ public class BilderGameDataObjects //: MonoBehaviour
             case SaveLoadData.TypePrefabs.Ground05:
                 objGameBild = new ModelNPC.Ground05();
                 break;
-            case SaveLoadData.TypePrefabs.Tussok:
-                objGameBild = new ModelNPC.Tussok();
+            case SaveLoadData.TypePrefabs.Tussock:
+                objGameBild = new ModelNPC.Tussock();
                 break;
             case SaveLoadData.TypePrefabs.Osoka:
                 objGameBild = new ModelNPC.Osoka();

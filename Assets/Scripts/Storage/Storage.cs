@@ -526,6 +526,8 @@ public class Storage : MonoBehaviour {
 
     private void InitObjectsGrid()
     {
+        ScriptableObjectUtility.LoadAssetBundleCell();
+
         //Debug.Log("III InitObjectsGrid_______________");
         Fields = new Dictionary<string, GameObject>();
         _GamesObjectsReal = new Dictionary<string, List<GameObject>>();
@@ -659,8 +661,12 @@ public class Storage : MonoBehaviour {
     {
         Storage.EventsUI.ListLogAdd = "LoadPathDatab...";
         Storage.EventsUI.SetTittle = "##### LoadPathData";
-        //string datapathPart = Application.dataPath + "/Levels/LevelDataPart" + nameFileXML + ".xml";
         _datapathLevel = Application.dataPath + "/Levels/LevelDataPart1x1.xml";
+        string dir = Application.dataPath + "/Levels";
+
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
         if (File.Exists(_datapathLevel))
         {
             Storage.EventsUI.ListLogAdd = "LoadGridXml...";

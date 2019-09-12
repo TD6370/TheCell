@@ -103,7 +103,9 @@ public class StoragePerson : MonoBehaviour {
             Storage.EventsUI.ListLogAdd = "...LoadPriorityPerson....";
             if(ContainerPrioritys == null)
             {
-                ContainerPrioritys = CreateAssetBundles.LoadContainerPriorityFinder;
+                ContainerPrioritys = ScriptableObjectUtility.LoadContainerPriorityFinder;
+                if(ContainerPrioritys == null)
+                    ContainerPrioritys = ScriptableObjectUtility.LoadContainerPriorityFinderByResource;
                 if (ContainerPrioritys == null)
                 {
                     Storage.EventsUI.ListLogAdd = "ContainerPriority is null";
