@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 3}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -68,7 +68,7 @@ MonoBehaviour:
     y: 0
     width: 999
     height: 1034
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &4
 MonoBehaviour:
@@ -634,7 +634,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 471}
   m_MaxSize: {x: 14002, y: 14021}
   vertical: 0
-  controlID: 120
+  controlID: 3603
 --- !u!114 &27
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -658,7 +658,7 @@ MonoBehaviour:
   m_MinSize: {x: 402, y: 471}
   m_MaxSize: {x: 10000, y: 14021}
   vertical: 1
-  controlID: 121
+  controlID: 3604
 --- !u!114 &28
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -682,7 +682,7 @@ MonoBehaviour:
   m_MinSize: {x: 402, y: 221}
   m_MaxSize: {x: 8002, y: 4021}
   vertical: 0
-  controlID: 122
+  controlID: 3605
 --- !u!114 &29
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1460,10 +1460,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -454.5
-    m_HBaseRangeMax: 454.5
-    m_VBaseRangeMin: -255.5
-    m_VBaseRangeMax: 255.5
+    m_HBaseRangeMin: -848
+    m_HBaseRangeMax: 848
+    m_VBaseRangeMin: -477
+    m_VBaseRangeMax: 477
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -1481,25 +1481,25 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 17
-      width: 909
-      height: 563
+      width: 1920
+      height: 954
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 454.5, y: 281.5}
+    m_Translation: {x: 960, y: 477}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -454.5
-      y: -281.5
-      width: 909
-      height: 563
+      x: -960
+      y: -477
+      width: 1920
+      height: 954
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_TargetTexture: {fileID: 0}
   m_CurrentColorSpace: 0
-  m_LastWindowPixelSize: {x: 909, y: 580}
+  m_LastWindowPixelSize: {x: 1920, y: 971}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
@@ -2000,7 +2000,7 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 66160000
+    m_SelectedIDs: 60110000
     m_LastClickedID: 0
     m_ExpandedIDs: dafbffff00000000
     m_RenameOverlay:
@@ -2051,7 +2051,7 @@ MonoBehaviour:
     height: 651
   m_PersistentViewDataDictionary: {fileID: 0}
   m_ResetOnNextRepaint: 1
-  m_SelectedAssetPath: 
+  m_SelectedAssetPath: Assets/AssetBundles/ScriptableData/Wall/Priority_Kolba.asset
   m_SelectedSpriteRectGUID: 
 --- !u!114 &60
 MonoBehaviour:
@@ -2131,7 +2131,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 940}
     m_SelectedIDs: ba8df4ff
     m_LastClickedID: -750150
-    m_ExpandedIDs: 00000000600c0000ac0d0000920e0000f00e0000d20f0000601000003612000096130000521400006214000084140000e014000096150000221600003a160000721600007c1600001c170000281800003e1800008e18000090180000ee180000e4600000
+    m_ExpandedIDs: 00000000600c0000ac0d0000920e0000f00e0000d20f0000601000003612000096130000521400006214000084140000e014000096150000221600003a160000721600007c1600001c170000281800003e1800008e18000090180000ee180000e460000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2158,7 +2158,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300006e8d0000888d0000ce3100009c0b0000f43c0000484f000094c40000ca0b0000547e0000847e0000807e0000747e00007c7e0000787e0000c60900000c610000600b0000740f0000d8770100a4090000d20b0000300d0000580d0000d20a0000ca590200704502006a6e0100180e0000a80a00007a0c0000ba0c0000600a00005c0b00004c0d0000780d00006c0b0000040a0000e60c0000401000005c0e0000120f00000c0e000024d40100aa0a0000ee0c0000fe0c0000c40b0000ba0a000096420000320c0000d80d0000800a0000cc420000720d0000cc110000dc0c00005c680000640e0000a40d0000d63100003c140000000000005e1100007e150000381300001e0e0000da160000aa170000e41100002e180000f216000048110000480f0000a65900000c5a00004c5a00002e170000b41200007e1700004218000040160000b416000084170000341700008e5e00003e190100541901004c1901009e640000901901005c19010094190100ccea0200c8ea0200d4ea0200bc1200000e8503000a850300e4c40300e0c403008e0e000012380300fc370300a80f0000cc12000008140000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -2183,7 +2183,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 79}
     m_GridSize: 68
   m_DirectoriesAreaWidth: 189
 --- !u!114 &61
