@@ -1,27 +1,45 @@
 ManifestFileVersion: 0
-CRC: 780211132
+CRC: 1045092751
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 155f48e2a6cc90a39a742a59e403e529
+    Hash: 9db0855f6e335cdd7f8fbb6b39fb171b
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6e9aff2df29aead2db6bfe1c839a5157
+    Hash: fad850e1e933670fddffa778223dcf2e
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
 - Class: 28
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 50
+  Script: {instanceID: 0}
+- Class: 58
+  Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 9fdbd970b1d3ecd4e9cf3788622b5230, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 8859a97391eb93e4a873a2f2997c8611, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0491a1c550afc7945a3961141977a0ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c046d42f5f25e4d47a54bb6b66262f16, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8b86c2335a47e1844808e4227a70e3a3, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 212
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -31,6 +49,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/BlueBerryInv.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconClear35.png
 - Assets/AssetBundles/Textures/Terra/Floor/Land.png
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossBooble.prefab
 - Assets/AssetBundles/Textures/UI/Inventory/OrbitsInv.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/FantomDetails.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/MachinetoolDetails.png
@@ -38,20 +57,29 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/IconLayer.png
 - Assets/AssetBundles/Textures/World/Floor/Red/Kishka.png
 - Assets/AssetBundles/Textures/UI/Metal/IronExit.png
+- Assets/AssetBundles/Tiles/aracul.asset
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossArm.prefab
 - Assets/AssetBundles/Textures/Portals/GreenL2.png
 - Assets/AssetBundles/Textures/Map/GridIcons/DesertMap.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Parket.asset
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossLizard.prefab
 - Assets/AssetBundles/Textures/World/Flore/Gray/Iris.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Chip.asset
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/ActionIconIdle.png
+- Assets/AssetBundles/Tiles/kishka.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/RockBrownMap.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Chpok.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenFullCheck.png
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBossLizard.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/Ground04Map.png
 - Assets/AssetBundles/Textures/UI/Cursor.png
 - Assets/AssetBundles/Textures/Map/UI/MarkerMap.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Grass.asset
 - Assets/AssetBundles/Textures/Map/UI/PanelInventInfo.png
 - Assets/AssetBundles/Textures/UI/Inventory/VhailorInv.png
 - Assets/AssetBundles/Textures/World/NPC/Violet/Fantom.png
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMapBrd.png
+- Assets/AssetBundles/Tiles/dendroid.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconOptSegmentFirst.png
 - Assets/AssetBundles/Textures/Portals/PortalGreenDetails.png
 - Assets/AssetBundles/Textures/World/Floor/Blues/Chip.png
@@ -64,7 +92,9 @@ Assets:
 - Assets/AssetBundles/Textures/Map/GridIcons/KamishMap.png
 - Assets/AssetBundles/Textures/UI/Metal/IronPanel.png
 - Assets/AssetBundles/Textures/World/Prefabs/Blues/Lantern.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Sosna.asset
 - Assets/AssetBundles/Textures/UI/Inventory/PavukInv.png
+- Assets/AssetBundles/Tiles/corals.asset
 - Assets/AssetBundles/Textures/UI/Metal/IronH.png
 - Assets/AssetBundles/Textures/UI/Metal/AlumLine.png
 - Assets/AssetBundles/Textures/Map/SpriteBossBandosMap.png
@@ -73,19 +103,25 @@ Assets:
 - Assets/AssetBundles/Textures/LUT/morningLUT_32.png
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabElka.png
 - Assets/AssetBundles/Textures/Map/UI/CellMap100.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Kamish.asset
+- Assets/AssetBundles/Tiles/lantern.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/IvaMap.png
 - Assets/AssetBundles/Textures/Map/UI/MapGreen.png
 - Assets/AssetBundles/Textures/Map/GridIcons/RoskDarkMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListContainerVersionOn.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossArm.png
 - Assets/AssetBundles/ScriptableData/Priority_Mecha.asset
+- Assets/AssetBundles/Tiles/weed.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlTypeOff.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Triffid.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/ShampinionMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptRepeatFindOff.png
+- Assets/AssetBundles/Tiles/boloto.asset
 - Assets/AssetBundles/Textures/UI/Inventory/WeedflowerInv.png
 - Assets/AssetBundles/Textures/Map/ToolBar/BackOpt.png
 - Assets/AssetBundles/Textures/Map/UI/MapCell.png
 - Assets/AssetBundles/Textures/Map/UI/MapCloseBtn.png
+- Assets/AssetBundles/Tiles/triffid.asset
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/Dialog.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconClearOn.png
 - Assets/AssetBundles/Textures/World/Floor/Red/Orbits.png
@@ -93,7 +129,9 @@ Assets:
 - Assets/AssetBundles/ScriptableData/Priority_Mask.asset
 - Assets/AssetBundles/Textures/UI/Up.png
 - Assets/AssetBundles/Textures/Map/UI/PanelToolDark.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_BlueBerry.asset
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/Kamen.asset
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Osoka.asset
 - Assets/AssetBundles/Textures/Terra/Flore/PrefabElka.png
 - Assets/AssetBundles/Textures/Map/SpriteBossAlienMap.png
 - Assets/AssetBundles/Textures/NPC/Shadow.png
@@ -102,12 +140,16 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/IconCursorCtr.png
 - Assets/AssetBundles/Textures/TilesPrefab/PrefabElka.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/HeroAnim.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Berry.asset
 - Assets/AssetBundles/Textures/World/DetailsNPC/ZergonDetails.png
 - Assets/AssetBundles/Textures/Map/SpriteBossDroidMap.png
 - Assets/AssetBundles/Textures/UI/TittleWood.png
+- Assets/AssetBundles/Tiles/mecha.asset
 - Assets/AssetBundles/Textures/TilesPrefab/PrefabVood.png
+- Assets/AssetBundles/Tiles/kolba.asset
 - Assets/AssetBundles/Textures/UI/CursorPoint.png
 - Assets/AssetBundles/Textures/World/Prefabs/Red/Triffid.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_RockValun.asset
 - Assets/AssetBundles/Textures/Map/UI/CellMapLgt.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground.png
 - Assets/AssetBundles/Textures/Map/GridIcons/CloudwoodMap.png
@@ -116,6 +158,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/BananasInv.png
 - Assets/AssetBundles/Textures/Map/UI/CellMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconTeleportOn.png
+- Assets/AssetBundles/Tiles/orbits.asset
 - Assets/AssetBundles/Textures/NarmalMaps/WallRock.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground02.png
 - Assets/AssetBundles/Textures/NPC/TilesNPC/UFO.asset
@@ -125,12 +168,15 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlTerraDel.png
 - Assets/AssetBundles/Textures/Map/ToolBar/RefreshMapP.png
 - Assets/AssetBundles/Textures/UI/Metal/StainlessM200.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Bananas.asset
 - Assets/AssetBundles/ScriptableData/Priority_Lollipop.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlPrefabOff.png
 - Assets/AssetBundles/Textures/World/NPC/Violet/Mask.png
+- Assets/AssetBundles/Tiles/nerv.asset
 - Assets/AssetBundles/Textures/UI/TrackPoints.png
 - Assets/AssetBundles/Textures/Map/VoodMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlPrefabCheck.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Pandora.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/ClubenMap.png
 - Assets/AssetBundles/Textures/Map/GridIcons/GrassMediumMap.png
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/ActionIconMove.png
@@ -169,38 +215,48 @@ Assets:
 - Assets/AssetBundles/Textures/NPC/Hero.png
 - Assets/AssetBundles/Textures/Map/GridIcons/RockValunMap.png
 - Assets/AssetBundles/Textures/UI/Metal/IronHM200.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_GrassMedium.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconOptSegmentRangeOn.png
 - Assets/AssetBundles/Textures/TilesPrefab/Tiles/PrefabWallRock.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/RockDark.png
 - Assets/AssetBundles/Textures/Map/UI/MapGreenLgt.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Nadmozg.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/SosnaMap.png
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBoss.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconMap.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Gecsagon.asset
 - Assets/AssetBundles/ScriptableData/Priority_Machineool.asset
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Lantern.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/CoralsMap.png
 - Assets/AssetBundles/Textures/World/Flore/Gray/Tussock.png
 - Assets/AssetBundles/Textures/Map/GridIcons/KishkaMap.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/MechaDetailsFront.png
 - Assets/AssetBundles/Textures/Map/GridIcons/NervMap.png
 - Assets/AssetBundles/Textures/Map/UI/BorderCell.png
+- Assets/Dust/Prefabs/Terraria/NPC/PrefabUfo.prefab
 - Assets/AssetBundles/Textures/UI/Inventory/InspectorInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/loudwoodInv.png
 - Assets/AssetBundles/Textures/LUT/Night_2_LUT_32.png
 - Assets/AssetBundles/ScriptableData/Priority_Fantom.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabWallWoodNormapMapQ.png
 - Assets/AssetBundles/Textures/Map/SpriteBossMap.png
+- Assets/AssetBundles/Tiles/skvid.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PolyanaNormalMap2.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Kishka.asset
 - Assets/AssetBundles/Textures/World/NPC/Red/Blastarr.png
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/Tundra.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconLayerOn.png
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/BlueBerry.png
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/Kochki.asset
+- Assets/AssetBundles/Tiles/weedflower.asset
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossRed.prefab
 - Assets/AssetBundles/Textures/World/Prefabs/Green/Pandora.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/GrassSmall.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconBrush.png
 - Assets/AssetBundles/Textures/Map/GridIcons/ParketMap.png
 - Assets/AssetBundles/Textures/World/Floor/Red/Nerv.png
 - Assets/AssetBundles/Textures/UI/Metal/AlumLineM200.png
+- Assets/AssetBundles/Tiles/lollipop.asset
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground05.png
 - Assets/AssetBundles/Textures/World/Floor/Green/Mashrooms.png
 - Assets/AssetBundles/Textures/SpriteAtlaNPC.spriteatlas
@@ -208,10 +264,14 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/CollipopInv.png
 - Assets/AssetBundles/Textures/World/Prefabs/Green/Chpok.png
 - Assets/AssetBundles/Textures/UI/Inventory/MachinetoolInv.png
+- Assets/Dust/Prefabs/Terraria/NPC/PrefabNPC.prefab
 - Assets/AssetBundles/Textures/SpriteAtlasWorld.spriteatlas
+- Assets/AssetBundles/Tiles/berry.asset
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Cloudwood.asset
 - Assets/AssetBundles/Textures/UI/Inventory/PandoraInv.png
 - Assets/AssetBundles/Textures/World/NPC/Red/Pavuk.png
 - Assets/AssetBundles/Textures/NarmalMaps/RockMaterial.mat
+- Assets/AssetBundles/Tiles/diods.asset
 - Assets/AssetBundles/Textures/Map/SpriteBossArmMap.png
 - Assets/AssetBundles/Textures/Terra/Floor/Block.png
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/Sosna.png
@@ -219,8 +279,10 @@ Assets:
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBossArm.asset
 - Assets/AssetBundles/ScriptableData/Priority_Garry.asset
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground03.png
+- Assets/AssetBundles/Tiles/inspector.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Violet/Cloudwood.png
 - Assets/AssetBundles/ScriptableData/Priority_Pavuk.asset
+- Assets/AssetBundles/Tiles/mashrooms.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/AraculMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconClear.png
 - Assets/AssetBundles/Textures/UI/Inventory/TriffidInv.png
@@ -232,30 +294,41 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/InventCasePrefab.png
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/PrefabFieldL.asset
 - Assets/AssetBundles/Textures/Terra/Flore/PrefabVood.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Ground04.asset
 - Assets/AssetBundles/Textures/NarmalMaps/LightTerra.mat
 - Assets/AssetBundles/Textures/World/Flore/Gray/Osoka.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Iva.asset
 - Assets/AssetBundles/Textures/Map/ElkaMap.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Diods.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/Iva.png
 - Assets/AssetBundles/Textures/World/NPC/Hero.png
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabRock.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Nerv.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/DiodsMap.png
+- Assets/AssetBundles/Tiles/gecsagon.asset
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/Boloto.asset
+- Assets/AssetBundles/Tiles/hydragon.asset
 - Assets/AssetBundles/Textures/Portals/PortalGreenCreatorDetails.png
 - Assets/AssetBundles/Textures/NPC/SpriteBoss.png
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/RockBrown.png
+- Assets/AssetBundles/Tiles/desert.asset
 - Assets/AssetBundles/Textures/Map/UI/BorderCell100.png
 - Assets/AssetBundles/Textures/Terra/Grass300.png
 - Assets/AssetBundles/Textures/Map/GridIcons/BananasMap.png
 - Assets/AssetBundles/Textures/UI/ExpandClose.png
+- Assets/AssetBundles/Tiles/vhailor.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlPrefabDel.png
+- Assets/AssetBundles/Tiles/chip.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenFullDel.png
 - Assets/AssetBundles/Textures/Terra/Pool.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossLizard.png
 - Assets/AssetBundles/Textures/Terra/Floor/Boloto.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/MaskDetails.png
 - Assets/AssetBundles/Textures/Terra/Floor/PrefabFieldL.png
+- Assets/AssetBundles/Tiles/cluben.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabVood.png
 - Assets/AssetBundles/Textures/Map/GridIcons/OsacaMap.png
+- Assets/AssetBundles/Tiles/fantom.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/RockValun.png
 - Assets/AssetBundles/Textures/LUT/Evening_1_LUT_32.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListVersionOff.png
@@ -267,18 +340,22 @@ Assets:
 - Assets/AssetBundles/Textures/Map/GridIcons/WeedMap.png
 - Assets/AssetBundles/Textures/NarmalMaps/MaterialHero.mat
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMapButton.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Shampinion.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlTerraCheck.png
 - Assets/AssetBundles/Textures/Map/GridIcons/BlueBerryMap.png
 - Assets/AssetBundles/Textures/UI/Metal/IronGlassM200.png
 - Assets/AssetBundles/Textures/Map/UI/BorderSelectCellPalette.png
 - Assets/AssetBundles/Textures/Portals/PortalBlueCreator.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Mashrooms.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/IrisMap.png
 - Assets/AssetBundles/Textures/Map/GridIcons/GecsagonMap.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_RockDark.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/NadmozgMap.png
 - Assets/AssetBundles/Textures/Map/GridIcons/GroundMap.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/GrassMedium.png
 - Assets/AssetBundles/Textures/Map/UI/CellMapGrid.png
 - Assets/AssetBundles/Textures/Map/RockMap.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Tussock.asset
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBossRed.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Green/Cluben.png
 - Assets/AssetBundles/Textures/Terra/Floor/Polyana.png
@@ -292,6 +369,8 @@ Assets:
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/VhailorDetailsFront.png
 - Assets/AssetBundles/Textures/UI/MaterialTtackLine.mat
 - Assets/AssetBundles/Textures/Map/UI/PanelToolVertical.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Ground05.asset
+- Assets/AssetBundles/Tiles/mask.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/PandoraMap.png
 - Assets/AssetBundles/Textures/World/NPC/Gray/Ej.png
 - Assets/AssetBundles/ScriptableData/Priority_Inspector.asset
@@ -308,44 +387,56 @@ Assets:
 - Assets/AssetBundles/Textures/UI/FrameMap300.png
 - Assets/AssetBundles/Textures/Terra/Wall/WallWoodL.png
 - Assets/AssetBundles/Textures/World/Floor/Violet/Diods.png
+- Assets/Dust/Prefabs/Terraria/NPC/PrefabBigNPC.prefab
 - Assets/AssetBundles/Textures/UI/TittleGreen.png
 - Assets/AssetBundles/Textures/Map/GridIcons/KlenMap.png
 - Assets/AssetBundles/Textures/Portals/PortalGreenFetus.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_RockBrown.asset
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Klen.asset
 - Assets/AssetBundles/Textures/Terra/Kust.png
 - Assets/AssetBundles/Textures/NarmalMaps/WallWood.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Weedflower.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/KolbaMap.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossDroid.png
 - Assets/AssetBundles/Textures/TilesPrefab/PrefabRock.png
 - Assets/AssetBundles/Textures/UI/Inventory/CkubenInv.png
 - Assets/AssetBundles/Textures/Map/UI/AtlasMapTexture.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Swamp.asset
 - Assets/AssetBundles/Textures/Map/UI/PanelCollectionTile.png
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlFullOff.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/LolipopDetails.png
 - Assets/AssetBundles/Textures/UI/Inventory/MaskInv.png
 - Assets/AssetBundles/Textures/TilesPrefab/PrefabWallWood.png
 - Assets/AssetBundles/Textures/World/NPC/Blues/Mecha.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Weed.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/GrassMap.png
 - Assets/AssetBundles/Textures/Portals/PortalVioletCreator.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Aracul.asset
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/PrefabFieldH.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconReloadWorldOn.png
+- Assets/Dust/Prefabs/Terraria/NPC/PrefabBoss.prefab
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/GaryDetailsFront.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconReload.png
 - Assets/AssetBundles/Textures/Portals/PoralRedFloor.png
 - Assets/AssetBundles/Textures/LUT/Evening_2_LUT_32.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Cluben.asset
 - Assets/AssetBundles/Textures/UI/Inventory/DendroidInv.png
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/Klen.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/Grass.png
 - Assets/AssetBundles/Textures/Map/GridIcons/OrbitsMap.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/BlastarrDetails.png
 - Assets/AssetBundles/Textures/Map/ToolBar/optGenSaveUpdate.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Orbits.asset
 - Assets/AssetBundles/Textures/World/NPC/Green/Gary.png
 - Assets/AssetBundles/Textures/UI/ExpandOpen.png
 - Assets/AssetBundles/Textures/Map/GridIcons/ChpokMap.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/SkvidDetails.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Desert.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/BerryMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconOptSegmentMarginDOff.png
 - Assets/AssetBundles/Textures/UI/TittleGranit.png
 - Assets/AssetBundles/Textures/World/NPC/Red/Hydragon.png
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossDroid.prefab
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListContainerVersionOff.png
 - Assets/AssetBundles/Textures/World/Floor/Blues/Swamp.png
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMapPlt.png
@@ -357,12 +448,16 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlTypeCheck.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/EjDetails.png
 - Assets/AssetBundles/Textures/Terra/Wall/WallRock.png
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossAlien.prefab
 - Assets/AssetBundles/Textures/UI/Inventory/GrassInv.png
+- Assets/AssetBundles/Tiles/machinetool.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/DustMap.png
 - Assets/AssetBundles/Textures/SpriteAtlasInventory.spriteatlas
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Corals.asset
 - Assets/AssetBundles/Textures/LUT/NeutralLUT_16.png
 - Assets/AssetBundles/Textures/LUT/NeutralLUT_32.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossBandos.png
+- Assets/AssetBundles/Tiles/pavuk.asset
 - Assets/AssetBundles/Textures/Terra/Wall/Wall.png
 - Assets/AssetBundles/Textures/Map/SpriteBossLizardMap.png
 - Assets/AssetBundles/Textures/World/Floor/Green/Weed.png
@@ -373,6 +468,8 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Metal/IronGlass.png
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/DialogIcon.png
 - Assets/AssetBundles/Textures/NarmalMaps/PolyanaNormalMap.png
+- Assets/AssetBundles/Tiles/chpok.asset
+- Assets/AssetBundles/Tiles/cloudwood.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconBrush35.png
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/ActionIconWork.png
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabWallRockNormalMapQ.png
@@ -383,6 +480,7 @@ Assets:
 - Assets/AssetBundles/Textures/Terra/Floor/PrefabFieldH.png
 - Assets/AssetBundles/Textures/Map/GridIcons/ChipMap.png
 - Assets/AssetBundles/Textures/UI/Inventory/FangsInv.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Ground.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Violet/Aracul.png
 - Assets/AssetBundles/ScriptableData/Priority_Skvid.asset
 - Assets/AssetBundles/Textures/Map/SpriteBossBoobleMap.png
@@ -390,16 +488,21 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/BerryInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/SwampInw.png
 - Assets/AssetBundles/ScriptableData/ContainerPriorityFinder.asset
+- Assets/AssetBundles/Tiles/pandora.asset
 - Assets/AssetBundles/Textures/NarmalMaps/HeroNormalMap.png
 - Assets/AssetBundles/Textures/UI/Inventory/GaryInv.png
+- Assets/AssetBundles/ScriptableData/Flore/Priority_Iris.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconOptSegmentLast.png
 - Assets/AssetBundles/Textures/World/NPC/Green/Lollipop.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/PavukDetails.png
+- Assets/Dust/Prefabs/Terraria/NPC/SpriteBossBandos.prefab
 - Assets/AssetBundles/Textures/Map/WallWoodMap.png
+- Assets/AssetBundles/ScriptableData/Wall/Priority_Kolba.asset
 - Assets/AssetBundles/Textures/NarmalMaps/WallRockMaterial.mat
 - Assets/AssetBundles/Textures/Map/UI/PanelTool.png
 - Assets/AssetBundles/Textures/SpriteAtlasPrefabs.spriteatlas
 - Assets/AssetBundles/Textures/World/Prefabs/Green/Bananas.png
+- Assets/AssetBundles/Tiles/shampinion.asset
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/GaryDetailsBack.png
 - Assets/AssetBundles/ScriptableData/Priority_Vhailor.asset
 - Assets/AssetBundles/Textures/Portals/PortalGreenFloor.png
@@ -413,31 +516,41 @@ Assets:
 - Assets/AssetBundles/Textures/NPC/UFO.png
 - Assets/AssetBundles/Textures/Map/UI/PanelInvent.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptRepeatFindOn.png
+- Assets/AssetBundles/Tiles/kamish.asset
+- Assets/AssetBundles/ScriptableData/Floor/Priority_GrassSmall.asset
 - Assets/AssetBundles/Textures/World/Floor/Blues/Gecsagon.png
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBossBandos.asset
 - Assets/AssetBundles/Textures/Terra/Wall/Stolz.jpg
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabWoodNormalMapQ2.png
 - Assets/AssetBundles/Textures/Map/GridIcons/TriffidMap.png
 - Assets/AssetBundles/Textures/TilesPrefab/PrefabWallRock.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Ground03.asset
 - Assets/AssetBundles/Textures/Map/UI/CellMap100L.png
+- Assets/AssetBundles/ScriptableData/Settings/ContainerPriorityFinderTerra.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabRockNormalMap4.png
 - Assets/AssetBundles/Textures/Map/GridIcons/MashroomsMap.png
+- Assets/AssetBundles/Tiles/nadmozg.asset
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/ActionIconCompleted.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/DendroidDetailsFront.png
 - Assets/AssetBundles/Textures/UI/TittleSteel.png
 - Assets/AssetBundles/Textures/UI/Inventory/ZergonInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/ColralsInv.png
+- Assets/AssetBundles/Tiles/gary.asset
+- Assets/AssetBundles/Tiles/blastarr.asset
 - Assets/AssetBundles/Textures/World/Floor/Violet/Fangs.png
 - Assets/AssetBundles/Textures/TilesPrefab/Tiles/PrefabVood.asset
+- Assets/AssetBundles/Tiles/bananas.asset
 - Assets/AssetBundles/Textures/World/Prefabs/Blues/Kolba.png
 - Assets/AssetBundles/Textures/Map/UI/RowDown.png
 - Assets/AssetBundles/Textures/LUT/Night_3_LUT_32.png
+- Assets/AssetBundles/ScriptableData/Floor/Priority_Ground02.asset
 - Assets/AssetBundles/Textures/UI/Inventory/ChpokInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/KamichInv.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/MechaDetails.png
 - Assets/AssetBundles/Textures/NarmalMaps/FieldMaterial.mat
 - Assets/AssetBundles/Textures/Terra/Wall/PlitkaVood.png
 - Assets/AssetBundles/Textures/UI/Metal/stainless.png
+- Assets/AssetBundles/Tiles/parket.asset
 - Assets/AssetBundles/Textures/World/Floor/Green/Berry.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconPaint35.png
 - Assets/AssetBundles/Textures/UI/Inventory/KolbaInv.png
