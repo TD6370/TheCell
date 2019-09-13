@@ -14,9 +14,9 @@ MonoBehaviour:
   TypeObserver: 15
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 
-  PrioritysTypeModelFloor: 
-  PrioritysTypeModelFlore: 
-  PrioritysTypeModelWood: 
+  PrioritysTypeModelFloor: 0b0000000c0000000a0000000900000008000000
+  PrioritysTypeModelFlore: 0b00000006000000050000000300000004000000
+  PrioritysTypeModelWood: 0f0000000d0000000e0000001200000013000000
   PrioritysTypeModelWall: 
-  PrioritysTypePool: 
+  PrioritysTypePool: 0000000001000000
   PrioritysTypeBiomNPC: 

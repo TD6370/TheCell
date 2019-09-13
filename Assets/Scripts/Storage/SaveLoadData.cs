@@ -174,6 +174,7 @@ public class SaveLoadData : MonoBehaviour {
     
     public enum TypePrefabFlore
     {
+        Swamp,
         Kamish,
 
         Berry,
@@ -216,7 +217,6 @@ public class SaveLoadData : MonoBehaviour {
 
     public enum TypePrefabFloors
     {
-        Swamp,
         Chip,
         Gecsagon,
 

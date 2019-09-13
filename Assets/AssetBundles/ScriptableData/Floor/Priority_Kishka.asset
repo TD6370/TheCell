@@ -11,12 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Kishka
   m_EditorClassIdentifier: 
-  TypeObserver: 25
+  TypeObserver: 30
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 
-  PrioritysTypeModelFloor: 
-  PrioritysTypeModelFlore: 
-  PrioritysTypeModelWood: 
+  PrioritysTypeModelFloor: 04000000050000000f00000003000000
+  PrioritysTypeModelFlore: 06000000050000000200000004000000
+  PrioritysTypeModelWood: 0a0000000900000013000000070000000c000000
   PrioritysTypeModelWall: 
-  PrioritysTypePool: 
+  PrioritysTypePool: 0000000001000000
   PrioritysTypeBiomNPC: 

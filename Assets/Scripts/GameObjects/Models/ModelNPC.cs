@@ -1327,7 +1327,8 @@ public class ModelNPC
     }
 
     [XmlType("Weedflower")]
-    public class Weedflower : FloorData
+    //public class Weedflower : FloorData
+    public class Weedflower : FloreData
     {
         public override int Defence { get { return 10; } }
         public override int HP { get { return 10; } }

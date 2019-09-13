@@ -15,7 +15,7 @@ MonoBehaviour:
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 
   PrioritysTypeModelFloor: 010000000200000007000000
-  PrioritysTypeModelFlore: 000000000700000006000000
+  PrioritysTypeModelFlore: 000000000700000008000000
   PrioritysTypeModelWood: 0400000003000000
   PrioritysTypeModelWall: 
   PrioritysTypePool: 0000000001000000
