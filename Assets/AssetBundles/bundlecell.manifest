@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1045092751
+CRC: 455055340
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9db0855f6e335cdd7f8fbb6b39fb171b
+    Hash: ccdd7438123e24f5326d4abf356eacea
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fad850e1e933670fddffa778223dcf2e
+    Hash: c96f0add1d8b8b68e7a2ccd9fca3b268
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -107,7 +107,7 @@ Assets:
 - Assets/AssetBundles/Tiles/lantern.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/IvaMap.png
 - Assets/AssetBundles/Textures/Map/UI/MapGreen.png
-- Assets/AssetBundles/Textures/Map/GridIcons/RoskDarkMap.png
+- Assets/AssetBundles/Textures/Map/GridIcons/RockDarkMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListContainerVersionOn.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossArm.png
 - Assets/AssetBundles/ScriptableData/Priority_Mecha.asset
@@ -224,6 +224,7 @@ Assets:
 - Assets/AssetBundles/Textures/Map/GridIcons/SosnaMap.png
 - Assets/AssetBundles/Textures/NPC/TilesNPC/SpriteBoss.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconMap.png
+- Assets/AssetBundles/Textures/SpriteAtlasTiles.spriteatlas
 - Assets/AssetBundles/ScriptableData/Floor/Priority_Gecsagon.asset
 - Assets/AssetBundles/ScriptableData/Priority_Machineool.asset
 - Assets/AssetBundles/ScriptableData/Wall/Priority_Lantern.asset

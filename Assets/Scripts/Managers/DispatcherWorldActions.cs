@@ -233,6 +233,7 @@ public class DispatcherWorldActions : MonoBehaviour
         actionCurrent = GameActionPersonController.GetCurrentAction(persData);
         GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
 
+        //TEST -----------------------------
         if (Storage.SceneDebug.SettingsScene.IsLog)
             Storage.EventsUI.ListLogAdd = "WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
 

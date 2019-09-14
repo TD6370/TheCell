@@ -210,7 +210,7 @@ public class PlayerManager : MonoBehaviour {
         //Storage.PlayerController.FindFieldCurrent();
             Storage.PlayerController.FindFieldCurrent(false);
         //Debug.Log("Teleporting Hero run test....3");
-        Storage.GenGrid.StartGenGrigField(true);
+        Storage.GenGrid.StartBuildBaseGridField(true);
         //Debug.Log("Teleporting Hero run test....4");
         Storage.GenGrid.LoadObjectsNearHero();
         //Debug.Log("Teleporting Hero run test....5");

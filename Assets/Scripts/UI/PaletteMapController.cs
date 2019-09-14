@@ -200,43 +200,107 @@ public class PaletteMapController : MonoBehaviour {
     public InputField tbxOptSpawnPointRadius;
     public InputField tbxOptSpawnPointScope;
 
-    //bool IsSpawnPoint
-    //int SpawnPointRadius
-    //int SpawnPointScope
-
-    private bool IsSpawnPoint
-    {
-        get
-        {
+    private bool IsSpawnPoint    {
+        get        {
             return checkOptSpawnPoint.isOn;
         }
     }
-    private int SpawnPointRadius
-    {
-        get
-        {
+    private int SpawnPointRadius    {
+        get        {
             int _SpawnPointRadius = 0;
             int.TryParse(tbxOptSpawnPointRadius.text, out _SpawnPointRadius);
             return _SpawnPointRadius;
         }
-        set
-        {
+        set        {
             tbxOptSpawnPointRadius.text = value.ToString();
         }
     }
-    public int SpawnPointScope
-    {
-        get
-        {
+    public int SpawnPointScope    {
+        get        {
             int _SpawnPointScope = 0;
             int.TryParse(tbxOptSpawnPointScope.text, out _SpawnPointScope);
             return _SpawnPointScope;
         }
-        set
-        {
+        set        {
             tbxOptSpawnPointScope.text = value.ToString();
         }
     }
+
+    #region Priority
+    //Option Generic World terra (Priority) 
+    public Toggle checkOptGenericWorldPriorityTerra;
+    public InputField tbxOptPriorityIdleStartPercent;
+    public InputField tbxOptPriorityPrefabPercent;
+    public InputField tbxOptPriorityTreePercent;
+    public InputField tbxOptPriorityRockPercent;
+    public InputField tbxOptPriorityFlorePercent;
+
+    private bool IsGenericWorldPriorityTerra    {
+        get        {
+            return checkOptGenericWorldPriorityTerra.isOn;
+        }
+    }
+
+    public int PriorityIdleStartPercent    {
+        get        {
+            int _PriorityIdleStartPercent = 0;
+            int.TryParse(tbxOptPriorityIdleStartPercent.text, out _PriorityIdleStartPercent);
+            return _PriorityIdleStartPercent;
+        }
+        set        {
+            tbxOptPriorityIdleStartPercent.text = value.ToString();
+        }
+    }
+    public int PriorityPrefabPercent    {
+        get        {
+            int _PriorityPrefabPercent = 0;
+            int.TryParse(tbxOptPriorityPrefabPercent.text, out _PriorityPrefabPercent);
+            return _PriorityPrefabPercent;
+        }
+        set        {
+            tbxOptPriorityPrefabPercent.text = value.ToString();
+        }
+    }
+    public int PriorityTreePercent
+    {
+        get
+        {
+            int _PriorityTreePercent = 0;
+            int.TryParse(tbxOptPriorityTreePercent.text, out _PriorityTreePercent);
+            return _PriorityTreePercent;
+        }
+        set
+        {
+            tbxOptPriorityTreePercent.text = value.ToString();
+        }
+    }
+    public int PriorityRockPercent
+    {
+        get
+        {
+            int _PriorityRockPercent = 0;
+            int.TryParse(tbxOptPriorityRockPercent.text, out _PriorityRockPercent);
+            return _PriorityRockPercent;
+        }
+        set
+        {
+            tbxOptPriorityRockPercent.text = value.ToString();
+        }
+    }
+    public int PriorityFlorePercent
+    {
+        get
+        {
+            int _PriorityFlorePercent = 0;
+            int.TryParse(tbxOptPriorityFlorePercent.text, out _PriorityFlorePercent);
+            return _PriorityFlorePercent;
+        }
+        set
+        {
+            tbxOptPriorityFlorePercent.text = value.ToString();
+        }
+    }
+    #endregion
 
     // --- options Delete cell prefabs generic option
     private SelCheckOptDel m_TypeModeOptStartDelete = SelCheckOptDel.All;
@@ -1661,7 +1725,8 @@ public class PaletteMapController : MonoBehaviour {
 
         int sizeX = (int)posStructFieldNew.x + size;
         int sizeY = (int)posStructFieldNew.y + size;
-
+        int startX = (int)posStructFieldNew.x;
+        int startY = (int)posStructFieldNew.y;
 
         bool isValidResult = true;
         
@@ -1675,9 +1740,11 @@ public class PaletteMapController : MonoBehaviour {
             countCellInConstruct = dtTiles.Height * dtTiles.Height;
         }
 
-        if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
+        bool isBrushDraw = SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap;
+        if (isBrushDraw)
         {
-
+            BrushDrawSingletonCell(selDataTile, startX, startY, sizeX, sizeY, limitRepeat, _isClearLayer);
+            /*
             for (int x = (int)posStructFieldNew.x; x < sizeX; x++)
             {
                 for (int y = (int)posStructFieldNew.y; y < sizeY; y++)
@@ -1707,6 +1774,7 @@ public class PaletteMapController : MonoBehaviour {
                 }
                 indexRepeat = 0;
             }
+            */
         }
         else
         {
@@ -1727,10 +1795,12 @@ public class PaletteMapController : MonoBehaviour {
             if (SubsystemLevel == 0) SubsystemLevel = 10;
             int minLevel = (SubsystemLevel / 2) * (-1);
             int maxLevel = (SubsystemLevel / 2);
-            int startX = (int)posStructFieldNew.x;
-            int startY = (int)posStructFieldNew.y;
 
-            if (IsSpawnPoint)
+            if (IsGenericWorldPriorityTerra)
+            {
+                Storage.GenWorld.GenericWorldPriorityTerra(PriorityIdleStartPercent, PriorityPrefabPercent, PriorityTreePercent, PriorityRockPercent, PriorityFlorePercent);
+            }
+            else if (IsSpawnPoint)
             {
                 if (isLog)
                     Storage.EventsUI.ListLogAdd = "standart generation 1.";
@@ -1784,6 +1854,40 @@ public class PaletteMapController : MonoBehaviour {
         else
         {
             //Storage.Events.ListLogAdd = "Create construct NOT in zona";
+        }
+    }
+
+    private void BrushDrawSingletonCell(DataTile selDataTile, int startX, int startY, int sizeX, int sizeY, int limitRepeat, bool _isClearLayer)
+    {
+        bool isValidResult = true;
+        int indexRepeat = 0;
+        for (int x = startX; x < sizeX; x++)
+        {
+            for (int y = startY; y < sizeY; y++)
+            {
+                string fieldNew = Helper.GetNameField(x, y);
+
+                if (_isClearLayer)
+                    GenericWorldManager.ClearLayerForStructure(fieldNew);
+
+                if (!IsGenericContruct)
+                {
+                    isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, _isClearLayer);
+                }
+                else
+                {
+                    Storage.Instance.SelectFieldCursor = fieldNew;
+                    GenericContructInGridData();
+                }
+
+                if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
+                {
+                    //#repeat
+                    y--;
+                    indexRepeat++;
+                }
+            }
+            indexRepeat = 0;
         }
     }
 

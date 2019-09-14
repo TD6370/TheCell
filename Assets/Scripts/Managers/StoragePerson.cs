@@ -96,39 +96,6 @@ public class StoragePerson : MonoBehaviour {
 
     }
 
-    private void LoadPriorityPerson()
-    {
-        try
-        {
-            Storage.EventsUI.ListLogAdd = "...LoadPriorityPerson....";
-            if(ContainerPrioritys == null)
-            {
-                ContainerPrioritys = ScriptableObjectUtility.LoadContainerPriorityFinder;
-                if(ContainerPrioritys == null)
-                    ContainerPrioritys = ScriptableObjectUtility.LoadContainerPriorityFinderByResource;
-                if (ContainerPrioritys == null)
-                {
-                    Storage.EventsUI.ListLogAdd = "ContainerPriority is null";
-                    return;
-                }
-            }
-            if (ContainerPrioritys.CollectionPriorityFinder == null)
-            {
-                Storage.EventsUI.ListLogAdd = "ContainerPriority.CollectionPriorityFinder is null";
-                return;
-            }
-            Storage.EventsUI.ListLogAdd = "CollectionPriorityFinder Count = " + ContainerPrioritys.CollectionPriorityFinder.Count();
-            PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
-            foreach (var prior in ContainerPrioritys.CollectionPriorityFinder)
-            {
-                PersonPriority.Add(prior.TypeObserver, prior);
-            }
-            FillAllPriority();
-        }catch(Exception ex)
-        {
-            Storage.EventsUI.ListLogAdd = "##### LoadPriorityPerson : " + ex.Message;
-        }
-    }
 
     public Sprite[] GetSpritesAtlasNPC()
     {
@@ -850,7 +817,7 @@ public class StoragePerson : MonoBehaviour {
         //v.1
         if (versionSearching == 1)
             //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
-            result = FindFromLocation(dataAlien, distantionFind);
+            result = Helper.FindFromLocation(dataAlien, distantionFind);
         //v.2
         if (versionSearching == 2)
         {
@@ -863,218 +830,29 @@ public class StoragePerson : MonoBehaviour {
 
         return result;
     }
-
-
-
-
-    //public Vector3 GetAlienNextTarget(ModelNPC.GameDataAlien dataAlien)
-    //{
-    //    //string typeAlien = dataAlien.TypePrefabName;
-    //    //Storage.ReaderWorld
-    //    PriorityFinder prioritys = PersonPriority[dataAlien.TypePrefab];
-    //    int distantionFind = UnityEngine.Random.Range(2, 15);
-
-    //    ModelNPC.ObjectData result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id);
-
-    //    if (result == null)
-    //        return Vector3.zero;
-
-    //    return result.Position;
-    //}
-    public ModelNPC.ObjectData FindFromLocation(ModelNPC.GameDataAlien dataAlien, int distantion)
-    {
-        Vector2 Position = dataAlien.Position;
-        string id_Observer = dataAlien.Id;
-        string id_PrevousTarget = dataAlien.PrevousTargetID;
-        SaveLoadData.TypePrefabs typeObserver = dataAlien.TypePrefab;
-
-        //string fieldName = Helper.GetNameField(Position);
-        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
-        Vector2 posField = Helper.GetPositByField(fieldName);
-        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-
-        //ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, prioritys, id_Observer, typeObserver, id_PrevousTarget);
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget);
-        return finder.ResultData;
-    }
-
-    //public  ModelNPC.ObjectData FindFromLocation(Vector2 Position, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
-    //{
-
-    //    //string fieldName = Helper.GetNameField(Position);
-    //    string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
-    //    Vector2 posField = Helper.GetPositByField(fieldName);
-    //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-
-    //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, prioritys, id_Observer, typeObserver);
-    //    return finder.ResultData;
-    //}
-
-    //public ModelNPC.ObjectData FindFromLocation(Vector2Int fieldPosit, int distantion, PriorityFinder prioritys, string id_Observer, SaveLoadData.TypePrefabs typeObserver)
-    //{
-    //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(fieldPosit, distantion, prioritys, id_Observer, typeObserver);
-    //    return finder.ResultData;
-    //}
     
-    [Header("Count Prioritys Join ID")]
-    public int CountPrioritysJoinID = 0;
-
-    public void FillAllPriority()
+    private void LoadPriorityPerson()
     {
-        var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabs)).Length - 1;
-        //var ind = UnityEngine.Random.Range(12, max);
-        //var prefabNameGet = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), ind.ToString());
-
-        //prefabNameGet = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), ind.ToString());
-
-        CollectionPowerAllTypes = new Dictionary<string, int>();
-
-        SaveLoadData.TypePrefabs prefabNameType;
-        SaveLoadData.TypePrefabs prefabNameTypeTarget;
-        for (int ind = 0; ind < max; ind++)
+        try
         {
-            prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), ind.ToString());
-            //if (Helper.IsTypePrefabNPC(prefabNameType.ToString()))
-            if(PersonPriority.ContainsKey(prefabNameType))
-            {
-                ModelNPC.ObjectData objData = BilderGameDataObjects.BildObjectData(prefabNameType.ToString());
-                PriorityFinder prioritys = PersonPriority[prefabNameType];
-                for (int indT = 0; indT < max; indT++)
-                {
-                    prefabNameTypeTarget = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), indT.ToString());
-                    ModelNPC.ObjectData objDataTarget = BilderGameDataObjects.BildObjectData(prefabNameTypeTarget.ToString());
-                    int power = GetPriorityPower(objDataTarget, prioritys);
-                    string keyJoinNPC = prefabNameType + "_" + prefabNameTypeTarget;
-                    CollectionPowerAllTypes.Add(keyJoinNPC, power);
-                }
-            }
+            PersonPriority = Helper.GetPrioritys(ContainerPrioritys,"NPC");
+            CollectionPowerAllTypes = Helper.FillPrioritys(PersonPriority);
         }
-        CountPrioritysJoinID = CollectionPowerAllTypes.Count(); 
-        //Storage.EventsUI.ListLogAdd = "COUNT PRIORITYS JOIN ID : " + CollectionPowerAllTypes.Count();
-    }
-
-    public static int GetPriorityPower(string id, PriorityFinder priority)
-    {
-        if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(id))
+        catch (Exception ex)
         {
-            Debug.Log("######### Error GetPrioriryPower=" + id);
+            Storage.EventsUI.ListLogAdd = "##### LoadTerraPriority : " + ex.Message;
         }
-
-        int power = 0;
-
-        var objData = Storage.ReaderWorld.CollectionInfoID[id].Data;
-        return Storage.Person.GetPriorityPower(objData, priority);
-
-        //return GetPriorityPowerByJoin(objData, priority);
     }
 
     public int GetPriorityPowerByJoin(SaveLoadData.TypePrefabs prefabNameType, SaveLoadData.TypePrefabs prefabNameTypeTarget)
     {
         string keyJoinNPC = prefabNameType + "_" + prefabNameTypeTarget;
-        if(!Storage.Person.CollectionPowerAllTypes.ContainsKey(keyJoinNPC))
+        if (!CollectionPowerAllTypes.ContainsKey(keyJoinNPC))
         {
             Debug.Log("########## GetPriorityPowerByJoin Not Key = " + keyJoinNPC);
             return 0;
         }
-        return Storage.Person.CollectionPowerAllTypes[keyJoinNPC];
-    }
-
-   
-    public List<SaveLoadData.TypePrefabs> GetPrioritysTypeModel(PriorityFinder priority)
-    {
-        List<SaveLoadData.TypePrefabs> getPrioritysTypeModel = new List<SaveLoadData.TypePrefabs>();
-        getPrioritysTypeModel.AddRange(priority.PrioritysTypeModelAll);
-
-        foreach (var item in priority.PrioritysTypeModelNPC)
-        {
-            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
-            getPrioritysTypeModel.Add(prioriT);
-        }
-        foreach (var item in priority.PrioritysTypeModelFloor)
-        {
-            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
-            getPrioritysTypeModel.Add(prioriT);
-        }
-        foreach (var item in priority.PrioritysTypeModelFlore)
-        {
-            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
-            getPrioritysTypeModel.Add(prioriT);
-        }
-        foreach (var item in priority.PrioritysTypeModelWood)
-        {
-            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
-            getPrioritysTypeModel.Add(prioriT);
-        }
-        foreach (var item in priority.PrioritysTypeModelWall)
-        {
-            var prioriT = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), item.ToString());
-            getPrioritysTypeModel.Add(prioriT);
-        }
-
-
-        return getPrioritysTypeModel;
-    }
-   
-
-    public int GetPriorityPower(ModelNPC.ObjectData objData, PriorityFinder priority)
-    {
-        int power = 0;
-        SaveLoadData.TypePrefabs typeModel = objData.TypePrefab;
-        PoolGameObjects.TypePoolPrefabs typePool = objData.TypePoolPrefab;
-        TypesBiomNPC biomNPC = GetBiomByTypeModel(typeModel);
-
-        int slotPower = 3;
-        int maxtPrioprity = 10;
-        //maxtPrioprity = priority.GetPrioritysTypeModel().Count() * slotPower;
-        maxtPrioprity = GetPrioritysTypeModel(priority).Count() * slotPower;
-        //foreach (SaveLoadData.TypePrefabs itemModel in priority.GetPrioritysTypeModel())
-        foreach (SaveLoadData.TypePrefabs itemModel in GetPrioritysTypeModel(priority))
-        {
-            if (itemModel == typeModel)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-        maxtPrioprity = priority.PrioritysTypeBiomNPC.Count() * slotPower;
-        foreach (TypesBiomNPC itemBiom in priority.PrioritysTypeBiomNPC)
-        {
-            if (itemBiom == biomNPC)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-        maxtPrioprity = priority.PrioritysTypeBiomNPC.Count() * slotPower;
-        foreach (PoolGameObjects.TypePoolPrefabs itemPool in priority.PrioritysTypePool)
-        {
-            if (itemPool == typePool)
-            {
-                power += maxtPrioprity;
-                break;
-            }
-            maxtPrioprity -= slotPower;
-        }
-
-        return power;
-    }
-
-    public static TypesBiomNPC GetBiomByTypeModel(SaveLoadData.TypePrefabs typeModel)
-    {
-        TypesBiomNPC resType = TypesBiomNPC.None;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomBlue), typeModel.ToString()))
-            return TypesBiomNPC.Blue;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomGreen), typeModel.ToString()))
-            return TypesBiomNPC.Green;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomRed), typeModel.ToString()))
-            return TypesBiomNPC.Red;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomViolet), typeModel.ToString()))
-            return TypesBiomNPC.Violet;
-        if (Enum.IsDefined(typeof(SaveLoadData.TypesBiomGray), typeModel.ToString()))
-            return TypesBiomNPC.Gray;
-        return resType;
+        return CollectionPowerAllTypes[keyJoinNPC];
     }
 
 

@@ -9,5 +9,5 @@ public class ContainerPriorityFinder : ScriptableObject
     [SerializeField]
     public PriorityFinder[] CollectionPriorityFinder;
     [SerializeField]
-    public int T2;
+    public string Tag;
 }

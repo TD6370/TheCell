@@ -30,28 +30,20 @@ public class GenerateGridFields : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-
         _sctiptData = GetComponent<SaveLoadData>();
         if (_sctiptData == null)
             Debug.Log("GenerateGridFields.Start : sctiptData not load !!!");
-
-        //LoadPoolGameObjects();
-
-
-        //StartCoroutine(CalculateTilesObjects());
     }
 
     void Awake()
     {
-
     }
 
     // Update is called once per frame
     void Update() {
-
     }
 
-    public void StartGenGrigField(bool isOffsetHero = false)
+    public void StartBuildBaseGridField(bool isOffsetHero = false)
     {
         int maxWidth = (int)GridY * -1;
         int maxHeight = (int)GridX;
@@ -280,14 +272,8 @@ public class GenerateGridFields : MonoBehaviour {
         //Profiler.EndSample();
     }
 
-    public void LoadObjectToReal(string nameField)
-    {
-
-        LoadGameObjectDataForLook_2(nameField);
-    }
-
     //загрузка из данныx объектов из памяти и создание их на поле  ADDED FOR LOOK - DATA 2
-    private void LoadGameObjectDataForLook_2(string p_nameField)
+    public void LoadObjectToReal(string p_nameField)
     {
         var _gridData = Storage.Instance.GridDataG;
         var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
@@ -441,10 +427,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
-
-
     //REMOVE FOR LOOK
-    //private void RemoveRealObjects_Data(string p_nameField)
     public void RemoveRealObjects(string p_nameField)
     {
         if (!Storage.Instance.GamesObjectsReal.ContainsKey(p_nameField))
@@ -472,55 +455,6 @@ public class GenerateGridFields : MonoBehaviour {
             Storage.Data.RemoveFieldRealObject(p_nameField, "RemoveRealObjects");
         }
     }
-
-    private int ConflictLog(GameObject gobj, string p_nameField, List<ModelNPC.ObjectData> dataObjects)
-    {
-        FindPersonData findPersonData = null;
-        int indDataNew = -1;
-        //var listDataObjsInField = Storage.Person.GetAllDataPersonsForName(p_nameField);
-        //----------
-        FindPersonData findPersonDataT = Storage.Person.GetFindPersonsDataForName(gobj.name.GetID());
-        if (findPersonDataT != null)
-        {
-            Debug.Log("##..... ConflictLog (" + gobj.name + ") GetFindPersonsDataForName[" + findPersonDataT.Field + "]: " + findPersonDataT.DataObj);
-            if (gobj.name == findPersonDataT.DataObj.NameObject && findPersonDataT.Field == p_nameField)
-            {
-                indDataNew = findPersonDataT.Index;
-                if (dataObjects.Count <= indDataNew)
-                {
-                    Debug.Log("##..... ConflictLog indDataNew[" + indDataNew + "]  out of range " + dataObjects.Count);
-                }
-                else
-                {
-                    if (dataObjects[indDataNew].NameObject != gobj.name)
-                    {
-                        Debug.Log("##..... ConflictLog dataObjects[" + indDataNew + "].NameObject[" + dataObjects[indDataNew].NameObject + "]  <>  GOBJ: " + gobj.name);
-                        Debug.Log("##..... Objects in Data : ");
-                        foreach (var doItem in dataObjects)
-                        {
-                            Debug.Log("#................. Data : " + doItem.ToString());
-                        }
-                        return -1;
-                    }
-                    else
-                    {
-                        return indDataNew;
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("##..... ConflictLog [" + p_nameField + "] (" + gobj.name + ") <> [" + findPersonDataT.Field + "]: " + findPersonDataT.DataObj);
-            }
-        }
-        else
-        {
-            return -1;
-        }
-        return -1;
-    }
-
-    //#.D //UPDATE FOR LOOK - DATA_2
 
     private void SaveListObjectsToData(string p_nameField, bool isDestroy = false)
     {
@@ -591,7 +525,7 @@ public class GenerateGridFields : MonoBehaviour {
                     {
                         Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
 
-                        int newIndex = ConflictLog(gobj, p_nameField, dataObjects);
+                        int newIndex = Storage.Log.ConflictLog(gobj, p_nameField, dataObjects);
                         if (newIndex == -1)
                         {
                             Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
@@ -859,7 +793,6 @@ public class GenerateGridFields : MonoBehaviour {
         LoadObjectsNearHero();
     }
 
-    //static Type CompType;
     private GameObject GetPrefabFieldFloor(Vector3 pos, string nameFieldNew)
     {
         GameObject resGO;

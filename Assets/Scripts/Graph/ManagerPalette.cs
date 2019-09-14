@@ -156,27 +156,28 @@ public class ManagerPalette : MonoBehaviour {
             {
                 m_SpritesMaps = new Dictionary<string, Sprite>();
                 Sprite[] _sprites = GetSpritesAtlasMapPrefab();
-                string nameSprite;
-                int indS = 0;
+                //string nameSprite;
+                //int indS = 0;
+                //------------------- Legacy code -- Textures/Map/GridIcons in SpritesAtlasMapPrefab
+                /*
                 foreach (Sprite sprt in _sprites)
                 {
                     var textureItem =  sprt.texture;
                     //Texture2D textureItem = _sprites[indS].texture;
                     //indS++;
-
                     nameSprite = sprt.name.Replace("(Clone)", "");
                     nameSprite = nameSprite.Replace("Map", "");
-
-                    Texture2D textureRes = Resources.Load<Texture2D>("Textures/Map/GridIcons/" + nameSprite + "Map");
-                    if (textureRes != null)
-                        textureItem = textureRes;
-
-                    m_SpritesMaps.Add(nameSprite, sprt);
-                    if (TexturesMaps.ContainsKey(nameSprite))
-                        Debug.Log("######## EXIST TEXTURE MAP: " + nameSprite);
-                    else
-                        TexturesMaps.Add(nameSprite, textureItem);
+                    //Texture2D textureRes = Resources.Load<Texture2D>("Textures/Map/GridIcons/" + nameSprite + "Map");
+                    //if (textureRes != null)
+                    //    textureItem = textureRes;
+                    //m_SpritesMaps.Add(nameSprite, sprt);
+                    //if (TexturesMaps.ContainsKey(nameSprite))
+                    //    Debug.Log("######## EXIST TEXTURE MAP: " + nameSprite);
+                    //else
+                    //    TexturesMaps.Add(nameSprite, textureItem);
+                    //---------------
                 }
+                */
             }
             return m_SpritesMaps;
         }

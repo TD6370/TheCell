@@ -609,7 +609,7 @@ public class Storage : MonoBehaviour {
 
         //--------------------- NEW -------------------
         _screiptHero.FindFieldCurrent(false);
-        _scriptGrid.StartGenGrigField(true);
+        _scriptGrid.StartBuildBaseGridField(true);
         _screiptHero.FindFieldCurrent();
 
         //------------------------------

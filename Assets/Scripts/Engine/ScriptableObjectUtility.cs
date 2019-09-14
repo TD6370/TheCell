@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.IO;
 using System;
+using System.Linq;
 
 public static class ScriptableObjectUtility
 {
@@ -116,6 +117,25 @@ public static class ScriptableObjectUtility
             string strErr = "0";
             try
             {
+                ContainerPriorityFinder container = LoadContainerPriorityFinderByTag("NPC");
+                return container;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+            }
+            return null;
+        }
+    }
+
+    //Legacy code
+    public static ContainerPriorityFinder LoadContainerPriorityFinder_
+    {
+        get
+        {
+            string strErr = "0";
+            try
+            {
                 ContainerPriorityFinder container = null;
 
                 if (loadedAssetBundle == null)
@@ -159,6 +179,58 @@ public static class ScriptableObjectUtility
             }
             return null;
         }
+    }
+
+    public static ContainerPriorityFinder LoadContainerPriorityFinderByTag(string tag)
+    {
+
+        string strErr = "0";
+        try
+        {
+            ContainerPriorityFinder container = null;
+
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("load AssetBundle... " + m_name);
+                AssetBundle.UnloadAllAssetBundles(false);
+                loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + m_name);
+            }
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("Failed to load AssetBundle! ");
+                return null;
+            }
+            var bundle = loadedAssetBundle;
+
+            ContainerPriorityFinder containerObj = null;
+            ContainerPriorityFinder[] containerObjs = bundle.LoadAllAssets<ContainerPriorityFinder>();
+
+            if (containerObjs == null)
+                Debug.Log("containerObjs - null");
+            if (containerObjs != null && containerObjs.Length == 0)
+                Debug.Log("containerObjs count = 0");
+
+            if (containerObjs != null && containerObjs.Length != 0)
+            {
+                containerObj = containerObjs.Where(p => p.Tag == tag).FirstOrDefault();
+            }
+
+            if (containerObj != null)
+                Debug.Log("ContainerPriorityFinder >> " + containerObj.name + " by Tag = " + tag);
+
+            container = containerObj as ContainerPriorityFinder;
+            if (container == null)
+            {
+                Debug.Log("Failed to load ContainerPriorityFinder ! ");
+            }
+
+            return container;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+        }
+        return null;
     }
 
 #if UNITY_EDITOR

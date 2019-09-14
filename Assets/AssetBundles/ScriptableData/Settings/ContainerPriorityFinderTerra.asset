@@ -56,4 +56,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 32ab97038771d694c9171c23a32d3144, type: 2}
   - {fileID: 11400000, guid: c695fb3158c1d164ca848ccb2c66305c, type: 2}
   - {fileID: 11400000, guid: f76e1be18f9c41b4d9c5c11fc6f5eb75, type: 2}
-  T2: 0
+  Tag: Terra

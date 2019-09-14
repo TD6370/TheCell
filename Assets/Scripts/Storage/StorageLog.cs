@@ -176,6 +176,53 @@ public class StorageLog //: MonoBehaviour
     }
     #endregion
 
+    public int ConflictLog(GameObject gobj, string p_nameField, List<ModelNPC.ObjectData> dataObjects)
+    {
+        FindPersonData findPersonData = null;
+        int indDataNew = -1;
+        //var listDataObjsInField = Storage.Person.GetAllDataPersonsForName(p_nameField);
+        //----------
+        FindPersonData findPersonDataT = Storage.Person.GetFindPersonsDataForName(gobj.name.GetID());
+        if (findPersonDataT != null)
+        {
+            Debug.Log("##..... ConflictLog (" + gobj.name + ") GetFindPersonsDataForName[" + findPersonDataT.Field + "]: " + findPersonDataT.DataObj);
+            if (gobj.name == findPersonDataT.DataObj.NameObject && findPersonDataT.Field == p_nameField)
+            {
+                indDataNew = findPersonDataT.Index;
+                if (dataObjects.Count <= indDataNew)
+                {
+                    Debug.Log("##..... ConflictLog indDataNew[" + indDataNew + "]  out of range " + dataObjects.Count);
+                }
+                else
+                {
+                    if (dataObjects[indDataNew].NameObject != gobj.name)
+                    {
+                        Debug.Log("##..... ConflictLog dataObjects[" + indDataNew + "].NameObject[" + dataObjects[indDataNew].NameObject + "]  <>  GOBJ: " + gobj.name);
+                        Debug.Log("##..... Objects in Data : ");
+                        foreach (var doItem in dataObjects)
+                        {
+                            Debug.Log("#................. Data : " + doItem.ToString());
+                        }
+                        return -1;
+                    }
+                    else
+                    {
+                        return indDataNew;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("##..... ConflictLog [" + p_nameField + "] (" + gobj.name + ") <> [" + findPersonDataT.Field + "]: " + findPersonDataT.DataObj);
+            }
+        }
+        else
+        {
+            return -1;
+        }
+        return -1;
+    }
+
     public class HistoryGameObject
     {
         public string Name { get; set; }

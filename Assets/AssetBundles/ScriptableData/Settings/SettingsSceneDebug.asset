@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Name: SettingsSceneDebug
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
-  IsShowTittleInfoPerson: 1
+  IsShowTittleInfoPerson: 0
   IsLog: 0
   AutoRefreshOn: 0
   RealDebugOn: 0
   SpeedMovePersonInDream: 1
-  TimeRelax: 0
+  TimeRelax: 1
   TimeWorkAction: 1
-  TimeLimitResetNavigator: 1
+  TimeLimitResetNavigator: 20
   TimeRefreshDebugScene: 0.1
   IsClearTemplate: 0
   TimeClearTemplate: 10

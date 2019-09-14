@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class GenericWorldManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    [SerializeField]
+    public ContainerPriorityFinder ContainerPrioritysTerra;
+    public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> TerraPriority;
+    public Dictionary<string, int> CollectionPowerAllTypes;
+
+    [Header("Count Prioritys Join ID")]
+    public int CountPrioritysJoinID = 0;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -459,8 +468,47 @@ public class GenericWorldManager : MonoBehaviour {
         }
     }
 
-    public void GenericCellWorld()
-    {
 
+    public void GenericWorldPriorityTerra(int PriorityIdleStartPercent, int PriorityPrefabPercent, int PriorityTreePercent, int PriorityRockPercent, int PriorityFlorePercent)
+    {
+        string indErr = "0";
+        ModelNPC.ObjectData requestedGenTerra = null;
+        ModelNPC.ObjectData receivedGenTerra = null;
+        Action _loadPriority = LoadTerraPriority;
+        try
+        {
+            indErr = "1";
+            receivedGenTerra = Helper.GenericOnPriority(requestedGenTerra, TerraPriority, _loadPriority);
+        }
+        catch (Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### GenericCellWorld " + ex.Message;
+            return;
+        }
     }
+
+    private void LoadTerraPriority()
+    {
+        try
+        {
+            TerraPriority = Helper.GetPrioritys(ContainerPrioritysTerra, "Terra");
+            CollectionPowerAllTypes = Helper.FillPrioritys(TerraPriority);
+        }
+        catch (Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### LoadTerraPriority : " + ex.Message;
+        }
+    }
+
+    public int GetPriorityPowerByJoin(SaveLoadData.TypePrefabs prefabNameType, SaveLoadData.TypePrefabs prefabNameTypeTarget)
+    {
+        string keyJoinNPC = prefabNameType + "_" + prefabNameTypeTarget;
+        if (!CollectionPowerAllTypes.ContainsKey(keyJoinNPC))
+        {
+            Debug.Log("########## GetPriorityPowerByJoin Not Key = " + keyJoinNPC);
+            return 0;
+        }
+        return CollectionPowerAllTypes[keyJoinNPC];
+    }
+
 }

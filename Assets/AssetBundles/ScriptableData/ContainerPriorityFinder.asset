@@ -25,4 +25,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 73d86867d1ff86c47bba0e29ac88e219, type: 2}
   - {fileID: 11400000, guid: 9ac0e84d592848c45ad69293ac171954, type: 2}
   - {fileID: 11400000, guid: 477e6f0e8e14e43439a78bbeea76c308, type: 2}
-  T2: 0
+  - {fileID: 11400000, guid: 73291be51e3319041b7486fb79fe0f7e, type: 2}
+  Tag: NPC
