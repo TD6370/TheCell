@@ -35,6 +35,7 @@ public class ManagerPalette : MonoBehaviour {
     public SpriteAtlas SpriteAtlasMapPrefab;
     public SpriteAtlas SpriteAtlasInventory;
     public SpriteAtlas SpriteAtlasUI;
+    public SpriteAtlas SpriteAtlasTiles;
 
     private void Awake()
     {
@@ -200,6 +201,13 @@ public class ManagerPalette : MonoBehaviour {
     {
         Sprite[] spritesAtlas = new Sprite[SpriteAtlasUI.spriteCount];
         SpriteAtlasUI.GetSprites(spritesAtlas);
+        return spritesAtlas;
+    }
+
+    public Sprite[] GetSpriteAtlasTiles()
+    {
+        Sprite[] spritesAtlas = new Sprite[SpriteAtlasTiles.spriteCount];
+        SpriteAtlasTiles.GetSprites(spritesAtlas);
         return spritesAtlas;
     }
 

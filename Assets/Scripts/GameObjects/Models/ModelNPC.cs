@@ -996,11 +996,11 @@ public class ModelNPC
                 Debug.Log("######## Init TerraData: Storage.TilesManager is Empty");
                 return;
             }
-            if (Storage.TilesManager.ListTexturs == null)
-            {
-                Debug.Log("######## Init TerraData: TilesManager.ListTexturs is Empty");
-                return;
-            }
+            //if (Storage.TilesManager.ListTexturs == null)
+            //{
+            //    Debug.Log("######## Init TerraData: TilesManager.ListTexturs is Empty");
+            //    return;
+            //}
             //#FIX null
             if ((!IsLoadad && !IsReality) || ModelView==null)
             {
@@ -1010,7 +1010,9 @@ public class ModelNPC
                     if (TypePrefabName == SaveLoadData.TypePrefabs.PrefabField.ToString())
                     {
                         //fix legacy pool type on gen World GenObjectWorld()
-                        ModelView = Storage.TilesManager.GenNameTileTerra();
+                        //ModelView = Storage.TilesManager.GenNameTileTerra();
+                        Debug.Log("####### LEGACY CODE !!!!!!");
+                        ModelView = null;
                     }
                     else
                     {
@@ -1018,7 +1020,11 @@ public class ModelNPC
                     }
                 }
                 else
-                    ModelView = Storage.TilesManager.ListTexturs[0].name;
+                {
+                    Debug.Log("####### LEGACY CODE !!!!!!");
+                    ModelView = null;
+                }
+                //ModelView = Storage.TilesManager.ListTexturs[0].name;
             }
             //if (Storage.Instance.ReaderSceneIsValid)
             //    Storage.ReaderWorld.UpdateLinkData(this);

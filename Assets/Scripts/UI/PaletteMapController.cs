@@ -140,7 +140,7 @@ public class PaletteMapController : MonoBehaviour {
     public InputField btxIntGenOption4;
     public InputField btxIntGenOption5;
 
-    bool IsSteps
+    public bool IsSteps
     {
         get
         {
@@ -157,7 +157,7 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle checkOptStartSegmentRange;
     public Toggle checkOptStartSegmentIsFirstLast;
     public Toggle checkOptRepeatFind;
-    bool IsRepeatFind {
+    public bool IsRepeatFind {
         get
         {
            return checkOptRepeatFind.isOn;
@@ -224,7 +224,7 @@ public class PaletteMapController : MonoBehaviour {
             tbxOptSpawnPointRadius.text = value.ToString();
         }
     }
-    private int SpawnPointScope
+    public int SpawnPointScope
     {
         get
         {
@@ -240,7 +240,7 @@ public class PaletteMapController : MonoBehaviour {
 
     // --- options Delete cell prefabs generic option
     private SelCheckOptDel m_TypeModeOptStartDelete = SelCheckOptDel.All;
-    private SelCheckOptDel TypeModeOptStartDelete
+    public SelCheckOptDel TypeModeOptStartDelete
     {
         get
         {
@@ -257,7 +257,7 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
     private SelCheckOptDel m_TypeModeOptStartCheck = SelCheckOptDel.All;
-    private SelCheckOptDel TypeModeOptStartCheck
+    public SelCheckOptDel TypeModeOptStartCheck
     {
         get
         {
@@ -280,6 +280,13 @@ public class PaletteMapController : MonoBehaviour {
     public Toggle checkOptStartDeleteTypePrefab;
     public Toggle checkOptStartDeletePrefab;
     public Toggle checkOptStartDeleteTerra;
+
+    public bool IsClearStart
+    {
+        get {
+            return m_ModeOptStartDeleteFull == ModeDelete.Clear;
+        }
+    }
 
     public enum SelCheckOptDel
     {
@@ -335,6 +342,7 @@ public class PaletteMapController : MonoBehaviour {
 
     public float FirstLimitMargin = 0f;
     public float FirstLimitRange = 0f;
+
     public float FirstLimit
     {
         get
@@ -1364,7 +1372,22 @@ public class PaletteMapController : MonoBehaviour {
             string namePrefab = itemTileData.Name;
             string nameTexture = itemTileData.Name;
             bool isUpdate = (isOnLayer && m_listCellsOnPalette.Count > index);
+
+            if (!Storage.TilesManager.CollectionSpriteTiles.ContainsKey(nameTexture))
+            {
+                Debug.Log(Storage.EventsUI.ListLogAdd = "### CollectionSpriteTiles inot found = " + nameTexture);
+                continue;
+            }
             Sprite spriteTile = Storage.TilesManager.CollectionSpriteTiles[nameTexture];
+
+            ///^^^
+            //if (!Storage.Palette.SpritesPrefabs.ContainsKey(nameTexture))
+            //{
+            //    Debug.Log(Storage.EventsUI.ListLogAdd = "### CollectionSpriteTiles inot found = " + nameTexture);
+            //    continue;
+            //}
+            //Sprite spriteTile = Storage.Palette.SpritesPrefabs[nameTexture];
+
 
             GameObject cellMap;
             if (isUpdate)
@@ -1555,7 +1578,7 @@ public class PaletteMapController : MonoBehaviour {
             for (int y = (int)posFieldClear.y; y < sizeClearY; y++)
             {
                 fieldNew = Helper.GetNameField(x, y);
-                ClearLayerForStructure(fieldNew, isClearDataGrid);
+                GenericWorldManager.ClearLayerForStructure(fieldNew, isClearDataGrid);
             }
         }
     }
@@ -1596,7 +1619,7 @@ public class PaletteMapController : MonoBehaviour {
 
         int size = Helper.WidthLevel;
         //OptionGenCount = (m_SizeBrush * m_SizeBrush) * m_OptionGenPercent2 / 100;
-        OptionGenCount = (size * size) * m_OptionGenPercent2 / 100;
+        //OptionGenCount = (size * size) * m_OptionGenPercent2 / 100; //????
         BrushCells(true, genPrefab);
     }
 
@@ -1654,6 +1677,7 @@ public class PaletteMapController : MonoBehaviour {
 
         if (SelectedTypeBrush != TypesBrushGrid.OptionsGeneric && !isOnFullMap)
         {
+
             for (int x = (int)posStructFieldNew.x; x < sizeX; x++)
             {
                 for (int y = (int)posStructFieldNew.y; y < sizeY; y++)
@@ -1662,7 +1686,7 @@ public class PaletteMapController : MonoBehaviour {
                     string fieldNew = Helper.GetNameField(x, y);
 
                     if (_isClearLayer)
-                        ClearLayerForStructure(fieldNew);
+                        GenericWorldManager.ClearLayerForStructure(fieldNew);
 
                     if (!IsGenericContruct)
                     {
@@ -1701,95 +1725,30 @@ public class PaletteMapController : MonoBehaviour {
             int SubsystemSegments = OptionGenSegments;
             int SubsystemLevel = OptionGenLevel;
             if (SubsystemLevel == 0) SubsystemLevel = 10;
-            //int CountObjects = OptionGen1;
+            int minLevel = (SubsystemLevel / 2) * (-1);
+            int maxLevel = (SubsystemLevel / 2);
+            int startX = (int)posStructFieldNew.x;
+            int startY = (int)posStructFieldNew.y;
 
-
-            if(IsSpawnPoint)
+            if (IsSpawnPoint)
             {
-                //bool IsSpawnPoint
-                //int SpawnPointRadius
-                //int SpawnPointScope
                 if (isLog)
                     Storage.EventsUI.ListLogAdd = "standart generation 1.";
 
-                int startX = Random.Range((int)posStructFieldNew.x, sizeX);
-                int startY = Random.Range((int)posStructFieldNew.y, sizeY);
+                startX = Random.Range((int)posStructFieldNew.x, sizeX);
+                startY = Random.Range((int)posStructFieldNew.y, sizeY);
 
-                int ContAll = CountObjects;// / SpawnPointScope;
+                int ContAll = CountObjects;
                 int radiusSpawn = SpawnPointRadius;
-                int indexDiff = 0;
-                //int limitDiff = (int)( CountObjects / SpawnPointScope);
 
-                //------ Spawn Point
-                for (int i = 0; i < ContAll; i++)
-                {
-                    
-                    int offsetX = Random.Range(1, radiusSpawn);
-                    int offsetY = Random.Range(1, radiusSpawn);
-                    bool isLeft = 1 == Random.Range(1, 3);
-                    bool isTop = 1 == Random.Range(1, 3);
-                    if (isLeft)
-                        offsetX *= -1;
-                    if (isTop)
-                        offsetY *= -1;
-                    int x = startX + offsetX;
-                    int y = startY + offsetY;
-
-                    string fieldNew = Helper.GetNameField(x, y);
-                    if (_isClearLayer)
-                        ClearLayerForStructure(fieldNew);
-
-                    isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
-
-                    if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
-                    {
-                        //#repeat
-                        i--;
-                        indexRepeat++;
-                    }
-
-                    //Spawn activity
-                    indexDiff++;
-                    if (indexDiff >= SpawnPointScope)
-                    {
-                        indexDiff = 0;
-                        radiusSpawn -= SpawnPointScope;
-                        if (radiusSpawn < 2)
-                            radiusSpawn = 2;
-                    }
-                }
-                //------
-
+                Storage.GenWorld.GenericSpawnPoint(this, selDataTile, startX, startY, ContAll, radiusSpawn, limitRepeat, indexRepeat);
             }
             else if (OptionGenSegments < 2)
             {
                 if (isLog)
                     Storage.EventsUI.ListLogAdd = "standart generation 1.";
-                //------ standart 1.
-                for (int i = 0; i < CountObjects; i++)
-                {
-                    int x = Random.Range((int)posStructFieldNew.x, sizeX);
-                    int y = Random.Range((int)posStructFieldNew.y, sizeY);
-                    string fieldNew = Helper.GetNameField(x, y);
-                    if (_isClearLayer)
-                        ClearLayerForStructure(fieldNew);
 
-                    if (!IsGenericContruct) {
-                        isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                    }
-                    else {
-                        Storage.Instance.SelectFieldCursor = fieldNew;
-                        GenericContructInGridData();
-                    }
-
-                    if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
-                    {
-                        //#repeat
-                        i--;
-                        indexRepeat++;
-                    }
-                }
-                //------
+                Storage.GenWorld.GenericStandart(this, selDataTile, startX, startY, CountObjects, sizeX, sizeY, limitRepeat, indexRepeat);
             }
             else if (ModeSegmentMarginLimit == ModeStartSegmentGen.None)
             //------ Segment
@@ -1798,243 +1757,28 @@ public class PaletteMapController : MonoBehaviour {
                     Storage.EventsUI.ListLogAdd = "Segments generation.";
                 //Step
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
-
                 int ContAll = CountObjects / SubsystemSegments;
-                int startX = (int)posStructFieldNew.x;
-                int startY = (int)posStructFieldNew.y;
-                int minLevel = (SubsystemLevel / 2) * (-1);
-                int maxLevel = (SubsystemLevel / 2);
-
-                for (int i = 0; i < ContAll; i++)
-                {
-                    startX = Random.Range((int)posStructFieldNew.x, sizeX);
-                    startY = Random.Range((int)posStructFieldNew.y, sizeY);
-
-                    for (int s = 0; s < SubsystemSegments; s++)
-                    {
-                        int offsetX = Random.Range(minLevel, maxLevel);
-                        int offsetY = Random.Range(minLevel, maxLevel);
-                        int x = 0;
-                        int y = 0;
-                        if (IsSteps)
-                        {
-                            startX += offsetX;
-                            startY += offsetY;
-                            x = startX;
-                            y = startY;
-                        }
-                        else
-                        {
-                            x = startX + offsetX;
-                            y = startY + offsetY;
-                        }
-                        string fieldNew = Helper.GetNameField(x, y);
-                        if (_isClearLayer)
-                            ClearLayerForStructure(fieldNew);
-
-                        if (!IsGenericContruct)
-                        {
-                            isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                        }
-                        else
-                        {
-                            Storage.Instance.SelectFieldCursor = fieldNew;
-                            GenericContructInGridData();
-                        }
-
-                        if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
-                        {
-                            //#repeat
-                            s--;
-                            indexRepeat++;
-                        }
-                    }
-                    indexRepeat = 0;
-                }
-            } else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
-
+                
+                Storage.GenWorld.GenericSegment(this, selDataTile, startX, startY, CountObjects, sizeX, sizeY, limitRepeat, indexRepeat, SubsystemSegments, SubsystemLevel);
+                //-------------------
+            }
+            else if (ModeSegmentMarginLimit != ModeStartSegmentGen.None) {
                 //------------- # Segmnt Next Point Gen
-
                 if (isLog)
                     Storage.EventsUI.ListLogAdd = "Segments next Point generation.";
-                //bool isSteps = checkStepGen.isOn;
-                //bool isSteps = true;
                 //Step
                 if (SubsystemSegments == 0) SubsystemSegments = 1;
-
                 int ContAll = CountObjects / SubsystemSegments;
 
-                int startX = (int)posStructFieldNew.x;
-                int startY = (int)posStructFieldNew.y;
-                int minLevel = (SubsystemLevel / 2) * (-1);
-                int maxLevel = (SubsystemLevel / 2);
-
-                int startSegmentX = 0;
-                int startSegmentY = 0;
-                List<Vector2Int> stepsPointsSart = new List<Vector2Int>();
-
-                for (int i = 0; i < ContAll; i++)
-                {
-                    startX = Random.Range((int)posStructFieldNew.x, sizeX);
-                    startY = Random.Range((int)posStructFieldNew.y, sizeY);
-
-                    if (!IsSteps)
-                        stepsPointsSart = new List<Vector2Int>();
-
-                    stepsPointsSart.Add(new Vector2Int(startX, startY));
-
-                    for (int s = 0; s < SubsystemSegments; s++)
-                    {
-                        if (!IsSteps)
-                        {
-                            startSegmentX = 0;
-                            startSegmentY = 0;
-                        }
-                        if (s < 3)
-                        {
-                            startSegmentX = startX;
-                            startSegmentY = startY;
-                        }
-                        else
-                        {
-                            //-------------------- Select Next start Point segment
-                            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Margin) //------------ number limit
-                            {
-                                int max = stepsPointsSart.Count - 1;
-
-                                Vector2Int corrRange = GetValidMargin((int)FirstLimit, (int)LastLimit, max);
-                                int firstCorr = corrRange.x;
-                                int lastCorr = corrRange.y;
-
-                                int SelectedPintindex = 0;
-                                if (IsFirstStartSegment)
-                                {
-                                    SelectedPintindex = Random.Range(0, firstCorr);
-
-                                    if (IsLogGenericWorld)
-                                        info = "margin (0--" + firstCorr + ")   max = " + max + "  I=" + SelectedPintindex + "  [" + FirstLimit + @"\" + LastLimit + "]";
-                                }
-                                else
-                                {
-                                    SelectedPintindex = Random.Range(max - lastCorr, max);
-
-                                    if (IsLogGenericWorld)
-                                        info = "margin (" + (max - lastCorr) + "--" + max + ")    max = " + max + "  I=" + SelectedPintindex + "  [" + FirstLimit + @"\" + LastLimit + "]";
-                                }
-
-                                startSegmentX = stepsPointsSart[SelectedPintindex].x;
-                                startSegmentY = stepsPointsSart[SelectedPintindex].y;
-
-                                if (IsLogGenericWorld)
-                                {
-                                    info += " < " + startSegmentX + "x" + startSegmentY + " >";
-                                    if (isLog)
-                                        Storage.EventsUI.ListLogAdd = info;
-                                    //Debug.Log(info);
-                                }
-                            }
-                            if (ModeSegmentMarginLimit == ModeStartSegmentGen.Range) //------------ percent limit
-                            {
-                                int max = stepsPointsSart.Count - 1;
-
-                                float firstCorr = FirstLimit;
-                                if (firstCorr < 0f || firstCorr >= 1f)
-                                    firstCorr = 0.5f;
-                                float lastCorr = LastLimit;
-                                if (lastCorr < 0f || firstCorr >= 1f)
-                                    firstCorr = 0.5f;
-
-                                int SelectedPintindex = 0;
-                                if (IsFirstStartSegment)
-                                {
-                                    firstCorr = max * FirstLimit;
-                                    firstCorr = (int)firstCorr;
-                                    if (firstCorr < 1)
-                                        firstCorr = 1;
-
-                                    SelectedPintindex = Random.Range(0, (int)firstCorr);
-
-                                    if (IsLogGenericWorld)
-                                        info = "percent 0 -- " + firstCorr + "  max = " + max + "   index = " + SelectedPintindex;
-                                }
-                                else
-                                {
-
-                                    lastCorr = max - (max * LastLimit);
-                                    lastCorr = (int)lastCorr;
-                                    SelectedPintindex = Random.Range((int)lastCorr, max);
-
-                                    if (IsLogGenericWorld)
-                                        info = "percent  " + lastCorr + " -- " + max + "    max = " + max + "   index = " + SelectedPintindex;
-                                }
-
-                                startSegmentX = stepsPointsSart[SelectedPintindex].x;
-                                startSegmentY = stepsPointsSart[SelectedPintindex].y;
-
-                                if (IsLogGenericWorld)
-                                {
-                                    info += " < " + startSegmentX + "x" + startSegmentY + " >";
-                                    if (isLog)
-                                        Storage.EventsUI.ListLogAdd = info;
-                                    //Debug.Log(info);
-                                }
-                            }
-                            //--------------------
-                        }
-
-                        //---- #fix start gen
-                        int offsetX = Random.Range(minLevel, maxLevel);
-                        int offsetY = Random.Range(minLevel, maxLevel);
-                        int x = 0;
-                        int y = 0;
-                        bool isLeft = 1 == Random.Range(1, 3);
-                        bool isTop = 1 == Random.Range(1, 3);
-                        if (isLeft)
-                            offsetX *= -1;
-                        if (isTop)
-                            offsetY *= -1;
-                        x = startSegmentX + offsetX;
-                        y = startSegmentY + offsetY;
-                        //------------
-
-                        stepsPointsSart.Add(new Vector2Int(x, y));
-
-                        string fieldNew = Helper.GetNameField(x, y);
-
-                        if (_isClearLayer || TypeModeOptStartDelete == SelCheckOptDel.DelFull)
-                            ClearLayerForStructure(fieldNew);
-
-                        if (!IsGenericContruct)
-                        {
-                            isValidResult = Storage.GridData.AddConstructInGridData(fieldNew, selDataTile, TypeModeOptStartDelete, TypeModeOptStartCheck);
-                        }
-                        else
-                        {
-                            Storage.Instance.SelectFieldCursor = fieldNew;
-                            GenericContructInGridData();
-                        }
-
-                        if (!isValidResult && IsRepeatFind && indexRepeat < limitRepeat)
-                        {
-                            //#repeat
-                            s--;
-                            indexRepeat++;
-                        }
-                    }
-                    indexRepeat=0;
-                }
-                //------
+                info = Storage.GenWorld.GenericSegmentNextPoint(this, selDataTile, startX, startY, ContAll, sizeX, sizeY, limitRepeat, indexRepeat, SubsystemSegments, SubsystemLevel);
+                //--------
             }
-
         }
 
-        //int sizeX = (int)posStructFieldNew.x + size;
-        //int sizeY = (int)posStructFieldNew.y + size;
         bool isZoneStart = Helper.IsValidFieldInZona(posStructFieldNew.x, posStructFieldNew.y);
         bool isZoneEnd = Helper.IsValidFieldInZona(sizeX, sizeY);
         if (isZoneStart || isZoneEnd) //#fast
         {
-            //Storage.Events.ListLogAdd = "Create construct in zona";
             Storage.GenGrid.LoadObjectsNearHero();
         }
         else
@@ -2043,7 +1787,7 @@ public class PaletteMapController : MonoBehaviour {
         }
     }
 
-    private void GenericContructInGridData()
+    public void GenericContructInGridData()
     {
         if (string.IsNullOrEmpty(SelectedConstruction))
             return;
@@ -2069,7 +1813,7 @@ public class PaletteMapController : MonoBehaviour {
         return false;
     }
 
-    private Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
+    public Vector2Int GetValidMargin(int FirstLimit, int LastLimit, int max)
     {
         int firstCorr =
             (int)FirstLimit > max - 1 ?
@@ -2191,7 +1935,7 @@ public class PaletteMapController : MonoBehaviour {
             string fieldNew = Helper.GetNameField(posStructFieldNew.x, posStructFieldNew.y);
 
             if (_isClearLayer)
-                ClearLayerForStructure(fieldNew);
+                GenericWorldManager.ClearLayerForStructure(fieldNew);
 
             Storage.GridData.AddConstructInGridData(fieldNew, itemTile, _isClearLayer);
         }
@@ -2234,39 +1978,39 @@ public class PaletteMapController : MonoBehaviour {
         OptionGen5--;
     }
 
-    private void ClearLayerForStructure(string field, bool isClearData = false)
-    {
-        //Destroy All Objects
-        if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
-        {
-            var listObjs = Storage.Instance.GamesObjectsReal[field];
+    //private void ClearLayerForStructure(string field, bool isClearData = false)
+    //{
+    //    //Destroy All Objects
+    //    if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
+    //    {
+    //        var listObjs = Storage.Instance.GamesObjectsReal[field];
 
-            foreach (var obj in listObjs.ToArray())
-            {
-                if (PoolGameObjects.IsUsePoolObjects)
-                {
-                    obj.DisableComponents();
-                    Storage.Instance.DestroyFullObject(obj);
-                }
-                else
-                {
-                    Storage.Instance.AddDestroyGameObject(obj);
-                }
-            }
-        }
+    //        foreach (var obj in listObjs.ToArray())
+    //        {
+    //            if (PoolGameObjects.IsUsePoolObjects)
+    //            {
+    //                obj.DisableComponents();
+    //                Storage.Instance.DestroyFullObject(obj);
+    //            }
+    //            else
+    //            {
+    //                Storage.Instance.AddDestroyGameObject(obj);
+    //            }
+    //        }
+    //    }
 
-        if (isClearData)
-        {
-            if (Storage.Map.IsGridMap)
-                Storage.Map.CheckSector(field);
+    //    if (isClearData)
+    //    {
+    //        if (Storage.Map.IsGridMap)
+    //            Storage.Map.CheckSector(field);
 
-            //Destroy All DATA Objects
-            if (ReaderScene.IsGridDataFieldExist(field))
-            {
-                Storage.Data.ClearObjecsDataFromGrid(field);
-            }
-        }
-    }
+    //        //Destroy All DATA Objects
+    //        if (ReaderScene.IsGridDataFieldExist(field))
+    //        {
+    //            Storage.Data.ClearObjecsDataFromGrid(field);
+    //        }
+    //    }
+    //}
 
     #region Save generic options
 

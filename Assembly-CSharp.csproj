@@ -125,6 +125,7 @@
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\Graph\SceneLighting.cs" />
     <Compile Include="Assets\Scripts\Managers\DispatcherWorldActions.cs" />
+    <Compile Include="Assets\Scripts\Managers\GenericWorldManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\Managers\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Managers\PoolGameObjects.cs" />

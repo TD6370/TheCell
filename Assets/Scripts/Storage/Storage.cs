@@ -78,7 +78,18 @@ public class Storage : MonoBehaviour {
         }
     }
 
+
     
+    private GenericWorldManager _GenWorld;
+    public static GenericWorldManager GenWorld
+    {
+        get
+        {
+            return Instance._GenWorld;
+        }
+    }
+
+
     private MovementCamera _MoveCamera;
     public static MovementCamera MoveCamera
     {
@@ -383,6 +394,13 @@ public class Storage : MonoBehaviour {
             return;
         }
 
+        _GenWorld = UIController.GetComponent<GenericWorldManager>();
+        if (_GenWorld == null)
+        {
+            Debug.Log("########## InitComponents _GenWorld is Empty");
+            return;
+        }
+
         _scriptData = MainCamera.GetComponent<SaveLoadData>();
         if (_scriptData == null)
         {
@@ -518,7 +536,9 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _MoveCamera is Empty");
             return;
         }
-        
+
+
+     
 
         //_PoolObgects
         //DrawGeometry 
@@ -597,7 +617,7 @@ public class Storage : MonoBehaviour {
         //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         if (isGenNewWorld)
         {
-            _scriptData.GenericWorld();
+            _GenWorld.GenericWorld();
         }
         else
         {

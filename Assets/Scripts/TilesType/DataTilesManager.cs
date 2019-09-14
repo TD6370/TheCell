@@ -19,6 +19,7 @@ public class DataTilesManager : MonoBehaviour {
     private List<Texture2D> m_listTextursPrefabs;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
     private List<Texture2D> m_listTextursWorld;// = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/");
 
+    /*
     private Texture2D[] m_listTexturs;
     public  Texture2D[] ListTexturs
     {
@@ -52,7 +53,7 @@ public class DataTilesManager : MonoBehaviour {
             return m_listTexturs;
         }
     }
-
+    */
     private TileBase[] m_listTiles;// = Resources.LoadAll<TileBase>("Textures/Terra/Floor/Tiles/");
 
     private Dictionary<string, Texture2D> m_collectionTextureTiles;
@@ -286,46 +287,70 @@ public class DataTilesManager : MonoBehaviour {
     }
 
 
+    
+
+
 
     public void LoadTextures()
     {
         m_collectionTextureTiles = new Dictionary<string, Texture2D>();
-        CollectionTiles = new Dictionary<string, TileBase>();
+        //???? CollectionTiles = new Dictionary<string, TileBase>();
         m_collectionSpriteTiles = new Dictionary<string, Sprite>();
 
-        var listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/").ToList();
-        var listTilesPrefabs = Resources.LoadAll<Tile>("Textures/TilesPrefab/Tiles/").ToList();
-        var listTilesWorld = Resources.LoadAll<Tile>("Tiles/").ToList();
+        //var listTiles = Resources.LoadAll<Tile>("Textures/Terra/Floor/Tiles/").ToList();
+        //var listTilesPrefabs = Resources.LoadAll<Tile>("Textures/TilesPrefab/Tiles/").ToList();
+        //var listTilesWorld = Resources.LoadAll<Tile>("Tiles/").ToList();
 
-        listTiles.AddRange(listTilesPrefabs);
-        listTiles.AddRange(listTilesWorld);
+        //listTiles.AddRange(listTilesPrefabs);
+        //listTiles.AddRange(listTilesWorld);
 
-        m_listTiles = listTiles.ToArray();
+        //m_listTiles = listTiles.ToArray();
 
-        foreach (var tileItem in m_listTiles)
+
+        //???? 
+        //foreach (var tileItem in m_listTiles)
+        //{
+        //    if (CollectionTiles.ContainsKey(tileItem.name))
+        //    {
+        //        Debug.Log("########## LoadTextures CollectionTiles already exit :" + tileItem.name);
+        //        continue;
+        //    }
+        //    CollectionTiles.Add(tileItem.name, tileItem);
+        //}
+
+        //m_listTextursTerra = Resources.LoadAll<Texture2D>("Textures/Terra/Floor/").ToList();
+        //m_listTextursPrefabs = Resources.LoadAll<Texture2D>("Textures/TilesPrefab/").ToList();
+        //m_listTextursWorld = Resources.LoadAll<Texture2D>("Textures/World/").ToList();
+        //Legacy code load from Resources
+
+
+        //foreach (var imageItem in ListTexturs)
+        //{
+        //    if (m_collectionTextureTiles.ContainsKey(imageItem.name))
+        //    {
+        //        Debug.Log("########## LoadTextures CollectionTextureTiles already exit :" + imageItem.name);
+        //        continue;
+        //    }
+        //    m_collectionTextureTiles.Add(imageItem.name, imageItem);
+
+        //    Sprite spriteTile = Sprite.Create(imageItem, new Rect(0.0f, 0.0f, imageItem.width, imageItem.height), new Vector2(0.5f, 0.5f), 100.0f);
+        //    m_collectionSpriteTiles.Add(imageItem.name, spriteTile);
+        //}
+
+        foreach (var spriteTile in Storage.Palette.GetSpriteAtlasTiles())
         {
-            if (CollectionTiles.ContainsKey(tileItem.name))
+            if (m_collectionTextureTiles.ContainsKey(spriteTile.name))
             {
-                Debug.Log("########## LoadTextures CollectionTiles already exit :" + tileItem.name);
+                Debug.Log("########## LoadTextures CollectionTextureTiles already exit :" + spriteTile.name);
                 continue;
             }
-            CollectionTiles.Add(tileItem.name, tileItem);
+            //m_collectionTextureTiles.Add(imageItem.name, imageItem);
+
+            //Sprite spriteTile = Sprite.Create(imageItem, new Rect(0.0f, 0.0f, imageItem.width, imageItem.height), new Vector2(0.5f, 0.5f), 100.0f);
+            string name = spriteTile.name.Replace("(Clone)", "");
+            m_collectionSpriteTiles.Add(name, spriteTile);
         }
 
-        //m_listTiles = Resources.LoadAll<TileBase>("Textures/Terra/Floor/Tiles/");
-        
-        foreach (var imageItem in ListTexturs)
-        {
-            if (m_collectionTextureTiles.ContainsKey(imageItem.name))
-            {
-                Debug.Log("########## LoadTextures CollectionTextureTiles already exit :" + imageItem.name);
-                continue;
-            }
-            m_collectionTextureTiles.Add(imageItem.name, imageItem);
-
-            Sprite spriteTile = Sprite.Create(imageItem, new Rect(0.0f, 0.0f, imageItem.width, imageItem.height), new Vector2(0.5f, 0.5f), 100.0f);
-            m_collectionSpriteTiles.Add(imageItem.name, spriteTile);
-        }
 
         TilesData data = Serializator.LoadTilesXml(Storage.Instance.DataPathTiles);
         if(data!=null)
@@ -355,7 +380,7 @@ public class DataTilesManager : MonoBehaviour {
         //if (m_listTextursTerra == null || m_listTextursTerra.Count == 0)
         if(m_listTextursNames == null || m_listTextursNames.Count == 0)
         {
-            var init = ListTexturs;
+            //var init = ListTexturs;
             if (m_listTextursNames == null || m_listTextursNames.Count == 0)
             {
                 Debug.Log("###### GenNameTileTerra m_listTextursTerra is Empty");
