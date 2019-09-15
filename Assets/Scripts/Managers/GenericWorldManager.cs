@@ -7,6 +7,11 @@ using Random = UnityEngine.Random;
 
 public class GenericWorldManager : MonoBehaviour {
 
+    public enum GenObjectWorldMode
+    {
+        Standart, Floorl, FloorGray, Flore, Prefab
+    }
+
     [SerializeField]
     public ContainerPriorityFinder ContainerPrioritysTerra;
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> TerraPriority;
@@ -19,10 +24,8 @@ public class GenericWorldManager : MonoBehaviour {
     void Start () {
 		
 	}
-	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
     public void GenericWorldLegacy()
@@ -106,17 +109,45 @@ public class GenericWorldManager : MonoBehaviour {
 
 
     //GEN -----
-    public SaveLoadData.TypePrefabs GenObjectWorld()
+    public SaveLoadData.TypePrefabs GenObjectWorld(GenObjectWorldMode mode = GenObjectWorldMode.Standart)
     {
+        SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
+        int max = 0;
+        int ind = 0;
+        int lockTest = 0;
 
-        var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabs)).Length - 1;
-        var ind = UnityEngine.Random.Range(12, max);
-        var prefabNameGet = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), ind.ToString());
-        return prefabNameGet;
+        switch (mode)
+        {
+            case GenObjectWorldMode.Standart:
+                max = Enum.GetValues(typeof(SaveLoadData.TypePrefabs)).Length - 1;
+                ind = UnityEngine.Random.Range(12, max);
+                prefabName = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), ind.ToString());
+                break;
+            case GenObjectWorldMode.FloorGray:
+                SaveLoadData.TypePrefabFloors floor = SaveLoadData.TypePrefabFloors.Desert;
+                bool isGray = false;
+                while (!isGray)
+                {
+                    max = Enum.GetValues(typeof(SaveLoadData.TypePrefabFloors)).Length - 1;
+                    ind = UnityEngine.Random.Range(0, max);
+                    floor = (SaveLoadData.TypePrefabFloors)Enum.Parse(typeof(SaveLoadData.TypePrefabFloors), ind.ToString());
+                    isGray = Enum.IsDefined(typeof(SaveLoadData.TypesBiomGray), prefabName.ToString());
+                    lockTest++;
+                    if (lockTest > 100)
+                        break;
+                }
+                prefabName = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), floor.ToString());
+                //TypesBiomGray
+                break;
+            default:
+                break;
+        }
+
+        return prefabName;
 
         int intGen = UnityEngine.Random.Range(1, 4);
         int intTypePrefab = 0;
-        SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
+        
 
         if (intGen == 1)
             prefabName = SaveLoadData.TypePrefabs.PrefabBoss;
@@ -468,8 +499,9 @@ public class GenericWorldManager : MonoBehaviour {
         }
     }
 
+    #region Generic on Priority
 
-    public void GenericWorldPriorityTerra(int PriorityIdleStartPercent, int PriorityPrefabPercent, int PriorityTreePercent, int PriorityRockPercent, int PriorityFlorePercent)
+    public void GenericWorldPriorityTerra(int PriorityIdleStartPercent, int PriorityPrefabPercent, int PriorityTreePercent, int PriorityRockPercent, int PriorityFlorePercent, int PriorityDistantionFind)
     {
         string indErr = "0";
         ModelNPC.ObjectData requestedGenTerra = null;
@@ -478,11 +510,81 @@ public class GenericWorldManager : MonoBehaviour {
         try
         {
             indErr = "1";
-            receivedGenTerra = Helper.GenericOnPriority(requestedGenTerra, TerraPriority, _loadPriority);
+            //receivedGenTerra = Helper.GenericOnPriority(requestedGenTerra, TerraPriority, _loadPriority);
+
+            //-------------
+            int coutCreateObjects = 0;
+            SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
+            Debug.Log("Sart... GenericWorldPriorityTerra...");              indErr = "2";
+            Storage.Instance.ClearGridData();
+
+            int countAll = 0;
+            int index = 0;
+            Dictionary<int, Vector2Int> cellsPos = new Dictionary<int, Vector2Int>(); indErr = "3";
+            for (int y = 0; y < Helper.HeightLevel; y++)
+            {
+                for (int x = 0; x < Helper.WidthLevel; x++)
+                {
+                    int indRnd = Random.Range(1, index+5);
+                    cellsPos.Add(index++, new Vector2Int(x, y));
+                }
+            }
+            
+            Queue<Vector2Int> colectionPosRnd = new Queue<Vector2Int>();
+            //List<Vector2Int> listPosRnd = cellsPos.OrderBy(p => p.Key).Select(p => p.Value).ToList(); ;
+            foreach(var item in cellsPos.OrderBy(p => p.Key).Select(p => p.Value))
+            {
+                colectionPosRnd.Enqueue(item);
+            }
+
+            countAll = colectionPosRnd.Count;
+
+            int startPercent = PriorityIdleStartPercent;
+            if (startPercent == 0)
+                startPercent = 50;
+            int countNotPriority = (countAll / startPercent) * 100;
+
+            int distantionFind = PriorityDistantionFind;
+            if (distantionFind == 0)
+                distantionFind = 2;
+
+            foreach (Vector2Int cellPos in colectionPosRnd)
+            {
+                int x = cellPos.x;
+                int y = cellPos.y;
+                string nameField = Helper.GetNameField(x, y);
+                Storage.EventsUI.SetTittle = String.Format("Loading {0} %", (countAll / (coutCreateObjects + 1)).ToString());
+                int _y = y * (-1);
+                Vector3 pos = new Vector3(x, _y, 0) * SaveLoadData.Spacing;
+                pos.z = -1;
+
+                //GEN ----- floor gray
+                bool isUsePriority = coutCreateObjects > countNotPriority;
+                prefabName = GenObjectWorld(GenObjectWorldMode.FloorGray);
+                if (isUsePriority)
+                {
+                    receivedGenTerra = Helper.GenericOnPriorityByType(prefabName, pos, distantionFind, TerraPriority, _loadPriority);
+                    prefabName = receivedGenTerra.TypePrefab;
+                }
+                string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+                ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, true);
+                objDataSave.SetNameObject(nameObject);
+                objDataSave.Position = pos;
+                coutCreateObjects++;
+
+                Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld");
+            }
+
+            //Storage.Data.SaveGridGameObjectsXml(true);
+
+            Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
+
+            Storage.EventsUI.SetTittle = String.Format("World is Loaded");
+            //---------------
         }
         catch (Exception ex)
         {
-            Storage.EventsUI.ListLogAdd = "##### GenericCellWorld " + ex.Message;
+            Storage.EventsUI.ListLogAdd = "##### GenericCellWorld #" + indErr + "  " + ex.Message;
             return;
         }
     }
@@ -511,4 +613,5 @@ public class GenericWorldManager : MonoBehaviour {
         return CollectionPowerAllTypes[keyJoinNPC];
     }
 
+    #endregion
 }

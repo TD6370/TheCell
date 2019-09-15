@@ -234,6 +234,7 @@ public class PaletteMapController : MonoBehaviour {
     public InputField tbxOptPriorityTreePercent;
     public InputField tbxOptPriorityRockPercent;
     public InputField tbxOptPriorityFlorePercent;
+    public InputField tbxOptPriorityDistantionFind;
 
     private bool IsGenericWorldPriorityTerra    {
         get        {
@@ -300,6 +301,20 @@ public class PaletteMapController : MonoBehaviour {
             tbxOptPriorityFlorePercent.text = value.ToString();
         }
     }
+    public int PriorityDistantionFind
+    {
+        get
+        {
+            int _PriorityDistantionFind = 0;
+            int.TryParse(tbxOptPriorityDistantionFind.text, out _PriorityDistantionFind);
+            return _PriorityDistantionFind;
+        }
+        set
+        {
+            tbxOptPriorityDistantionFind.text = value.ToString();
+        }
+    }
+    
     #endregion
 
     // --- options Delete cell prefabs generic option
@@ -1798,7 +1813,7 @@ public class PaletteMapController : MonoBehaviour {
 
             if (IsGenericWorldPriorityTerra)
             {
-                Storage.GenWorld.GenericWorldPriorityTerra(PriorityIdleStartPercent, PriorityPrefabPercent, PriorityTreePercent, PriorityRockPercent, PriorityFlorePercent);
+                Storage.GenWorld.GenericWorldPriorityTerra(PriorityIdleStartPercent, PriorityPrefabPercent, PriorityTreePercent, PriorityRockPercent, PriorityFlorePercent, PriorityDistantionFind);
             }
             else if (IsSpawnPoint)
             {

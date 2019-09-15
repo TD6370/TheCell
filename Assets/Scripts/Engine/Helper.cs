@@ -669,28 +669,7 @@ public static class Helper { //: MonoBehaviour {
 
     #region Priority utility
 
-    public static ModelNPC.ObjectData FindFromLocation(ModelNPC.ObjectData data, int distantion)
-    {
-        Vector2 Position = data.Position;
-        string id_Observer = data.Id;
-        ModelNPC.GameDataAlien dataAlien = data as ModelNPC.GameDataAlien;
-        string id_PrevousTarget = dataAlien == null ? string.Empty : dataAlien.PrevousTargetID;
-        //if (id_PrevousTarget == string.Empty)
-        //    Storage.EventsUI.ListLogAdd = "######## FindFromLocation id_PrevousTarget == string.Empty >> " + data.NameObject;
-        if (id_PrevousTarget != string.Empty)
-            Storage.EventsUI.ListLogAdd = "!!!!!!!! FindFromLocation id_PrevousTarget >> " + data.NameObject + " == " + id_PrevousTarget;
-
-
-        SaveLoadData.TypePrefabs typeObserver = data.TypePrefab;
-
-        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
-        Vector2 posField = Helper.GetPositByField(fieldName);
-        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget);
-        return finder.ResultData;
-    }
-
+   
     public static ModelNPC.ObjectData GenericOnPriority(ModelNPC.ObjectData dataRequested, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority)
     {
         if (p_prioritys == null)
@@ -722,6 +701,56 @@ public static class Helper { //: MonoBehaviour {
         ModelNPC.ObjectData result = new ModelNPC.ObjectData();
         result = Helper.FindFromLocation(dataRequested, distantionFind);
         return result;
+    }
+
+    public static ModelNPC.ObjectData GenericOnPriorityByType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority)
+    {
+        if (p_prioritys == null)
+        {
+            Storage.EventsUI.ListLogAdd = "### GenericTerraOnPriority >> PersonPriority is null";
+            if (p_actionLoadPriority != null)
+                p_actionLoadPriority();
+            return null;
+        }
+        
+        //int distantionFind = UnityEngine.Random.Range(2, 15);
+        ModelNPC.ObjectData result = new ModelNPC.ObjectData();
+        result = FindFromLocationType(typeRequested, posRequested, distantionFind);
+        return result;
+    }
+
+    public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion)
+    {
+        SaveLoadData.TypePrefabs typeObserver = typeRequested;
+
+        string fieldName = GetNameFieldPosit(posRequested.x, posRequested.y);
+        Vector2 posField = GetPositByField(fieldName);
+        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeObserver, string.Empty);
+        return finder.ResultData;
+    }
+
+    public static ModelNPC.ObjectData FindFromLocation(ModelNPC.ObjectData data, int distantion)
+    {
+        Vector2 Position = data.Position;
+        string id_Observer = data.Id;
+        ModelNPC.GameDataAlien dataAlien = data as ModelNPC.GameDataAlien;
+        string id_PrevousTarget = dataAlien == null ? string.Empty : dataAlien.PrevousTargetID;
+        //if (id_PrevousTarget == string.Empty)
+        //    Storage.EventsUI.ListLogAdd = "######## FindFromLocation id_PrevousTarget == string.Empty >> " + data.NameObject;
+        if (id_PrevousTarget != string.Empty)
+            Storage.EventsUI.ListLogAdd = "!!!!!!!! FindFromLocation id_PrevousTarget >> " + data.NameObject + " == " + id_PrevousTarget;
+
+
+        SaveLoadData.TypePrefabs typeObserver = data.TypePrefab;
+
+        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
+        Vector2 posField = Helper.GetPositByField(fieldName);
+        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget);
+        return finder.ResultData;
     }
 
     public static int GetPriorityPower(string id, PriorityFinder priority)
