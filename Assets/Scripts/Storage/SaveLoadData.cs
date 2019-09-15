@@ -61,7 +61,34 @@ public class SaveLoadData : MonoBehaviour {
             return list;
         }
     }
-    
+
+    private List<TypePrefabs> m_collectionFloorGray;
+    public List<TypePrefabs> GetFloorGray
+    {
+        get
+        {
+            if (m_collectionFloorGray == null)
+            {
+                m_collectionFloorGray = new List<TypePrefabs>();
+                var list = new List<string>();
+                bool isGray;
+                bool isPrefab;
+                //foreach (var typeFloor in Enum.GetValues(typeof(SaveLoadData.TypePrefabFloors)))
+                foreach (var typeFloor in NamesPrefabFloors)
+                {
+                    isGray = Enum.IsDefined(typeof(TypesBiomGray), typeFloor);
+                    isPrefab = Enum.IsDefined(typeof(TypePrefabs), typeFloor);
+                    if(isPrefab && isGray)
+                    {
+                        TypePrefabs typePrefab = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), typeFloor.ToString());
+                        m_collectionFloorGray.Add(typePrefab);
+                    }
+                }
+            }
+            return m_collectionFloorGray;
+        }
+    }
+
     public enum TypePrefabsLegacy
     {
         PrefabField,
@@ -260,7 +287,7 @@ public class SaveLoadData : MonoBehaviour {
 
         RockDark,
         RockValun,
-        RockBrownn,
+        RockBrown,
           Klen,
           Iva,
           Sosna,

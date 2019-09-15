@@ -279,13 +279,15 @@ public class ReaderScene //: UpdateData
     //===============================================================================
 
     //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
-    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
+    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
     {
         DataInfoFinder finder = new DataInfoFinder();
+        Dictionary<string, ModelNPC.ObjectData> locationObjects = new Dictionary<string, ModelNPC.ObjectData>();
+        bool isFindReaderWorld = Storage.ReaderWorld.CollectionInfoID.Count > 0;
 
-        if (!Storage.Instance.ReaderSceneIsValid)
-            return finder;
-        
+        //if (!Storage.Instance.ReaderSceneIsValid)
+        //    return finder;
+
         int startX = fieldPosit.x - distantion;
         int startY = fieldPosit.y - distantion;
         int endX = fieldPosit.x + distantion;
@@ -307,14 +309,25 @@ public class ReaderScene //: UpdateData
                         continue;
 
                     //int power = Storage.Person.GetPriorityPower(objData, priority);
-                    int power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
+                    int power = 0;
+                    if (isFoor)
+                        power = Storage.GenWorld.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
+                    else
+                        power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
                     int powerDist = (distantion - Math.Max(Math.Abs(fieldPosit.x - x), Math.Abs(fieldPosit.y - y))) * 3;
                     power += powerDist;
                     //if (finder.ResultPowerData.ContainsKey(id))
                     //Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
                     //else
                     if (!finder.ResultPowerData.ContainsKey(id))
+                    {
                         finder.ResultPowerData.Add(id, power);
+                        if (!isFindReaderWorld)
+                        {
+                            if(!locationObjects.ContainsKey(id))
+                                locationObjects.Add(id, objData);
+                        }
+                    }
                 }
             }
         }
@@ -349,8 +362,14 @@ public class ReaderScene //: UpdateData
         //--------------------------
         if (!string.IsNullOrEmpty(selId))
         {
-            if(Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
-                finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
+            if (isFindReaderWorld)
+            {
+                if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
+                    finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
+            }else
+            {
+                finder.ResultData = locationObjects[selId];
+            }
         }
         return finder;
     }

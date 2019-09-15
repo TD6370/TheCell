@@ -669,8 +669,8 @@ public static class Helper { //: MonoBehaviour {
 
     #region Priority utility
 
-   
-    public static ModelNPC.ObjectData GenericOnPriority(ModelNPC.ObjectData dataRequested, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority)
+   /*
+    public static ModelNPC.ObjectData GenericOnPriority(ModelNPC.ObjectData dataRequested, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority, bool isFoor)
     {
         if (p_prioritys == null)
         {
@@ -699,11 +699,12 @@ public static class Helper { //: MonoBehaviour {
         }
         int distantionFind = UnityEngine.Random.Range(2, 15);
         ModelNPC.ObjectData result = new ModelNPC.ObjectData();
-        result = Helper.FindFromLocation(dataRequested, distantionFind);
+        result = Helper.FindFromLocation(dataRequested, distantionFind, isFoor);
         return result;
     }
+    */
 
-    public static ModelNPC.ObjectData GenericOnPriorityByType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority)
+    public static ModelNPC.ObjectData GenericOnPriorityByType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority, bool isFoor)
     {
         if (p_prioritys == null)
         {
@@ -715,11 +716,11 @@ public static class Helper { //: MonoBehaviour {
         
         //int distantionFind = UnityEngine.Random.Range(2, 15);
         ModelNPC.ObjectData result = new ModelNPC.ObjectData();
-        result = FindFromLocationType(typeRequested, posRequested, distantionFind);
+        result = FindFromLocationType(typeRequested, posRequested, distantionFind, isFoor);
         return result;
     }
 
-    public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion)
+    public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion, bool isFoor)
     {
         SaveLoadData.TypePrefabs typeObserver = typeRequested;
 
@@ -727,7 +728,7 @@ public static class Helper { //: MonoBehaviour {
         Vector2 posField = GetPositByField(fieldName);
         Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
 
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeObserver, string.Empty);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeObserver, string.Empty, isFoor);
         return finder.ResultData;
     }
 
@@ -749,7 +750,7 @@ public static class Helper { //: MonoBehaviour {
         Vector2 posField = Helper.GetPositByField(fieldName);
         Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
 
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget, false);
         return finder.ResultData;
     }
 

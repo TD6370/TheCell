@@ -125,19 +125,9 @@ public class GenericWorldManager : MonoBehaviour {
                 break;
             case GenObjectWorldMode.FloorGray:
                 SaveLoadData.TypePrefabFloors floor = SaveLoadData.TypePrefabFloors.Desert;
-                bool isGray = false;
-                while (!isGray)
-                {
-                    max = Enum.GetValues(typeof(SaveLoadData.TypePrefabFloors)).Length - 1;
-                    ind = UnityEngine.Random.Range(0, max);
-                    floor = (SaveLoadData.TypePrefabFloors)Enum.Parse(typeof(SaveLoadData.TypePrefabFloors), ind.ToString());
-                    isGray = Enum.IsDefined(typeof(SaveLoadData.TypesBiomGray), prefabName.ToString());
-                    lockTest++;
-                    if (lockTest > 100)
-                        break;
-                }
-                prefabName = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), floor.ToString());
-                //TypesBiomGray
+                max = Storage.GridData.GetFloorGray.Count;
+                ind = UnityEngine.Random.Range(0, max);
+                prefabName = Storage.GridData.GetFloorGray[ind];
                 break;
             default:
                 break;
@@ -509,6 +499,9 @@ public class GenericWorldManager : MonoBehaviour {
         Action _loadPriority = LoadTerraPriority;
         try
         {
+            if (TerraPriority == null)
+                LoadTerraPriority();
+
             indErr = "1";
             //receivedGenTerra = Helper.GenericOnPriority(requestedGenTerra, TerraPriority, _loadPriority);
 
@@ -542,7 +535,7 @@ public class GenericWorldManager : MonoBehaviour {
             int startPercent = PriorityIdleStartPercent;
             if (startPercent == 0)
                 startPercent = 50;
-            int countNotPriority = (countAll / startPercent) * 100;
+            int countNotPriority = (countAll * startPercent) / 100;
 
             int distantionFind = PriorityDistantionFind;
             if (distantionFind == 0)
@@ -563,7 +556,7 @@ public class GenericWorldManager : MonoBehaviour {
                 prefabName = GenObjectWorld(GenObjectWorldMode.FloorGray);
                 if (isUsePriority)
                 {
-                    receivedGenTerra = Helper.GenericOnPriorityByType(prefabName, pos, distantionFind, TerraPriority, _loadPriority);
+                    receivedGenTerra = Helper.GenericOnPriorityByType(prefabName, pos, distantionFind, TerraPriority, _loadPriority, true);
                     prefabName = receivedGenTerra.TypePrefab;
                 }
                 string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
@@ -615,3 +608,4 @@ public class GenericWorldManager : MonoBehaviour {
 
     #endregion
 }
+
