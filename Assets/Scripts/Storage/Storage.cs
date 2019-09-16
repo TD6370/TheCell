@@ -572,11 +572,54 @@ public class Storage : MonoBehaviour {
         LoadGameObjects(true);
 
         IsLoadingWorld = false;
+    }
 
+    public void ResumeDispatcherAction()
+    {
+        if (m_DispatcherWorldActions != null)
+            m_DispatcherWorldActions.Resume();
+    }
+
+    public void StopDispatcherAction()
+    {
+        if (ReaderWorld != null)
+        {
+            ReaderWorld.Clear();
+            //m_DispatcherWorldActions.ResetDispatcher();
+            if (m_DispatcherWorldActions != null)
+            {
+                m_DispatcherWorldActions.StopDispatcher();
+                //m_DispatcherWorldActions.enabled = false;
+                //m_DispatcherWorldActions = null;
+            }
+        }
+    }
+
+    public void ResetDataId()
+    {
+        if (ReaderWorld != null)
+        {
+            ReaderWorld.Clear();
+            ReaderWorld.InitCollectionID();
+
+            //if (m_DispatcherWorldActions == null)
+            //{
+            //    m_DispatcherWorldActions = MainCamera.GetComponent<DispatcherWorldActions>();
+            //    if (m_DispatcherWorldActions == null)
+            //    {
+            //        Debug.Log("Storage.Start : DispatcherWorldActions not load !!!");
+            //        return;
+            //    }
+            //}
+            m_DispatcherWorldActions.ResetDispatcher();
+            //m_DispatcherWorldActions.enabled = true;
+        }
     }
 
     public void StopGame()
     {
+        StopDispatcherAction();
+
         //bool temp_autoRefreshOn = SceneDebug.SettingsScene.AutoRefreshOn;
         SceneDebug.SettingsScene.AutoRefreshOn = false;
         //if (_scriptNPC != null)
@@ -589,12 +632,6 @@ public class Storage : MonoBehaviour {
         Pool.Restart();
 
         InitObjectsGrid();
-
-        if (ReaderWorld != null)
-        {
-            ReaderWorld.Clear();
-            m_DispatcherWorldActions.ResetDispatcher();
-        }
     }
 
     public void CreateWorld(bool isGenNewWorld = false)
@@ -635,14 +672,10 @@ public class Storage : MonoBehaviour {
         }
 
         Map.RefreshFull();
-
-        if (ReaderWorld != null)
-        {
-            ReaderWorld.Clear();
-            ReaderWorld.InitCollectionID();
-            m_DispatcherWorldActions.ResetDispatcher();
-        }
+        ResetDataId();
     }
+
+    
 
     private void LoadDefaultUI()
     {

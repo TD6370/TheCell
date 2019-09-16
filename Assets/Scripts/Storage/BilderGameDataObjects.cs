@@ -22,10 +22,9 @@ public class BilderGameDataObjects //: MonoBehaviour
         return BildObjectData(prefabType, false);
     }
 
+    public static ModelNPC.ObjectData objGameBild;
     public static ModelNPC.ObjectData BildObjectData(SaveLoadData.TypePrefabs prefabType, bool isTerraGen = false)
     {
-        ModelNPC.ObjectData objGameBild;
-
         switch (prefabType)
         {
             case SaveLoadData.TypePrefabs.PrefabRock:

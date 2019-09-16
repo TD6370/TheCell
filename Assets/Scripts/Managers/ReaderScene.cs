@@ -81,6 +81,7 @@ public class ReaderScene //: UpdateData
     {
         if(CollectionInfoID!=null)
             CollectionInfoID.Clear();
+        IsLoaded = false;
     }
 
     public void InitCollectionID()
@@ -108,7 +109,8 @@ public class ReaderScene //: UpdateData
                     string strOld = oldObj == null ? " none " : oldObj.Data.NameObject;
                     string strNew = (dataInfo == null || dataInfo.Data == null) ? " none " : dataInfo.Data.NameObject;
                     Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew);
-                    continue;
+                    CollectionInfoID.Remove(id);
+                    //continue;
                 }
 
                 CollectionInfoID.Add(id, dataInfo);
@@ -283,7 +285,8 @@ public class ReaderScene //: UpdateData
     {
         DataInfoFinder finder = new DataInfoFinder();
         Dictionary<string, ModelNPC.ObjectData> locationObjects = new Dictionary<string, ModelNPC.ObjectData>();
-        bool isFindReaderWorld = Storage.ReaderWorld.CollectionInfoID.Count > 0;
+        //bool isFindReaderWorld = Storage.ReaderWorld.CollectionInfoID.Count > 0;
+        bool isFindReaderWorld = false;
 
         //if (!Storage.Instance.ReaderSceneIsValid)
         //    return finder;

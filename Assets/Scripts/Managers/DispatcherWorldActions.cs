@@ -1,22 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 //using UnityEditor;
 
 public class DispatcherWorldActions : MonoBehaviour
 {
     private bool m_IsRunSearching = false;
     private bool m_IsFilledSearchingCollection= false;
-    //public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
-       
+    public bool m_isInit = false;
+    public bool m_isStop = false;
 
     private void Awake()
     {
-        
     }
-
-    public bool isInit = false;
 
     private void LateUpdate()
     {
@@ -24,15 +23,19 @@ public class DispatcherWorldActions : MonoBehaviour
     }
     private void Init()
     {
-        if (isInit)
+        if (m_isInit)
             return;
 
-        
+
+        m_isInit = true;
+        m_isStop = false;
+
+        StopCoroutine(NavigatorWorldScene());
         StartCoroutine(NavigatorWorldScene());
 
         //m_actionController = new GameActionPersonController();
 
-        isInit = true;
+        //isInit = true;
     }
 
     void Start () {
@@ -52,11 +55,32 @@ public class DispatcherWorldActions : MonoBehaviour
     //    }
     //}
 
+    public void StopDispatcher()
+    {
+        m_isStop = true;
+    }
+
+    public void Resume()
+    {
+        m_isInit = false; 
+    }
+
     public void ResetDispatcher()
     {
-        //isInit = false;
-        StopCoroutine(NavigatorWorldScene());
-        StartCoroutine(NavigatorWorldScene());
+        try
+        {
+            //isInit = false;
+            //StopCoroutine(NavigatorWorldScene());
+            //StartCoroutine(NavigatorWorldScene());
+
+            //isStop = false;
+            //isInit = false;
+
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error ResetDispatcher : " + ex.Message);
+        }
     }
 
     public class CaseDreamWorker
@@ -95,6 +119,7 @@ public class DispatcherWorldActions : MonoBehaviour
         bool isTimeOfClear = false;
         float timeLimitResetNavigator = 10f;
         float timeLive = Time.time + timeLimitResetNavigator;
+        int nextIndexID = 0;
 
         Queue<CaseDreamWorker> colectionLivePerson = new Queue<CaseDreamWorker>();
         Queue<CaseDreamWorker> colectionLivePersonVIP = new Queue<CaseDreamWorker>();
@@ -102,6 +127,14 @@ public class DispatcherWorldActions : MonoBehaviour
 
         while (true)
         {
+            //yield break;//TEST TEMP Close
+
+            if (m_isStop)
+            {
+                m_isInit = false;
+                yield break;
+            }
+
             timeLimitResetNavigator = Storage.SceneDebug.SettingsScene.TimeLimitResetNavigator;
 
             if (Storage.Instance.ReaderSceneIsValid)
@@ -112,27 +145,68 @@ public class DispatcherWorldActions : MonoBehaviour
 
                 if (!m_IsFilledSearchingCollection)
                 {
+                    if (Storage.ReaderWorld.CollectionInfoID.Count == 0)
+                    {
+                        yield return new WaitForSeconds(5f);
+                        continue;
+                    }
                     string message = "Search dreamworkers...";
+
                     float timeStartSearch = Time.time;
                     Storage.EventsUI.ListLogAdd = "~~~~~~~~~~" + message;
                     //Storage.EventsUI.SetTittle = message;
                     m_IsRunSearching = true;
-                    listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
+                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SPEED
+                    //listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
+                    listNPC = new List<string>();
+                    int indexWait = 0;
+                    var arrayID = Storage.ReaderWorld.CollectionInfoID.Values.ToArray();
+                    yield return null;
+                    int count = arrayID.Count();
+                    nextIndexID = 0;
+                    while(nextIndexID < count)
+                    {
+                        var item = arrayID[nextIndexID];
+                        if (item.Data.IsNPC())
+                            listNPC.Add(item.ID);
+                        if(indexWait > 1000)
+                        {
+                            indexWait = 0;
+                            yield return null;
+                        }
+                        indexWait++;
+                        nextIndexID++;
+                    }
+                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    if (listNPC.Count == 0)
+                    {
+                        //UnityEngine.Profiling.Profiler.BeginSample("Sample LOCK dreamworkers");
+                        Storage.EventsUI.ListLogAdd = "...Search dreamworkers No NPC... all: " + count;
+                        yield return new WaitForSeconds(8f);
+
+                        //UnityEngine.Profiling.Profiler.EndSample();
+                        //yield return null;
+                        continue;
+                        
+                    }
+                    yield return null;
                     List<Shuffle> listNPC_Rnd = new List<Shuffle>();
                     foreach (string id in listNPC)
                     {
                         int indRnd = Random.Range(1, listNPC.Count());
                         listNPC_Rnd.Add( new Shuffle() { ID = id, Index = indRnd } );
                     }
+                    yield return null;
                     //Randomize list
                     listNPC = listNPC_Rnd.OrderBy(p => p.Index).Select(p => p.ID).ToList();
-
+                    yield return null;
                     foreach (string id in listNPC)
                     {
                         //colectionLivePerson.Enqueue(new CaseDreamWorker(id));
                         //var item = new CaseDreamWorker(id);
                         colectionLivePerson.Enqueue(new CaseDreamWorker(id));
                     }
+                    yield return null;
                     m_IsRunSearching = false;
                     m_IsFilledSearchingCollection = true;
                     //Next time reset
@@ -141,7 +215,6 @@ public class DispatcherWorldActions : MonoBehaviour
                     //if(Storage.EventsUI.SetTittle == message)
                         //Storage.EventsUI.SetTittle = "";
                     Storage.EventsUI.ListLogAdd = "...Search dreamworkers end : " + (Time.time - timeStartSearch)  ;
-
                 }
                 //----
                 //---Init VIP---
@@ -219,6 +292,7 @@ public class DispatcherWorldActions : MonoBehaviour
             }
         }
     }
+   
 
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {

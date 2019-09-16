@@ -391,6 +391,11 @@ public class PoolGameObjects
         return findGO;
     }
 
+    public void Stop()
+    {
+        PoolGamesObjectsStack.Clear();
+    }
+
     public void Restart()
     {
     //    if (IsStack)

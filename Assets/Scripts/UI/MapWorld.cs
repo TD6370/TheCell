@@ -827,9 +827,13 @@ public class MapWorld : MonoBehaviour {
             return null;
         }
 
-        if (!Storage.Palette.TexturesMaps.ContainsKey(strTypePref))
+        //Sprite[] _sprites = GetSpritesAtlasMapPrefab();
+        
+        if (!Storage.Palette.SpritesMaps.ContainsKey(strTypePref))
+        //if (!Storage.Palette.TexturesMaps.ContainsKey(strTypePref))
         {
-            Debug.Log("############# GetPrefabTexture   TexturesPrefabs not found type: " + typePredab.ToString());
+            //Debug.Log("############# GetPrefabTexture   TexturesPrefabs not found type: " + typePredab.ToString());
+            Debug.Log("############# GetPrefabTexture   Palette.SpritesMaps not found type: " + typePredab.ToString());
             return Storage.Palette.TexturesMaps["PrefabField"]; //fix 
         }
 
@@ -843,10 +847,10 @@ public class MapWorld : MonoBehaviour {
                     "PrefabField",
                     "PrefabHero",
         };
-        
-        //------------------------------
 
-        Texture2D textureRes = Storage.Palette.TexturesMaps[strTypePref];
+        //------------------------------
+        //Texture2D textureRes = Storage.Palette.TexturesMaps[strTypePref];
+        Texture2D textureRes = Storage.Palette.SpritesMaps[strTypePref].texture;
 
         if (!strFilter.Contains(strTypePref))
         {

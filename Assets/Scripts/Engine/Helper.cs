@@ -323,6 +323,18 @@ public static class Helper { //: MonoBehaviour {
         return false;
     }
 
+    public static bool IsTerraLayer(PoolGameObjects.TypePoolPrefabs typePrefab)
+    {
+        switch (typePrefab)
+        {
+            case PoolGameObjects.TypePoolPrefabs.PoolFlore:
+            case PoolGameObjects.TypePoolPrefabs.PoolWall:
+            case PoolGameObjects.TypePoolPrefabs.PoolWood:
+                return true;
+        }
+        return false;
+    }
+
     public static Vector2 NormalizPosToField(System.Single x, System.Single y)
     {
         x = (int)(x / Storage.ScaleWorld);
@@ -669,42 +681,7 @@ public static class Helper { //: MonoBehaviour {
 
     #region Priority utility
 
-   /*
-    public static ModelNPC.ObjectData GenericOnPriority(ModelNPC.ObjectData dataRequested, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority, bool isFoor)
-    {
-        if (p_prioritys == null)
-        {
-            Storage.EventsUI.ListLogAdd = "### GenericTerraOnPriority >> PersonPriority is null";
-            if(p_actionLoadPriority!=null)
-                p_actionLoadPriority();
-            return null;
-        }
-        if (dataRequested == null)
-        {
-            Storage.EventsUI.ListLogAdd = "### GenericTerraOnPriority >> dataRequested is null";
-            return null;
-        }
-        if (!p_prioritys.ContainsKey(dataRequested.TypePrefab))
-        {
-            if (p_prioritys.Count == 0)
-            {
-                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GenericTerraOnPriority PersonPriority count = 0");
-                if (p_actionLoadPriority != null)
-                    p_actionLoadPriority();
-            }
-            else
-                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GenericTerraOnPriority PersonPriority Not found = " + dataRequested.TypePrefab);
-
-            return null;
-        }
-        int distantionFind = UnityEngine.Random.Range(2, 15);
-        ModelNPC.ObjectData result = new ModelNPC.ObjectData();
-        result = Helper.FindFromLocation(dataRequested, distantionFind, isFoor);
-        return result;
-    }
-    */
-
-    public static ModelNPC.ObjectData GenericOnPriorityByType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority, bool isFoor)
+     public static ModelNPC.ObjectData GenericOnPriorityByType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, Action p_actionLoadPriority, bool isFoor)
     {
         if (p_prioritys == null)
         {
@@ -714,21 +691,23 @@ public static class Helper { //: MonoBehaviour {
             return null;
         }
         
-        //int distantionFind = UnityEngine.Random.Range(2, 15);
         ModelNPC.ObjectData result = new ModelNPC.ObjectData();
         result = FindFromLocationType(typeRequested, posRequested, distantionFind, isFoor);
         return result;
     }
 
+    public static ModelNPC.ObjectData GenericOnPriorityByType_Cash(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, bool isFoor)
+    {
+        return FindFromLocationType(typeRequested, posRequested, distantionFind, isFoor);
+    }
+
     public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion, bool isFoor)
     {
-        SaveLoadData.TypePrefabs typeObserver = typeRequested;
-
         string fieldName = GetNameFieldPosit(posRequested.x, posRequested.y);
         Vector2 posField = GetPositByField(fieldName);
         Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
 
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeObserver, string.Empty, isFoor);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeRequested, string.Empty, isFoor);
         return finder.ResultData;
     }
 

@@ -7,8 +7,13 @@ public class PositionRenderSorting : MonoBehaviour {
     public bool IsHero;
     public GameObject BoneRoorAnimation;
 
+    private bool Disabled = false;
+
     private int SortingBase = 5000;
     private Renderer rendererSort;
+    private Renderer m_rendererSortOther;
+    string m_OldFieldHero = "";
+
     private List<Renderer> renderersSort;
     [SerializeField]
     private int Offset = 0;
@@ -17,9 +22,14 @@ public class PositionRenderSorting : MonoBehaviour {
 
     private bool m_IsCheckOverlap = false;
     private int m_offsetOverlap = 0;
+    [SerializeField]
+    public bool IsMeTerra = false;
 
     private void Awake()
     {
+        if (Disabled)
+            return;
+
         renderersSort = new List<Renderer>();
         if (IsHero)
         {
@@ -80,18 +90,59 @@ public class PositionRenderSorting : MonoBehaviour {
     //    }
     //}
 
+    bool isInit = false;
     private void Start()
     {
+
+        
     }
+
+    private string m_lastName = "";
 
     // Update is called once per frame
     void Update () {
-    }
 
-    Renderer m_rendererSortOther;
+        //if(m_lastName != this.gameObject.name)
+        //{
+        //    isInit = false;
+        //    m_lastName = this.gameObject.name;
+        //}
+
+        //if (!isInit)
+        //{
+        //    var data = this.gameObject.GetData();
+        //    if (data != null)
+        //    {
+        //        if (Helper.IsTerraLayer(data.TypePoolPrefab))
+        //        {
+        //            IsMeTerra = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        IsMeTerra = true;
+        //    }
+        //    isInit = true;
+        //}
+    }
+        
+    private void OnDisable()
+    {
+        isInit = false;
+    }
 
     private void FixedUpdate()
     {
+        if (Disabled)
+            return;
+
+        if (IsMeTerra)
+        {
+            if (m_OldFieldHero == Storage.Instance.SelectFieldPosHero)
+                return;
+            m_OldFieldHero = Storage.Instance.SelectFieldPosHero;
+        }
+
         float offsetCalculate = SortingBase - gameObject.transform.position.y; // - Offset; //@@+ fix
         offsetCalculate = (float)System.Math.Round(offsetCalculate, 2);
         offsetCalculate *= 100;

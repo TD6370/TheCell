@@ -26,7 +26,7 @@ public class StorageLog //: MonoBehaviour
     //    }
     //}
 
-    private bool _isSaveHistory = true;
+    private bool _isSaveHistory = false;// true;
     public bool IsSaveHistory { get { return _isSaveHistory; } }
 
 

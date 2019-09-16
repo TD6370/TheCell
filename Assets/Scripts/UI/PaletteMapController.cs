@@ -1864,6 +1864,7 @@ public class PaletteMapController : MonoBehaviour {
         bool isZoneEnd = Helper.IsValidFieldInZona(sizeX, sizeY);
         if (isZoneStart || isZoneEnd) //#fast
         {
+            //# TEST TIME CLOSE   
             Storage.GenGrid.LoadObjectsNearHero();
         }
         else

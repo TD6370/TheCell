@@ -835,21 +835,38 @@ public class SaveLoadData : MonoBehaviour {
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
     }
 
-    public void ClearWorld(bool isReload = true)
+    public void ClearWorld(bool isSync = false)
     {
-        Storage.Instance.StopGame();
-        Storage.Pool.Restart();
-        Storage.Instance.DestroyAllGamesObjects();
-        Storage.Pool.Restart();
-        Storage.Instance.GridDataG.FieldsD.Clear();
-        if(isReload)
-            Storage.Player.LoadPositionHero();
-        //Storage.Instance.GridDataG.FieldsD.Clear();
+        if (isSync)
+        {
+            Storage.Instance.GridDataG.FieldsD.Clear();
+
+            //Storage.Player.LoadPositionHero(); //<<-- in Storage.Instance.StopGame();
+
+            Storage.Instance.StopGame();
+            Storage.Instance.LoadGameObjects(true); //NEW
+        }
+        else
+        {
+            StartCoroutine(StartClearWorld());
+        }
     }
 
-   
-
-
+    IEnumerator StartClearWorld()
+    {
+        while (true)
+        {
+            Storage.Instance.GridDataG.FieldsD.Clear();
+            yield return null;
+            Storage.Instance.StopDispatcherAction();
+            yield return null;
+            Storage.Instance.StopGame();
+            yield return null;
+            Storage.Instance.LoadGameObjects(true); 
+            //Storage.Player.LoadPositionHero();
+            yield break;
+        }
+    }
 
 
 

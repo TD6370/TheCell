@@ -4208,6 +4208,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: -10
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!114 &134454367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10125,7 +10126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5804041}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.8401356, y: -1}
+  m_AnchoredPosition: {x: -1.8401413, y: -1}
   m_SizeDelta: {x: -2.4099998, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &312878481
@@ -10367,6 +10368,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: -35
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!1 &317526056
 GameObject:
   m_ObjectHideFlags: 0
@@ -15169,6 +15171,11 @@ Prefab:
       propertyPath: Offset
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114082268443085190, guid: d07c882ede4a65141a30c5425f6d2d5b,
+        type: 2}
+      propertyPath: IsMeTerra
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d07c882ede4a65141a30c5425f6d2d5b, type: 2}
   m_IsPrefabAsset: 0
@@ -15312,7 +15319,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: -0.0000045715897}
+  m_AnchoredPosition: {x: 8.5, y: -0.00000006585151}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &460410515
@@ -17809,6 +17816,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 444997723}
   Offset: 0
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!1 &526491242
 GameObject:
   m_ObjectHideFlags: 0
@@ -20685,7 +20693,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c4e67bc69d1fa46a69f1a8454d048b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInit: 0
+  m_isInit: 0
+  m_isStop: 0
 --- !u!114 &580250722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32584,8 +32593,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1384420415}
   m_HandleRect: {fileID: 1384420414}
   m_Direction: 2
-  m_Value: 0.9999992
-  m_Size: 0.62136453
+  m_Value: 0.9999993
+  m_Size: 0.62032694
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41575,6 +41584,11 @@ Prefab:
       propertyPath: m_Offset.y
       value: -0.29
       objectReference: {fileID: 0}
+    - target: {fileID: 114168615179167160, guid: bebfdd6ac7b1c9e42b8b3836500b8a70,
+        type: 2}
+      propertyPath: IsMeTerra
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61121965722454826, guid: bebfdd6ac7b1c9e42b8b3836500b8a70, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: bebfdd6ac7b1c9e42b8b3836500b8a70, type: 2}
@@ -41833,7 +41847,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.036000002}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 0.45732725}
-  m_AnchoredPosition: {x: -1.8401241, y: 0.7590065}
+  m_AnchoredPosition: {x: -1.8400421, y: 0.7590065}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1075322314
@@ -42211,6 +42225,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: -10
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!1 &1079224221
 GameObject:
   m_ObjectHideFlags: 0
@@ -42429,6 +42444,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: -30
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!61 &1088875651
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -43986,7 +44002,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 0.46226868}
-  m_AnchoredPosition: {x: -1.8401356, y: 0.7590027}
+  m_AnchoredPosition: {x: -1.8401413, y: 0.7590027}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1130822277
@@ -52720,6 +52736,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: -10
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!114 &1390742138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54182,6 +54199,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: 0
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!70 &1432524895
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -54758,7 +54776,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.54267275}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.8401165, y: -0.5}
+  m_AnchoredPosition: {x: -1.8400345, y: -0.5}
   m_SizeDelta: {x: -2.4099998, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1448596505
@@ -55100,6 +55118,11 @@ Prefab:
     - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
         type: 2}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114658697376345018, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: IsMeTerra
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -66552,6 +66575,7 @@ MonoBehaviour:
   BoneRoorAnimation: {fileID: 0}
   Offset: 0
   IsOverlapSprite: 0
+  IsMeTerra: 0
 --- !u!70 &1798573871
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -67411,6 +67435,11 @@ Prefab:
     - target: {fileID: 212762101449004552, guid: 790cf88490d6237408bc490ea8d96100,
         type: 2}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114884641513828432, guid: 790cf88490d6237408bc490ea8d96100,
+        type: 2}
+      propertyPath: IsMeTerra
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -69601,7 +69630,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.94559145, y: 1}
-  m_AnchoredPosition: {x: 8.5, y: 0.000015258789}
+  m_AnchoredPosition: {x: 8.5, y: 0}
   m_SizeDelta: {x: 8.5, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1849839238
@@ -70803,7 +70832,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.3, y: 94.5867}
+  m_AnchoredPosition: {x: 0.3, y: 94.16586}
   m_SizeDelta: {x: 155.04, y: 29}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1891207650
@@ -71373,7 +71402,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1804064628}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -74347,8 +74376,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1626462185}
   m_HandleRect: {fileID: 1626462184}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
