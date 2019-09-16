@@ -235,6 +235,21 @@ public static class ScriptableObjectUtility
 
 #if UNITY_EDITOR
 
+    //[CreateAssetMenu(menuName = "Custom Tool/Create Container Priority", fileName = "ContainerPriorityFinder")]
+    [MenuItem("Assets/Build AssetBundles")]
+    static void BuildAllAssetBundles()
+    {
+        if (!Directory.Exists(AssetBundleDirectory))
+        {
+            Directory.CreateDirectory(AssetBundleDirectory);
+        }
+        //BuildPipeline.BuildAssetBundles(m_assetBundleDirectory, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+
+        BuildPipeline.BuildAssetBundles(AssetBundleDirectory,
+                                        BuildAssetBundleOptions.None,
+                                        BuildTarget.StandaloneWindows);
+    }
+
     public static void LoadContainerPriorityFinderEditor()
     {
         ContainerPriorityFinder cpf = null;
@@ -256,23 +271,7 @@ public static class ScriptableObjectUtility
     {
         CreateAsset<ContainerPriorityFinder>();
     }
-
-    //[CreateAssetMenu(menuName = "Custom Tool/Create Container Priority", fileName = "ContainerPriorityFinder")]
-    [MenuItem("Assets/Build AssetBundles")]
-    static void BuildAllAssetBundles()
-    {
-        if (!Directory.Exists(AssetBundleDirectory))
-        {
-            Directory.CreateDirectory(AssetBundleDirectory);
-        }
-        //BuildPipeline.BuildAssetBundles(m_assetBundleDirectory, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-
-        BuildPipeline.BuildAssetBundles(AssetBundleDirectory,
-                                        BuildAssetBundleOptions.None,
-                                        BuildTarget.StandaloneWindows);
-    }
-
-
+        
     [MenuItem("Assets/Load Data/Load Prioritys finders")]
     static void LoadPriotitysFinders()
     {

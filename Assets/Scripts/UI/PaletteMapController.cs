@@ -1813,7 +1813,7 @@ public class PaletteMapController : MonoBehaviour {
 
             if (IsGenericWorldPriorityTerra)
             {
-                Storage.GenWorld.GenericWorldPriorityTerra(PriorityIdleStartPercent, PriorityPrefabPercent, PriorityTreePercent, PriorityRockPercent, PriorityFlorePercent, PriorityDistantionFind);
+                Storage.GenWorld.GenericWorldPriorityTerra(PriorityIdleStartPercent, PriorityDistantionFind, PriorityPrefabPercent, PriorityTreePercent, PriorityRockPercent, PriorityFlorePercent);
             }
             else if (IsSpawnPoint)
             {

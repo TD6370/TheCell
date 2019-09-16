@@ -48,6 +48,8 @@ public class SaveLoadData : MonoBehaviour {
 
     public List<string> NamesPrefabObjects;
     public List<string> NamesPrefabFloors;
+    public List<string> NamesPrefabFlore;
+    public List<string> NamesPrefabsObjectsAndFlore;
     public List<string> NamesPrefabNPC;
 
     private IEnumerable<string> _namesPrefabs
@@ -88,6 +90,115 @@ public class SaveLoadData : MonoBehaviour {
             return m_collectionFloorGray;
         }
     }
+
+    private List<TypePrefabs> m_collectionPrefabObjectsAndFloreGray;
+    public List<TypePrefabs> GetPrefabsObjectsAndFloreGray
+    {
+        get
+        {
+            if (m_collectionPrefabObjectsAndFloreGray == null)
+            {
+                m_collectionPrefabObjectsAndFloreGray = new List<TypePrefabs>();
+
+                var list = new List<string>();
+                bool isGray;
+                bool isPrefab;
+                foreach (var typePrefabNext in NamesPrefabsObjectsAndFlore)
+                {
+                    isGray = Enum.IsDefined(typeof(TypesBiomGray), typePrefabNext);
+                    isPrefab = Enum.IsDefined(typeof(TypePrefabs), typePrefabNext);
+                    if (isPrefab && isGray)
+                    {
+                        TypePrefabs typePrefab = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), typePrefabNext);
+                        m_collectionPrefabObjectsAndFloreGray.Add(typePrefab);
+                    }
+                }
+            }
+            return m_collectionPrefabObjectsAndFloreGray;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionFloreGray;
+    public List<TypePrefabs> GetFloreGray
+    {
+        get
+        {
+            if (m_collectionFloreGray == null)
+            {
+                m_collectionFloreGray = new List<TypePrefabs>();
+
+                var list = new List<string>();
+                bool isGray;
+                bool isPrefab;
+                foreach (var typeFloor in NamesPrefabFlore)
+                {
+                    isGray = Enum.IsDefined(typeof(TypesBiomGray), typeFloor);
+                    isPrefab = Enum.IsDefined(typeof(TypePrefabs), typeFloor);
+                    if (isPrefab && isGray)
+                    {
+                        TypePrefabs typePrefab = (TypePrefabs)Enum.Parse(typeof(TypePrefabs), typeFloor.ToString());
+                        m_collectionFloreGray.Add(typePrefab);
+                    }
+                }
+                m_collectionFloreGray.Add(TypePrefabs.BlueBerry);
+
+            }
+            return m_collectionFloreGray;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionTreeGray;
+    public List<TypePrefabs> GetTreeGray
+    {
+        get
+        {
+            if (m_collectionTreeGray == null)
+            {
+                m_collectionTreeGray = new List<TypePrefabs>()
+                {
+                    TypePrefabs.Iva,
+                    TypePrefabs.Klen,
+                    TypePrefabs.Sosna
+                };
+            }
+            return m_collectionTreeGray;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionRockGray;
+    public List<TypePrefabs> GetRockGray
+    {
+        get
+        {
+            if (m_collectionRockGray == null)
+            {
+                m_collectionRockGray = new List<TypePrefabs>() {
+                    TypePrefabs.RockDark,
+                    TypePrefabs.RockBrown,
+                    TypePrefabs.RockValun
+                };
+            }
+            return m_collectionRockGray;
+        }
+    }
+        
+    private List<TypePrefabs> m_collectionGrassGray;
+    public List<TypePrefabs> GetGrassGray
+    {
+        get
+        {
+            if (m_collectionGrassGray == null)
+            {
+                m_collectionGrassGray = new List<TypePrefabs>() {
+                    TypePrefabs.Grass,
+                    TypePrefabs.GrassMedium,
+                    TypePrefabs.GrassSmall
+                };
+            }
+            return m_collectionGrassGray;
+        }
+    }
+
 
     public enum TypePrefabsLegacy
     {
@@ -561,6 +672,9 @@ public class SaveLoadData : MonoBehaviour {
 
     public void InitPrefabCollections()
     {
+
+        NamesPrefabsObjectsAndFlore = new List<string>();
+
         string[] floors = Enum.GetNames(typeof(TypePrefabFloors));
         NamesPrefabFloors = new List<string>();
         foreach (var item in floors)
@@ -568,11 +682,20 @@ public class SaveLoadData : MonoBehaviour {
             NamesPrefabFloors.Add(item);
         }
 
+        string[] flores = Enum.GetNames(typeof(TypePrefabFlore));
+        NamesPrefabFlore = new List<string>();
+        foreach (var item in flores)
+        {
+            NamesPrefabFlore.Add(item);
+            NamesPrefabsObjectsAndFlore.Add(item);
+        }
+        
         string[] gameObjects = Enum.GetNames(typeof(TypePrefabObjects));
         NamesPrefabObjects = new List<string>();
         foreach (var item in gameObjects)
         {
             NamesPrefabObjects.Add(item);
+            NamesPrefabsObjectsAndFlore.Add(item);
         }
 
         string[] gameNPC = Enum.GetNames(typeof(TypePrefabNPC));
@@ -604,10 +727,11 @@ public class SaveLoadData : MonoBehaviour {
         }
 
         //test
-        Storage.GenWorld.GenericWorldLegacy();
+        //Storage.GenWorld.GenericWorldLegacy();
+        //Storage.GenWorld.GenericWorldPriorityTerra(50, 2, 20, isGenNPC: true);
+        int distantion = 20;
+        Storage.GenWorld.GenericWorldPriorityTerra(30, distantion, 20, isStartWorld: true);
     }
-
-    
        
     public static ModelNPC.ObjectData GetObjectDataByGobj(GameObject p_gobject)
     {
@@ -778,7 +902,7 @@ public class SaveLoadData : MonoBehaviour {
             pos.z = -2;
 
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
-        ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName, false);
+        ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName);
         objDataSave.CreateID(nameObject);
         string typePool = objDataSave.TypePoolPrefabName; //test
 

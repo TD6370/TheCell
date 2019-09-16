@@ -1146,7 +1146,8 @@ public class MapWorld : MonoBehaviour {
                 yield return null;
 
             string sector = StackSectorsUpdating.Pop();
-            //Debug.Log("************ RefreshGrid " + sector);
+            Debug.Log(Storage.EventsUI.ListLogAdd = "************ Refresh MAP Grid " + sector);
+
 
             IsReloadGridMap = true;
             RefreshGrid(sector);

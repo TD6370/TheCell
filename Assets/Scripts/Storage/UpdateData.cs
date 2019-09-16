@@ -152,6 +152,14 @@ public class UpdateData {
         return fieldData;
     }
 
+    public bool AddFirstDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField)
+    {
+        ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = nameField };
+        _GridDataG.FieldsD.Add(nameField, fieldData);
+        fieldData.Objects.Add(objDataSave);
+        return true;
+    }
+
     public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc)
     {
         ModelNPC.FieldData fieldData;

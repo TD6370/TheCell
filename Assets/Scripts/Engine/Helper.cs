@@ -700,6 +700,7 @@ public static class Helper { //: MonoBehaviour {
     {
         return FindFromLocationType(typeRequested, posRequested, distantionFind, isFoor);
     }
+     
 
     public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion, bool isFoor)
     {
@@ -710,6 +711,7 @@ public static class Helper { //: MonoBehaviour {
         ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeRequested, string.Empty, isFoor);
         return finder.ResultData;
     }
+        
 
     public static ModelNPC.ObjectData FindFromLocation(ModelNPC.ObjectData data, int distantion)
     {

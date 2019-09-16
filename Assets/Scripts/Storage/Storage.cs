@@ -360,6 +360,8 @@ public class Storage : MonoBehaviour {
         _datapathTiles = Application.dataPath + "/Levels/TilesData.xml";
         _datapathVersionOptGenericWorld = Application.dataPath + "/UserConfig/VersionsOptGeneric.xml";
 
+        CreateForders();
+
         ZonaField = null;
         ZonaReal = null;
 
@@ -542,6 +544,16 @@ public class Storage : MonoBehaviour {
 
         //_PoolObgects
         //DrawGeometry 
+    }
+
+    private void CreateForders()
+    {
+        if (!Directory.Exists("Levels"))
+            Directory.CreateDirectory("Levels");
+        if (!Directory.Exists("UserConfig"))
+            Directory.CreateDirectory("UserConfig");
+        if (!Directory.Exists("Player"))
+            Directory.CreateDirectory("Player");
     }
 
     private void InitObjectsGrid()
@@ -796,7 +808,7 @@ public class Storage : MonoBehaviour {
             yield return new WaitForSeconds(0.3f);
 
             EventsUI.SetTittle = "Level saving...";
-            Storage.Disk.SaveLevel();
+            Disk.SaveLevel();
 
             yield return new WaitForSeconds(0.3f);
 

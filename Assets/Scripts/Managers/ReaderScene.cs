@@ -286,7 +286,7 @@ public class ReaderScene //: UpdateData
         DataInfoFinder finder = new DataInfoFinder();
         Dictionary<string, ModelNPC.ObjectData> locationObjects = new Dictionary<string, ModelNPC.ObjectData>();
         //bool isFindReaderWorld = Storage.ReaderWorld.CollectionInfoID.Count > 0;
-        bool isFindReaderWorld = false;
+        //bool isFindReaderWorld = false;
 
         //if (!Storage.Instance.ReaderSceneIsValid)
         //    return finder;
@@ -325,11 +325,11 @@ public class ReaderScene //: UpdateData
                     if (!finder.ResultPowerData.ContainsKey(id))
                     {
                         finder.ResultPowerData.Add(id, power);
-                        if (!isFindReaderWorld)
-                        {
+                        //if (!isFindReaderWorld)
+                        //{
                             if(!locationObjects.ContainsKey(id))
                                 locationObjects.Add(id, objData);
-                        }
+                        //}
                     }
                 }
             }
@@ -365,18 +365,19 @@ public class ReaderScene //: UpdateData
         //--------------------------
         if (!string.IsNullOrEmpty(selId))
         {
-            if (isFindReaderWorld)
-            {
-                if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
-                    finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
-            }else
-            {
+            //if (isFindReaderWorld)
+            //{
+            //    if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
+            //        finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
+            //}else
+            //{
                 finder.ResultData = locationObjects[selId];
-            }
+            //}
         }
         return finder;
     }
 
+    
 
     public static bool IsUseCashFinderPriorityNPC = false;
 

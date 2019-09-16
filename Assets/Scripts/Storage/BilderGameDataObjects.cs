@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 //using System.Collections;
 //using System.Collections.Generic;
 //using UnityEngine;
@@ -19,11 +20,28 @@ public class BilderGameDataObjects //: MonoBehaviour
     public static ModelNPC.ObjectData BildObjectData(string prefabTypeStr)
     {
         SaveLoadData.TypePrefabs prefabType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabTypeStr);
-        return BildObjectData(prefabType, false);
+        return BildObjectData(prefabType);
     }
 
+    private static Dictionary<SaveLoadData.TypePrefabs, ModelNPC.ObjectData> m_templateBielders = new Dictionary<SaveLoadData.TypePrefabs, ModelNPC.ObjectData>();
+
+    public static ModelNPC.ObjectData BildObjectData_Cash(SaveLoadData.TypePrefabs prefabType)
+    {
+        if (m_templateBielders.ContainsKey(prefabType))
+        {
+            return m_templateBielders[prefabType];
+        }
+        else
+        {
+            var data = BildObjectData(prefabType);
+            m_templateBielders.Add(prefabType, data);
+            return data;
+        }
+    }
+
+
     public static ModelNPC.ObjectData objGameBild;
-    public static ModelNPC.ObjectData BildObjectData(SaveLoadData.TypePrefabs prefabType, bool isTerraGen = false)
+    public static ModelNPC.ObjectData BildObjectData(SaveLoadData.TypePrefabs prefabType)
     {
         switch (prefabType)
         {
