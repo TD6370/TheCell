@@ -47,13 +47,23 @@ public class UIEvents : MonoBehaviour {
             txtMessage.text = value;
         }
     }
+
+    
     public string SetMessageBox
     {
         set
         {
             PanelMessage.SetActive(true);
             MessageBox.text = value;
+            StartCoroutine(MessageBoxCourutine());
         }
+    }
+
+    IEnumerator MessageBoxCourutine()
+    {
+        yield return null;
+        yield return new WaitForSeconds(2f);
+        HideMessage();
     }
 
 

@@ -471,6 +471,8 @@ public class GameActionPersonController : MonoBehaviour
             controller.PlayAnimationIdle();
     }
 
+    private static ModelNPC.ObjectData m_TargetObject = null;
+
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
         //Storage.EventsUI.ListLogAdd = "ActionTarget .... ReaderSceneIsValid=" + Storage.Instance.ReaderSceneIsValid;
@@ -486,12 +488,13 @@ public class GameActionPersonController : MonoBehaviour
 
         //string tempID = dataNPC.TargetID;
         string indErr = "0";
-        ModelNPC.ObjectData TargetObject = null;
+        
         try {
             indErr = "1";
             GetAlienData(dataNPC).OnTargetCompleted();
             indErr = "2";
-            TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+            //m_TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+            Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, GetAlienData(dataNPC));
         }
         catch (Exception ex)
         {
@@ -500,15 +503,17 @@ public class GameActionPersonController : MonoBehaviour
         }
 
         //test
-        string log = TargetObject == null ? " empty " : TargetObject.NameObject;
-        Storage.EventsUI.ListLogAdd = "*** " + dataNPC.NameObject + " ==> " + log;
+        if (m_TargetObject == null)
+            Storage.EventsUI.ListLogAdd = "*** " + dataNPC.NameObject + " ==> empty";
+        else
+            Storage.EventsUI.ListLogAdd = "*** " + dataNPC.NameObject + " ==> " + m_TargetObject.NameObject;
             
-        if (TargetObject == null)
+        if (m_TargetObject == null)
             GetAlienData(dataNPC).SetTargetPosition();
         else
         {
-            var targetPosition = TargetObject.Position;
-            dataNPC.TargetID = TargetObject.Id;
+            var targetPosition = m_TargetObject.Position;
+            dataNPC.TargetID = m_TargetObject.Id;
             dataNPC.SetTargetPosition(targetPosition);
         }
     

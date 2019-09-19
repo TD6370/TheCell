@@ -776,9 +776,9 @@ public class StoragePerson : MonoBehaviour {
     }
 
     //================================================
-    
 
-    public ModelNPC.ObjectData GetAlienNextTargetObject(ModelNPC.GameDataAlien dataAlien)
+    private PriorityFinder m_prioritysGet;
+    public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ModelNPC.GameDataAlien dataAlien)
     {
         int versionSearching = 1;
 
@@ -786,12 +786,14 @@ public class StoragePerson : MonoBehaviour {
         {
             Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> PersonPriority is null";
             LoadPriorityPerson();
-            return null;
+            result = null;
+            return;
         }
         if (dataAlien == null)
         {
             Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> dataAlien is null";
-            return null;
+            result = null;
+            return;
         }
 
         if (!PersonPriority.ContainsKey(dataAlien.TypePrefab))
@@ -803,32 +805,30 @@ public class StoragePerson : MonoBehaviour {
             }
             else
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
-            
-            return null;
+            result = null;
+            return;
         }
 
-        //string typeAlien = dataAlien.TypePrefabName;
-        //Storage.ReaderWorld
-        PriorityFinder prioritys = PersonPriority[dataAlien.TypePrefab];
+        m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
         int distantionFind = UnityEngine.Random.Range(2, 15);
-
-        ModelNPC.ObjectData result = new ModelNPC.ObjectData();
 
         //v.1
         if (versionSearching == 1)
             //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
-            result = Helper.FindFromLocation(dataAlien, distantionFind);
+            //result = Helper.FindFromLocation(dataAlien, distantionFind);
+            Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
         //v.2
-        if (versionSearching == 2)
-        {
-            string fieldName = Helper.GetNameFieldPosit(dataAlien.Position.x, dataAlien.Position.y);
-            Vector2 posField = Helper.GetPositByField(fieldName);
-            Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-            ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID(posFieldInt, distantionFind, dataAlien.TypePrefab, dataAlien.Id); ;
-            result = finder.ResultData;
-        }
+        //if (versionSearching == 2)
+        //{
+        //    string fieldName = Helper.GetNameFieldPosit(dataAlien.Position.x, dataAlien.Position.y);
+        //    Vector2 posField = Helper.GetPositByField(fieldName);
+        //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+        //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
 
-        return result;
+        //    result = finder.ResultData;
+        //}
+
+        //return result;
     }
     
     private void LoadPriorityPerson()

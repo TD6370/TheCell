@@ -152,6 +152,15 @@ public class UpdateData {
         return fieldData;
     }
 
+    public void AddNewFieldInGrid_Cache(ref ModelNPC.FieldData result, string newField, string callFunc, bool isForce = false)
+    {
+        result = new ModelNPC.FieldData() { NameField = newField };
+        _GridDataG.FieldsD.Add(newField, result);
+
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(newField);
+    }
+
     public bool AddFirstDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField)
     {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = nameField };
@@ -163,14 +172,17 @@ public class UpdateData {
     public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc)
     {
         ModelNPC.FieldData fieldData;
-        if (!_GridDataG.FieldsD.ContainsKey(nameField))
-        {
-            fieldData = AddNewFieldInGrid(nameField, callFunc);
-        }
-        else
-        {
-            fieldData = _GridDataG.FieldsD[nameField];
-        }
+        if(!_GridDataG.FieldsD.TryGetValue(nameField, out fieldData))
+            AddNewFieldInGrid_Cache(ref fieldData, nameField, callFunc);
+
+        //if (!_GridDataG.FieldsD.ContainsKey(nameField))
+        //{
+        //    fieldData = AddNewFieldInGrid(nameField, callFunc);
+        //}
+        //else
+        //{
+        //    fieldData = _GridDataG.FieldsD[nameField];
+        //}
 
         if (isTestSlow)
         {
@@ -196,7 +208,8 @@ public class UpdateData {
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
 
-        Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
+        if(Storage.Log.IsSaveHistory)
+            Storage.Log.SaveHistory(objDataSave.NameObject, "AddDataObjectInGrid", callFunc, nameField, "", null, objDataSave);
 
         return true;
     }
@@ -499,11 +512,14 @@ public class UpdateData {
             Debug.Log("################ RemoveRealObject  " + nameField + "  Not indexDel: " + indexDel);
             return;
         }
-        if (_GamesObjectsReal[nameField][indexDel] == null)
-            Storage.Log.SaveHistory("Destroy real obj", "RemoveRealObject", callFunc, nameField);
-        else
-            Storage.Log.SaveHistory(_GamesObjectsReal[nameField][indexDel].name, "RemoveRealObject", callFunc, nameField);
 
+        if (Storage.Log.IsSaveHistory)
+        {
+            if (_GamesObjectsReal[nameField][indexDel] == null)
+                Storage.Log.SaveHistory("Destroy real obj", "RemoveRealObject", callFunc, nameField);
+            else
+                Storage.Log.SaveHistory(_GamesObjectsReal[nameField][indexDel].name, "RemoveRealObject", callFunc, nameField);
+        }
         _GamesObjectsReal[nameField].RemoveAt(indexDel);
     }
 

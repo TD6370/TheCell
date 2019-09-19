@@ -39,7 +39,7 @@ public class BilderGameDataObjects //: MonoBehaviour
         }
     }
 
-
+    
     public static ModelNPC.ObjectData objGameBild;
     public static ModelNPC.ObjectData BildObjectData(SaveLoadData.TypePrefabs prefabType)
     {
@@ -265,8 +265,9 @@ public class BilderGameDataObjects //: MonoBehaviour
         //objGameBild.Id = Guid.NewGuid().ToString();
         return objGameBild;
     }
+    
 
-
+    
 }
 
 public static class BilderExtension

@@ -281,7 +281,8 @@ public class ReaderScene //: UpdateData
     //===============================================================================
 
     //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
-    public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
+    //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
+    public static DataInfoFinder GetDataInfoLocation(int xPos, int yPos, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
     {
         DataInfoFinder finder = new DataInfoFinder();
         Dictionary<string, ModelNPC.ObjectData> locationObjects = new Dictionary<string, ModelNPC.ObjectData>();
@@ -291,13 +292,16 @@ public class ReaderScene //: UpdateData
         //if (!Storage.Instance.ReaderSceneIsValid)
         //    return finder;
 
-        int startX = fieldPosit.x - distantion;
-        int startY = fieldPosit.y - distantion;
-        int endX = fieldPosit.x + distantion;
-        int endY = fieldPosit.y + distantion;
+        int startX = xPos - distantion;
+        int startY = yPos - distantion;
+        int endX = xPos + distantion;
+        int endY = yPos + distantion;
 
         if (startX < 1)  startX = 1;
         if (startY < 1)  startY = 1;
+        string id = "";
+        int power = 0;
+        int powerDist = 0;
 
         for (int y = startY; y < endY; y++)
         {
@@ -307,17 +311,16 @@ public class ReaderScene //: UpdateData
                 List<ModelNPC.ObjectData> objects = GetObjectsDataFromGridTest(field); //TEST
                 foreach (ModelNPC.ObjectData objData in objects)
                 {
-                    string id = Helper.GetID(objData.NameObject);
+                    id = Helper.GetID(objData.NameObject);
                     if (id == id_Observer || id == id_PrevousTarget)
                         continue;
 
                     //int power = Storage.Person.GetPriorityPower(objData, priority);
-                    int power = 0;
                     if (isFoor)
                         power = Storage.GenWorld.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
                     else
                         power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
-                    int powerDist = (distantion - Math.Max(Math.Abs(fieldPosit.x - x), Math.Abs(fieldPosit.y - y))) * 3;
+                    powerDist = (distantion - Math.Max(Math.Abs(xPos - x), Math.Abs(yPos - y))) * 3;
                     power += powerDist;
                     //if (finder.ResultPowerData.ContainsKey(id))
                     //Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
@@ -335,7 +338,7 @@ public class ReaderScene //: UpdateData
             }
         }
       
-        int priorityIndex = 0;
+        //int priorityIndex = 0;
         string selId = string.Empty;
         //------------------------
         //foreach (var item in finder.ResultPowerData)
@@ -381,7 +384,7 @@ public class ReaderScene //: UpdateData
 
     public static bool IsUseCashFinderPriorityNPC = false;
 
-    public static DataInfoFinder GetDataInfoLocationFromID(Vector2Int fieldPosit, int distantion, SaveLoadData.TypePrefabs typeObserver, string id_Observer)
+    public static DataInfoFinder GetDataInfoLocationFromID(int x, int y, int distantion, SaveLoadData.TypePrefabs typeObserver, string id_Observer)
     {
         int distantionLocalObjects = 50;
         DataInfoFinder finder = new DataInfoFinder();
@@ -393,7 +396,7 @@ public class ReaderScene //: UpdateData
                .Where(p =>
                {
                    Vector2 posT = p.Value.Data.Position;
-                   int distToTatget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y));
+                   int distToTatget = Math.Max(Math.Abs(x - (int)posT.x), Math.Abs(y - (int)posT.y));
                    return distToTatget <= distantionLocalObjects;
                })
                .Select(p => p.Key)
@@ -405,29 +408,32 @@ public class ReaderScene //: UpdateData
             .Where(p => {
                 //Vector2 posT = p.Value.Data.Position;
                 Vector2 posT = p.Value.FiledPos;
-                int distToTatget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y));
+                int distToTatget = Math.Max(Math.Abs(x - (int)posT.x), Math.Abs(y - (int)posT.y));
                 return distToTatget <= distantion;
             })
             .Select(p => {
                 Vector2 posT = p.Value.FiledPos;
                 DataInfoFinder resFinder = new DataInfoFinder()
                 {
-                    DistantionToTarget = Math.Max(Math.Abs(fieldPosit.x - (int)posT.x), Math.Abs(fieldPosit.y - (int)posT.y)),
+                    DistantionToTarget = Math.Max(Math.Abs(x - (int)posT.x), Math.Abs(y - (int)posT.y)),
                     ResultData = p.Value.Data,
                     PowerTarget = Storage.Person.GetPriorityPowerByJoin(typeObserver, p.Value.Data.TypePrefab)
             };
                 return resFinder;
             })
             .ToList();
+        string id;
+        int power = 0;
+        int powerDist = 0;
         foreach (DataInfoFinder objDataPower in listPowers)
         {
-            string id = Helper.GetID(objDataPower.ResultData.NameObject);
+            id = Helper.GetID(objDataPower.ResultData.NameObject);
             //string id = objDataPower.ResultData;
             if (id == id_Observer)
                 continue;
 
-            int power = objDataPower.PowerTarget;
-            int powerDist = (distantion - objDataPower.DistantionToTarget) * 3;
+            power = objDataPower.PowerTarget;
+            powerDist = (distantion - objDataPower.DistantionToTarget) * 3;
             power += powerDist;
 
             if (finder.ResultPowerData.ContainsKey(id))

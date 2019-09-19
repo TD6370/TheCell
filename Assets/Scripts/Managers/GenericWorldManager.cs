@@ -117,39 +117,42 @@ public class GenericWorldManager : MonoBehaviour {
         switch (mode)
         {
             case GenObjectWorldMode.Standart:
-                m_maxGenObjWorld = Enum.GetValues(typeof(SaveLoadData.TypePrefabs)).Length - 1;
+                //m_prefabNameGenObjectWorld = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), Random.Range(12, Enum.GetValues(typeof(SaveLoadData.TypePrefabs)).Length - 1).ToString());
+                //m_maxGenObjWorld = Storage.GridData.TypePrefabsCount - 1;
+                m_maxGenObjWorld = Storage.GridData.TypePrefabsCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(12, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), m_indGenObjWorld.ToString());
                 break;
             case GenObjectWorldMode.NPC:
-                m_maxGenObjWorld = m_maxGenObjWorld = Storage.GridData.NamesPrefabNPC.Count - 1;
+                m_maxGenObjWorld = Storage.GridData.TypePrefabNPCCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(2, m_maxGenObjWorld);
                 string nameNPC = Storage.GridData.NamesPrefabNPC[m_indGenObjWorld];
                 m_prefabNameGenObjectWorld = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), nameNPC);
                 break;
 
             case GenObjectWorldMode.FloorGray:
-                m_maxGenObjWorld = Storage.GridData.GetFloorGray.Count;
+                m_maxGenObjWorld = Storage.GridData.TypeFloorGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetFloorGray[m_indGenObjWorld];
                 break;
             case GenObjectWorldMode.TreeGray:
-                m_maxGenObjWorld = Storage.GridData.GetTreeGray.Count;
+                //m_maxGenObjWorld = Storage.GridData.GetTreeGray.Count;
+                m_maxGenObjWorld = Storage.GridData.TypeTreeGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetTreeGray[m_indGenObjWorld];
                 break;
             case GenObjectWorldMode.RockGray:
-                m_maxGenObjWorld = Storage.GridData.GetRockGray.Count;
+                m_maxGenObjWorld = Storage.GridData.TypeRockGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetRockGray[m_indGenObjWorld];
                 break;
             case GenObjectWorldMode.FloreGray:
-                m_maxGenObjWorld = Storage.GridData.GetFloreGray.Count;
+                m_maxGenObjWorld = Storage.GridData.TypeFloreGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetFloreGray[m_indGenObjWorld];
                 break;
             case GenObjectWorldMode.GrayGrass:
-                m_maxGenObjWorld = Storage.GridData.GetGrassGray.Count;
+                m_maxGenObjWorld = Storage.GridData.TypeGrassGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetGrassGray[m_indGenObjWorld];
                 break;
@@ -596,15 +599,19 @@ public class GenericWorldManager : MonoBehaviour {
 
 
     //TEST OPTIONS
-    public bool IsUseGenericTypeTerra = true;
-    public bool IsUseCache = true;
+    private bool IsUseGenericTypeTerra = true;
+    //private bool IsUseCache = true;
     public bool IsGenOnlyFloor = false;
     public bool IsTestGenNPC = false;
-
-    //TEST FREEZEE
+    public bool IsGC = true;
+  
     public void GenericWorldPriorityTerra(int PriorityIdleStartPercent, int PriorityDistantionFind, int PriorityPrefabPercent = 0, int PriorityTreePercent = 0, int PriorityRockPercent = 0, int PriorityFlorePercent = 0, bool isStartWorld = false)
     {
         string indErr = "0";
+        float testTime = Time.time;
+        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+        stopWatch.Start();
+        
         //ModelNPC.ObjectData requestedGenTerra = null;
         ModelNPC.ObjectData receivedGenTerra = null;
         Action _loadPriority = LoadTerraPriority;
@@ -625,7 +632,7 @@ public class GenericWorldManager : MonoBehaviour {
             int coutCreateObjects = 0;
             SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
             Debug.Log("Sart... GenericWorldPriorityTerra..."); indErr = "2";
-            
+
             Storage.Instance.ClearGridData(); //  >>>TEST 1.
 
             int countAll = 0;
@@ -663,13 +670,16 @@ public class GenericWorldManager : MonoBehaviour {
             if (distantionFind == 0)
                 distantionFind = 2;
 
+            if(IsGC)
+                System.GC.Collect();
+
             Vector3 pos;
             float scaling = SaveLoadData.Spacing;
-            string nameObject;
+            string nameObject = "";
             bool isUsePriority;
             int posX = 0;
             int posY = 0;
-            string nameField;
+            string nameField= "";
             bool isCurrentGrass = false;
             ModelNPC.ObjectData objDataSave;
             //---- Gen Floor
@@ -677,7 +687,9 @@ public class GenericWorldManager : MonoBehaviour {
             {
                 posX = cellPos.x;
                 posY = cellPos.y;
-                nameField = Helper.GetNameField(posX, posY);
+                //nameField = Helper.GetNameField(posX, posY);
+                Helper.GetNameField_Cache(ref nameField, posX, posY);
+
                 //Storage.EventsUI.SetTittle = String.Format("Loading {0} %", (countAll / (coutCreateObjects + 1)).ToString());
                 pos.x = posX * scaling;
                 pos.y = (posY * (-1)) * scaling;
@@ -693,15 +705,22 @@ public class GenericWorldManager : MonoBehaviour {
 
                 if (isUsePriority)
                 {
-                    if(IsUseGenericTypeTerra) //ver 2. //GenericTypeTerraOnPriority_Cache v.3 (IsUseCache)
+                    if (IsUseGenericTypeTerra) //ver 2. //GenericTypeTerraOnPriority_Cache v.3 (IsUseCache)
                         prefabName = GenericTypeTerraOnPriority(prefabName, pos, distantionFind);
                     else
                     {
-                        receivedGenTerra = Helper.GenericOnPriorityByType_Cash(prefabName, pos, distantionFind, TerraPriority, true);
+                        //if(IsUseCache)
+                            Helper.GenericOnPriorityByType_Cash(ref receivedGenTerra, prefabName, pos, distantionFind, TerraPriority, true);
+                        //else
+                        //    receivedGenTerra = Helper.GenericOnPriorityByType(prefabName, pos, distantionFind, TerraPriority, null, true);
                         prefabName = receivedGenTerra.TypePrefab;
                     }
                 }
-                nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+                //if(IsUseCache)
+                    Helper.CreateName_Cache(ref nameObject, nameField, nameField, "-1");
+                //else
+                //    nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+
                 objDataSave = BilderGameDataObjects.BildObjectData(prefabName);
                 //objDataSave = BilderGameDataObjects.BildObjectData_Cash(prefabName);
                 objDataSave.SetNameObject(nameObject);
@@ -712,6 +731,9 @@ public class GenericWorldManager : MonoBehaviour {
 
             if (IsTestGenNPC && PriorityPrefabPercent == 0)
                 PriorityPrefabPercent = 20;
+
+            if (IsGC)
+                System.GC.Collect();
 
             //---- Gen Prefabs
             if (!IsGenOnlyFloor && PriorityPrefabPercent > 0)
@@ -754,28 +776,37 @@ public class GenericWorldManager : MonoBehaviour {
                     //Storage.EventsUI.SetTittle = String.Format("Loading {0} %", (countAll / (coutCreateObjects + 1)).ToString());
                     posX = cellPos.x;
                     posY = cellPos.y;
-                    nameField = Helper.GetNameField(posX, posY);
+                    //nameField = Helper.GetNameField(posX, posY);
+                    //if (IsUseCache)
+                        Helper.GetNameField_Cache(ref nameField, posX, posY);
+                    //else
+                    //    nameField = Helper.GetNameField(posX, posY);
                     pos.x = posX * scaling;
                     pos.y = (posY * (-1)) * scaling;
                     pos.z = -1;
 
-                    if (index < countTree && countTree !=0) {
+                    if (index < countTree && countTree != 0)
+                    {
                         //---- Gen Tree
                         modeGeneric = GenObjectWorldMode.TreeGray;
                     }
-                    else if(index < countRock && countRock!=0) {
+                    else if (index < countRock && countRock != 0)
+                    {
                         //---- Gen Rock
                         modeGeneric = GenObjectWorldMode.RockGray;
                     }
-                    else if (index < countFlore && countFlore!= 0) { 
+                    else if (index < countFlore && countFlore != 0)
+                    {
                         //---- Gen Flore
                         modeGeneric = GenObjectWorldMode.FloreGray;
                     }
-                    else if (index < countNPC && countNPC != 0 ) {
+                    else if (index < countNPC && countNPC != 0)
+                    {
                         //---- Gen NPC
                         modeGeneric = GenObjectWorldMode.NPC;
                     }
-                    else {
+                    else
+                    {
                         //---- Default
                         modeGeneric = GenObjectWorldMode.PrefabsGray;
                     }
@@ -783,12 +814,18 @@ public class GenericWorldManager : MonoBehaviour {
                     prefabName = GenObjectWorld(modeGeneric);
                     if (modeGeneric != GenObjectWorldMode.NPC)
                     {
-                        prefabName = GenericTypeTerraOnPriority(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
+                        //if (IsUseCache)
+                            GenericTypeTerraOnPriority_Cache(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
+                        //else
+                        //    prefabName = GenericTypeTerraOnPriority(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
                     }
 
-                    nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+                    //if (IsUseCache)
+                        Helper.CreateName_Cache(ref nameObject, prefabName.ToString(), nameField, "-1");
+                    //else
+                    //    nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+
                     objDataSave = BilderGameDataObjects.BildObjectData(prefabName);
-                    //objDataSave = BilderGameDataObjects.BildObjectData_Cash(prefabName);
                     objDataSave.SetNameObject(nameObject);
                     objDataSave.Position = pos;
                     Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericWorldPriorityTerra");
@@ -802,19 +839,21 @@ public class GenericWorldManager : MonoBehaviour {
             colectionPosRnd.Clear();
             colectionPosRnd = null;
 
-            if(isStartWorld)
+            System.GC.Collect();
+
+
+            if (isStartWorld)
                 Storage.Data.SaveGridGameObjectsXml(true);
-            //--- fix freezee
-            //Storage.Instance.ClearGridData();
-            //Storage.Data.ThreadLoadDataBigXML();
-            //Storage.Instance.LoadLevels();
-            //Storage.Instance.LoadData();
-            //Storage.Instance.LoadGameObjects(true);
-            //-------
 
             Debug.Log("CreateDataGamesObjectsWorld IN Data World COUNT====" + coutCreateObjects);
 
-            Storage.EventsUI.SetTittle = String.Format("World is Loaded");
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+            float timeGens = (Time.time - testTime);
+            Storage.EventsUI.SetTittle = String.Format("World is Loaded : " + ts.TotalMilliseconds);
+            Storage.EventsUI.ListLogAdd = Storage.EventsUI.SetTittle;
+            Storage.EventsUI.SetMessageBox = Storage.EventsUI.SetTittle;
 
             Storage.Instance.IsLoadingWorld = false;
             //---------------
@@ -829,9 +868,7 @@ public class GenericWorldManager : MonoBehaviour {
 
     private SaveLoadData.TypePrefabs GenericTypeTerraOnPriority(SaveLoadData.TypePrefabs typeObserver, Vector3 posRequested, int distantion, GenObjectWorldMode genModeFilter = GenObjectWorldMode.Standart)
     {
-        if (IsUseCache)
-            return GenericTypeTerraOnPriority_Cache(typeObserver, posRequested, distantion, genModeFilter);
-
+        
         int top = 2;
 
         string fieldName = Helper.GetNameFieldPosit(posRequested.x, posRequested.y);
@@ -922,7 +959,7 @@ public class GenericWorldManager : MonoBehaviour {
 
     private GenTerraCashe m_cacheGen = new GenTerraCashe();
 
-    private SaveLoadData.TypePrefabs GenericTypeTerraOnPriority_Cache(SaveLoadData.TypePrefabs typeObserver, Vector3 posRequested, int distantion, GenObjectWorldMode genModeFilter = GenObjectWorldMode.Standart)
+    private void GenericTypeTerraOnPriority_Cache(SaveLoadData.TypePrefabs typeObserver, Vector3 posRequested, int distantion, GenObjectWorldMode genModeFilter = GenObjectWorldMode.Standart)
     {
         m_cacheGen.SetName(posRequested, distantion);
         m_cacheGen.Finder.ResultPowerData.Add(typeObserver.ToString(), m_cacheGen.MePower); //me power
@@ -950,7 +987,8 @@ public class GenericWorldManager : MonoBehaviour {
         {
             for (int x = m_cacheGen.StartX; x < m_cacheGen.EndX; x++)
             {
-                m_cacheGen.Field = Helper.GetNameField(x, y);
+                //m_cacheGen.Field = Helper.GetNameField(x, y);
+                Helper.GetNameField_Cache(ref m_cacheGen.Field, x, y);
                 foreach (ModelNPC.ObjectData objData in m_cacheGen.GetObjects)
                 {
                     m_cacheGen.TypeModel = objData.TypePrefab.ToString();
@@ -966,8 +1004,8 @@ public class GenericWorldManager : MonoBehaviour {
             }
         }
 
-        m_cacheGen.SelType = typeObserver.ToString();
-        m_cacheGen.ResultType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), m_cacheGen.SelType);
+        m_cacheGen.SelType = typeObserver;
+        m_cacheGen.ResultType = m_cacheGen.SelType;
         if (m_cacheGen.Finder.ResultPowerData.Count > 0)
         {
             List<string> listTopTypes = new List<string>();
@@ -980,11 +1018,11 @@ public class GenericWorldManager : MonoBehaviour {
             if (listTopTypes.Count() > 0)
             {
                 int indRnd = UnityEngine.Random.Range(0, listTopTypes.Count() - 1);
-                m_cacheGen.SelType = listTopTypes[indRnd];
+                m_cacheGen.SelType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), listTopTypes[indRnd]);
             }
             m_cacheGen.CheckResult();
         }
-        return m_cacheGen.ResultType;
+        typeObserver = m_cacheGen.ResultType;
     }
 
     public class GenTerraCashe
@@ -1010,7 +1048,7 @@ public class GenericWorldManager : MonoBehaviour {
         public string TypeModel;
 
         public int PowerDist;
-        public string SelType;
+        public SaveLoadData.TypePrefabs SelType;
         public SaveLoadData.TypePrefabs ResultType;
         
         public int IndRnd;
@@ -1065,8 +1103,8 @@ public class GenericWorldManager : MonoBehaviour {
 
         public void CheckResult()
         {
-            if (ResultType.ToString() != SelType)
-                ResultType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), SelType);
+            if (ResultType != SelType)
+                ResultType = SelType;
         }
     }
 

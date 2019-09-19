@@ -46,6 +46,7 @@ public class SaveLoadData : MonoBehaviour {
     //>>> ObjectData -> GameDataNPC -> GameDataOther
     //#################################################################################################
 
+    // TypePrefabs TypeInventoryObjects TypesBiomGray TypesBiomViolet TypesBiomGreen TypesBiomRed TypesBiomBlue TypePrefabNPC TypePrefabWall TypePrefabObjects TypePrefabFloors TypePrefabFlore
     public List<string> NamesPrefabObjects;
     public List<string> NamesPrefabFloors;
     public List<string> NamesPrefabFlore;
@@ -199,7 +200,7 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
-
+    
     public enum TypePrefabsLegacy
     {
         PrefabField,
@@ -215,7 +216,7 @@ public class SaveLoadData : MonoBehaviour {
         PrefabPerson,
         PrefabFloor
     }
-
+    
     public enum TypePrefabs
     {
         PrefabField,
@@ -352,7 +353,7 @@ public class SaveLoadData : MonoBehaviour {
     //    Diods,
     //    Parket,
     //}
-
+    
     public enum TypePrefabFloors
     {
         Chip,
@@ -427,7 +428,7 @@ public class SaveLoadData : MonoBehaviour {
     //    Aracul,
     //    Cloudwood
     //}
-
+    
     public enum TypePrefabWall
     {
         PrefabWallRock,
@@ -458,7 +459,7 @@ public class SaveLoadData : MonoBehaviour {
 
         Ej
     }
-
+    
     public enum TypesBiomBlue
     {
         //----- NPC
@@ -481,6 +482,7 @@ public class SaveLoadData : MonoBehaviour {
         Swamp,
         Gecsagon,
     }
+    
     public enum TypesBiomRed
     {
         //----- NPC
@@ -504,6 +506,7 @@ public class SaveLoadData : MonoBehaviour {
         Nerv,
         
     }
+    
     public enum TypesBiomGreen
     {
         //----- NPC
@@ -525,6 +528,7 @@ public class SaveLoadData : MonoBehaviour {
         //--------- Floor
         Weed,
     }
+    
     public enum TypesBiomViolet
     {
         //----- NPC
@@ -548,7 +552,7 @@ public class SaveLoadData : MonoBehaviour {
         Desert,
         Parket,
     }
-
+    
     public enum TypesBiomGray
     {
         //----- NPC
@@ -653,6 +657,47 @@ public class SaveLoadData : MonoBehaviour {
     private void Awake()
     {
         InitPrefabCollections();
+        InitCacheDataEnum();
+    }
+
+    public int TypePrefabsCount = 0;
+    public int TypeInventoryObjectsCount = 0;
+    public int TypesBiomGrayCount = 0;
+    public int TypesBiomVioletCount = 0;
+    public int TypesBiomGreenCount = 0;
+    public int TypesBiomRedCount = 0;
+    public int TypesBiomBlueCount = 0;
+    public int TypePrefabNPCCount = 0;
+    public int TypePrefabWallCount = 0;
+    public int TypePrefabObjectsCount = 0;
+    public int TypePrefabFloorsCount = 0;
+    public int TypePrefabFloreCount = 0;
+    public int TypeFloorGrayCount = 0;
+    public int TypeTreeGrayCount = 0;
+    public int TypeRockGrayCount = 0;
+    public int TypeFloreGrayCount = 0;
+    public int TypeGrassGrayCount = 0;
+
+    private void InitCacheDataEnum()
+    {
+        // TypePrefabs TypeInventoryObjects TypesBiomGray TypesBiomViolet TypesBiomGreen TypesBiomRed TypesBiomBlue TypePrefabNPC TypePrefabWall TypePrefabObjects TypePrefabFloors TypePrefabFlore
+        TypePrefabsCount = Enum.GetValues(typeof(TypePrefabs)).Length - 1;
+        TypeInventoryObjectsCount = Enum.GetValues(typeof(TypeInventoryObjects)).Length - 1;
+        TypesBiomGrayCount = Enum.GetValues(typeof(TypesBiomGray)).Length - 1;
+        TypesBiomVioletCount = Enum.GetValues(typeof(TypesBiomViolet)).Length - 1;
+        TypesBiomGreenCount = Enum.GetValues(typeof(TypesBiomGreen)).Length - 1;
+        TypesBiomRedCount = Enum.GetValues(typeof(TypesBiomRed)).Length - 1;
+        TypesBiomBlueCount = Enum.GetValues(typeof(TypesBiomBlue)).Length - 1;
+        TypePrefabNPCCount = Enum.GetValues(typeof(TypePrefabNPC)).Length - 1;
+        TypePrefabWallCount = Enum.GetValues(typeof(TypePrefabWall)).Length - 1;
+        TypePrefabObjectsCount = Enum.GetValues(typeof(TypePrefabObjects)).Length - 1;
+        TypePrefabFloorsCount = Enum.GetValues(typeof(TypePrefabFloors)).Length - 1;
+        TypePrefabFloreCount = Enum.GetValues(typeof(TypePrefabFlore)).Length - 1;
+        TypeFloorGrayCount = GetFloorGray.Count();
+        TypeTreeGrayCount = GetTreeGray.Count();
+        TypeRockGrayCount = GetRockGray.Count();
+        TypeFloreGrayCount = GetFloreGray.Count();
+        TypeGrassGrayCount = GetGrassGray.Count();
     }
 
     void Start()

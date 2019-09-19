@@ -160,10 +160,14 @@ public class DiskData : MonoBehaviour
         Debug.Log("*********************** Time loding World: " + loadingTime);
 
         yield return null;
+        System.GC.Collect();
+        yield return null;
 
         Storage.Instance.IsLoadingWorldThread = false;
         Storage.Instance.InitCollectionID();
 
+        yield return null;
+        System.GC.Collect();
         yield break;
     }
 

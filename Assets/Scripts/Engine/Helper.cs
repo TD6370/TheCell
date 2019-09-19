@@ -136,6 +136,33 @@ public static class Helper { //: MonoBehaviour {
         return tag + "_" + nameFiled + "_" + id;
     }
 
+    public static void CreateName_Cache(ref string result, string tag, string nameFiled, string id = "", string nameObjOld = "")
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            if (string.IsNullOrEmpty(nameObjOld))
+            {
+                Debug.Log("!!!!!! Error create name !!!!!!!!!!");
+            }
+            else
+            {
+                int i = nameObjOld.LastIndexOf("_");
+                if (i != -1)
+                {
+                    id = nameObjOld.Substring(i + 1, nameObjOld.Length - i - 1);
+                }
+            }
+        }
+        if (id == "-1") {
+            id = Guid.NewGuid().ToString().Substring(1, 7);
+        }
+
+        //StringBuilder sb = new StringBuilder("ABC", 50);
+        // Append three characters (D, E, and F) to the end of the StringBuilder.
+        //sb.Append(new char[] { 'D', 'E', 'F' });
+        result = tag + "_" + nameFiled + "_" + id;
+    }
+
     public static string GetGameObjectID(GameObject gobj)
     {
         string nameObj = gobj.name;
@@ -185,6 +212,12 @@ public static class Helper { //: MonoBehaviour {
     {
         return FieldKey + x + "x" + Mathf.Abs(y);
     }
+
+    public static void GetNameField_Cache(ref string result, int x, int y)
+    {
+        result = FieldKey + x + "x" + Mathf.Abs(y);
+    }
+
     public static string GetNameField(Vector2 pos)
     {
         return FieldKey + (int)pos.x + "x" + Mathf.Abs((int)pos.y);
@@ -208,6 +241,13 @@ public static class Helper { //: MonoBehaviour {
         x = (int)(x / Storage.ScaleWorld);
         y = (int)(y / Storage.ScaleWorld);
         return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
+    }
+
+    public static void GetFieldPositByWorldPosit(ref int xOut, ref int yOut,  System.Single xIn, System.Single yIn)
+    {
+        xOut = (int)(xIn / Storage.ScaleWorld);
+        yOut = (int)Mathf.Abs(yIn / Storage.ScaleWorld);
+        //return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
     }
 
     public static string GetNameFieldObject(GameObject gobj)
@@ -354,6 +394,41 @@ public static class Helper { //: MonoBehaviour {
         y *= -1;
         return new Vector2(x, y);
     }
+
+    public static void GetPositByField_Cache(ref Vector2Int result, string nameFiled)
+    {
+        if (string.IsNullOrEmpty(nameFiled))
+        {
+            Debug.Log("########## Error GetPositByField nameFiled is Empty");
+            return;
+        }
+
+        string strPos = nameFiled.Replace(FieldKey, "");
+        string[] masPos = strPos.Split('x');
+        float x;
+        float y;
+        if (masPos.Length < 2)
+        {
+            Debug.Log("########## Error GetPositByField --  : " + nameFiled);
+            return;
+        }
+        if (!float.TryParse(masPos[0], out x))
+        {
+            Debug.Log("########## Error GetPositByField -- x : " + nameFiled);
+            return;
+        }
+        if (!float.TryParse(masPos[1], out y))
+        {
+            Debug.Log("########## Error GetPositByField -- y : " + nameFiled);
+            return;
+        }
+
+        //Debug.Log("----- GetPositByField (" + nameFiled + ") : " + x + "x" + y);
+        // return new Vector2(x, y);
+        result.x = (int)x;
+        result.y = (int)y;
+    }
+
 
     public static Vector2 GetPositByField(string nameFiled)
     {
@@ -696,26 +771,29 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
-    public static ModelNPC.ObjectData GenericOnPriorityByType_Cash(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, bool isFoor)
+    public static void GenericOnPriorityByType_Cash(ref ModelNPC.ObjectData result, SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantionFind, Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> p_prioritys, bool isFoor)
     {
-        return FindFromLocationType(typeRequested, posRequested, distantionFind, isFoor);
+        FindFromLocationType_Cache(ref result, typeRequested, posRequested, distantionFind, isFoor);
     }
      
 
     public static ModelNPC.ObjectData FindFromLocationType(SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion, bool isFoor)
     {
-        string fieldName = GetNameFieldPosit(posRequested.x, posRequested.y);
-        Vector2 posField = GetPositByField(fieldName);
-        Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, string.Empty, typeRequested, string.Empty, isFoor);
+        GetFieldPositByWorldPosit(ref posFieldInt_FindFromLocation_X, ref posFieldInt_FindFromLocation_Y, posRequested.x, posRequested.y);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt_FindFromLocation_X, posFieldInt_FindFromLocation_Y, distantion, string.Empty, typeRequested, string.Empty, isFoor);
         return finder.ResultData;
     }
-        
 
+    public static void FindFromLocationType_Cache(ref ModelNPC.ObjectData result, SaveLoadData.TypePrefabs typeRequested, Vector3 posRequested, int distantion, bool isFoor)
+    {
+        GetFieldPositByWorldPosit(ref posFieldInt_FindFromLocation_X, ref posFieldInt_FindFromLocation_Y, posRequested.x, posRequested.y);
+        result = ReaderScene.GetDataInfoLocation(posFieldInt_FindFromLocation_X, posFieldInt_FindFromLocation_Y, distantion, string.Empty, typeRequested, string.Empty, isFoor).ResultData;
+    }
+
+    /*
     public static ModelNPC.ObjectData FindFromLocation(ModelNPC.ObjectData data, int distantion)
     {
-        Vector2 Position = data.Position;
+        //Vector2 Position = data.Position;
         string id_Observer = data.Id;
         ModelNPC.GameDataAlien dataAlien = data as ModelNPC.GameDataAlien;
         string id_PrevousTarget = dataAlien == null ? string.Empty : dataAlien.PrevousTargetID;
@@ -727,12 +805,26 @@ public static class Helper { //: MonoBehaviour {
 
         SaveLoadData.TypePrefabs typeObserver = data.TypePrefab;
 
-        string fieldName = Helper.GetNameFieldPosit(Position.x, Position.y);
+        string fieldName = Helper.GetNameFieldPosit(data.Position.x, data.Position.y);
         Vector2 posField = Helper.GetPositByField(fieldName);
         Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
 
-        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt, distantion, id_Observer, typeObserver, id_PrevousTarget, false);
+        ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocation(posFieldInt.x, posFieldInt.y, distantion, id_Observer, typeObserver, id_PrevousTarget, false);
         return finder.ResultData;
+    }
+    */
+
+    //FindFromLocation_Cache
+
+    //private static Vector2Int posFieldInt_FindFromLocation = new Vector2Int();
+    private static int posFieldInt_FindFromLocation_X;
+    private static int posFieldInt_FindFromLocation_Y;
+    private static ModelNPC.GameDataAlien dataAlien_FindFromLocation_Cache;
+    public static void FindFromLocation_Cache(ref ModelNPC.ObjectData result, ModelNPC.ObjectData data, int distantion)
+    {
+        dataAlien_FindFromLocation_Cache = data as ModelNPC.GameDataAlien;
+        GetFieldPositByWorldPosit(ref posFieldInt_FindFromLocation_X, ref posFieldInt_FindFromLocation_Y, data.Position.x, data.Position.y);
+        result = ReaderScene.GetDataInfoLocation(posFieldInt_FindFromLocation_X, posFieldInt_FindFromLocation_Y, distantion, data.Id, data.TypePrefab, dataAlien_FindFromLocation_Cache.PrevousTargetID, false).ResultData;
     }
 
     public static int GetPriorityPower(string id, PriorityFinder priority)
@@ -746,8 +838,6 @@ public static class Helper { //: MonoBehaviour {
 
         var objData = Storage.ReaderWorld.CollectionInfoID[id].Data;
         return GetPriorityPower(objData, priority);
-
-        //return GetPriorityPowerByJoin(objData, priority);
     }
 
     public static Dictionary<string, int> FillPrioritys(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys)

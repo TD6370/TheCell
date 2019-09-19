@@ -738,6 +738,9 @@ public class Storage : MonoBehaviour {
             Storage.Instance.IsLoadingWorldThread = true;
 
             _GridDataG = Serializator.LoadGridXml(_datapathLevel);
+
+            System.GC.Collect();
+
             //--load parts 
             //StartCoroutine(StartLoadDataPartsXML());
             //--load cash
