@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AnimationEventObserver.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -124,11 +123,14 @@
     <Compile Include="Assets\Scripts\Graph\ManagerPalette.cs" />
     <Compile Include="Assets\Scripts\Graph\PositionRenderSorting.cs" />
     <Compile Include="Assets\Scripts\Graph\SceneLighting.cs" />
+    <Compile Include="Assets\Scripts\Managers\AnimationEventObserver.cs" />
     <Compile Include="Assets\Scripts\Managers\DispatcherWorldActions.cs" />
     <Compile Include="Assets\Scripts\Managers\GenericWorldManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ManagerPortals.cs" />
     <Compile Include="Assets\Scripts\Managers\MovementCamera.cs" />
     <Compile Include="Assets\Scripts\Managers\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Managers\PoolGameObjects.cs" />
+    <Compile Include="Assets\Scripts\Managers\PortalController.cs" />
     <Compile Include="Assets\Scripts\Managers\ReaderScene.cs" />
     <Compile Include="Assets\Scripts\Managers\StoragePerson.cs" />
     <Compile Include="Assets\Scripts\Player\CompletePlayerController.cs" />

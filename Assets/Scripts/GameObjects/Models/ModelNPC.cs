@@ -136,6 +136,49 @@ public class ModelNPC
         }
     }
 
+    [XmlType("Portal")]
+    public class PortalData : ObjectData
+    {
+        [XmlIgnore]
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPortal; } }
+
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabPortal; } }
+    }
+
+    [XmlType("PortalRed")]
+    public class PortalRed : PortalData
+    {
+        [XmlIgnore]
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPortal; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PortalRed; } }
+    }
+    [XmlType("PortalBlue")]
+    public class PortalBlue : PortalData
+    {
+        [XmlIgnore]
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPortal; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PortalBlue; } }
+    }
+    [XmlType("PortalGreen")]
+    public class PortalGreen : PortalData
+    {
+        [XmlIgnore]
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPortal; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PortalGreen; } }
+    }
+    [XmlType("PortalViolet")]
+    public class PortalViolet : PortalData
+    {
+        [XmlIgnore]
+        public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPortal; } }
+        [XmlIgnore]
+        public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PortalViolet; } }
+    }
+
     //#################################################################################################
     //>>> ObjectData -> GameDataNPC -> PersonData -> 
     //>>> ObjectData -> GameDataNPC -> PersonData -> PersonDataBoss -> GameDataBoss

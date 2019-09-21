@@ -56,6 +56,7 @@ public class PoolGameObjects
         public int LimitWood = 100;
         public int LimitWall = 100;
         public int LimitNPC = 250;
+        public int LimitPortal = 10;
     }
 
     //public enum TypesStructure
@@ -79,7 +80,8 @@ public class PoolGameObjects
         PoolWall,
         PoolPerson,
         PoolPersonUFO,
-        PoolPersonBoss
+        PoolPersonBoss,
+        PoolPortal
     }
 
    /*
@@ -164,6 +166,7 @@ public class PoolGameObjects
             {TypePoolPrefabs.PoolWood.ToString(), Storage.GridData.PrefabWood},
             {TypePoolPrefabs.PoolWall.ToString(), Storage.GridData.PrefabWall},
             {TypePoolPrefabs.PoolPerson.ToString(), Storage.GridData.PrefabPerson},
+            {TypePoolPrefabs.PoolPortal.ToString(), Storage.GridData.PrefabPortal},//#PO#
 
             {TypePoolPrefabs.PoolPersonUFO.ToString(), Storage.GridData.PrefabUfo},
             {TypePoolPrefabs.PoolPersonBoss.ToString(), Storage.GridData.PrefabBoss },
@@ -220,6 +223,13 @@ public class PoolGameObjects
         {
             indexPool = i;
             AddPoolNewTypeObject(TypePoolPrefabs.PoolPersonBoss.ToString(), false);
+        }
+
+        //#PO#
+        foreach (var i in Enumerable.Range(0, poolConfig.LimitPortal))
+        {
+            indexPool = i;
+            AddPoolNewTypeObject(TypePoolPrefabs.PoolPortal.ToString());
         }
     }
     

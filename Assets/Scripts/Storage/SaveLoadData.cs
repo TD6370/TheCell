@@ -28,6 +28,8 @@ public class SaveLoadData : MonoBehaviour {
     public GameObject PrefabWood;
     public GameObject PrefabFloor;
 
+    public GameObject PrefabPortal;
+
     ////--- TAILS ---
     //public GameObject BackPalette;
     //public Grid GridTails;
@@ -231,6 +233,12 @@ public class SaveLoadData : MonoBehaviour {
         PrefabFlore,
         PrefabPerson,
         PrefabFloor,
+
+        PrefabPortal,
+        PortalRed,
+        PortalBlue,
+        PortalGreen,
+        PortalViolet,
         //-------------- Floor and Flore
 
         Grass,
