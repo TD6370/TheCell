@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Fantom
   m_EditorClassIdentifier: 
-  TypeObserver: 49
+  TypeObserver: 54
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 050000000c00000003000000
-  PrioritysTypeModelFloor: 070000000600000003000000
+  PrioritysTypeModelFloor: 0b0000000600000003000000
   PrioritysTypeModelFlore: 06000000070000000400000000000000
   PrioritysTypeModelWood: 080000000b0000000c00000003000000
   PrioritysTypeModelWall: 

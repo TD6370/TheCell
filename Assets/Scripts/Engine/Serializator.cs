@@ -100,7 +100,19 @@ public class Serializator
         typeof(ModelNPC.Klen),
         typeof(ModelNPC.Iva),
         typeof(ModelNPC.Sosna),
-        typeof(ModelNPC.BlueBerry) 
+        typeof(ModelNPC.BlueBerry),
+
+
+        typeof(ModelNPC.PortalData),
+        typeof(DataObjectInventory),
+
+        
+        typeof(ModelNPC.PortalData),
+        typeof(ModelNPC.PortalBlue),
+        typeof(ModelNPC.PortalGreen),
+        typeof(ModelNPC.PortalRed),
+        typeof(ModelNPC.PortalViolet),
+        
     };
 
     static public void SaveGridXml(ModelNPC.GridData state, string datapath, bool isNewWorld = false)

@@ -113,6 +113,7 @@ public class DispatcherWorldActions : MonoBehaviour
         }
     }
 
+    
 
     IEnumerator NavigatorWorldScene()
     {
@@ -120,6 +121,8 @@ public class DispatcherWorldActions : MonoBehaviour
         float timeLimitResetNavigator = 10f;
         float timeLive = Time.time + timeLimitResetNavigator;
         int nextIndexID = 0;
+        float waitForSeconds_SearchDreamworkersNoNPC = 8f;
+        float waitForSeconds_NotReaderSceneIsValid = 2f;
 
         Queue<CaseDreamWorker> colectionLivePerson = new Queue<CaseDreamWorker>();
         Queue<CaseDreamWorker> colectionLivePersonVIP = new Queue<CaseDreamWorker>();
@@ -182,7 +185,7 @@ public class DispatcherWorldActions : MonoBehaviour
                     {
                         //UnityEngine.Profiling.Profiler.BeginSample("Sample LOCK dreamworkers");
                         Storage.EventsUI.ListLogAdd = "...Search dreamworkers No NPC... all: " + count;
-                        yield return new WaitForSeconds(8f);
+                        yield return new WaitForSeconds(waitForSeconds_SearchDreamworkersNoNPC);
 
                         //UnityEngine.Profiling.Profiler.EndSample();
                         //yield return null;
@@ -288,7 +291,7 @@ public class DispatcherWorldActions : MonoBehaviour
             }
             else
             {
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(waitForSeconds_NotReaderSceneIsValid);
             }
         }
     }

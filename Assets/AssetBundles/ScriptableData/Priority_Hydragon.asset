@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Hydragon
   m_EditorClassIdentifier: 
-  TypeObserver: 46
+  TypeObserver: 51
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 09000000020000000b000000060000000a000000040000000c00000007000000
   PrioritysTypeModelFloor: 

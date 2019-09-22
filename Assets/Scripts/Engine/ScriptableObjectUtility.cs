@@ -233,6 +233,58 @@ public static class ScriptableObjectUtility
         return null;
     }
 
+    public static T LoadResource<T>(string tag)  where T : UnityEngine.Object
+    {
+
+        string strErr = "0";
+        try
+        {
+            T container = null;
+
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("load AssetBundle... " + m_name);
+                AssetBundle.UnloadAllAssetBundles(false);
+                loadedAssetBundle = AssetBundle.LoadFromFile(AssetBundleDirectory + "/" + m_name);
+            }
+            if (loadedAssetBundle == null)
+            {
+                Debug.Log("Failed to load AssetBundle! ");
+                return null;
+            }
+            var bundle = loadedAssetBundle;
+
+            T containerObj = null;
+            T[] containerObjs = bundle.LoadAllAssets<T>();
+
+            if (containerObjs == null)
+                Debug.Log("containerObjs - null");
+            if (containerObjs != null && containerObjs.Length == 0)
+                Debug.Log("containerObjs count = 0");
+
+            if (containerObjs != null && containerObjs.Length != 0)
+            {
+                containerObj = containerObjs.FirstOrDefault();
+            }
+
+            if (containerObj != null)
+                Debug.Log("ContainerPriorityFinder >> " + containerObj.name + " by Tag = " + tag);
+
+            container = containerObj as T;
+            if (container == null)
+            {
+                Debug.Log("Failed to load  Scriptable Object ! ");
+            }
+
+            return container;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+        }
+        return null;
+    }
+
 #if UNITY_EDITOR
 
     //[CreateAssetMenu(menuName = "Custom Tool/Create Container Priority", fileName = "ContainerPriorityFinder")]

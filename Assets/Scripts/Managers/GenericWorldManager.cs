@@ -9,7 +9,7 @@ public class GenericWorldManager : MonoBehaviour {
 
     public enum GenObjectWorldMode
     {
-        Standart, Flore, Floor, FloorGray, TreeGray, RockGray, FloreGray, PrefabsGray, GrayGrass, NPC
+        Standart, Flore, Floor, FloorGray, TreeGray, RockGray, FloreGray, PrefabsGray, GrayGrass, NPC, BlueNPC, RedNPC, GreenNPC, VioletNPC
     }
 
     [SerializeField]
@@ -717,7 +717,8 @@ public class GenericWorldManager : MonoBehaviour {
                     }
                 }
                 //if(IsUseCache)
-                    Helper.CreateName_Cache(ref nameObject, nameField, nameField, "-1");
+                //FIX$$ Helper.CreateName_Cache(ref nameObject, nameField, nameField, "-1");
+                Helper.CreateName_Cache(ref nameObject, prefabName.ToString(), nameField, "-1");
                 //else
                 //    nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
 
@@ -1133,5 +1134,72 @@ public class GenericWorldManager : MonoBehaviour {
     }
 
     #endregion
+
+    public string[] GenericPortal(int count, SaveLoadData.TypePrefabs typePortal = SaveLoadData.TypePrefabs.PrefabPortal)
+    {
+        List<string> portalsId = new List<string>();
+        Vector3 pos = new Vector3();
+        bool isRndTypePortal = typePortal == SaveLoadData.TypePrefabs.PrefabPortal;
+        float scaling = SaveLoadData.Spacing;
+        string nameObject = "";
+        Dictionary<int, SaveLoadData.TypePrefabs> listPortals = new Dictionary<int, SaveLoadData.TypePrefabs>
+        {
+            { 0, SaveLoadData.TypePrefabs.PortalBlue },
+            { 1, SaveLoadData.TypePrefabs.PortalRed },
+            { 2, SaveLoadData.TypePrefabs.PortalGreen },
+            { 3, SaveLoadData.TypePrefabs.PortalViolet },
+        };
+        int maxPortal = listPortals.Values.Count();
+        string nameField = "";
+        ModelNPC.ObjectData objDataSave;
+        int maxRnd = Helper.HeightLevel;
+        int padding = 15;
+        int posX = 0;
+        int posY = 0;
+        int indPort = 0;
+
+        foreach (int ind in Enumerable.Range(0, count))
+        {
+            posX = Random.Range(padding, maxRnd - padding);
+            posY = Random.Range(padding, maxRnd - padding);
+            if (isRndTypePortal)
+            {
+                indPort = Random.Range(0, maxPortal);
+                typePortal = listPortals[indPort];
+            }
+            Helper.GetNameField_Cache(ref nameField, posX, posY);
+            pos.x = posX * scaling;
+            pos.y = (posY * (-1)) * scaling;
+            pos.z = -1;
+
+            Helper.CreateName_Cache(ref nameObject, typePortal.ToString(), nameField, "-1");
+            objDataSave = BilderGameDataObjects.BildObjectData(typePortal);
+            objDataSave.SetNameObject(nameObject);
+            objDataSave.Position = pos;
+            Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
+            portalsId.Add(objDataSave.Id);
+        }
+
+        return portalsId.ToArray();
+    }
+
+    public void GenericPrefab(SaveLoadData.TypePrefabs typePrefab, Vector3 pos)
+    {
+        string nameField = "";
+        ModelNPC.ObjectData objDataSave;
+        int posX = (int)pos.x;
+        int posY = (int)pos.y;
+        string nameObject = "";
+        Helper.GetNameField_Cache(ref nameField, posX, posY);
+        pos.x = posX * SaveLoadData.Spacing; ;
+        pos.y = (posY * (-1)) * SaveLoadData.Spacing; 
+        pos.z = -1;
+
+        Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
+        objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
+        objDataSave.SetNameObject(nameObject);
+        objDataSave.Position = pos;
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
+    }
 }
 

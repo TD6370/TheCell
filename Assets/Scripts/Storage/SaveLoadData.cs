@@ -467,7 +467,11 @@ public class SaveLoadData : MonoBehaviour {
 
         Ej
     }
-    
+
+    //GetBiomByTypeModel
+    //TypesBiomNPC
+    //public enum TypeBioms { Blue, Red, Green, Violet, Grey }
+
     public enum TypesBiomBlue
     {
         //----- NPC
@@ -595,14 +599,7 @@ public class SaveLoadData : MonoBehaviour {
 
     public enum TypeInventoryObjects
     {
-        PrefabField,
-        PrefabRock,
-        PrefabVood,
-        PrefabUfo,
-        PrefabBoss,
-        PrefabElka,
-        PrefabWallRock,
-        PrefabWallWood,
+        None,
 
         Swamp,
         Chip,
@@ -657,9 +654,11 @@ public class SaveLoadData : MonoBehaviour {
         Cloudwood,
 
         //--------Gray
-        WoodBranchInv,
-        BlueBerryInv,
-        GrassInv,
+        //WoodBranchInv,
+        //BlueBerryInv,
+        //GrassInv,
+
+        Coldfusion,
     }
 
     private void Awake()
@@ -685,6 +684,16 @@ public class SaveLoadData : MonoBehaviour {
     public int TypeRockGrayCount = 0;
     public int TypeFloreGrayCount = 0;
     public int TypeGrassGrayCount = 0;
+
+
+    public List<string> NamesPrefabBiomViolet;
+    public List<string> NamesPrefabBiomGeen;
+    public List<string> NamesPrefabBiomBlue;
+    public List<string> NamesPrefabBiomRed;
+    public List<string> NamesBiomVioletNPC;
+    public List<string> NamesBiomGeenNPC;
+    public List<string> NamesBiomBlueNPC;
+    public List<string> NamesBiomRedNPC;
 
     private void InitCacheDataEnum()
     {
@@ -725,25 +734,25 @@ public class SaveLoadData : MonoBehaviour {
 
     public void InitPrefabCollections()
     {
-
+        string[] gameObjects;
         NamesPrefabsObjectsAndFlore = new List<string>();
 
-        string[] floors = Enum.GetNames(typeof(TypePrefabFloors));
+        gameObjects = Enum.GetNames(typeof(TypePrefabFloors));
         NamesPrefabFloors = new List<string>();
-        foreach (var item in floors)
+        foreach (var item in gameObjects)
         {
             NamesPrefabFloors.Add(item);
         }
 
-        string[] flores = Enum.GetNames(typeof(TypePrefabFlore));
+        gameObjects = Enum.GetNames(typeof(TypePrefabFlore));
         NamesPrefabFlore = new List<string>();
-        foreach (var item in flores)
+        foreach (var item in gameObjects)
         {
             NamesPrefabFlore.Add(item);
             NamesPrefabsObjectsAndFlore.Add(item);
         }
-        
-        string[] gameObjects = Enum.GetNames(typeof(TypePrefabObjects));
+
+        gameObjects = Enum.GetNames(typeof(TypePrefabObjects));
         NamesPrefabObjects = new List<string>();
         foreach (var item in gameObjects)
         {
@@ -751,14 +760,58 @@ public class SaveLoadData : MonoBehaviour {
             NamesPrefabsObjectsAndFlore.Add(item);
         }
 
-        string[] gameNPC = Enum.GetNames(typeof(TypePrefabNPC));
+        gameObjects = Enum.GetNames(typeof(TypePrefabNPC));
         NamesPrefabNPC = new List<string>();
-        foreach (var item in gameNPC)
+        foreach (var item in gameObjects)
         {
             NamesPrefabNPC.Add(item);
         }
+        
+        TypesBiomVioletCount = Enum.GetValues(typeof(TypesBiomViolet)).Length - 1;
+        TypesBiomGreenCount = Enum.GetValues(typeof(TypesBiomGreen)).Length - 1;
+        TypesBiomRedCount = Enum.GetValues(typeof(TypesBiomRed)).Length - 1;
+        TypesBiomBlueCount = Enum.GetValues(typeof(TypesBiomBlue)).Length - 1;
 
-    }
+        //----------------
+        gameObjects = Enum.GetNames(typeof(TypesBiomViolet));
+        NamesPrefabBiomViolet = new List<string>();
+        foreach (var item in gameObjects)
+        {
+            NamesPrefabBiomViolet.Add(item);
+        }
+
+        gameObjects = Enum.GetNames(typeof(TypesBiomGreen));
+        NamesPrefabBiomGeen = new List<string>();
+        foreach (var item in gameObjects)
+        {
+            NamesPrefabBiomGeen.Add(item);
+        }
+
+        gameObjects = Enum.GetNames(typeof(TypesBiomRed));
+        NamesPrefabBiomRed = new List<string>();
+        foreach (var item in gameObjects)
+        {
+            NamesPrefabBiomRed.Add(item);
+        }
+
+        gameObjects = Enum.GetNames(typeof(TypesBiomBlue));
+        NamesPrefabBiomBlue = new List<string>();
+        foreach (var item in gameObjects)
+        {
+            NamesPrefabBiomBlue.Add(item);
+        }
+        foreach(var itemNPC in NamesPrefabNPC)
+        {
+            if (NamesPrefabBiomViolet.Contains(itemNPC))
+                NamesBiomVioletNPC.Add(itemNPC);
+            if (NamesPrefabBiomGeen.Contains(itemNPC))
+                NamesBiomGeenNPC.Add(itemNPC);
+            if (NamesPrefabBiomRed.Contains(itemNPC))
+                NamesBiomRedNPC.Add(itemNPC);
+            if (NamesPrefabBiomBlue.Contains(itemNPC))
+                NamesBiomBlueNPC.Add(itemNPC);
+        }
+}
 
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
@@ -790,6 +843,8 @@ public class SaveLoadData : MonoBehaviour {
     {
         ModelNPC.ObjectData newObject;
         string nameGameObject = p_gobject.name;
+        if (string.IsNullOrEmpty(nameGameObject))
+            return null;
         //string typePrefab = p_gobject.tag.ToString();
         string nameField = Helper.GetNameFieldByName(nameGameObject);
         newObject = GetObjectDataFromGrid(nameGameObject, nameField);

@@ -78,8 +78,15 @@ public class Storage : MonoBehaviour {
         }
     }
 
+    private ManagerPortals _Portals;
+    public static ManagerPortals Portals
+    {
+        get
+        {
+            return Instance._Portals;
+        }
+    }
 
-    
     private GenericWorldManager _GenWorld;
     public static GenericWorldManager GenWorld
     {
@@ -88,8 +95,7 @@ public class Storage : MonoBehaviour {
             return Instance._GenWorld;
         }
     }
-
-
+    
     private MovementCamera _MoveCamera;
     public static MovementCamera MoveCamera
     {
@@ -354,7 +360,8 @@ public class Storage : MonoBehaviour {
     // Use this for initialization
     void Start() {
 
-        _datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
+        //_datapathLevel = Application.dataPath + "/Levels/LevelData" + Application.loadedLevel + ".xml";
+        _datapathLevel = Application.dataPath + "/Levels/LevelData.xml";
         _datapathUserData = Application.dataPath + "/UserConfig/UserData.xml";
         _datapatPlayerData = Application.dataPath + "/Player/PlayerData.xml";
         _datapathTiles = Application.dataPath + "/Levels/TilesData.xml";
@@ -530,8 +537,7 @@ public class Storage : MonoBehaviour {
             Debug.Log("########## InitComponents _DiskData is Empty");
             return;
         }
-
-        
+                
         _MoveCamera = UIController.GetComponent<MovementCamera>();
         if (_MoveCamera == null)
         {
@@ -539,8 +545,12 @@ public class Storage : MonoBehaviour {
             return;
         }
 
-
-     
+        _Portals = UIController.GetComponent<ManagerPortals>();
+        if (_Portals == null)
+        {
+            Debug.Log("########## InitComponents _Portals is Empty");
+            return;
+        }
 
         //_PoolObgects
         //DrawGeometry 
@@ -766,7 +776,8 @@ public class Storage : MonoBehaviour {
             Storage.EventsUI.ListLogAdd = "##### LoadPathData";
         }
 
-        _datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
+        //_datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
+        _datapathPerson = Application.dataPath + "/Levels/PersonData.xml";
         if (File.Exists(_datapathPerson))
         {
             var _personsData = Serializator.LoadPersonXml(_datapathPerson);

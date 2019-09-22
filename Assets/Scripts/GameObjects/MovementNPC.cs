@@ -29,7 +29,8 @@ public class MovementNPC : MonoBehaviour {
 
     void Awake()
     {
-        m_dataController = gameObject.GetComponent<GameObjecDataController>();
+        //m_dataController = gameObject.GetComponent<GameObjecDataController>();
+        m_dataController = gameObject.GetDataController();
     }
 
     // Use this for initialization

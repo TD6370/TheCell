@@ -11,3 +11,16 @@ public class ContainerPriorityFinder : ScriptableObject
     [SerializeField]
     public string Tag;
 }
+
+
+[CreateAssetMenu(menuName = "Custom Tool/Create Container Fabrications", fileName = "ContainerFabrications")]
+//[Serializable]
+public class ContainerPortalFabrication : ScriptableObject
+{
+    [SerializeField]
+    public PortalResourceFabrication[] CollectionPriorityFinder;
+    [SerializeField]
+    public string Tag;
+}
+
+

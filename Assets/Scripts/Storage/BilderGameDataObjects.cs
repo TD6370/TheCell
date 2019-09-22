@@ -255,8 +255,20 @@ public class BilderGameDataObjects //: MonoBehaviour
                 objGameBild = new ModelNPC.GameDataAlienEj();
                 break;
 
-            
-
+              
+            case SaveLoadData.TypePrefabs.PortalBlue:
+                objGameBild = new ModelNPC.PortalBlue();
+                break;
+            case SaveLoadData.TypePrefabs.PortalGreen:
+                objGameBild = new ModelNPC.PortalGreen();
+                break;
+            case SaveLoadData.TypePrefabs.PortalRed:
+                objGameBild = new ModelNPC.PortalRed();
+                break;
+            case SaveLoadData.TypePrefabs.PortalViolet:
+                objGameBild = new ModelNPC.PortalViolet();
+                break;
+               
             default:
                 objGameBild = new ModelNPC.ObjectData();
                 break;
@@ -272,7 +284,12 @@ public class BilderGameDataObjects //: MonoBehaviour
 
 public static class BilderExtension
 {
-
+   
+    public static bool IsPortal(this ModelNPC.ObjectData model)
+    {
+        return model is ModelNPC.PortalData;
+    }
+    
     public static bool IsNPC(this ModelNPC.ObjectData model)
     {
         return model is ModelNPC.GameDataNPC;

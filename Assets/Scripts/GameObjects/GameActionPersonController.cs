@@ -780,7 +780,7 @@ public class GameActionPersonController : MonoBehaviour
     private void LoadModelsView()
     {
         //Skip prefab original
-        bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.name == "PrefabPerson";
+        //bool isThisPrefab = gameObject.name == "PrefabBoss" || gameObject.name == "PrefabPerson";
 
         //if (!isThisPrefab)
         //    return;
@@ -794,29 +794,29 @@ public class GameActionPersonController : MonoBehaviour
         if (m_ListViewModels == null)
         {
             m_ListViewModels = new Dictionary<SaveLoadData.TypePrefabs, GameObject>();
-            if (isThisPrefab)
+            //if (isThisPrefab)
+            //{
+            //    CreateViewNodelsPrefabs();
+            //}
+            //else
+            //{
+            foreach (Transform child in transform)
             {
-                CreateViewNodelsPrefabs();
-            }
-            else
-            {
-                foreach (Transform child in transform)
+                GameObject modelView = child.gameObject;
+                SaveLoadData.TypePrefabs typeModel = SaveLoadData.TypePrefabs.PrefabField;
+                string nameModelView = modelView.name.Replace("ModelView", "");
+                try
                 {
-                    GameObject modelView = child.gameObject;
-                    SaveLoadData.TypePrefabs typeModel = SaveLoadData.TypePrefabs.PrefabField;
-                    string nameModelView = modelView.name.Replace("ModelView", "");
-                    try
-                    {
-                        typeModel = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), nameModelView);
-                    }
-                    catch (Exception x)
-                    {
-                        Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
-                        continue;
-                    }
-                    m_ListViewModels.Add(typeModel, modelView);
+                    typeModel = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), nameModelView);
                 }
+                catch (Exception x)
+                {
+                    Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
+                    continue;
+                }
+                m_ListViewModels.Add(typeModel, modelView);
             }
+            //}
         }
     }
 

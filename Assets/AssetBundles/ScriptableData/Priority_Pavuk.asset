@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Pavuk
   m_EditorClassIdentifier: 
-  TypeObserver: 47
+  TypeObserver: 52
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 0b0000000a0000000600000007000000020000000d000000
-  PrioritysTypeModelFloor: 0400000005000000
+  PrioritysTypeModelFloor: 0200000005000000
   PrioritysTypeModelFlore: 0300000004000000
   PrioritysTypeModelWood: 0c0000000500000004000000090000000a000000
   PrioritysTypeModelWall: 

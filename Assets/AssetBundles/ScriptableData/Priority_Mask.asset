@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
   m_Name: Priority_Mask
   m_EditorClassIdentifier: 
-  TypeObserver: 50
+  TypeObserver: 55
   PrioritysTypeModelAll: 
   PrioritysTypeModelNPC: 0300000005000000090000000c000000060000000a000000
   PrioritysTypeModelFloor: 

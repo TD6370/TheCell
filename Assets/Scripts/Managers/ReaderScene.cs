@@ -84,6 +84,30 @@ public class ReaderScene //: UpdateData
         IsLoaded = false;
     }
 
+    public static bool ExistID(string id)
+    {
+        if (id == null || 
+            false == Storage.Instance.ReaderSceneIsValid || 
+            Storage.ReaderWorld.CollectionInfoID == null && 
+            Storage.ReaderWorld.CollectionInfoID.Count == 0)
+                return false;
+
+        return Storage.ReaderWorld.CollectionInfoID.ContainsKey(id);
+    }
+
+
+    public static DataObjectInfoID GetInfoID(string id)
+    {
+        if (id == null ||
+            false == Storage.Instance.ReaderSceneIsValid ||
+            Storage.ReaderWorld.CollectionInfoID == null &&
+            Storage.ReaderWorld.CollectionInfoID.Count == 0)
+            return null;
+        DataObjectInfoID result;
+        Storage.ReaderWorld.CollectionInfoID.TryGetValue(id, out result);
+        return result;
+    }
+
     public void InitCollectionID()
     {
         string message = "   Init CollectionID...";
@@ -193,8 +217,8 @@ public class ReaderScene //: UpdateData
             return;
 
         //TEST
-        var t1 = CollectionInfoID[id].Data;
-        var t2 = CollectionInfoID[id].Gobject;
+        //var t1 = CollectionInfoID[id].Data;
+        //var t2 = CollectionInfoID[id].Gobject;
 
         CollectionInfoID[id].Field = newField;
     }
