@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-[CreateAssetMenu(menuName = "Custom Tool/Create Portal Resource Fabrication %&f", fileName = "Fabrication_")]
+[CreateAssetMenu(menuName = "Custom Tool/Create/Portal Resource Fabrication %&f", fileName = "Fabrication_")]
 public class PortalResourceFabrication : ScriptableObject
 {
     [SerializeField]

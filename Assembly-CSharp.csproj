@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\Engine\PriorityFinder.cs" />
     <Compile Include="Assets\Scripts\Engine\ScriptableObjectUtility.cs" />
     <Compile Include="Assets\Scripts\Engine\Serializator.cs" />
+    <Compile Include="Assets\Scripts\Engine\SettingsPortals.cs" />
     <Compile Include="Assets\Scripts\Engine\SettingsSceneDebug.cs" />
     <Compile Include="Assets\Scripts\GameObjects\Boss\MovementBoss.cs" />
     <Compile Include="Assets\Scripts\GameObjects\EventsObject.cs" />

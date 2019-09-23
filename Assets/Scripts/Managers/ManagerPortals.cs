@@ -6,15 +6,20 @@ using System.Linq;
 
 public class ManagerPortals : MonoBehaviour
 {
-  
     [SerializeField]
     public ContainerPortalFabrication ContainerFabrications;
-    public List<ModelNPC.PortalData> Portals;
-    public Dictionary<TypesBiomNPC, List<PortalResourceFabrication>> ResourcesFabrications;
 
+    [Space]
+    [Header("INFO PORTAL:")]
+    public string InfoPortal;
+    [Space]
     public string CurrentID;
     public int CurrentIndex;
     public ModelNPC.PortalData CurrentPortal;
+
+    public List<ModelNPC.PortalData> Portals;
+    public Dictionary<TypesBiomNPC, List<PortalResourceFabrication>> ResourcesFabrications;
+    public SettingsPortals SettingPortals;
 
     private List<PortalResourceFabrication> m_listResourceWork;
     private DataObjectInventory m_resourceNext;
@@ -27,6 +32,19 @@ public class ManagerPortals : MonoBehaviour
     public ManagerPortals()
     {
         Portals = new List<ModelNPC.PortalData>();
+    }
+
+    private static Dictionary<TypesBiomNPC, GenericWorldManager.GenObjectWorldMode> GetGenericModeNPC;
+
+    private void Awake()
+    {
+        GetGenericModeNPC = new Dictionary<TypesBiomNPC, GenericWorldManager.GenObjectWorldMode>()
+        {
+            { TypesBiomNPC.Blue, GenericWorldManager.GenObjectWorldMode.BlueNPC},
+            { TypesBiomNPC.Red, GenericWorldManager.GenObjectWorldMode.RedNPC},
+            { TypesBiomNPC.Green, GenericWorldManager.GenObjectWorldMode.BlueNPC},
+            { TypesBiomNPC.Violet, GenericWorldManager.GenObjectWorldMode.VioletNPC},
+        };
     }
 
     private void LateUpdate()
@@ -43,6 +61,12 @@ public class ManagerPortals : MonoBehaviour
     {
         if (false == LoadResourceFabrications())
             return;
+
+        if(SettingPortals == null)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "Setting portals is Empty !!!");
+            return;
+        }
 
         Storage.EventsUI.ListLogAdd = "LoadPortals....";
         Storage.EventsUI.SetMessageBox = "LoadPortals....";
@@ -127,13 +151,18 @@ public class ManagerPortals : MonoBehaviour
         yield return null;
         while (!isCompleted)
         {
+            if (!Storage.Instance.ReaderSceneIsValid)
+            {
+                yield return new WaitForSeconds(timeWait * 3);
+                continue;
+            }
             //if (Portals.Count == 0)
             //{
             //    yield return new WaitForSeconds(timeWait * 2);
             //    //yield return new WaitForSeconds(timeWait);
             //    continue;
             //}
-            yield return null;
+             yield return null;
 
             CurrentPortal = Portals[CurrentIndex];
 
@@ -143,8 +172,10 @@ public class ManagerPortals : MonoBehaviour
                 yield return new WaitForSeconds(timeWait * 2);
                 continue;
             }
+            
 
             CurrentID = CurrentPortal.Id;
+            InfoPortal = CurrentPortal.GetInfo();
             PortalProcess(CurrentPortal);
 
             yield return new WaitForSeconds(timeWait);
@@ -156,6 +187,77 @@ public class ManagerPortals : MonoBehaviour
         }
         yield return null;
     }
+      
+
+    private void PortalProcess(ModelNPC.PortalData p_portal)
+    {
+        if (p_portal.ChildrensId == null)
+            p_portal.ChildrensId = new List<string>();
+
+        int preCountChild = p_portal.ChildrensId.Count;
+        //bool isIncubationValid = p_portal.ChildrenPreparationIncubation();
+        //bool isParkingLock = p_portal.ChildrenPreparationIncubation();
+        bool isNotCreated;
+
+        //foreach(DataObjectInventory resource in p_portal.Resources)
+        if (p_portal.Resources != null && p_portal.Resources.Count > 0)
+        {
+            Storage.EventsUI.ListLogAdd = "PortalWork....";
+            Storage.EventsUI.SetMessageBox = "PortalWork....";
+
+            for (int i = p_portal.Resources.Count() - 1; i > 0; i--)  //!!!!!!!!!!!!!!!!
+            {
+                m_resourceNext = p_portal.Resources[i];
+                m_listResourceWork = ResourcesFabrications[p_portal.TypeBiom];
+                m_workResource = m_listResourceWork.Find(p => p.ResouceInventory == m_resourceNext.TypeInventoryObject);
+                if (m_workResource != null)
+                {
+                    if (m_resourceNext.Count >= m_workResource.LimitToBeginProcess)
+                    {
+                        isNotCreated = preCountChild == p_portal.ChildrensId.Count && p_portal.CurrentProcess == TypeResourceProcess.None;
+                        if (isNotCreated)
+                        {
+                            //Begin portal process incubation on Full resources
+                            StartPortalProcess(m_workResource.BeginProcess, p_portal, i);
+                            //isIncubationValid = false;
+                        }
+                    }
+                }
+            }
+        }
+        isNotCreated = preCountChild == p_portal.ChildrensId.Count;// && isIncubationValid;
+        if (isNotCreated)
+        {
+            //if (p_portal.CurrentProcess != TypeResourceProcess.None)
+            //    StartPortalProcess(p_portal.CurrentProcess, p_portal); //FIX
+            //else
+            if (p_portal.CurrentProcess == TypeResourceProcess.None)
+            {
+                bool isNotFullLimit = p_portal.ChildrensId.Count < SettingPortals.StartLimitNPC;
+                bool isTimeValid = p_portal.LastTimeIncubation + SettingPortals.PeriodIncubation < Time.time;
+                //Begin portal process on Time
+                if (isNotFullLimit && isTimeValid)
+                {
+                    StartPortalProcess(TypeResourceProcess.Incubation, p_portal);
+                }
+            }
+        }
+    }
+
+    //Start Portal process
+    private void StartPortalProcess(TypeResourceProcess workProcess, ModelNPC.PortalData p_portal, int index = -1)
+    {
+        switch (workProcess)
+        {
+            case TypeResourceProcess.Incubation:
+                // *  Start Action
+                IncubationProcess(p_portal);
+                // *  Remove resource
+                if(index != -1)
+                    p_portal.Resources.RemoveAt(index);
+                break;
+        }
+    }
 
     public void CreatePortal()
     {
@@ -164,89 +266,76 @@ public class ManagerPortals : MonoBehaviour
         {
             if (ReaderScene.ExistID(idPortal))
             {
-                ModelNPC.PortalData portalNext = Storage.ReaderWorld.CollectionInfoID[idPortal].Data as ModelNPC.PortalData;
+                var info = ReaderScene.GetInfoID(idPortal);
+                ModelNPC.PortalData portalNext = info.Data as ModelNPC.PortalData;
                 if (portalNext != null)
-                    Portals.Add(portalNext);
-            }
-        }
-    }
-       
-
-    private void PortalProcess(ModelNPC.PortalData p_portal)
-    {
-        //foreach(DataObjectInventory resource in p_portal.Resources)
-        if (p_portal.Resources == null || p_portal.Resources.Count == 0)
-            return;
-
-        Storage.EventsUI.ListLogAdd = "PortalWork....";
-        Storage.EventsUI.SetMessageBox = "PortalWork....";
-
-        for (int i = p_portal.Resources.Count() - 1; i > 0; i--)  //!!!!!!!!!!!!!!!!
-        {
-            m_resourceNext = p_portal.Resources[i];
-            m_listResourceWork = ResourcesFabrications[p_portal.TypeBiom];
-            m_workResource = m_listResourceWork.Find(p => p.ResouceInventory == m_resourceNext.TypeInventoryObject);
-            if(m_workResource != null)
-            {
-                if(m_resourceNext.Count >= m_workResource.LimitToBeginProcess)
                 {
-                    //Begin portal process
-                    StartPortalProcess(m_workResource.BeginProcess, p_portal, i);
+                    Portals.Add(portalNext);
+
+                    //... Check on Real
+                    string fieldName = string.Empty;
+                    Helper.GetNameFieldByPosit(ref fieldName, portalNext.Position);
+                    bool isZonaReal = Helper.IsValidPiontInZona(portalNext.Position.x, portalNext.Position.y);
+                    if (!portalNext.IsReality && isZonaReal)
+                        Storage.GenGrid.LoadObjectToReal(fieldName);
                 }
             }
         }
     }
 
-    //Start Portal process
-    private void StartPortalProcess(TypeResourceProcess workProcess, ModelNPC.PortalData p_portal, int index)
-    {
-        switch (workProcess)
-        {
-            case TypeResourceProcess.Incubation:
-                // *  Start Action
-                StartIncubationProcess(p_portal);
-                // *  Remove resource
-                p_portal.Resources.RemoveAt(index);
-                break;
-        }
-    }
+    #region Process 
 
-    private void StartIncubationProcess(ModelNPC.PortalData p_portal)
+    public static void IncubationProcess(ModelNPC.PortalData p_portal, bool isCallFromReality = false)
     {
         p_portal.CurrentProcess = TypeResourceProcess.Incubation;
-
         bool isDreamworker = !p_portal.IsReality;
-        if (isDreamworker)
+        if (isDreamworker || isCallFromReality)
         {
             GenericWorldManager.GenObjectWorldMode nodeGen = GenericWorldManager.GenObjectWorldMode.NPC;
             Vector3 posGen = p_portal.Position;
-            if(p_portal.TypeBiom == TypesBiomNPC.Blue)
+
+            GetGenericModeNPC.TryGetValue(p_portal.TypeBiom, out nodeGen);
+            if(nodeGen.Equals(null))
             {
-                nodeGen = GenericWorldManager.GenObjectWorldMode.BlueNPC;
-                SaveLoadData.TypePrefabs genNPC = Storage.GenWorld.GenObjectWorld(nodeGen);
-                Storage.GenWorld.GenericPrefab(genNPC, p_portal.Position);
-                p_portal.CurrentProcess = TypeResourceProcess.None;
-                //GetBiomByTypeModel
+                Debug.Log("######### GetGenericModeNPC not found = " + p_portal.TypeBiom.ToString());
+                return;
             }
 
+            string fieldName = string.Empty;
+            Vector3 positGen = new Vector3();
+            bool isParkingFree = p_portal.ChildrenPreparationIncubation();
+            if (isParkingFree)
+                positGen = p_portal.Position;
+            else
+                positGen = p_portal.SearchParking(ref fieldName);
+
+            if (positGen == Vector3.zero)
+                return;
+
+            if (fieldName == string.Empty)
+                Helper.GetNameFieldByPosit(ref fieldName, positGen);
+
+            SaveLoadData.TypePrefabs genNPC = Storage.GenWorld.GenObjectWorld(nodeGen);
+            ModelNPC.ObjectData objDataNPC = Storage.GenWorld.GenericPrefabOnWorld(genNPC, positGen);
+            if (objDataNPC != null)
+            {
+                p_portal.ChildrensId.Add(objDataNPC.Id);
+                bool isZonaReal = Helper.IsValidPiontInZona(objDataNPC.Position.x, objDataNPC.Position.y);
+                if (!objDataNPC.IsReality && isZonaReal)
+                {
+                    Storage.GenGrid.LoadObjectToReal(fieldName);
+                }
+            }
+            p_portal.CurrentProcess = TypeResourceProcess.None;
+            p_portal.LastTimeIncubation = Time.time;
         }
-
-
-        //GetBiomByTypeModel
-        //public enum TypeBioms { Blue, Red, Green, Violet, Grey }
-        //if (!Storage.Instance.ReaderSceneIsValid)
-        //    return;
-        //ReaderScene.DataObjectInfoID infoPortal =  ReaderScene.GetInfoID(p_portal.Id);
-        //if(infoPortal!=null && 
-        //    infoPortal.Data.IsReality &&
-        //    infoPortal.Gobject !=null )
-        //{
-        //    //In Reality
-        //    //var gobject = infoPortal.Gobject;
-        //    //gobject.Get
-
-        //}
     }
+    #endregion
 
+    public void Stop()
+    {
+        Portals.Clear();
+    }
 }
+
 

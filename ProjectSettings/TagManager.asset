@@ -43,6 +43,7 @@ TagManager:
   - FrontAnimationModel
   - BoneModelAnimation
   - RootBoneModelAnimation
+  - PoolPortal
   layers:
   - Default
   - TransparentFX

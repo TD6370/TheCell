@@ -236,6 +236,21 @@ public static class Helper { //: MonoBehaviour {
         return FieldKey + x + "x" + Mathf.Abs(y);
     }
 
+    public static void GetNameFieldByPosit(ref string result, Vector3 posit)
+    {
+        int x = (int)(posit.x / Storage.ScaleWorld);
+        int y = (int)(posit.y / Storage.ScaleWorld);
+        result = String.Format("{0}{1}x{2}", FieldKey, x, Mathf.Abs(y));
+            //FieldKey + x + "x" + Mathf.Abs(y);
+    }
+
+    public static void GetNameFieldPosit(ref string nameField, int x, int y)
+    {
+        x = (int)(x / Storage.ScaleWorld);
+        y = (int)(y / Storage.ScaleWorld);
+        nameField = FieldKey + x + "x" + Mathf.Abs(y);
+    }
+
     public static string GetNameFieldPosit(System.Single x, System.Single y)
     {
         x = (int)(x / Storage.ScaleWorld);
@@ -248,6 +263,11 @@ public static class Helper { //: MonoBehaviour {
         xOut = (int)(xIn / Storage.ScaleWorld);
         yOut = (int)Mathf.Abs(yIn / Storage.ScaleWorld);
         //return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
+    }
+    public static void GetFieldPositByWorldPosit(ref int xOut, ref int yOut, Vector3 pos)
+    {
+        xOut = (int)(pos.x / Storage.ScaleWorld);
+        yOut = (int)Mathf.Abs(pos.y / Storage.ScaleWorld);
     }
 
     public static string GetNameFieldObject(GameObject gobj)
@@ -393,6 +413,14 @@ public static class Helper { //: MonoBehaviour {
         y = (int)(y * Storage.ScaleWorld);
         y *= -1;
         return new Vector2(x, y);
+    }
+
+    public static Vector3 NormalizFieldToWorld(Vector2Int vector2)
+    {
+        vector2.x = (int)(vector2.x * Storage.ScaleWorld);
+        vector2.y = (int)(vector2.y * Storage.ScaleWorld);
+        vector2.y *= -1;
+        return new Vector3(vector2.x, vector2.y, 0);
     }
 
     public static void GetPositByField_Cache(ref Vector2Int result, string nameFiled)
@@ -714,6 +742,33 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
 
+    public static bool IsValidPiontInZonaWorld(float x, float y)
+    {
+        if (x < 1)
+            return false;
+        if (y > -1)
+            return false; 
+        if (x > WidthLevel * Storage.ScaleWorld)
+            return false; 
+        if (y < (HeightLevel * Storage.ScaleWorld) * (-1))
+            return false;
+        return true;
+    }
+
+    public static bool IsValidFieldInZonaWorld(float x, float y)
+    {
+        var posWorld = NormalizFieldToPos(x, y);
+        if (posWorld.x < 1)
+            return false;
+        if (posWorld.y > -1)
+            return false; 
+        if (posWorld.x > WidthLevel * Storage.ScaleWorld)
+            return false; 
+        if (posWorld.y < (HeightLevel * Storage.ScaleWorld) * (-1))
+            return false;
+        return true;
+    }
+
     public static byte[] StringToUTF8ByteArray(string pXmlString)
     {
         System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
@@ -1001,6 +1056,58 @@ public static class Helper { //: MonoBehaviour {
         return result;
     }
     #endregion
+
+    public static void GetSpiralFields(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8)
+    {
+        int indexSingle = 0;
+        int _single = 1;
+        int limitInvertSingle = 1;
+        int indexFileds = 0;
+
+        foreach (int index in Enumerable.Range(0, 6))
+        {
+            //X
+            foreach (int i in Enumerable.Range(0, index))
+            {
+                x += _single;
+                if (IsValidFieldInZonaWorld(x, y))
+                {
+                    findedFileds.Add(new Vector2Int(x, y));
+                    indexFileds++;
+                }
+                indexSingle++;
+                if (indexFileds > lenSnake)
+                    return;
+                if (indexSingle >= limitInvertSingle)
+                {
+                    limitInvertSingle += 2;
+                    indexSingle = 0;
+                    _single *= -1;
+                }
+            }
+            //Y
+            foreach (int i in Enumerable.Range(0, index))
+            {
+                y += _single;
+                if (IsValidFieldInZonaWorld(x,y))
+                {
+                    findedFileds.Add(new Vector2Int(x, y));
+                    indexFileds++;
+                }
+                indexSingle++;
+                if (indexFileds > lenSnake)
+                    return;
+                if (indexSingle >= limitInvertSingle)
+                {
+                    limitInvertSingle += 2;
+                    indexSingle = 0;
+                    _single *= -1;
+                }
+            }
+        }
+    }
+
+
 
 }
 

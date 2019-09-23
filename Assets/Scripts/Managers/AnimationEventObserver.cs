@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class AnimationEventObserver : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    PortalController controlPortal;
+    private bool isPortal = false;
+
+    private void Awake()
+    {
+        if(gameObject.transform.parent!=null)
+        {
+            controlPortal = gameObject.transform.parent.gameObject.GetComponent<PortalController>();
+            if (controlPortal != null)
+                isPortal = true;
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -14,9 +27,15 @@ public class AnimationEventObserver : MonoBehaviour {
 		
 	}
 
-
     public void EventAnimationAttack()
     {
+    }
 
+    public void EventIncubationCompleted()
+    {
+        if(isPortal)
+        {
+            controlPortal.IncubationCompleted();
+        }
     }
 }

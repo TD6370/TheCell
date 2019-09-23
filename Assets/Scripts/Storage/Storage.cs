@@ -615,6 +615,7 @@ public class Storage : MonoBehaviour {
                 //m_DispatcherWorldActions = null;
             }
         }
+        Portals.Stop();
     }
 
     public void ResetDataId()
@@ -927,8 +928,6 @@ public class Storage : MonoBehaviour {
         {
             string nameField = item.Key;
             List<GameObject> resListData = _GamesObjectsReal[nameField];
-
-          
             if (resListData != null)
             {
                 for (int i = 0; i < resListData.Count(); i++)

@@ -425,6 +425,11 @@ public class PoolGameObjects
         if (string.IsNullOrEmpty(delGO.name))
             return false;
 
+        //TEST
+        if (delGO.tag == "Portal")
+        {
+            Debug.Log("Delete portal");
+        }
         //....
 
         EventsObject evenObj = delGO.GetComponent<EventsObject>();
@@ -588,23 +593,23 @@ public class PoolGameObject
 
         //GameObjectNext.SetActive(true);
         GameObjectNext.transform.SetParent(null);
-
         SpriteRenderer renderer = GameObjectNext.GetComponent<SpriteRenderer>();
-
-        //#FIX TAG
-        if (GameObjectNext.tag == "Field")
-            GameObjectNext.tag = tag;
-        if (GameObjectNext.tag == "PrefabField" || GameObjectNext.tag == PoolGameObjects.TypePoolPrefabs.PoolFloor.ToString())
+        if (renderer != null) //FIX portal
         {
-            //fix alpha field
-            renderer.sortingLayerName = Helper.LayerFloorName;
+            //#FIX TAG
+            if (GameObjectNext.tag == "Field")
+                GameObjectNext.tag = tag;
+            if (GameObjectNext.tag == "PrefabField" || GameObjectNext.tag == PoolGameObjects.TypePoolPrefabs.PoolFloor.ToString())
+            {
+                //fix alpha field
+                renderer.sortingLayerName = Helper.LayerFloorName;
+            }
+            renderer.color = Color.white;
+            //set default effect alpha
+            renderer.SetAlpha(1f);
         }
-
         GameObjectNext.transform.position = pos;
         GameObjectNext.name = nameObj;
-        renderer.color = Color.white;
-        //set default effect alpha
-        renderer.SetAlpha(1f);
 
         var movement = GameObjectNext.GetComponent<MovementBoss>();
         if (movement == null)

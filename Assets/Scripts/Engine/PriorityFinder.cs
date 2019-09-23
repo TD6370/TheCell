@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System;
 
-[CreateAssetMenu(menuName = "Custom Tool/Create Priority Finder %&h", fileName = "Priority_" )]
+[CreateAssetMenu(menuName = "Custom Tool/Create/Priority Finder %&h", fileName = "Priority_" )]
 //[Serializable]
 public class PriorityFinder : ScriptableObject
 {

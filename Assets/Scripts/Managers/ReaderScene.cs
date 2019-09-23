@@ -282,6 +282,16 @@ public class ReaderScene //: UpdateData
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
     }
 
+    public static bool IsFieldFree(string nameField)
+    {
+        foreach (ModelNPC.ObjectData dataObjNext in GetObjectsDataFromGrid(nameField))
+        {
+            if (!dataObjNext.IsFloor() && !dataObjNext.IsFlore())
+                return false;
+        }
+        return true;
+    }
+
     public static List<ModelNPC.ObjectData> GetObjectsDataFromGrid(string nameField)
     {
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;

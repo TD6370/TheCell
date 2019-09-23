@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class PortalController : MonoBehaviour {
 
-    public GameObject PanelModelsView;
+    public enum AnimationState { None, Run , Completed };
+
     private GameObjecDataController m_dataController;
     private ModelNPC.PortalData m_DataPortal;
     private bool m_isInit = false;
@@ -21,10 +22,12 @@ public class PortalController : MonoBehaviour {
 
     private string temp_name = "";
     private SaveLoadData.TypePrefabs temp_TypePrefab;
+    private Animator m_animator;
+    private AnimationState m_stateAnimation = AnimationState.None;
 
     private void Awake()
     {
-        if (name == "PrefabPortaBase")
+        if (name == "PrefabPortalBase")
         {
             m_isInit = true;
             gameObject.SetActive(false);
@@ -32,13 +35,13 @@ public class PortalController : MonoBehaviour {
         }
         m_dataController = gameObject.GetDataController();
 
-        if (PanelModelsView == null)
-            Debug.Log("####### PrefabPortaBase is Empty");
-
         m_sortingLayer = GetComponent<PositionRenderSorting>();
         if (m_sortingLayer == null)
-            Debug.Log("####### m_sortingLayer is Empty");
+            Debug.Log("####### PortalController.m_sortingLayer is Empty");
 
+        
+        
+        
         LoadModelsView();
     }
 
@@ -55,10 +58,33 @@ public class PortalController : MonoBehaviour {
         if(!m_isInit)
         {
             m_DataPortal = GetUpdateData();
+            m_isInit = true;
         }
 
-        if(m_isInit)
+        if (m_isInit)
+        {
             CheckUpdateModelView();
+            CheckUpdateStatusProcess();
+            //if (m_stateAnimation == AnimationState.Run)
+            //{
+            //    //AnimationClip moveClip = m_animator.runtimeAnimatorController.animationClips[1];
+            //    AnimatorStateInfo state = m_animator.GetCurrentAnimatorStateInfo(0);
+                
+            //    if (!m_animator.GetCurrentAnimatorStateInfo(0).IsName("PortalBlueEnterAnimation"))
+            //        m_stateAnimation = AnimationState.Completed;
+            //    if(state.speed==0)
+            //        m_stateAnimation = AnimationState.Completed;
+            //    //PlayIncubation(true);
+            //}
+        }
+    }
+
+    public void IncubationCompleted()
+    {
+        if (m_stateAnimation == AnimationState.Run)
+        {
+            m_stateAnimation = AnimationState.Completed;
+        }
     }
 
     protected ModelNPC.PortalData GetUpdateData(string callInfo = "PortalController.GetUpdateData")
@@ -70,12 +96,6 @@ public class PortalController : MonoBehaviour {
     #region Model View
     private void LoadModelsView()
     {
-        if (PanelModelsView == null)
-        {
-            Debug.Log("###### LoadModelsView  PanelModelsViewNPC == null");
-            return;
-        }
-
         if (m_ListViewModels == null)
         {
             m_ListViewModels = new Dictionary<SaveLoadData.TypePrefabs, GameObject>();
@@ -117,8 +137,28 @@ public class PortalController : MonoBehaviour {
                 UpdateMeModelView();
             }
         }
+               
     }
-        
+
+    private void CheckUpdateStatusProcess()
+    {
+        //Check on process
+        switch (m_DataPortal.CurrentProcess)
+        {
+            case ManagerPortals.TypeResourceProcess.Incubation:
+                if (m_stateAnimation == AnimationState.None)
+                {
+                    PlayIncubation(true);
+                    m_stateAnimation = AnimationState.Run;
+                }
+                else if (m_stateAnimation == AnimationState.Completed)
+                {
+                    ManagerPortals.IncubationProcess(m_DataPortal, isCallFromReality: true);
+                    m_stateAnimation = AnimationState.None;
+                }
+                break;
+        }
+    }
 
     public void UpdateMeModelView()
     {
@@ -133,8 +173,20 @@ public class PortalController : MonoBehaviour {
             {
                 m_MeModelView = itemModel.Value;
                 m_sortingLayer.UpdateOrderingLayer(m_MeModelView.GetComponent<Renderer>());
+                m_animator = m_MeModelView.GetComponent<Animator>();
+                if (m_animator == null)
+                    Debug.Log("####### PortalController.m_animator is Empty");
             }
         }
+               
     }
-#endregion
+    #endregion
+
+    #region Animation
+    public void PlayIncubation(bool isPlay)
+    {
+        m_animator.SetBool("TriggerIncubation", isPlay);
+    }
+    #endregion
+
 }

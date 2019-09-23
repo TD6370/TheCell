@@ -2,7 +2,7 @@
 using UnityEditor;
 using System;
 
-[CreateAssetMenu(menuName = "Custom Tool/Create Container Priority", fileName = "ContainerPriorityFinder")]
+[CreateAssetMenu(menuName = "Custom Tool/Create/Container Priority", fileName = "ContainerPriorityFinder")]
 //[Serializable]
 public class ContainerPriorityFinder : ScriptableObject
 {
@@ -13,7 +13,7 @@ public class ContainerPriorityFinder : ScriptableObject
 }
 
 
-[CreateAssetMenu(menuName = "Custom Tool/Create Container Fabrications", fileName = "ContainerFabrications")]
+[CreateAssetMenu(menuName = "Custom Tool/Create/Container Fabrications", fileName = "ContainerFabrications")]
 //[Serializable]
 public class ContainerPortalFabrication : ScriptableObject
 {

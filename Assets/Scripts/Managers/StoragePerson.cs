@@ -967,6 +967,14 @@ public static class PersonsExtensions
         var dataObj = gobj.GetComponent<GameObjecDataController>();
         if (dataObj != null && dataObj.GetData() != null)
             dataObj.GetData().IsReality = false;
+
+        var actionObj = gobj.GetComponent<GameActionPersonController>();
+        if (actionObj != null)
+            actionObj.enabled = false;
+
+        var portalObj = gobj.GetComponent<PortalController>();
+        if (portalObj)
+            portalObj.enabled = false;
     }
 }
 

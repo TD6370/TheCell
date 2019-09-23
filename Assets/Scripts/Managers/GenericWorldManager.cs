@@ -20,6 +20,8 @@ public class GenericWorldManager : MonoBehaviour {
     [Header("Count Prioritys Join ID")]
     public int CountPrioritysJoinID = 0;
 
+    private Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs> PortalBiomFloorsSpawn;
+
     // Use this for initialization
     void Start () {
 		
@@ -155,6 +157,26 @@ public class GenericWorldManager : MonoBehaviour {
                 m_maxGenObjWorld = Storage.GridData.TypeGrassGrayCount;
                 m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
                 m_prefabNameGenObjectWorld = Storage.GridData.GetGrassGray[m_indGenObjWorld];
+                break;
+            case GenObjectWorldMode.BlueNPC:
+                m_maxGenObjWorld = Storage.GridData.TypeBlueNPC_Count;
+                m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
+                m_prefabNameGenObjectWorld = Storage.GridData.GetBlueNPC[m_indGenObjWorld];
+                break;
+            case GenObjectWorldMode.RedNPC:
+                m_maxGenObjWorld = Storage.GridData.TypeRedNPC_Count;
+                m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
+                m_prefabNameGenObjectWorld = Storage.GridData.GetRedNPC[m_indGenObjWorld];
+                break;
+            case GenObjectWorldMode.GreenNPC:
+                m_maxGenObjWorld = Storage.GridData.TypeGreenNPC_Count;
+                m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
+                m_prefabNameGenObjectWorld = Storage.GridData.GetGreenNPC[m_indGenObjWorld];
+                break;
+            case GenObjectWorldMode.VioletNPC:
+                m_maxGenObjWorld = Storage.GridData.TypeVioletNPC_Count;
+                m_indGenObjWorld = UnityEngine.Random.Range(0, m_maxGenObjWorld);
+                m_prefabNameGenObjectWorld = Storage.GridData.GetVioletNPC[m_indGenObjWorld];
                 break;
             default:
 
@@ -604,7 +626,9 @@ public class GenericWorldManager : MonoBehaviour {
     public bool IsGenOnlyFloor = false;
     public bool IsTestGenNPC = false;
     public bool IsGC = true;
-  
+    [HideInInspector]
+    private bool IsTestPortal = true; 
+
     public void GenericWorldPriorityTerra(int PriorityIdleStartPercent, int PriorityDistantionFind, int PriorityPrefabPercent = 0, int PriorityTreePercent = 0, int PriorityRockPercent = 0, int PriorityFlorePercent = 0, bool isStartWorld = false)
     {
         string indErr = "0";
@@ -1162,6 +1186,12 @@ public class GenericWorldManager : MonoBehaviour {
         {
             posX = Random.Range(padding, maxRnd - padding);
             posY = Random.Range(padding, maxRnd - padding);
+            if (IsTestPortal) //TEST
+            {
+                posX = Random.Range(10, 20);
+                posY = Random.Range(10, 20);
+            }
+
             if (isRndTypePortal)
             {
                 indPort = Random.Range(0, maxPortal);
@@ -1172,10 +1202,15 @@ public class GenericWorldManager : MonoBehaviour {
             pos.y = (posY * (-1)) * scaling;
             pos.z = -1;
 
+            
             Helper.CreateName_Cache(ref nameObject, typePortal.ToString(), nameField, "-1");
             objDataSave = BilderGameDataObjects.BildObjectData(typePortal);
             objDataSave.SetNameObject(nameObject);
             objDataSave.Position = pos;
+
+            //Clear location for portal
+            ClearLocationForPortal(posX, posY, objDataSave);
+
             Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
             portalsId.Add(objDataSave.Id);
         }
@@ -1183,16 +1218,72 @@ public class GenericWorldManager : MonoBehaviour {
         return portalsId.ToArray();
     }
 
-    public void GenericPrefab(SaveLoadData.TypePrefabs typePrefab, Vector3 pos)
+    //Clear location for portal
+    private void ClearLocationForPortal(int fieldX, int fieldY, ModelNPC.ObjectData objData)
+    {
+        var portal = objData as ModelNPC.PortalData;
+        TypesBiomNPC typePortal = portal.TypeBiom;
+        if (PortalBiomFloorsSpawn == null)
+        {
+            PortalBiomFloorsSpawn = new Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs>()
+            {
+                {TypesBiomNPC.Blue, SaveLoadData.TypePrefabs.Gecsagon },
+                {TypesBiomNPC.Green, SaveLoadData.TypePrefabs.Weed },
+                {TypesBiomNPC.Red, SaveLoadData.TypePrefabs.Kishka },
+                {TypesBiomNPC.Violet, SaveLoadData.TypePrefabs.Desert },
+            };
+        }
+
+        string nameField = string.Empty;
+        List<Vector2Int> findedFileds = new List<Vector2Int>();
+        Helper.GetSpiralFields(ref findedFileds, fieldX, fieldY, 23);
+        findedFileds.Add(new Vector2Int(fieldX, fieldY));
+        foreach (Vector2Int fieldNext in findedFileds)
+        {
+            Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
+            ClearLayerForStructure(nameField, true);
+
+            SaveLoadData.TypePrefabs portalFloop = PortalBiomFloorsSpawn[typePortal];
+
+            //Create object Biom Floor
+            var objDataSave = BilderGameDataObjects.BildObjectData(portalFloop);
+            string nameObject = string.Empty;
+            Helper.CreateName_Cache(ref nameObject, portalFloop.ToString(), nameField, "-1");
+            objDataSave.SetNameObject(nameObject);
+            objDataSave.Position = Helper.NormalizFieldToWorld(fieldNext);
+            Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
+
+            //... Check on Real
+            bool isZonaReal = Helper.IsValidPiontInZona(objDataSave.Position.x, objDataSave.Position.y);
+            if (!objDataSave.IsReality && isZonaReal)
+                Storage.GenGrid.LoadObjectToReal(nameField);
+        }
+    }
+
+    public ModelNPC.ObjectData GenericPrefabOnWorld(SaveLoadData.TypePrefabs typePrefab, Vector3 pos)
     {
         string nameField = "";
         ModelNPC.ObjectData objDataSave;
-        int posX = (int)pos.x;
-        int posY = (int)pos.y;
+        string nameObject = "";
+        Helper.GetNameFieldPosit(ref nameField, (int)pos.x, (int)pos.y);
+
+        Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
+        objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
+        objDataSave.SetNameObject(nameObject);
+        objDataSave.Position = pos;
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
+        return objDataSave;
+    }
+
+    public ModelNPC.ObjectData GenericPrefabOnField(SaveLoadData.TypePrefabs typePrefab, int posX, int posY)
+    {
+        string nameField = "";
+        ModelNPC.ObjectData objDataSave;
         string nameObject = "";
         Helper.GetNameField_Cache(ref nameField, posX, posY);
-        pos.x = posX * SaveLoadData.Spacing; ;
-        pos.y = (posY * (-1)) * SaveLoadData.Spacing; 
+        Vector3 pos = new Vector3();
+        pos.x = posX * SaveLoadData.Spacing; 
+        pos.y = (posY * (-1)) * SaveLoadData.Spacing;
         pos.z = -1;
 
         Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
@@ -1200,6 +1291,7 @@ public class GenericWorldManager : MonoBehaviour {
         objDataSave.SetNameObject(nameObject);
         objDataSave.Position = pos;
         Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
+        return objDataSave;
     }
 }
 

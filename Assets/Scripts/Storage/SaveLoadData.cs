@@ -202,7 +202,76 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
-    
+    private List<TypePrefabs> m_collectionBlueNPC;
+    public List<TypePrefabs> GetBlueNPC
+    {
+        get
+        {
+            if (m_collectionBlueNPC == null)
+            {
+                m_collectionBlueNPC = new List<TypePrefabs>() {
+                    TypePrefabs.Inspector,
+                    TypePrefabs.Mecha,
+                    TypePrefabs.Machinetool
+                };
+            }
+            return m_collectionBlueNPC;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionRedNPC;
+    public List<TypePrefabs> GetRedNPC
+    {
+        get
+        {
+            if (m_collectionRedNPC == null)
+            {
+                m_collectionRedNPC = new List<TypePrefabs>() {
+                    TypePrefabs.Hydragon,
+                    TypePrefabs.Skvid,
+                    TypePrefabs.Pavuk
+                };
+            }
+            return m_collectionRedNPC;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionGreenNPC;
+    public List<TypePrefabs> GetGreenNPC
+    {
+        get
+        {
+            if (m_collectionGreenNPC == null)
+            {
+                m_collectionGreenNPC = new List<TypePrefabs>() {
+                    TypePrefabs.Lollipop,
+                    TypePrefabs.Dendroid,
+                    TypePrefabs.Gary
+                };
+            }
+            return m_collectionGreenNPC;
+        }
+    }
+
+    private List<TypePrefabs> m_collectionVioletNPC;
+    public List<TypePrefabs> GetVioletNPC
+    {
+        get
+        {
+            if (m_collectionVioletNPC == null)
+            {
+                m_collectionVioletNPC = new List<TypePrefabs>() {
+                    TypePrefabs.Mask,
+                    TypePrefabs.Fantom,
+                    TypePrefabs.Vhailor
+                };
+            }
+            return m_collectionVioletNPC;
+        }
+    }
+
+
+
     public enum TypePrefabsLegacy
     {
         PrefabField,
@@ -684,14 +753,21 @@ public class SaveLoadData : MonoBehaviour {
     public int TypeRockGrayCount = 0;
     public int TypeFloreGrayCount = 0;
     public int TypeGrassGrayCount = 0;
-
+    //public int TypeBiomVioletNPC_Count = 0;
+    //public int TypeBiomRedNPC_Count = 0;
+    //public int TypeBiomBlueNPC_Count = 0;
+    //public int TypeBiomGreenNPC_Count = 0;
+    public int TypeBlueNPC_Count = 0;
+    public int TypeRedNPC_Count = 0;
+    public int TypeGreenNPC_Count = 0;
+    public int TypeVioletNPC_Count = 0;
 
     public List<string> NamesPrefabBiomViolet;
     public List<string> NamesPrefabBiomGeen;
     public List<string> NamesPrefabBiomBlue;
     public List<string> NamesPrefabBiomRed;
     public List<string> NamesBiomVioletNPC;
-    public List<string> NamesBiomGeenNPC;
+    public List<string> NamesBiomGreenNPC;
     public List<string> NamesBiomBlueNPC;
     public List<string> NamesBiomRedNPC;
 
@@ -715,6 +791,10 @@ public class SaveLoadData : MonoBehaviour {
         TypeRockGrayCount = GetRockGray.Count();
         TypeFloreGrayCount = GetFloreGray.Count();
         TypeGrassGrayCount = GetGrassGray.Count();
+        TypeBlueNPC_Count = GetBlueNPC.Count();
+        TypeRedNPC_Count = GetRedNPC.Count();
+        TypeGreenNPC_Count = GetGreenNPC.Count();
+        TypeVioletNPC_Count = GetVioletNPC.Count();
     }
 
     void Start()
@@ -773,45 +853,50 @@ public class SaveLoadData : MonoBehaviour {
         TypesBiomBlueCount = Enum.GetValues(typeof(TypesBiomBlue)).Length - 1;
 
         //----------------
-        gameObjects = Enum.GetNames(typeof(TypesBiomViolet));
-        NamesPrefabBiomViolet = new List<string>();
-        foreach (var item in gameObjects)
-        {
-            NamesPrefabBiomViolet.Add(item);
-        }
+        //gameObjects = Enum.GetNames(typeof(TypesBiomViolet));
+        //NamesPrefabBiomViolet = new List<string>();
+        //foreach (var item in gameObjects)
+        //{
+        //    NamesPrefabBiomViolet.Add(item);
+        //}
 
-        gameObjects = Enum.GetNames(typeof(TypesBiomGreen));
-        NamesPrefabBiomGeen = new List<string>();
-        foreach (var item in gameObjects)
-        {
-            NamesPrefabBiomGeen.Add(item);
-        }
+        //gameObjects = Enum.GetNames(typeof(TypesBiomGreen));
+        //NamesPrefabBiomGeen = new List<string>();
+        //foreach (var item in gameObjects)
+        //{
+        //    NamesPrefabBiomGeen.Add(item);
+        //}
 
-        gameObjects = Enum.GetNames(typeof(TypesBiomRed));
-        NamesPrefabBiomRed = new List<string>();
-        foreach (var item in gameObjects)
-        {
-            NamesPrefabBiomRed.Add(item);
-        }
+        //gameObjects = Enum.GetNames(typeof(TypesBiomRed));
+        //NamesPrefabBiomRed = new List<string>();
+        //foreach (var item in gameObjects)
+        //{
+        //    NamesPrefabBiomRed.Add(item);
+        //}
 
-        gameObjects = Enum.GetNames(typeof(TypesBiomBlue));
-        NamesPrefabBiomBlue = new List<string>();
-        foreach (var item in gameObjects)
-        {
-            NamesPrefabBiomBlue.Add(item);
-        }
-        foreach(var itemNPC in NamesPrefabNPC)
-        {
-            if (NamesPrefabBiomViolet.Contains(itemNPC))
-                NamesBiomVioletNPC.Add(itemNPC);
-            if (NamesPrefabBiomGeen.Contains(itemNPC))
-                NamesBiomGeenNPC.Add(itemNPC);
-            if (NamesPrefabBiomRed.Contains(itemNPC))
-                NamesBiomRedNPC.Add(itemNPC);
-            if (NamesPrefabBiomBlue.Contains(itemNPC))
-                NamesBiomBlueNPC.Add(itemNPC);
-        }
-}
+        //gameObjects = Enum.GetNames(typeof(TypesBiomBlue));
+        //NamesPrefabBiomBlue = new List<string>();
+        //foreach (var item in gameObjects)
+        //{
+        //    NamesPrefabBiomBlue.Add(item);
+        //}
+        //foreach(var itemNPC in NamesPrefabNPC)
+        //{
+        //    if (NamesPrefabBiomViolet.Contains(itemNPC))
+        //        NamesBiomVioletNPC.Add(itemNPC);
+        //    if (NamesPrefabBiomGeen.Contains(itemNPC))
+        //        NamesBiomGreenNPC.Add(itemNPC);
+        //    if (NamesPrefabBiomRed.Contains(itemNPC))
+        //        NamesBiomRedNPC.Add(itemNPC);
+        //    if (NamesPrefabBiomBlue.Contains(itemNPC))
+        //        NamesBiomBlueNPC.Add(itemNPC);
+        //}
+
+        //TypeBiomVioletNPC_Count = NamesBiomVioletNPC.Count;
+        //TypeBiomRedNPC_Count = NamesBiomRedNPC.Count;
+        //TypeBiomBlueNPC_Count = NamesBiomBlueNPC.Count;
+        //TypeBiomGreenNPC_Count = NamesBiomGreenNPC.Count;
+    }
 
     //#.D 
     public void CreateDataGamesObjectsWorld(bool isAlwaysCreate = false)
