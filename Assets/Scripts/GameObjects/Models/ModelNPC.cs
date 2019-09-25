@@ -160,7 +160,7 @@ public partial class ModelNPC
 
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPerson; } }
-
+       
         public string GetId
         {
             get
@@ -364,6 +364,28 @@ public partial class ModelNPC
 
         public string[] PersonActions { get; set; } //$$$
         public string CurrentAction { get; set; }
+        public string JobName { get; set; }
+
+        [XmlIgnore]
+        private AlienJob m_Job;
+        [XmlIgnore]
+        public AlienJob Job
+        {
+            get
+            {
+                if (m_Job == null && !string.IsNullOrEmpty(JobName))
+                {
+                    AlienJobsManager.GetJobFromName(ref m_Job, JobName, TypePrefab);
+                }
+                return m_Job;
+            }
+            set
+            {
+                m_Job = value;
+                JobName = AlienJobsManager.GetNameJob(m_Job);
+            }
+        }
+
 
         public PersonData()
             : base()

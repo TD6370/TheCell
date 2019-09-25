@@ -121,15 +121,28 @@ public class UpdateData {
         if (!ReaderScene.IsGridDataFieldExist(nameField))
             Storage.Data.AddNewFieldInGrid(nameField, "SetObjecDataFromGrid");
         ReaderScene.GetObjectsDataFromGrid(nameField)[index] = newData;
+
+        if (Storage.Instance.ReaderSceneIsValid)
+            Storage.ReaderWorld.UpdateLinkData(newData);
     }
 
     public void ClearObjecsDataFromGrid(string nameField)
     {
+        if (Storage.Instance.ReaderSceneIsValid)
+        {
+            foreach (var item in ReaderScene.GetObjectsDataFromGrid(nameField))
+            {
+                Storage.ReaderWorld.RemoveObject(item.Id);
+            }
+        }
         ReaderScene.GetObjectsDataFromGrid(nameField).Clear();
     }
 
     public void RemoveObjecDataGridByIndex(string nameField, int index)
     {
+        if (Storage.Instance.ReaderSceneIsValid)
+            Storage.ReaderWorld.RemoveObject(ReaderScene.GetObjectsDataFromGrid(nameField)[index].Id);
+
         ReaderScene.GetObjectsDataFromGrid(nameField).RemoveAt(index);
     }
 
@@ -166,6 +179,7 @@ public class UpdateData {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = nameField };
         _GridDataG.FieldsD.Add(nameField, fieldData);
         fieldData.Objects.Add(objDataSave);
+               
         return true;
     }
  
@@ -401,6 +415,34 @@ public class UpdateData {
                 return;
             }
             Storage.Log.SaveHistory(histData.NameObject, "RemoveDataObjectInGrid", callFunc, nameField, "", histData, dataObjDel);
+        }
+
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
+    }
+
+    public void RemoveDataObjectInGrid(ModelNPC.ObjectData dataObjDel = null)
+    {
+
+        string nameField = string.Empty;
+        int index = -1;
+        if (dataObjDel != null )
+        {
+            Helper.GetNameFieldByPosit(ref nameField, dataObjDel.Position);
+            index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            if (index == -1)
+            {
+                Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + dataObjDel.NameObject + "  ... NOT find in Field: " + nameField);
+                Storage.Log.SaveHistory(dataObjDel.NameObject, "ERROR RemoveDataObjectInGrid", "", nameField, "Conflict Name", dataObjDel, dataObjDel);
+                return;
+            }
+        }
+
+        RemoveObjecDataGridByIndex(nameField, index);
+
+        if (Storage.Log.IsSaveHistory)
+        {
+            Storage.Log.SaveHistory(dataObjDel.NameObject, "RemoveDataObjectInGrid", "RemoveDataObjectInGrid", nameField, "", dataObjDel, dataObjDel);
         }
 
         if (Storage.Map.IsGridMap)

@@ -20,3 +20,7 @@ MonoBehaviour:
   PrioritysTypeModelWall: 
   PrioritysTypePool: 040000000300000002000000
   PrioritysTypeBiomNPC: 020000000300000004000000
+  ListJobs:
+  - {fileID: 11400000, guid: ed950cfc1ea98a945a6998d5f515b61d, type: 2}
+  - {fileID: 11400000, guid: eebdcc79acce1e14d92439967db15b8c, type: 2}
+  - {fileID: 11400000, guid: eccb6702b3f7b1c4c8d3dba84b19ed4b, type: 2}

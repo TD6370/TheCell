@@ -1017,7 +1017,7 @@ public class Storage : MonoBehaviour {
         if (nameField == null)
             return false;
 
-        ReaderWorld.RemoveGobject(setName.GetID());
+        ReaderWorld.RemoveObject(setName.GetID());
 
         //#FIX
         if (!_GamesObjectsReal.ContainsKey(nameField))

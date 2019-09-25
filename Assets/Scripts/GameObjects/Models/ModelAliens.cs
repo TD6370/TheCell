@@ -10,6 +10,8 @@ public partial class ModelNPC
     public class GameDataAlien : PersonData
     {
         public virtual int Life { get; set; }
+        public virtual int PortalId { get; set; }
+
         [XmlIgnore]
         public virtual int Level { get; set; }
 

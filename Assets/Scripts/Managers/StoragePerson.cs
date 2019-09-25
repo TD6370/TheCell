@@ -17,6 +17,8 @@ public class StoragePerson : MonoBehaviour {
 
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
     public Dictionary<string, int> CollectionPowerAllTypes;
+    public Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob;
+    public Dictionary<string, AlienJob> AlienToResourceJobsJoins;
 
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
@@ -778,9 +780,10 @@ public class StoragePerson : MonoBehaviour {
     //================================================
 
     private PriorityFinder m_prioritysGet;
-    public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ModelNPC.GameDataAlien dataAlien)
+    //private AlienJob temp_job;
+    public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
     {
-        int versionSearching = 1;
+        int versionSearching = 1; //@JOB@
 
         if (PersonPriority == null)
         {
@@ -802,6 +805,7 @@ public class StoragePerson : MonoBehaviour {
             {
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority count = 0");
                 LoadPriorityPerson();
+                
             }
             else
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
@@ -817,6 +821,12 @@ public class StoragePerson : MonoBehaviour {
             //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
             //result = Helper.FindFromLocation(dataAlien, distantionFind);
             Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+        else //v.3
+        {
+            FindJobResouceLocation(ref result, ref job, dataAlien, distantionFind);
+            if (result == null)
+                Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+        }
         //v.2
         //if (versionSearching == 2)
         //{
@@ -824,19 +834,46 @@ public class StoragePerson : MonoBehaviour {
         //    Vector2 posField = Helper.GetPositByField(fieldName);
         //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
         //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
-
-        //    result = finder.ResultData;
-        //}
-
-        //return result;
     }
-    
+
+    private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.ObjectData dataAien, int distantionWay)
+    {
+        int x = 0;
+        int y = 0;
+        Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
+        List<Vector2Int> findedFileds = new List<Vector2Int>();
+        Helper.GetSpiralFields(ref findedFileds, x, y, distantionWay * distantionWay);
+        string nameField = string.Empty;
+        List<ModelNPC.ObjectData> resourcesData;
+        string key;
+        result = null;
+        foreach (Vector2Int fieldNext in findedFileds)
+        {
+            Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
+            resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
+            foreach(ModelNPC.ObjectData resoursData in resourcesData)
+            {
+                key = string.Format("{0}_{0}", resoursData.TypePrefabName, dataAien.TypePrefabName);
+                AlienToResourceJobsJoins.TryGetValue(key, out job);
+                if(job != null)
+                {
+                    result = resoursData;
+                    return;
+                }
+            }
+        }
+        job = null;
+    }
+
     private void LoadPriorityPerson()
     {
         try
         {
             PersonPriority = Helper.GetPrioritys(ContainerPrioritys,"NPC");
             CollectionPowerAllTypes = Helper.FillPrioritys(PersonPriority);
+            AlienToResourceJobsJoins = new Dictionary<string, AlienJob>();
+            //@JOB@
+            CollectionAlienJob = Helper.CollectionAlienJob(PersonPriority ,ref AlienToResourceJobsJoins);
         }
         catch (Exception ex)
         {

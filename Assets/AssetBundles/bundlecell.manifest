@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2716533361
+CRC: 3398941379
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f20f636fefe1808f6b09f1faff4683db
+    Hash: 4ec28d4257bcebbbe94f2eae661c901a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c96f0add1d8b8b68e7a2ccd9fca3b268
+    Hash: ea8daf6f6ed1a79e37cab2e1bd73e094
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -24,13 +24,21 @@ ClassTypes:
 - Class: 58
   Script: {instanceID: 0}
 - Class: 114
+  Script: {instanceID: 0}
+- Class: 114
   Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 9fdbd970b1d3ecd4e9cf3788622b5230, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 8859a97391eb93e4a873a2f2997c8611, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: ce882d440e9f92647bf416894eb8ae7e, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 0491a1c550afc7945a3961141977a0ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 974b2f07a7d363c428fa7d7128466c5a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4cf689ba65af8d4297518764c766d47, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: c046d42f5f25e4d47a54bb6b66262f16, type: 3}
 - Class: 114
@@ -91,6 +99,7 @@ Assets:
 - Assets/AssetBundles/Textures/Map/GridIcons/SwampMap.png
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMap.png
 - Assets/AssetBundles/Textures/Map/GridIcons/KamishMap.png
+- Assets/AssetBundles/ScriptableData/Settings/SettingsPortals.asset
 - Assets/AssetBundles/Textures/UI/Metal/IronPanel.png
 - Assets/AssetBundles/Textures/World/Prefabs/Blues/Lantern.png
 - Assets/AssetBundles/ScriptableData/Wall/Priority_Sosna.asset
@@ -152,6 +161,7 @@ Assets:
 - Assets/AssetBundles/Tiles/kolba.asset
 - Assets/AssetBundles/Textures/UI/CursorPoint.png
 - Assets/AssetBundles/Textures/World/Prefabs/Red/Triffid.png
+- Assets/AssetBundles/ScriptableData/Settings/SettingsSceneDebug.asset
 - Assets/AssetBundles/ScriptableData/Wall/Priority_RockValun.asset
 - Assets/AssetBundles/Textures/Map/UI/CellMapLgt.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground.png
@@ -243,6 +253,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/InspectorInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/loudwoodInv.png
 - Assets/AssetBundles/Textures/LUT/Night_2_LUT_32.png
+- Assets/AssetBundles/ScriptableData/Portals Fabrications/ContainerFabrications.asset
 - Assets/AssetBundles/ScriptableData/Priority_Fantom.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabWallWoodNormapMapQ.png
 - Assets/AssetBundles/Textures/Map/SpriteBossMap.png
@@ -322,6 +333,7 @@ Assets:
 - Assets/AssetBundles/Tiles/desert.asset
 - Assets/AssetBundles/Textures/Map/UI/BorderCell100.png
 - Assets/AssetBundles/Textures/Terra/Grass300.png
+- Assets/AssetBundles/Textures/Portals/PortalVioletDetails.png
 - Assets/AssetBundles/Textures/Map/GridIcons/BananasMap.png
 - Assets/AssetBundles/Textures/UI/ExpandClose.png
 - Assets/AssetBundles/Tiles/vhailor.asset
@@ -388,6 +400,7 @@ Assets:
 - Assets/AssetBundles/Textures/SpriteAtlasUI.spriteatlas
 - Assets/AssetBundles/Textures/World/Floor/Green/Weedflower.png
 - Assets/AssetBundles/Textures/Map/WallRockMap.png
+- Assets/AssetBundles/ScriptableData/Portals Fabrications/Fabrication_Blue_Coldfusion.asset
 - Assets/AssetBundles/Textures/Map/HeroMap.png
 - Assets/AssetBundles/Textures/World/NPC/Blues/Machinetool.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListVersionOn.png

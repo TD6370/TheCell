@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974b2f07a7d363c428fa7d7128466c5a, type: 3}
   m_Name: SettingsPortals
   m_EditorClassIdentifier: 
-  StartLimitNPC: 10
-  PeriodIncubation: 2
+  StartLimitNPC: 100
+  PeriodIncubation: 10

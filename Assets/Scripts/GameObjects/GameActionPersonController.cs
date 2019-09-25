@@ -472,6 +472,7 @@ public class GameActionPersonController : MonoBehaviour
     }
 
     private static ModelNPC.ObjectData m_TargetObject = null;
+    private static AlienJob temp_job = null;
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
@@ -494,7 +495,8 @@ public class GameActionPersonController : MonoBehaviour
             GetAlienData(dataNPC).OnTargetCompleted();
             indErr = "2";
             //m_TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
-            Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, GetAlienData(dataNPC));
+            //@JOB@
+            Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, ref temp_job, GetAlienData(dataNPC));
         }
         catch (Exception ex)
         {
@@ -515,6 +517,7 @@ public class GameActionPersonController : MonoBehaviour
             var targetPosition = m_TargetObject.Position;
             dataNPC.TargetID = m_TargetObject.Id;
             dataNPC.SetTargetPosition(targetPosition);
+            dataNPC.Job = temp_job;//@JOB@
         }
     
         ExecuteActionNPC(dataNPC, NameActionsPerson.Move, controller);
@@ -651,8 +654,12 @@ public class GameActionPersonController : MonoBehaviour
             isCompletedMoving = dist < MinDistEndMove;
             if (isCompletedMoving) //END WAY TO BASE TARGET
             {
-                RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
-                RequestActionNPC(m_dataNPC, NameActionsPerson.Target, this);
+                //@JOB@
+                if (AlienJobsManager.CheckJobAlien(m_dataNPC) == false)
+                {
+                    RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
+                    RequestActionNPC(m_dataNPC, NameActionsPerson.Target, this);
+                }
                 isCompletedMoving = true;
             }
         }

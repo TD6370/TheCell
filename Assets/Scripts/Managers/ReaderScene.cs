@@ -223,7 +223,7 @@ public class ReaderScene //: UpdateData
         CollectionInfoID[id].Field = newField;
     }
 
-    public void RemoveGobject(string p_id)
+    public void RemoveObject(string p_id)
     {
         if (false == CheckCollectionInfoID(p_id))
         {
@@ -232,7 +232,6 @@ public class ReaderScene //: UpdateData
         }
         CollectionInfoID.Remove(p_id);
     }
-
 
     private bool CheckCollectionInfoID(string id)
     {

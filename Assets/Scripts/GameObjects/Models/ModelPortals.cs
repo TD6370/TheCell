@@ -80,15 +80,17 @@ public partial class ModelNPC
         {
             int xOut = 0;
             int yOut = 0;
-            string resInfo = (Resources == null) ? "..." : Resources.Count.ToString();
+            string resInfo = (Resources == null) ? "." : Resources.Count.ToString();
             string childInfo = (ChildrensId == null) ? "..." : ChildrensId.Count.ToString();
+            
             Helper.GetFieldPositByWorldPosit(ref xOut, ref yOut, Position);
-            return String.Format("{0} FIELD:{1}x{2}  RES:{3} NPC:{4}",
+            return String.Format("{0} F:{1}x{2} R:{3} NPC:{4} P:{5}",
                 TypeBiom.ToString(),
                 xOut,
                 yOut,
                 resInfo,
-                childInfo);
+                childInfo,
+                CurrentProcess);
         }
     }
 

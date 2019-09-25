@@ -142,6 +142,7 @@ public class PortalController : MonoBehaviour {
 
     private void CheckUpdateStatusProcess()
     {
+        Storage.Portals.CurrentAnimationState = m_MeModelView.name + " : " + m_stateAnimation.ToString();
         //Check on process
         switch (m_DataPortal.CurrentProcess)
         {

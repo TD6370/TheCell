@@ -26,6 +26,8 @@ public class PriorityFinder : ScriptableObject
     public List<PoolGameObjects.TypePoolPrefabs> PrioritysTypePool;
     [SerializeField]
     public List<TypesBiomNPC> PrioritysTypeBiomNPC;
+    [SerializeField]
+    public AlienJob[] ListJobs;
 }
 
 public enum TypesBiomNPC

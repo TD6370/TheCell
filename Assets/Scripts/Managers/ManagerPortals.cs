@@ -12,6 +12,7 @@ public class ManagerPortals : MonoBehaviour
     [Space]
     [Header("INFO PORTAL:")]
     public string InfoPortal;
+    public string CurrentAnimationState;
     [Space]
     public string CurrentID;
     public int CurrentIndex;
@@ -156,12 +157,6 @@ public class ManagerPortals : MonoBehaviour
                 yield return new WaitForSeconds(timeWait * 3);
                 continue;
             }
-            //if (Portals.Count == 0)
-            //{
-            //    yield return new WaitForSeconds(timeWait * 2);
-            //    //yield return new WaitForSeconds(timeWait);
-            //    continue;
-            //}
              yield return null;
 
             CurrentPortal = Portals[CurrentIndex];
@@ -172,7 +167,6 @@ public class ManagerPortals : MonoBehaviour
                 yield return new WaitForSeconds(timeWait * 2);
                 continue;
             }
-            
 
             CurrentID = CurrentPortal.Id;
             InfoPortal = CurrentPortal.GetInfo();

@@ -244,6 +244,19 @@ public static class Helper { //: MonoBehaviour {
             //FieldKey + x + "x" + Mathf.Abs(y);
     }
 
+    public static void GetDistatntionFields(ref int distField, Vector3 targetPosition, Vector3 p_PositionNPC)
+    {
+        int x = 0;
+        int y = 0;
+        GetFieldPositByWorldPosit(ref x, ref y, p_PositionNPC);
+        int x2 = 0;
+        int y2 = 0;
+        GetFieldPositByWorldPosit(ref x2, ref y2, targetPosition);
+        int distX = Math.Abs(x - x2);
+        int distY = Math.Abs(y - y2);
+        distField = Math.Min(distX, distY);
+    }
+
     public static void GetNameFieldPosit(ref string nameField, int x, int y)
     {
         x = (int)(x / Storage.ScaleWorld);
@@ -893,6 +906,36 @@ public static class Helper { //: MonoBehaviour {
 
         var objData = Storage.ReaderWorld.CollectionInfoID[id].Data;
         return GetPriorityPower(objData, priority);
+    }
+
+    // = Helper.FillAlienJibs(PersonPriority);//
+    public static Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys, ref Dictionary<string, AlienJob> jobsJoin)
+    {
+        Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> jobs = new Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>>();
+        SaveLoadData.TypePrefabs prefabNameType;
+        SaveLoadData.TypePrefabNPC prefabNameTypeNPC;
+        string key;
+        PriorityFinder prioritys;
+        var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabNPC)).Length - 1;
+        for (int ind = 0; ind < max; ind++)
+        {
+            prefabNameTypeNPC = (SaveLoadData.TypePrefabNPC)Enum.Parse(typeof(SaveLoadData.TypePrefabNPC), ind.ToString());
+            prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabNameTypeNPC.ToString());
+            if (pioritys.ContainsKey(prefabNameType))
+            {
+                prioritys = pioritys[prefabNameType];
+                foreach(AlienJob job in prioritys.ListJobs)
+                {
+                    key = string.Format("{0}_{1}", prefabNameType, job.TargetResource.ToString());
+                    if (!jobsJoin.ContainsKey(key))
+                        jobsJoin.Add(key,job);
+                    
+                }
+                if(!jobs.ContainsKey(prefabNameType) && prioritys.ListJobs != null && prioritys.ListJobs.Count() >0)
+                    jobs.Add(prefabNameType, prioritys.ListJobs.ToList());
+            }
+        }
+        return jobs;
     }
 
     public static Dictionary<string, int> FillPrioritys(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys)

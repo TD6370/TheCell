@@ -727,11 +727,6 @@ public class GenerateGridFields : MonoBehaviour {
 
     public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
     {
-        //TEST
-        if(objData.NameObject.IndexOf("PortalBlue")!=-1)
-        {
-            Debug.Log("PortalBlue ");
-        }
         var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
         objData.UpdateGameObject(newGO);
         newGO.transform.position = objData.Position;
