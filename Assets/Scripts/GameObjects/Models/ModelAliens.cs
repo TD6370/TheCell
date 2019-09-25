@@ -9,11 +9,12 @@ public partial class ModelNPC
     [XmlType("Alien")]
     public class GameDataAlien : PersonData
     {
-        public virtual int Life { get; set; }
-        public virtual int PortalId { get; set; }
-
         [XmlIgnore]
         public virtual int Level { get; set; }
+        [XmlIgnore]
+        public virtual int Damage { get; set; }
+        [XmlIgnore]
+        public virtual int WorkPower { get; set; }
 
         [XmlIgnore]
         public float TimeEndCurrentAction = -1f;
@@ -25,6 +26,7 @@ public partial class ModelNPC
         public string PrevousTargetID = "";
         [XmlIgnore]
         public string BaseLockedTargetID;
+
 
         public GameDataAlien() : base()
         {
@@ -43,9 +45,12 @@ public partial class ModelNPC
                 GameDataAlien obj = Storage.Person.GenTypeAlien();
                 ModelView = obj.ModelView;
                 Level = obj.Level;
-                Life = obj.Life;
+                Health = obj.Health;
                 Speed = Level * 10;
             }
+            if (WorkPower == 0) WorkPower = 1;
+            if (Damage == 0) Damage = 1;
+            if (Defense == 0) Defense = 1;
 
             //#fix load
             if (IsCanSetTargetPosition && IsReality)
@@ -107,7 +112,7 @@ public partial class ModelNPC
                         "View: " + ModelView,
                         "Pos : " + Position,
                         "Target : " + TargetPosition,
-                        "Life: " + Life,
+                        "Health: " + Health,
                         "Speed: " + Speed,
                         "Individ: " + ModelView,
                         "Action: " + CurrentAction,
@@ -132,7 +137,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Inspector; } }
-        public override int Life { get { return 30; } set { } }
+        public override int Health { get { return 30; } set { } }
         public override int Level { get { return 2; } set { } }
         public override void Init()
         {
@@ -146,7 +151,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Machinetool; } }
-        public override int Life { get { return 50; } set { } }
+        public override int Health { get { return 50; } set { } }
         public override int Level { get { return 6; } set { } }
         public override void Init()
         {
@@ -160,7 +165,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Mecha; } }
-        public override int Life { get { return 40; } set { } }
+        public override int Health { get { return 40; } set { } }
         public override int Level { get { return 3; } set { } }
         public override void Init()
         {
@@ -174,7 +179,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Dendroid; } }
-        public override int Life { get { return 80; } set { } }
+        public override int Health { get { return 80; } set { } }
         public override int Level { get { return 6; } set { } }
         public override void Init()
         {
@@ -188,7 +193,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Gary; } }
-        public override int Life { get { return 40; } set { } }
+        public override int Health { get { return 40; } set { } }
         public override int Level { get { return 1; } set { } }
         public override void Init()
         {
@@ -202,7 +207,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Lollipop; } }
-        public override int Life { get { return 10; } set { } }
+        public override int Health { get { return 10; } set { } }
         public override int Level { get { return 3; } set { } }
         public override void Init()
         {
@@ -216,7 +221,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Blastarr; } }
-        public override int Life { get { return 100; } set { } }
+        public override int Health { get { return 100; } set { } }
         public override int Level { get { return 8; } set { } }
         public override void Init()
         {
@@ -230,7 +235,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Hydragon; } }
-        public override int Life { get { return 50; } set { } }
+        public override int Health { get { return 50; } set { } }
         public override int Level { get { return 6; } set { } }
         public override void Init()
         {
@@ -244,7 +249,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Pavuk; } }
-        public override int Life { get { return 80; } set { } }
+        public override int Health { get { return 80; } set { } }
         public override int Level { get { return 7; } set { } }
         public override void Init()
         {
@@ -258,7 +263,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Skvid; } }
-        public override int Life { get { return 30; } set { } }
+        public override int Health { get { return 30; } set { } }
         public override int Level { get { return 4; } set { } }
         public override void Init()
         {
@@ -272,7 +277,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Fantom; } }
-        public override int Life { get { return 60; } set { } }
+        public override int Health { get { return 60; } set { } }
         public override int Level { get { return 4; } set { } }
         public override void Init()
         {
@@ -286,7 +291,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Mask; } }
-        public override int Life { get { return 10; } set { } }
+        public override int Health { get { return 10; } set { } }
         public override int Level { get { return 8; } set { } }
         public override void Init()
         {
@@ -300,7 +305,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Vhailor; } }
-        public override int Life { get { return 100; } set { } }
+        public override int Health { get { return 100; } set { } }
         public override int Level { get { return 5; } set { } }
         public override void Init()
         {
@@ -315,7 +320,7 @@ public partial class ModelNPC
     {
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Ej; } }
-        public override int Life { get { return 20; } set { } }
+        public override int Health { get { return 20; } set { } }
         public override int Level { get { return 1; } set { } }
         public override void Init()
         {

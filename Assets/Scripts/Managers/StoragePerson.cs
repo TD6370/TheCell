@@ -783,7 +783,7 @@ public class StoragePerson : MonoBehaviour {
     //private AlienJob temp_job;
     public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
     {
-        int versionSearching = 1; //@JOB@
+        int versionSearching = 2;// 1; //@JOB@
 
         if (PersonPriority == null)
         {
@@ -823,9 +823,28 @@ public class StoragePerson : MonoBehaviour {
             Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
         else //v.3
         {
-            FindJobResouceLocation(ref result, ref job, dataAlien, distantionFind);
-            if (result == null)
-                Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+            if (job != null)
+            {
+                switch(job.JobTo)
+                { 
+                    case TypesJobTo.ToPortal:
+                        var info = ReaderScene.GetInfoID(dataAlien.PortalId);
+                        if (info != null)
+                            result = info.Data;
+                        break;
+                    default:
+                        job = null;
+                        break;
+                }
+            }
+            //if (string.IsNullOrEmpty(dataAlien.TargetID))
+            if(result == null)
+            {
+                FindJobResouceLocation(ref result, ref job, dataAlien, distantionFind);
+                if (result == null)
+                    Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+            }
+            
         }
         //v.2
         //if (versionSearching == 2)

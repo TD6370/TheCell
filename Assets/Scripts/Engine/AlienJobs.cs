@@ -30,7 +30,7 @@ public class AlienJob : ScriptableObject
 
 public static class AlienJobsManager
 {
-    public static bool CheckJobAlien(ModelNPC.PersonData p_dataNPC)
+    public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC)
     {
         //AlienJob job = p_dataNPC.Job;
         //string jobName = p_dataNPC.JobName;
@@ -57,35 +57,47 @@ public static class AlienJobsManager
                     //Test job on target //@JOB@
                     if (targetInfo.Data.TypePrefab == invObj)
                     {
-                        //---Replace object
-                        //1. Remove resource
-                        //Storage.Data.RemoveDataObjectInGrid(fieldTarget, -1, "CheckJobAlien", dataObjDel: targetInfo.Data);
-                        Vector3 posTarget = targetInfo.Data.Position;
-                        Storage.Data.RemoveDataObjectInGrid(targetInfo.Data);
-                        //2. Create new resource
-                        if(job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
+                        if (targetInfo.Data is ModelNPC.PortalData)
                         {
-                            Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
+                            //***** Back to HOME **** (trget is Portal)
+                            //p_dataNPC.InventoryObject is ModelNPC;
+                            Storage.Portals.AddResource(targetInfo.Data as ModelNPC.PortalData, p_dataNPC.Inventory);
                         }
-                        //3. Add resource in Inventory
-
-                        //4. Set target to target location
-                        if(job.JobTo == TypesJobTo.ToPortal)
+                        else
                         {
-                            //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Idle, null);
-                            //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Target, null);
+                            // **** FIND RESOURCE ****
+                            //---Replace object
+                            //1. Remove resource
+                            //Storage.Data.RemoveDataObjectInGrid(fieldTarget, -1, "CheckJobAlien", dataObjDel: targetInfo.Data);
+                            Vector3 posTarget = targetInfo.Data.Position;
+                            Storage.Data.RemoveDataObjectInGrid(targetInfo.Data);
+                            //2. Create new resource
+                            if (job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
+                            {
+                                Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
+                            }
+                            //3. Add resource in Inventory
+                            p_dataNPC.Inventory = targetInfo.Data.GetInventoryObject(p_dataNPC);
+                            //4. Set target to target location
+                            if (job.JobTo == TypesJobTo.ToPortal)
+                            {
+                                //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Idle, null);
+                                //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Target, null);
+                            }
+                            //continue work...
+                            return true;
                         }
                     }
                 }
             }
             //Test all object from location
-            List<ModelNPC.ObjectData> objectsOnField = ReaderScene.GetObjectsDataFromGrid(fieldAlien);
-            foreach(ModelNPC.ObjectData nextObject in objectsOnField)
-            {
-                if(nextObject.Id == p_dataNPC.TargetID)
-                {
-                }
-            }
+            //List<ModelNPC.ObjectData> objectsOnField = ReaderScene.GetObjectsDataFromGrid(fieldAlien);
+            //foreach(ModelNPC.ObjectData nextObject in objectsOnField)
+            //{
+            //    if(nextObject.Id == p_dataNPC.TargetID)
+            //    {
+            //    }
+            //}
         }
         return false;
     }

@@ -47,8 +47,8 @@ public class GameActionPersonController : MonoBehaviour
 
     private Vector2 m_MeMovement;
     private NameActionsPerson temp_ActionPerson = NameActionsPerson.None;
-    private ModelNPC.PersonData m_dataNPC;
-    private ModelNPC.PersonData temp_dataNPC;
+    private ModelNPC.GameDataAlien m_dataNPC;
+    private ModelNPC.GameDataAlien temp_dataNPC;
     private MovementNPC m_meMovement; //@@$$
     
     private Dictionary<SaveLoadData.TypePrefabs, GameObject> m_ListViewModels;
@@ -495,7 +495,9 @@ public class GameActionPersonController : MonoBehaviour
             GetAlienData(dataNPC).OnTargetCompleted();
             indErr = "2";
             //m_TargetObject = Storage.Person.GetAlienNextTargetObject(GetAlienData(dataNPC));
+            m_TargetObject = null;
             //@JOB@
+            temp_job = dataNPC.Job;
             Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, ref temp_job, GetAlienData(dataNPC));
         }
         catch (Exception ex)
@@ -833,7 +835,7 @@ public class GameActionPersonController : MonoBehaviour
         if (m_stateInit != IsStartInit)
         {
             m_stateInit = IsStartInit;
-            m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.PersonData;
+            m_dataNPC = m_meMovement.GetData("GameActionPersonController.Start") as ModelNPC.GameDataAlien;
             if(m_dataNPC== null)
             {
                 Debug.Log("########### ERROR CheckUpdateModelView  m_dataNPC is null");

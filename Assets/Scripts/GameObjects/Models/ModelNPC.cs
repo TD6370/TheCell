@@ -58,6 +58,10 @@ public partial class ModelNPC
         public string TypePoolPrefabName { get; set; }
 
         [XmlIgnore]
+        public virtual int Defense { get; set; }
+        public virtual int Health { get; set; }
+
+        [XmlIgnore]
         public virtual PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
         public string TypePrefabName { get; set; }
 
@@ -359,12 +363,12 @@ public partial class ModelNPC
     public class PersonData : GameDataNPC
     {
         public override Vector3 TargetPosition { get; set; }
-        
-        //public string Id { get; set; }
+        public virtual string PortalId { get; set; }
 
         public string[] PersonActions { get; set; } //$$$
         public string CurrentAction { get; set; }
         public string JobName { get; set; }
+        public DataObjectInventory Inventory { get; set; }
 
         [XmlIgnore]
         private AlienJob m_Job;
@@ -649,9 +653,8 @@ public partial class ModelNPC
         public bool IsGen { get; set; }
 
         public virtual int BlockResources { get; set; }
-        public virtual int Defence { get; set; }
+        
         public virtual string Debuff { get; set; }
-        public virtual int HP { get; set; }
         public virtual string ParentId { get; set; }
 
         [XmlIgnore]

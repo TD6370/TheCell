@@ -19,8 +19,8 @@ public partial class ModelNPC
     [XmlType("Kolba")]
     public class Kolba : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
 
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Kolba; } }
@@ -30,8 +30,8 @@ public partial class ModelNPC
     [XmlType("Lantern")]
     public class Lantern : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Lantern; } }
         public Lantern() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -40,8 +40,8 @@ public partial class ModelNPC
     [XmlType("Bananas")]
     public class Bananas : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Bananas; } }
         public Bananas() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -50,8 +50,8 @@ public partial class ModelNPC
     [XmlType("Cluben")]
     public class Cluben : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cluben; } }
         public Cluben() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -60,8 +60,8 @@ public partial class ModelNPC
     [XmlType("Chpok")]
     public class Chpok : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Chpok; } }
         public Chpok() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -70,8 +70,8 @@ public partial class ModelNPC
     [XmlType("Pandora")]
     public class Pandora : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Pandora; } }
         public Pandora() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -80,8 +80,8 @@ public partial class ModelNPC
     [XmlType("Nadmozg")]
     public class Nadmozg : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Nadmozg; } }
         public Nadmozg() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -90,8 +90,8 @@ public partial class ModelNPC
     [XmlType("Triffid")]
     public class Triffid : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Triffid; } }
         public Triffid() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -100,8 +100,8 @@ public partial class ModelNPC
     [XmlType("Aracul")]
     public class Aracul : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Aracul; } }
         public Aracul() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -110,8 +110,8 @@ public partial class ModelNPC
     [XmlType("Cloudwood")]
     public class Cloudwood : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Cloudwood; } }
         public Cloudwood() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -120,8 +120,8 @@ public partial class ModelNPC
     [XmlType("BlueBerry")]
     public class BlueBerry : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.BlueBerry; } }
         public BlueBerry() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -130,8 +130,8 @@ public partial class ModelNPC
     [XmlType("Sosna")]
     public class Sosna : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Sosna; } }
         public Sosna() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -140,8 +140,8 @@ public partial class ModelNPC
     [XmlType("Iva")]
     public class Iva : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Iva; } }
         public Iva() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -150,8 +150,8 @@ public partial class ModelNPC
     [XmlType("Klen")]
     public class Klen : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.Klen; } }
         public Klen() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -160,8 +160,8 @@ public partial class ModelNPC
     [XmlType("RockBrow")]
     public class RockBrown : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockBrown; } }
         public RockBrown() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -170,8 +170,8 @@ public partial class ModelNPC
     [XmlType("RockValun")]
     public class RockValun : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockValun; } }
         public RockValun() : base() { TypePrefabName = TypePrefab.ToString(); }
@@ -180,8 +180,8 @@ public partial class ModelNPC
     [XmlType("RockDark")]
     public class RockDark : WoodData
     {
-        public override int Defence { get { return 10; } }
-        public override int HP { get { return 10; } }
+        public override int Defense { get { return 10; } }
+        public override int Health { get { return 10; } }
         [XmlIgnore]
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.RockDark; } }
         public RockDark() : base() { TypePrefabName = TypePrefab.ToString(); }
