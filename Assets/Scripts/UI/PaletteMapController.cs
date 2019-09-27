@@ -892,7 +892,7 @@ public class PaletteMapController : MonoBehaviour {
         }
         yield return null;
         //Storage.Map.RefreshFull();
-        Storage.Player.LoadPositionHero();
+        Storage.Player.LoadHeroAndObjects();
         yield return null;
         Storage.EventsUI.SetTittle = "End generic";
     }

@@ -295,7 +295,10 @@ public class DispatcherWorldActions : MonoBehaviour
             }
         }
     }
-   
+
+
+    //List<GameActionPersonController.NameActionsPerson> temp_actonsNPC;
+    GameActionPersonController.NameActionsPerson temp_actionCurrent;
 
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {
@@ -303,14 +306,17 @@ public class DispatcherWorldActions : MonoBehaviour
         if (persData == null || persData.IsReality)
             return;
 
-        List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
-        GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
-        actionCurrent = GameActionPersonController.GetCurrentAction(persData);
-        GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
+        //List<GameActionPersonController.NameActionsPerson> actonsNPC = GameActionPersonController.GetActions(persData);
+        //GameActionPersonController.NameActionsPerson actionCurrent = GameActionPersonController.GetCurrentAction(persData);
+        //actionCurrent = GameActionPersonController.GetCurrentAction(persData);
+        //GameActionPersonController.CheckNextAction(persData, actionCurrent, null);
+        //temp_actonsNPC = GameActionPersonController.GetActions(persData);
+        GameActionPersonController.GetCurrentAction_Cache(ref temp_actionCurrent, persData);
+        GameActionPersonController.CheckNextAction(persData, temp_actionCurrent, null);
 
         //TEST -----------------------------
         if (Storage.SceneDebug.SettingsScene.IsLog)
-            Storage.EventsUI.ListLogAdd = "WORK: " + persData.NameObject + " >> " + actionCurrent.ToString();
+            Storage.EventsUI.ListLogAdd = "WORK: " + persData.NameObject + " >> " + temp_actionCurrent.ToString();
 
         bool isZonaReal = Helper.IsValidPiontInZona(persData.Position.x, persData.Position.y);
         if(!persData.IsReality && isZonaReal)

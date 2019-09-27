@@ -289,8 +289,15 @@ public class ManagerPortals : MonoBehaviour
 
     public void AddResourceFromAlien(ModelNPC.PortalData portal, ModelNPC.GameDataAlien alien)
     {
+        DataObjectInventory existRes = DataObjectInventory.EmptyInventory(); 
         //>INV>
-        DataObjectInventory existRes = portal.Resources.Where(p => p.TypeInventoryObject == alien.Inventory.TypeInventoryObject).FirstOrDefault();
+        try
+        {
+            existRes = portal.Resources.Where(p => p.TypeInventoryObject == alien.Inventory.TypeInventoryObject).FirstOrDefault();
+        }catch(System.Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = string.Format("###### AddResourceFromAlien error: {0}", ex));
+        }
         if (existRes == null)
             portal.Resources.Add(new DataObjectInventory(alien.Inventory));
         else

@@ -261,6 +261,15 @@ public class GameActionPersonController : MonoBehaviour
         }
         return (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.CurrentAction); ;
     }
+
+    public static void GetCurrentAction_Cache(ref NameActionsPerson result, ModelNPC.GameDataAlien dataNPC)
+    {
+        if (string.IsNullOrEmpty(dataNPC.CurrentAction))
+        {
+            dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
+        }
+        result = (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.CurrentAction); ;
+    }
     #endregion
 
     public static void CheckNextAction(ModelNPC.GameDataAlien dataNPC, NameActionsPerson p_actionPerson, GameActionPersonController controller)
@@ -484,7 +493,7 @@ public class GameActionPersonController : MonoBehaviour
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
         //Storage.EventsUI.ListLogAdd = "ActionTarget .... ReaderSceneIsValid=" + Storage.Instance.ReaderSceneIsValid;
-
+        temp_job = null;
 
         if (!Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
         {

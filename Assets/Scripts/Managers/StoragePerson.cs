@@ -60,25 +60,25 @@ public class StoragePerson : MonoBehaviour {
         }
     }
 
-    private ModelNPC.LevelData _personsData;
-    public ModelNPC.LevelData PersonsData
-    {
-        get { return _personsData; }
-    }
+    //private ModelNPC.LevelData _personsData;
+    //public ModelNPC.LevelData PersonsData
+    //{
+    //    get { return _personsData; }
+    //}
 
-    public void PersonsDataInit(ModelNPC.LevelData _newData = null)
-    {
-        if (_newData == null)
-            _personsData = new ModelNPC.LevelData();
-        else
-            _personsData = _newData;
+    //public void PersonsDataInit(ModelNPC.LevelData _newData = null)
+    //{
+    //    if (_newData == null)
+    //        _personsData = new ModelNPC.LevelData();
+    //    else
+    //        _personsData = _newData;
 
         
-    }
+    //}
 
     void Awake()
     {
-        PersonsDataInit();
+        //PersonsDataInit();
     }
 
     // Use this for initialization
@@ -183,7 +183,7 @@ public class StoragePerson : MonoBehaviour {
 
         return Storage.Instance.GamesObjectsReal.
                 SelectMany(x => x.Value).
-                Where(p => p.name.IndexOf(id)!=-1).ToList();
+                Where(p => p!=null && p.name.IndexOf(id)!=-1).ToList();
     }
 
     public IEnumerable<ModelNPC.ObjectData> GetAllDataPersonsForID(string name)
@@ -779,8 +779,10 @@ public class StoragePerson : MonoBehaviour {
 
     //================================================
 
-    private PriorityFinder m_prioritysGet;
+    //private PriorityFinder m_prioritysGet;
     //private AlienJob temp_job;
+    private int temp_distantionFind;
+
     public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
     {
         int versionSearching = 2;// 1; //@JOB@
@@ -799,42 +801,46 @@ public class StoragePerson : MonoBehaviour {
             return;
         }
 
+        /*
         if (!PersonPriority.ContainsKey(dataAlien.TypePrefab))
         {
             if (PersonPriority.Count == 0)
             {
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority count = 0");
                 LoadPriorityPerson();
-                
             }
             else
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
             result = null;
             return;
         }
+        */
 
-        m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
+        //m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
         //int distantionFind = UnityEngine.Random.Range(2, 15);
-        int distantionFind = UnityEngine.Random.Range(2, 100);
 
         //v.1
         if (versionSearching == 1)
+        {
             //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
             //result = Helper.FindFromLocation(dataAlien, distantionFind);
-            Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+            temp_distantionFind = UnityEngine.Random.Range(2, 15);
+            Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
+        }
         else //v.3
         {
-            //fix job
-            bool isCompletedMission = job != null &&
-                dataAlien.Inventory != null && 
-                dataAlien.Inventory.NameInventopyObject == job.TargetResource.ToString();
-
-            if (job != null) 
+            if (job != null)
             {
-                switch(job.JobTo)
-                { 
+                //fix job
+                bool isCompletedMission = job != null &&
+                    dataAlien.Inventory != null &&
+                    dataAlien.Inventory.NameInventopyObject == job.TargetResource.ToString();
+
+                switch (job.JobTo)
+                {
                     case TypesJobTo.ToPortal:
-                        if (isCompletedMission) {
+                        if (isCompletedMission)
+                        {
                             var info = ReaderScene.GetInfoID(dataAlien.PortalId);
                             if (info != null)
                                 result = info.Data;
@@ -846,13 +852,17 @@ public class StoragePerson : MonoBehaviour {
                 }
             }
             //if (string.IsNullOrEmpty(dataAlien.TargetID))
-            if(result == null)
+            if (result == null)
             {
-                FindJobResouceLocation(ref result, ref job, dataAlien, distantionFind);
+                temp_distantionFind = UnityEngine.Random.Range(2, 100);
+                FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
                 if (result == null)
-                    Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
+                {
+                    temp_distantionFind = UnityEngine.Random.Range(2, 15);
+                    Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
+                }
             }
-            
+
         }
         //v.2
         //if (versionSearching == 2)
@@ -863,23 +873,35 @@ public class StoragePerson : MonoBehaviour {
         //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
     }
 
+    List<Vector2Int> temp_findedFileds = new List<Vector2Int>();
+    List<ModelNPC.ObjectData> temp_resourcesData;
+
     private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.ObjectData dataAien, int distantionWay)
     {
+        if (!CollectionAlienJob.ContainsKey(dataAien.TypePrefab))
+            return;
+
         int x = 0;
         int y = 0;
-        Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
-        List<Vector2Int> findedFileds = new List<Vector2Int>();
-        Helper.GetSpiralFields(ref findedFileds, x, y, distantionWay * distantionWay);
         string nameField = string.Empty;
-        List<ModelNPC.ObjectData> resourcesData;
         string key;
+
+        Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
+
+        if(temp_findedFileds != null)
+            temp_findedFileds.Clear();
+        if (temp_resourcesData != null)
+            temp_resourcesData.Clear();
+        Helper.GetSpiralFields_Cache(ref temp_findedFileds, x, y, distantionWay);
         result = null;
-        foreach (Vector2Int fieldNext in findedFileds)
+        foreach (Vector2Int fieldNext in temp_findedFileds)
         {
             Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
             //resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
-            resourcesData = ReaderScene.GetObjectsDataFromGridTest(nameField);
-            foreach (ModelNPC.ObjectData resoursData in resourcesData)
+            temp_resourcesData = ReaderScene.GetObjectsDataFromGridContinue(nameField);
+            if (temp_resourcesData == null)
+                continue;
+            foreach (ModelNPC.ObjectData resoursData in temp_resourcesData)
             {
                 key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
                 AlienToResourceJobsJoins.TryGetValue(key, out job);
@@ -914,7 +936,7 @@ public class StoragePerson : MonoBehaviour {
         string keyJoinNPC = prefabNameType + "_" + prefabNameTypeTarget;
         if (!CollectionPowerAllTypes.ContainsKey(keyJoinNPC))
         {
-            Debug.Log("########## GetPriorityPowerByJoin Not Key = " + keyJoinNPC);
+            //Debug.Log("########## GetPriorityPowerByJoin Not Key = " + keyJoinNPC);
             return 0;
         }
         return CollectionPowerAllTypes[keyJoinNPC];

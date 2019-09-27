@@ -1100,20 +1100,23 @@ public static class Helper { //: MonoBehaviour {
     }
     #endregion
 
-    public static void GetSpiralFields(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8)
+    public static void GetSpiralFields(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = true)
     {
         int indexSingle = 0;
         int _single = 1;
         int limitInvertSingle = 1;
         int indexFileds = 0;
-
-        foreach (int index in Enumerable.Range(0, 6))
+        bool isValid = !isTestZonaWorls;
+        //foreach (int index in Enumerable.Range(0, 6))
+        foreach (int index in Enumerable.Range(0, 20))
         {
             //X
             foreach (int i in Enumerable.Range(0, index))
             {
                 x += _single;
-                if (IsValidFieldInZonaWorld(x, y))
+                if(isTestZonaWorls)
+                    isValid = IsValidFieldInZonaWorld(x, y);
+                if (isValid)
                 {
                     findedFileds.Add(new Vector2Int(x, y));
                     indexFileds++;
@@ -1132,7 +1135,9 @@ public static class Helper { //: MonoBehaviour {
             foreach (int i in Enumerable.Range(0, index))
             {
                 y += _single;
-                if (IsValidFieldInZonaWorld(x,y))
+                if (isTestZonaWorls)
+                    isValid = IsValidFieldInZonaWorld(x, y);
+                if (isValid)
                 {
                     findedFileds.Add(new Vector2Int(x, y));
                     indexFileds++;
@@ -1145,6 +1150,80 @@ public static class Helper { //: MonoBehaviour {
                     limitInvertSingle += 2;
                     indexSingle = 0;
                     _single *= -1;
+                }
+            }
+        }
+    }
+
+    public struct CacheParamSpiralFields
+    {
+        public int indexSingle;
+        public int _single;
+        public int limitInvertSingle ;
+        public int indexFileds;
+        public bool isValid;
+        public int index;
+        public int nextF;
+    }
+    public static CacheParamSpiralFields temp_spatal;
+
+    public static void GetSpiralFields_Cache(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = false)
+    {
+        //cacheSpiralFields = new CacheParamSpiralFields();
+
+        temp_spatal.indexSingle = 0;
+        temp_spatal._single = 1;
+        temp_spatal.limitInvertSingle = 1;
+        temp_spatal.indexFileds = 0;
+        temp_spatal.isValid = !isTestZonaWorls;
+        temp_spatal.index = 0;
+        temp_spatal.nextF = 0;
+
+        //foreach (int index in Enumerable.Range(0, 6))
+        for (temp_spatal.index = 0; temp_spatal.index < 20; temp_spatal.index++)
+        {
+            //X
+            //foreach (int i in Enumerable.Range(0, index))
+            for(temp_spatal.nextF = 0; temp_spatal.nextF < temp_spatal.index; temp_spatal.nextF++)
+            {
+                x += temp_spatal._single;
+                if (isTestZonaWorls)
+                    temp_spatal.isValid = IsValidFieldInZonaWorld(x, y);
+                if (temp_spatal.isValid)
+                {
+                    findedFileds.Add(new Vector2Int(x, y));
+                    temp_spatal.indexFileds++;
+                }
+                temp_spatal.indexSingle++;
+                if (temp_spatal.indexFileds > lenSnake)
+                    return;
+                if (temp_spatal.indexSingle >= temp_spatal.limitInvertSingle)
+                {
+                    temp_spatal.limitInvertSingle += 2;
+                    temp_spatal.indexSingle = 0;
+                    temp_spatal._single *= -1;
+                }
+            }
+            //Y
+            //foreach (int i in Enumerable.Range(0, index))
+            for(temp_spatal.nextF = 0; temp_spatal.nextF < temp_spatal.index; temp_spatal.nextF++)
+            {
+                y += temp_spatal._single;
+                if (isTestZonaWorls)
+                    temp_spatal.isValid = IsValidFieldInZonaWorld(x, y);
+                if (temp_spatal.isValid)
+                {
+                    findedFileds.Add(new Vector2Int(x, y));
+                    temp_spatal.indexFileds++;
+                }
+                temp_spatal.indexSingle++;
+                if (temp_spatal.indexFileds > lenSnake)
+                    return;
+                if (temp_spatal.indexSingle >= temp_spatal.limitInvertSingle)
+                {
+                    temp_spatal.limitInvertSingle += 2;
+                    temp_spatal.indexSingle = 0;
+                    temp_spatal._single *= -1;
                 }
             }
         }

@@ -45,6 +45,8 @@ public class GenerateGridFields : MonoBehaviour {
 
     public void StartBuildBaseGridField(bool isOffsetHero = false)
     {
+        //Storage.Person.PersonsData != null && Storage.Instance.ZonaReal != null)
+
         int maxWidth = (int)GridY * -1;
         int maxHeight = (int)GridX;
         Counter = maxWidth * maxHeight;

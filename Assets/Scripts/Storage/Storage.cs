@@ -373,18 +373,19 @@ public class Storage : MonoBehaviour {
         ZonaReal = null;
 
         InitObjectsGrid();
-
         InitComponents();
-
         //StartGenGrigField();
-
         LoadData();
 
-        LoadGameObjects();
-
-        LoadDefaultUI();
-
+        //--------------------------
+        //LoadGameObjects();
+        //LoadDefaultUI();
+        //Player.LoadPositionHero();
+        //--------------------------
         Player.LoadPositionHero();
+        LoadGameObjects();
+        LoadDefaultUI();
+        //--------------------------
     }
 
     void Update()
@@ -474,7 +475,7 @@ public class Storage : MonoBehaviour {
         //Reinit Component
         _StoragePerson = MainCamera.GetComponent<StoragePerson>();
         _StoragePerson.Init();
-        _StoragePerson.PersonsDataInit();
+        //_StoragePerson.PersonsDataInit();
 
         _Palette = DataStorage.GetComponent<ManagerPalette>();
         if (_Palette == null)
@@ -591,7 +592,7 @@ public class Storage : MonoBehaviour {
 
         LoadData();
 
-        LoadGameObjects(true, isStartGameLoad: true);
+        LoadGameObjects(true);
 
         IsLoadingWorld = false;
     }
@@ -663,18 +664,14 @@ public class Storage : MonoBehaviour {
         LoadGameObjects(true, true, isGenNewWorld);
     }
 
-    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false, bool isGenNewWorld = false, bool isStartGameLoad = false)
+    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false, bool isGenNewWorld = false)
     {
         Debug.Log("III LoadGameObjects ::::_______________");
 
-        //--------------------- NEW -------------------
         _screiptHero.FindFieldCurrent(false);
         _scriptGrid.StartBuildBaseGridField(true);
         _screiptHero.FindFieldCurrent();
 
-        //------------------------------
-
-        //Debug.Log("III CreateDataGamesObjectsWorld_______________");
         if (isGenNewWorld)
         {
             _GenWorld.GenericWorld();
@@ -688,36 +685,7 @@ public class Storage : MonoBehaviour {
             StartCoroutine(StartFindLookObjects());
         else
         {
-            //FIX#REAL
-            //Storage.Player.SetHeroPosition(posX, posY, transform.position.x, transform.position.y);
-            //public static bool IsValidPiontInZonaCorr(float x, float y)
-            //{
-            //    bool result = true;
-            //    int corr = 2;
-
-            //    if (x + corr < Storage.Instance.ZonaReal.X)
-            //        return false;
-            //    if (y - corr > Storage.Instance.ZonaReal.Y) //*-1
-            //        return false;
-            //    if (x - corr > Storage.Instance.ZonaReal.X2)
-            //        return false;
-            //    if (y + corr < Storage.Instance.ZonaReal.Y2) //*-1
-            //        return false;
-            //    return result;
-            //}
-            //var r = ZonaReal.X;
-            //var r2 = ZonaReal.X2;
-            //var r3 = ZonaReal.Y;
-            //var r4 = ZonaReal.Y2;
-
-            //if (Person.PersonsData != null && ZonaReal != null)
-            //{
-                //Debug.Log("III ....Init LoadObjectsNearHero ......");
-            if(!isStartGameLoad)
-                _scriptGrid.LoadObjectsNearHero();
-                //Debug.Log("III ....Sart Crate NPC......");
-                //_scriptNPC.SartCrateNPC();
-            //}
+            _scriptGrid.LoadObjectsNearHero();
         }
 
         Map.RefreshFull();
@@ -761,8 +729,8 @@ public class Storage : MonoBehaviour {
 
     public void LoadData()
     {
-        Storage.EventsUI.ListLogAdd = "LoadPathDatab...";
-        Storage.EventsUI.SetTittle = "##### LoadPathData";
+        EventsUI.ListLogAdd = "LoadPathDatab...";
+        EventsUI.SetTittle = "##### LoadPathData";
         _datapathLevel = Application.dataPath + "/Levels/LevelDataPart1x1.xml";
         string dir = Application.dataPath + "/Levels";
 
@@ -771,8 +739,8 @@ public class Storage : MonoBehaviour {
 
         if (File.Exists(_datapathLevel))
         {
-            Storage.EventsUI.ListLogAdd = "LoadGridXml...";
-            Storage.Instance.IsLoadingWorldThread = true;
+            EventsUI.ListLogAdd = "LoadGridXml...";
+            Instance.IsLoadingWorldThread = true;
 
             _GridDataG = Serializator.LoadGridXml(_datapathLevel);
 
@@ -801,18 +769,6 @@ public class Storage : MonoBehaviour {
             Storage.EventsUI.ListLogAdd = "##### LoadPathData";
             Storage.EventsUI.ListLogAdd = "##### LoadPathData not exist: " + _datapathLevel;
             Storage.EventsUI.ListLogAdd = "##### LoadPathData";
-        }
-
-        //_datapathPerson = Application.dataPath + "/Levels/PersonData" + Application.loadedLevel + ".xml";
-        _datapathPerson = Application.dataPath + "/Levels/PersonData.xml";
-        if (File.Exists(_datapathPerson))
-        {
-            var _personsData = Serializator.LoadPersonXml(_datapathPerson);
-            _StoragePerson.PersonsDataInit(_personsData);
-        }
-        else
-        {
-            Debug.Log("# LoadPathData not exist: " + _datapathPerson);
         }
     }
 

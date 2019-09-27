@@ -192,7 +192,7 @@ public class PlayerManager : MonoBehaviour {
     public void TeleportHero(int x , int y)
     {
         SavePosition(x, y);
-        LoadPositionHero();
+        LoadHeroAndObjects();
     }
 
     public void LoadPositionHero()
@@ -201,14 +201,22 @@ public class PlayerManager : MonoBehaviour {
         {
             Debug.Log("############## LoadPlayerData is empty");
         }
+        Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
+    }
 
+    public void LoadHeroAndObjects()
+    {
+        if (m_playerDataGame == null)
+        {
+            Debug.Log("############## LoadPlayerData is empty");
+        }
         //Debug.Log("Teleporting Hero....");
         Storage.Instance.StopGame();
         //Debug.Log("Teleporting Hero run test....1");
         Storage.PlayerController.transform.position = m_playerDataGame.SavePosition;
         //Debug.Log("Teleporting Hero run test....2");
         //Storage.PlayerController.FindFieldCurrent();
-            Storage.PlayerController.FindFieldCurrent(false);
+        Storage.PlayerController.FindFieldCurrent(false);
         //Debug.Log("Teleporting Hero run test....3");
         Storage.GenGrid.StartBuildBaseGridField(true);
         //Debug.Log("Teleporting Hero run test....4");

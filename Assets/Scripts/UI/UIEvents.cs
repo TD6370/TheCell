@@ -502,7 +502,7 @@ public class UIEvents : MonoBehaviour {
                 Storage.Player.SavePosition();
                 break;
             case "LoadPlayer":
-                Storage.Player.LoadPositionHero();
+                Storage.Player.LoadHeroAndObjects();
                 break;
             //case "LoadGridTiles":
             //    Storage.TilesManager.LoadGridTiles();
