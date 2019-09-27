@@ -53,6 +53,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d04d14a7e1b05ed44b357247e4b45954, type: 3}
   - {fileID: 21300000, guid: 5ac4e6d942ffc6c4984d7768604b6e70, type: 3}
   - {fileID: 21300000, guid: 47d6ce2a1d4e16343baee00822246e44, type: 3}
+  - {fileID: 21300000, guid: f1bea0ca06aadf74db0649ba0e90f45d, type: 3}
+  - {fileID: 21300000, guid: 8741c7cab78d5d343b5e236267fa8a9f, type: 3}
   - {fileID: 21300000, guid: c344c20b191c8364aaa004e1a16c6938, type: 3}
   - {fileID: 21300000, guid: 0122a14b984d4c243bf88ec83016bdf5, type: 3}
   - {fileID: 21300000, guid: 30aa72bbcb2065049b75df8e0fa16a41, type: 3}
@@ -90,6 +92,8 @@ SpriteAtlas:
   - InventCasePrefab
   - DiodsInv
   - ShampinionInv
+  - GrassMediumInv
+  - GrassSmallInv
   - CkubenInv
   - MaskInv
   - DendroidInv

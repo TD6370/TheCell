@@ -125,6 +125,12 @@ public class GameActionPersonController : MonoBehaviour
                 animationInfo = "\n Play : " + m_MeAnimation.CurrentAnimationPlay;
             }
 
+            string inventory = "";
+            if (DataAlien.Inventory != null)
+            {
+                inventory = "\n Inventory: " + DataAlien.Inventory.NameInventopyObject + "(" + DataAlien.Inventory.Count + ")";
+            }
+
             string actionList = "";
             foreach (var item in DataAlien.PersonActions)
             {
@@ -160,7 +166,8 @@ public class GameActionPersonController : MonoBehaviour
                 + "\nDistan : "
                 + distan
                 + "\nTarget : " + Helper.GetNameField(DataAlien.TargetPosition)
-                + TargetName;
+                + TargetName
+                + inventory;
             
             //string messageInfo = "TEST";
 
@@ -245,7 +252,7 @@ public class GameActionPersonController : MonoBehaviour
         }
         return ListPersonActions;
     }
-    public static NameActionsPerson GetCurrentAction(ModelNPC.PersonData dataNPC)
+    public static NameActionsPerson GetCurrentAction(ModelNPC.GameDataAlien dataNPC)
     {
         if(string.IsNullOrEmpty(dataNPC.CurrentAction))
         {
@@ -256,7 +263,7 @@ public class GameActionPersonController : MonoBehaviour
     }
     #endregion
 
-    public static void CheckNextAction(ModelNPC.PersonData dataNPC, NameActionsPerson p_actionPerson, GameActionPersonController controller)
+    public static void CheckNextAction(ModelNPC.GameDataAlien dataNPC, NameActionsPerson p_actionPerson, GameActionPersonController controller)
     {
         CheckCompletionActions(dataNPC, p_actionPerson, controller);
 
@@ -282,7 +289,7 @@ public class GameActionPersonController : MonoBehaviour
         }
     }
 
-    public static void CheckCompletionActions(ModelNPC.PersonData dataNPC, NameActionsPerson actionPerson, GameActionPersonController controller)
+    public static void CheckCompletionActions(ModelNPC.GameDataAlien dataNPC, NameActionsPerson actionPerson, GameActionPersonController controller)
     {
         //dleLock, Move, Target, TargetLocal, TargetBackToBase
         switch (actionPerson)
@@ -603,7 +610,7 @@ public class GameActionPersonController : MonoBehaviour
     //public bool IsLocked = false;
     //public string TempLockedTargetID;
 
-    public static void CheckComplitionMoveInDream(ModelNPC.PersonData dataNPC)
+    public static void CheckComplitionMoveInDream(ModelNPC.GameDataAlien dataNPC)
     {
         Vector3 newCurrentPosition = GetAlienData(dataNPC).Position;// .MovePosition;
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
@@ -616,7 +623,11 @@ public class GameActionPersonController : MonoBehaviour
 
         if (trueDist || trueField)
         {
-            RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
+            //@JOB@
+            if (AlienJobsManager.CheckJobAlien(dataNPC) == false)
+            {
+                RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
+            }
         }
     }
 

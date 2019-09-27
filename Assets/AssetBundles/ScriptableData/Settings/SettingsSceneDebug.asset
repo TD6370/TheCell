@@ -14,12 +14,12 @@ MonoBehaviour:
   IsShowTittlePerson: 0
   IsShowTittleInfoPerson: 1
   IsLog: 0
-  AutoRefreshOn: 0
+  AutoRefreshOn: 1
   RealDebugOn: 0
   SpeedMovePersonInDream: 1
   TimeRelax: 0
   TimeWorkAction: 1
-  TimeLimitResetNavigator: 1
+  TimeLimitResetNavigator: 31
   TimeRefreshDebugScene: 0.1
   IsClearTemplate: 0
   TimeClearTemplate: 10

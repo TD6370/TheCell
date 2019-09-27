@@ -132,18 +132,23 @@ public class UpdateData {
         {
             foreach (var item in ReaderScene.GetObjectsDataFromGrid(nameField))
             {
-                Storage.ReaderWorld.RemoveObject(item.Id);
+                Storage.ReaderWorld.RemoveObjectInfo(item.Id);
             }
         }
         ReaderScene.GetObjectsDataFromGrid(nameField).Clear();
     }
 
+    private List<ModelNPC.ObjectData> temp_objsDeletes;
+    private string temp_string = string.Empty;
     public void RemoveObjecDataGridByIndex(string nameField, int index)
     {
+        temp_objsDeletes = ReaderScene.GetObjectsDataFromGrid(nameField);
         if (Storage.Instance.ReaderSceneIsValid)
-            Storage.ReaderWorld.RemoveObject(ReaderScene.GetObjectsDataFromGrid(nameField)[index].Id);
-
-        ReaderScene.GetObjectsDataFromGrid(nameField).RemoveAt(index);
+        {
+            temp_string = temp_objsDeletes[index].Id;
+            Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+        }
+        temp_objsDeletes.RemoveAt(index);
     }
 
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc, bool isForce = false)
@@ -231,8 +236,8 @@ public class UpdateData {
 
     //public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false,
     public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc,
-         PaletteMapController.SelCheckOptDel p_TypeModeOptStartDelete = PaletteMapController.SelCheckOptDel.None,
-        PaletteMapController.SelCheckOptDel p_TypeModeOptStartCheck = PaletteMapController.SelCheckOptDel.None)
+         PaletteMapController.SelCheckOptDel p_modeDelete = PaletteMapController.SelCheckOptDel.None,
+        PaletteMapController.SelCheckOptDel p_modeCheck = PaletteMapController.SelCheckOptDel.None)
     {
         bool isLog = true;
 
@@ -240,7 +245,7 @@ public class UpdateData {
 
         if (isLog)
         {
-            Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_TypeModeOptStartDelete + " c: " + p_TypeModeOptStartCheck;  
+            Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_modeDelete + " c: " + p_modeCheck;  
         }
 
         ModelNPC.FieldData fieldData;
@@ -253,17 +258,17 @@ public class UpdateData {
         {
             fieldData = _GridDataG.FieldsD[nameField];
 
-            if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelFull)
+            if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelFull)
             { 
                 //if (!isDel)
                 //{
                 //if (isTestFilledField)
-                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelFull && p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelFull)
+                if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelFull && p_modeCheck == PaletteMapController.SelCheckOptDel.DelFull)
                     return false;
 
                 //if (isTestExistMeType)
-                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelType && 
-                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelType)
+                if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelType && 
+                    p_modeCheck == PaletteMapController.SelCheckOptDel.DelType)
                 {
                     var indTM = fieldData.Objects.FindIndex(p => p.TypePrefabName == objDataSave.TypePrefabName);
                     if (indTM != -1)
@@ -273,11 +278,12 @@ public class UpdateData {
                         return false;
                     }
                 }
-                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelPrefab && 
-                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelPrefab)
+                if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelPrefab && 
+                    p_modeCheck == PaletteMapController.SelCheckOptDel.DelPrefab)
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => p.TagObject.IsTerra());
-                    var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
+                    //var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
+                    var indTM = fieldData.Objects.FindIndex(p => !p.IsFloor());
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -285,11 +291,12 @@ public class UpdateData {
                         return false;
                     }
                 }
-                if (p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.DelTerra && 
-                    p_TypeModeOptStartCheck == PaletteMapController.SelCheckOptDel.DelTerra)
+                if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelTerra && 
+                    p_modeCheck == PaletteMapController.SelCheckOptDel.DelTerra)
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsTerra());
-                    var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
+                    //var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
+                    var indTM = fieldData.Objects.FindIndex(p => p.IsFloor());
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -300,7 +307,7 @@ public class UpdateData {
                 //}
                 //else
                 //{
-                if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelType)
+                if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelType)
                 {
                     var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
                     for(int i=ListRemove.Count -1; i>=0;i--)
@@ -311,9 +318,10 @@ public class UpdateData {
                         fieldData.Objects.Remove(ListRemove[i]);
                     }
                 }
-                else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
+                else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => !p.TypePrefabName.IsField()).ToList();
+                    //var ListRemove = fieldData.Objects.Where(p => !p.TypePrefabName.IsField()).ToList();
+                    var ListRemove = fieldData.Objects.Where(p => !p.IsFloor()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
@@ -322,9 +330,10 @@ public class UpdateData {
                         fieldData.Objects.Remove(ListRemove[i]);
                     }
                 }
-                else if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelTerra)
+                else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelTerra)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName.IsField()).ToList();
+                    //var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName.IsField()).ToList();
+                    var ListRemove = fieldData.Objects.Where(p => p.IsFloor()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
@@ -337,7 +346,7 @@ public class UpdateData {
             }
         }
 
-        if (p_TypeModeOptStartDelete == PaletteMapController.SelCheckOptDel.DelFull)
+        if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelFull)
         {
             if (isLog)
                 Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR FULL ";

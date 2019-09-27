@@ -142,7 +142,7 @@ public class SceneDebuger : MonoBehaviour {
 
     public void UpdateTargetDialog(CaseSceneDialogPerson caseDialog, SceneDialogPerson data, string modelViewTarget)
     {
-        Storage.EventsUI.ListLogAdd = "UpdateTargetDialog...........";
+        //Storage.EventsUI.ListLogAdd = "UpdateTargetDialog...........";
         caseDialog.ModelViewTarget = modelViewTarget;
         caseDialog.Activate(data, true);
     }

@@ -768,9 +768,16 @@ public class GenerateGridFields : MonoBehaviour {
             if (Storage.GenGrid.IsLoadOnlyField)
                 return;
 
+            //FIX#REAL
+            //if (Storage.Instance.IsLoadingWorld)
+            //    return;
+
             var keys = Storage.Instance.Fields.Select(p => p.Key).ToArray();
             //Debug.Log("______________________LoadObjectsNearHero__________________");
             //foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
+
+            //IsValidPiontInZonaCorr() --- //FIX#REAL
+
             foreach (var nameField in keys)
             {
                 //string nameField = field.Key;

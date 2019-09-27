@@ -524,6 +524,49 @@ public class GenericWorldManager : MonoBehaviour {
         }
     }
 
+    public static void ClearLayerObject(ModelNPC.ObjectData objData)
+    {
+        string field = string.Empty;
+        Helper.GetNameFieldByPosit(ref field, objData.Position);
+        if (string.IsNullOrEmpty(field)) {
+            Debug.Log("########## ClearLayerObject field is null");
+            return;
+        }
+       
+
+        bool isClearData = false;
+        if (objData.IsReality)
+        {
+            if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
+            {
+                var listObjs = Storage.Instance.GamesObjectsReal[field];
+
+                foreach (var obj in listObjs.ToArray())
+                {
+                    if (obj.name == objData.NameObject)
+                    {
+                        if (PoolGameObjects.IsUsePoolObjects)
+                        {
+                            obj.DisableComponents();
+                            Storage.Instance.DestroyFullObject(obj, isStopReal: false);
+                            isClearData = true;
+                        }
+                        else
+                        {
+                            Storage.Instance.AddDestroyGameObject(obj);
+                        }
+                    }
+                }
+            }
+        }
+        if (!isClearData)
+        {
+            if (Storage.Map.IsGridMap)
+                Storage.Map.CheckSector(field);
+            Storage.Data.RemoveDataObjectInGrid(objData);
+        }
+    }
+    
     #region Generic on Priority
 
     /*
@@ -1260,6 +1303,25 @@ public class GenericWorldManager : MonoBehaviour {
         }
     }
 
+    public ModelNPC.ObjectData GetCreatePrefab(SaveLoadData.TypePrefabs typePrefab, string nameField = "")
+    {
+        ModelNPC.ObjectData objDataSave;
+        string nameObject = "";
+        Vector2Int posField = Vector2Int.zero;
+        Helper.GetPositByField_Cache(ref posField, nameField);
+        //Helper.GetNameField_Cache(ref nameField, posX, posY);
+        Vector3 pos = new Vector3();
+        pos.x = posField.x * SaveLoadData.Spacing;
+        pos.y = (posField.y * (-1)) * SaveLoadData.Spacing;
+        pos.z = -1;
+
+        Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
+        objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
+        objDataSave.SetNameObject(nameObject);
+        objDataSave.Position = pos;
+        return objDataSave;
+    }
+
     public ModelNPC.ObjectData GenericPrefabOnWorld(SaveLoadData.TypePrefabs typePrefab, Vector3 pos)
     {
         string nameField = "";
@@ -1274,6 +1336,7 @@ public class GenericWorldManager : MonoBehaviour {
         Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
         return objDataSave;
     }
+    
 
     public ModelNPC.ObjectData GenericPrefabOnField(SaveLoadData.TypePrefabs typePrefab, int posX, int posY)
     {

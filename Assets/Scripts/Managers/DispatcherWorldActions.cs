@@ -299,7 +299,7 @@ public class DispatcherWorldActions : MonoBehaviour
 
     private void PersonWork(ReaderScene.DataObjectInfoID infoNPC, int count)
     {
-        var persData = infoNPC.Data as ModelNPC.PersonData;
+        var persData = infoNPC.Data as ModelNPC.GameDataAlien;
         if (persData == null || persData.IsReality)
             return;
 

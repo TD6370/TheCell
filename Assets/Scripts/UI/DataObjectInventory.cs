@@ -15,7 +15,10 @@ public class DataObjectInventory {
     {
         get
         {
-            if (Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), NameInventopyObject))
+            if(String.IsNullOrEmpty(NameInventopyObject))
+                return SaveLoadData.TypeInventoryObjects.None;
+
+            if (!Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), NameInventopyObject))
             {
                 Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + NameInventopyObject);
                 return SaveLoadData.TypeInventoryObjects.None;
@@ -31,19 +34,39 @@ public class DataObjectInventory {
         NameInventopyObject = nameObjectInventory;
         Count = m_count;
     }
+    public DataObjectInventory(DataObjectInventory inventry)
+    {
+        NameInventopyObject = inventry.NameInventopyObject;
+        Count = inventry.Count;
+    }
+    public static DataObjectInventory EmptyInventory()
+    {
+        return new DataObjectInventory(SaveLoadData.TypeInventoryObjects.None.ToString(), 0);
+    }
+
+    public void Clear()
+    {
+        NameInventopyObject = SaveLoadData.TypeInventoryObjects.None.ToString();
+        Count = 0;
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0} ({1})", NameInventopyObject, Count);
+    }
 }
 
 public static class InventoryExtension
 {
-    public static DataObjectInventory GetInventoryObject(this ModelNPC.ObjectData objData, ModelNPC.GameDataAlien alien = null)
+    public static DataObjectInventory LootObjectToInventory(this ModelNPC.ObjectData targetData, ModelNPC.GameDataAlien alien = null)
     {
-        if (Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), objData.TypePoolPrefabName))
+        if (!Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName))
         {
-            Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + objData.TypePoolPrefabName);
+            Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + targetData.TypePrefabName);
             return new DataObjectInventory();
         }
         int countResource = 1;
-        ModelNPC.TerraData terraRes = objData as ModelNPC.TerraData;
+        ModelNPC.TerraData terraRes = targetData as ModelNPC.TerraData;
         if (terraRes != null)
         {
             countResource = terraRes.BlockResources;
@@ -52,7 +75,25 @@ public static class InventoryExtension
                 terraRes.BlockResources -= alien.WorkPower; // or  WorkPower - is time work
             }
         }
-        SaveLoadData.TypeInventoryObjects invObject = (SaveLoadData.TypeInventoryObjects)Enum.Parse(typeof(SaveLoadData.TypeInventoryObjects), objData.TypePoolPrefabName);
+        SaveLoadData.TypeInventoryObjects invObject = (SaveLoadData.TypeInventoryObjects)Enum.Parse(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName);
+        return new DataObjectInventory(invObject.ToString(), countResource);
+    }
+
+    public static DataObjectInventory GetInventoryObject(this ModelNPC.ObjectData targetData)
+    {
+        if (!Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName))
+        {
+            Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + targetData.TypePrefabName);
+            return new DataObjectInventory();
+        }
+        
+        int countResource = 1;
+        ModelNPC.TerraData terraRes = targetData as ModelNPC.TerraData;
+        if (terraRes != null)
+        {
+            countResource = terraRes.BlockResources;
+        }
+        SaveLoadData.TypeInventoryObjects invObject = (SaveLoadData.TypeInventoryObjects)Enum.Parse(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName);
         return new DataObjectInventory(invObject.ToString(), countResource);
     }
 }

@@ -79,6 +79,50 @@ public class PortalController : MonoBehaviour {
         }
     }
 
+    void OnGUI()
+    {
+        if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
+        {
+            if (m_DataPortal == null)
+                return;
+
+            string objID = m_DataPortal.Id; // ModelView
+            if (objID == null)
+                return;
+
+            Color tittleColor = "#FFE881".ToColor();
+
+            string animationInfo = "\n Play : " + m_stateAnimation.ToString();
+            string resourcesList = "";
+            foreach (var item in m_DataPortal.Resources)
+            {
+                resourcesList += "\n" + item;
+            }
+            if (m_DataPortal.Resources.Count > 0)
+                resourcesList = "\n  Resources : " + resourcesList;
+
+            Color colorGreen = "#9FFF00".ToColor();
+            Color colorBlue = "#8BD6FF".ToColor();
+            Color colorOrange = "#FFD600".ToColor();
+            string messageInfo =
+                "BIOM  :" + m_DataPortal.TypeBiom
+                + animationInfo 
+                + resourcesList;
+
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 16;
+            style.fontStyle = FontStyle.Bold;
+            style.normal.textColor = tittleColor; // Color.yellow;
+
+            if (Camera.main == null)
+                return;
+
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            Rect positionRect = new Rect(screenPosition.x - 10, Screen.height - screenPosition.y - 200, 400, 100);
+            GUI.Label(positionRect, messageInfo, style);
+        }
+    }
+
     public void IncubationCompleted()
     {
         if (m_stateAnimation == AnimationState.Run)

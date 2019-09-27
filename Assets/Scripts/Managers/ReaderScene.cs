@@ -19,7 +19,19 @@ public class ReaderScene //: UpdateData
     public class DataObjectInfoID
     {
         DataObjectInfoID m_dataInfo;
-        public string Field { get; set; }
+
+        private string m_Field;
+        public string Field {
+            get {
+                if (string.IsNullOrEmpty(m_Field) && Data != null)
+                {
+                    Helper.GetNameFieldByPosit(ref m_Field, Data.Position);
+                }
+                return m_Field;
+            }
+            set {
+                m_Field = value; }
+        }
         public ModelNPC.ObjectData Data { get; set; }
         public GameObject Gobject { get; set; }
 
@@ -223,7 +235,7 @@ public class ReaderScene //: UpdateData
         CollectionInfoID[id].Field = newField;
     }
 
-    public void RemoveObject(string p_id)
+    public void RemoveObjectInfo(string p_id)
     {
         if (false == CheckCollectionInfoID(p_id))
         {

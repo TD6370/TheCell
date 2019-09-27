@@ -41,7 +41,7 @@ public static class AlienJobsManager
             string fieldAlien = string.Empty;
             string fieldTarget = string.Empty;
             Helper.GetNameFieldByPosit(ref fieldAlien, p_dataNPC.Position);
-            SaveLoadData.TypePrefabs invObj = job.ResourceResult;
+            SaveLoadData.TypePrefabs jobResourceTarget = job.TargetResource;
             //Target object
             ReaderScene.DataObjectInfoID targetInfo = ReaderScene.GetInfoID(p_dataNPC.TargetID);
             if (targetInfo != null)
@@ -50,34 +50,62 @@ public static class AlienJobsManager
                 int distField = 0;
                 Helper.GetDistatntionFields(ref distField, targetInfo.Data.Position, p_dataNPC.Position);
                 Helper.GetNameFieldByPosit(ref fieldTarget, targetInfo.Data.Position);
-                
-                
+
+                ModelNPC.PortalData portal = targetInfo.Data as ModelNPC.PortalData;
                 if (distField<2)
                 {
-                    //Test job on target //@JOB@
-                    if (targetInfo.Data.TypePrefab == invObj)
+                    
+                    if (portal != null)
                     {
-                        if (targetInfo.Data is ModelNPC.PortalData)
+                        if (p_dataNPC.Inventory != null)
                         {
                             //***** Back to HOME **** (trget is Portal)
                             //p_dataNPC.InventoryObject is ModelNPC;
-                            Storage.Portals.AddResource(targetInfo.Data as ModelNPC.PortalData, p_dataNPC.Inventory);
+                            Storage.Portals.AddResourceFromAlien(portal, p_dataNPC);
                         }
                         else
+                        {
+                            p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
+                            Debug.Log(Storage.EventsUI.ListLogAdd = "JOB: dataNPC.Inventory is null");
+                        }
+
+                        //End job
+                        p_dataNPC.Job = null;
+                        p_dataNPC.TargetID = string.Empty;
+                        p_dataNPC.TargetPosition = Vector3.zero;
+                    }
+                    else
+                    {
+                        //Test job on target //@JOB@
+                        if (targetInfo.Data.TypePrefab == jobResourceTarget)
                         {
                             // **** FIND RESOURCE ****
                             //---Replace object
                             //1. Remove resource
                             //Storage.Data.RemoveDataObjectInGrid(fieldTarget, -1, "CheckJobAlien", dataObjDel: targetInfo.Data);
                             Vector3 posTarget = targetInfo.Data.Position;
-                            Storage.Data.RemoveDataObjectInGrid(targetInfo.Data);
+                            //Storage.Data.RemoveDataObjectInGrid(targetInfo.Data);
+                            //GenericWorldManager.ClearLayerForStructure(targetInfo.Field, true);
+                            GenericWorldManager.ClearLayerObject(targetInfo.Data);
                             //2. Create new resource
                             if (job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
                             {
-                                Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
+                                //Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
+                                ModelNPC.ObjectData spawnObject = Storage.GenWorld.GetCreatePrefab(job.ResourceResult, targetInfo.Field);
+                                bool isSpawned = Storage.Data.AddDataObjectInGrid(spawnObject, 
+                                                    targetInfo.Field, "CheckJobAlien", 
+                                                    p_modeDelete: PaletteMapController.SelCheckOptDel.None, 
+                                                    p_modeCheck: PaletteMapController.SelCheckOptDel.DelTerra);
+                                if (!isSpawned)
+                                    Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB: Not Spawn " + spawnObject.NameObject);
                             }
+                            bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
+                            //if (!targetInfo.Data.IsReality && isZonaReal)
+                            if (isZonaReal)
+                                Storage.GenGrid.LoadObjectToReal(targetInfo.Field);
+
                             //3. Add resource in Inventory
-                            p_dataNPC.Inventory = targetInfo.Data.GetInventoryObject(p_dataNPC);
+                            p_dataNPC.Inventory = targetInfo.Data.LootObjectToInventory(p_dataNPC);
                             //4. Set target to target location
                             if (job.JobTo == TypesJobTo.ToPortal)
                             {

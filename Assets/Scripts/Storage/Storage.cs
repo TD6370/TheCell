@@ -591,7 +591,7 @@ public class Storage : MonoBehaviour {
 
         LoadData();
 
-        LoadGameObjects(true);
+        LoadGameObjects(true, isStartGameLoad: true);
 
         IsLoadingWorld = false;
     }
@@ -663,7 +663,7 @@ public class Storage : MonoBehaviour {
         LoadGameObjects(true, true, isGenNewWorld);
     }
 
-    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false, bool isGenNewWorld = false)
+    public void LoadGameObjects(bool isLoadRealtime = false, bool isCreate = false, bool isGenNewWorld = false, bool isStartGameLoad = false)
     {
         Debug.Log("III LoadGameObjects ::::_______________");
 
@@ -688,10 +688,36 @@ public class Storage : MonoBehaviour {
             StartCoroutine(StartFindLookObjects());
         else
         {
-            //Debug.Log("III ....Init LoadObjectsNearHero ......");
-            _scriptGrid.LoadObjectsNearHero();
-            //Debug.Log("III ....Sart Crate NPC......");
-            //_scriptNPC.SartCrateNPC();
+            //FIX#REAL
+            //Storage.Player.SetHeroPosition(posX, posY, transform.position.x, transform.position.y);
+            //public static bool IsValidPiontInZonaCorr(float x, float y)
+            //{
+            //    bool result = true;
+            //    int corr = 2;
+
+            //    if (x + corr < Storage.Instance.ZonaReal.X)
+            //        return false;
+            //    if (y - corr > Storage.Instance.ZonaReal.Y) //*-1
+            //        return false;
+            //    if (x - corr > Storage.Instance.ZonaReal.X2)
+            //        return false;
+            //    if (y + corr < Storage.Instance.ZonaReal.Y2) //*-1
+            //        return false;
+            //    return result;
+            //}
+            //var r = ZonaReal.X;
+            //var r2 = ZonaReal.X2;
+            //var r3 = ZonaReal.Y;
+            //var r4 = ZonaReal.Y2;
+
+            //if (Person.PersonsData != null && ZonaReal != null)
+            //{
+                //Debug.Log("III ....Init LoadObjectsNearHero ......");
+            if(!isStartGameLoad)
+                _scriptGrid.LoadObjectsNearHero();
+                //Debug.Log("III ....Sart Crate NPC......");
+                //_scriptNPC.SartCrateNPC();
+            //}
         }
 
         Map.RefreshFull();
@@ -1000,7 +1026,7 @@ public class Storage : MonoBehaviour {
     }
 
     //@DESTROY@
-    public bool DestroyFullObject(GameObject gObj, bool isCorrect = false)
+    public bool DestroyFullObject(GameObject gObj, bool isCorrect = false, bool isStopReal = false) //???? isStopReal
     {
         if (gObj == null)
         {
@@ -1017,42 +1043,47 @@ public class Storage : MonoBehaviour {
         if (nameField == null)
             return false;
 
-        ReaderWorld.RemoveObject(setName.GetID());
+        ReaderWorld.RemoveObjectInfo(setName.GetID());
 
+        bool isExistReal = true;
         //#FIX
         if (!_GamesObjectsReal.ContainsKey(nameField))
         {
-            Debug.Log("####### DestroyFullObject not field : " + nameField);
-            return false;
-        }
-
-        List<GameObject> listObjInField = _GamesObjectsReal[nameField];
-
-        for (int i = listObjInField.Count - 1; i >= 0; i--)
-        {
-            if (listObjInField[i] == null)
+            isExistReal = false;
+            if (isStopReal)
             {
-                _UpdateData.RemoveRealObject(i, nameField, "DestroyRealObject");
+                Debug.Log("####### DestroyFullObject not field : " + nameField);
+                return false;
             }
         }
-        if (listObjInField.Count > 0)
+        if (isExistReal)
         {
-            int indRealData = listObjInField.FindIndex(p => p.name == setName);
-            if (indRealData == -1)
+            List<GameObject> listObjInField = _GamesObjectsReal[nameField];
+
+            for (int i = listObjInField.Count - 1; i >= 0; i--)
             {
-                Debug.Log("+++ ------  DestroyFullObject: ------  Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+                if (listObjInField[i] == null)
+                {
+                    _UpdateData.RemoveRealObject(i, nameField, "DestroyRealObject");
+                }
             }
-            else
+            if (listObjInField.Count > 0)
             {
-                _UpdateData.RemoveRealObject(indRealData, nameField, "DestroyRealObject");
+                int indRealData = listObjInField.FindIndex(p => p.name == setName);
+                if (indRealData == -1)
+                {
+                    Debug.Log("+++ ------  DestroyFullObject: ------  Hero destroy >>> Not find GamesObjectsReal : " + gObj.name);
+                }
+                else
+                {
+                    _UpdateData.RemoveRealObject(indRealData, nameField, "DestroyRealObject");
+                }
             }
         }
 
         bool isDestroyOnBild = false;
         if (gObj != null)
         {
-            //if (gObj != null)
-            //    Debug.Log("%%%%%%%%%%%%%%%%%%%%%%%%%%%  DestroyFullObject " + gObj.name);
             if (PoolGameObjects.IsUsePoolObjects)
             {
                 var evObj = gObj.GetComponent<EventsObject>();
@@ -1091,19 +1122,19 @@ public class Storage : MonoBehaviour {
         int indObj = dataObjects.FindIndex(p => p.NameObject == gObj.name);
         if (!isCorrect)
         {
-            if (indObj == -1)
+            if (indObj != -1)
             {
-                if(!isDestroyOnBild)
-                { 
+                //Destroy to Data
+                _UpdateData.RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
+            }
+            else
+            {
+                if (!isDestroyOnBild)
+                {
                     Debug.Log("!!!! ObjectData GridData not object=" + gObj.name);
                     //RemoveAllFindRealObject(gObj.name);
                     _UpdateData.RemoveAllFindDataObject(gObj.name);
                 }
-            }
-            else
-            {
-                //@DD@ dataObjects.RemoveAt(indObj);
-                _UpdateData.RemoveDataObjectInGrid(nameField, indObj, "DestroyRealObject");
             }
         }
         else

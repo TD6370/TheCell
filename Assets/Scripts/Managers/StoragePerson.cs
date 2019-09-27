@@ -814,7 +814,8 @@ public class StoragePerson : MonoBehaviour {
         }
 
         m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
-        int distantionFind = UnityEngine.Random.Range(2, 15);
+        //int distantionFind = UnityEngine.Random.Range(2, 15);
+        int distantionFind = UnityEngine.Random.Range(2, 100);
 
         //v.1
         if (versionSearching == 1)
@@ -823,14 +824,21 @@ public class StoragePerson : MonoBehaviour {
             Helper.FindFromLocation_Cache(ref result, dataAlien, distantionFind);
         else //v.3
         {
-            if (job != null)
+            //fix job
+            bool isCompletedMission = job != null &&
+                dataAlien.Inventory != null && 
+                dataAlien.Inventory.NameInventopyObject == job.TargetResource.ToString();
+
+            if (job != null) 
             {
                 switch(job.JobTo)
                 { 
                     case TypesJobTo.ToPortal:
-                        var info = ReaderScene.GetInfoID(dataAlien.PortalId);
-                        if (info != null)
-                            result = info.Data;
+                        if (isCompletedMission) {
+                            var info = ReaderScene.GetInfoID(dataAlien.PortalId);
+                            if (info != null)
+                                result = info.Data;
+                        }
                         break;
                     default:
                         job = null;
@@ -869,10 +877,11 @@ public class StoragePerson : MonoBehaviour {
         foreach (Vector2Int fieldNext in findedFileds)
         {
             Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
-            resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
-            foreach(ModelNPC.ObjectData resoursData in resourcesData)
+            //resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
+            resourcesData = ReaderScene.GetObjectsDataFromGridTest(nameField);
+            foreach (ModelNPC.ObjectData resoursData in resourcesData)
             {
-                key = string.Format("{0}_{0}", resoursData.TypePrefabName, dataAien.TypePrefabName);
+                key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
                 AlienToResourceJobsJoins.TryGetValue(key, out job);
                 if(job != null)
                 {

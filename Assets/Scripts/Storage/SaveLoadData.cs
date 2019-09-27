@@ -728,6 +728,9 @@ public class SaveLoadData : MonoBehaviour {
         //GrassInv,
 
         Coldfusion,
+        GrassSmall,
+        GrassMedium,
+        Grass,
     }
 
     private void Awake()
