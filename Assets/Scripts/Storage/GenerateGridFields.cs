@@ -348,7 +348,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                     }
                     //fix @KOSTIL@
-                    listDataObjectInField.RemoveAt(i); ////!@#$
+                    Storage.Data.RemoveObjecDataGridByIndex(ref listDataObjectInField, i);
                     continue;
                 }
                 //--------------

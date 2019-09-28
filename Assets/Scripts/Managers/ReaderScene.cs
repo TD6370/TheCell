@@ -120,6 +120,22 @@ public class ReaderScene //: UpdateData
         return result;
     }
 
+    public static List<ModelNPC.ObjectData> GetFieldsByID(string id)
+    {
+        if (id == null ||
+            false == Storage.Instance.ReaderSceneIsValid ||
+            Storage.ReaderWorld.CollectionInfoID == null &&
+            Storage.ReaderWorld.CollectionInfoID.Count == 0)
+            return null;
+        DataObjectInfoID result;
+        Storage.ReaderWorld.CollectionInfoID.TryGetValue(id, out result);
+        if (result != null)
+            return GetObjectsDataFromGridTest(result.Field);
+
+        return new List<ModelNPC.ObjectData>();
+    }
+
+
     public void InitCollectionID()
     {
         string message = "   Init CollectionID...";
@@ -192,6 +208,25 @@ public class ReaderScene //: UpdateData
         //TEST
         //UpdateFix(id, newData);
     }
+
+  public void UpdateLinkData(ModelNPC.ObjectData newData, string newField)
+    {
+        if (newData == null || newData.NameObject == null)
+        {
+            //Debug.Log("### UpdateLinkGobject.newData is null");
+            return;
+        }
+        string id = GetDataID(newData);
+        if (false == CheckCollectionInfoID(id))
+            return;
+
+        //newData = UpdateFix(newData);
+        CollectionInfoID[id].Data = newData;
+        CollectionInfoID[id].Field = newField;
+        //TEST
+        //UpdateFix(id, newData);
+    }
+
 
     private void UpdateFix(string id, ModelNPC.ObjectData newData)
     {

@@ -44,9 +44,10 @@ public static class AlienJobsManager
             SaveLoadData.TypePrefabs jobResourceTarget = job.TargetResource;
             //Target object
             ReaderScene.DataObjectInfoID targetInfo = ReaderScene.GetInfoID(p_dataNPC.TargetID);
+            
             if (targetInfo != null)
             {
-                
+                              
                 int distField = 0;
                 Helper.GetDistatntionFields(ref distField, targetInfo.Data.Position, p_dataNPC.Position);
                 Helper.GetNameFieldByPosit(ref fieldTarget, targetInfo.Data.Position);
@@ -66,7 +67,7 @@ public static class AlienJobsManager
                         else
                         {
                             p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
-                            Debug.Log(Storage.EventsUI.ListLogAdd = "JOB: dataNPC.Inventory is null");
+                            Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: dataNPC.Inventory is null");
                         }
 
                         //End job
@@ -79,6 +80,17 @@ public static class AlienJobsManager
                         //Test job on target //@JOB@
                         if (targetInfo.Data.TypePrefab == jobResourceTarget)
                         {
+                            //------ test ----------
+                            if (string.IsNullOrEmpty(targetInfo.ID))
+                            {
+                                Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: ReaderScene.DataObjectInfoID targetInfo is null");
+                            }
+                            else
+                            {
+                                var objsTest = ReaderScene.GetFieldsByID(targetInfo.ID);
+                            }
+                            //--------------
+
                             // **** FIND RESOURCE ****
                             //---Replace object
                             //1. Remove resource

@@ -968,12 +968,7 @@ public class MapWorld : MonoBehaviour {
         GameObject gobjCell = GameObject.Find(name);
         if(gobjCell!=null)
             Destroy(gobjCell);
-        //var destroyObjs = m_listCellsGridMap.Where(p=> p == null).ToList();
-        //for (int i = 0; i < destroyObjs.Count() ; i++)
-        //{
-        //    m_listCellsGridMap.Remove(destroyObjs[i]);
-        //}
-
+   
         int destroyObjsIndex = m_listCellsGridMap.FindIndex(p => p == null);
         if(destroyObjsIndex!=-1)
             m_listCellsGridMap.RemoveAt(destroyObjsIndex);

@@ -501,7 +501,13 @@ public class StoragePerson : MonoBehaviour {
         Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
 
         if (index != -1)
+        {
+            if (Storage.Instance.ReaderSceneIsValid)
+            {
+                Storage.ReaderWorld.RemoveObjectInfo(objectsData[index].Id);
+            }
             objectsData.RemoveAt(index);
+        }
 
         Storage.ReaderWorld.UpdateField(dataNPC, fieldNew);
     }
@@ -769,7 +775,9 @@ public class StoragePerson : MonoBehaviour {
         }
 
         //remove
-        dataObjectsOldField.RemoveAt(testIndData);
+        //dataObjectsOldField.RemoveAt(testIndData); //FIX**DELETE
+        Storage.Data.RemoveObjecDataGridByIndex(ref dataObjectsOldField, testIndData);
+        //Storage.Data.RemoveObjecDataGridByIndex(p_OldField, testIndData);
         realObjectsOldField.RemoveAt(indReal);
 
         Storage.Data.UpdatingLocationPersonLocal--;

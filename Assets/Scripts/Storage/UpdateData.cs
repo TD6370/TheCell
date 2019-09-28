@@ -151,6 +151,19 @@ public class UpdateData {
         temp_objsDeletes.RemoveAt(index);
     }
 
+    public void RemoveObjecDataGridByIndex(ref List<ModelNPC.ObjectData> objects, int index)
+    {
+        if (Storage.Instance.ReaderSceneIsValid)
+        {
+            //TRANSFER
+            temp_string = objects[index].Id;
+            //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+            //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+        }
+        objects.RemoveAt(index);
+    }
+
+
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc, bool isForce = false)
     {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = newField };
@@ -166,6 +179,11 @@ public class UpdateData {
 
         if(Storage.Map.IsGridMap)
             Storage.Map.CheckSector(newField);
+
+        //if (Storage.Instance.ReaderSceneIsValid)
+        //{
+        //    Storage.ReaderWorld.UpdateLinkData(fieldData, fieldData.NameField); //FIX**DELETE
+        //}
 
         return fieldData;
     }
@@ -221,8 +239,11 @@ public class UpdateData {
 
         fieldData.Objects.Add(objDataSave);
 
-        if(Storage.Instance.ReaderSceneIsValid)
-            Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
+        if (Storage.Instance.ReaderSceneIsValid)
+        {
+            //Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
+            Storage.ReaderWorld.UpdateLinkData(objDataSave, fieldData.NameField); //FIX**DELETE
+        }
 
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
@@ -316,6 +337,11 @@ public class UpdateData {
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR type";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
+                        if (Storage.Instance.ReaderSceneIsValid)
+                        {
+                            temp_string = ListRemove[i].Id;
+                            Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+                        }
                     }
                 }
                 else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
@@ -328,6 +354,11 @@ public class UpdateData {
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
+                        if (Storage.Instance.ReaderSceneIsValid)
+                        {
+                            temp_string = ListRemove[i].Id;
+                            Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+                        }
                     }
                 }
                 else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelTerra)
@@ -340,6 +371,11 @@ public class UpdateData {
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
+                        if (Storage.Instance.ReaderSceneIsValid)
+                        {
+                            temp_string = ListRemove[i].Id;
+                            Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+                        }
                     }
                 }
 
@@ -438,7 +474,13 @@ public class UpdateData {
         if (dataObjDel != null )
         {
             Helper.GetNameFieldByPosit(ref nameField, dataObjDel.Position);
-            index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            //---------- test ------
+            var objs = ReaderScene.GetObjectsDataFromGrid(nameField);
+            index = objs.FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            //---------------------
+            //index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            //---------------------
+
             if (index == -1)
             {
                 Debug.Log("###################### RemoveDataObjectInGrid    Data Del: " + dataObjDel.NameObject + "     Data Find: " + dataObjDel.NameObject + "  ... NOT find in Field: " + nameField);
