@@ -44,10 +44,10 @@ public static class AlienJobsManager
             SaveLoadData.TypePrefabs jobResourceTarget = job.TargetResource;
             //Target object
             ReaderScene.DataObjectInfoID targetInfo = ReaderScene.GetInfoID(p_dataNPC.TargetID);
-            
             if (targetInfo != null)
             {
-                              
+                targetInfo.TestIsValud(); //FIX**DELETE
+
                 int distField = 0;
                 Helper.GetDistatntionFields(ref distField, targetInfo.Data.Position, p_dataNPC.Position);
                 Helper.GetNameFieldByPosit(ref fieldTarget, targetInfo.Data.Position);
@@ -88,6 +88,11 @@ public static class AlienJobsManager
                             else
                             {
                                 var objsTest = ReaderScene.GetFieldsByID(targetInfo.ID);
+                                if (objsTest.Count == 0)
+                                {
+                                    targetInfo.TestIsValud();
+                                    return false;
+                                }
                             }
                             //--------------
 

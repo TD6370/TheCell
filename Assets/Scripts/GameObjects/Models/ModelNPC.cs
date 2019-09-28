@@ -96,23 +96,25 @@ public partial class ModelNPC
             //    Storage.ReaderWorld.UpdateLinkData(this);
         }
 
-        public virtual void SetPosition(Vector3 newPosition)
+        public virtual void SetPosition(Vector3 newPosition, bool beforeUpdateField = false)
         {
             Position = new Vector3(newPosition.x, newPosition.y, Position.z);
-            if (Storage.Instance.ReaderSceneIsValid)
+            if (!beforeUpdateField)
             {
-                //Storage.ReaderWorld.UpdateLinkData(this);
-                string meField = Helper.GetNameFieldPosit(Position.x, Position.y);
-                Storage.ReaderWorld.UpdateField(this, meField);
+                if (Storage.Instance.ReaderSceneIsValid)
+                {
+                    //Storage.ReaderWorld.UpdateLinkData(this);
+                    string meField = Helper.GetNameFieldPosit(Position.x, Position.y);
+                    Storage.ReaderWorld.UpdateField(this, meField);
+                }
             }
-            
         }
 
-        public virtual void SetNameObject(string newNameObject)
+        public virtual void SetNameObject(string newNameObject, bool isGeneric = false)
         {
             NameObject = newNameObject;
             if (Storage.Instance.ReaderSceneIsValid)
-                Storage.ReaderWorld.UpdateLinkData(this);
+                Storage.ReaderWorld.UpdateLinkData(this, isGeneric);
             //CreateID(NameObject);
 
             if (Id == null)

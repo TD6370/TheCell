@@ -106,6 +106,8 @@ public class SceneDebuger : MonoBehaviour {
                 Debug.Log(Storage.EventsUI.ListLogAdd = "#### FillDialogsFromData -- data is EMPTY");
                 break;
             }
+            if (data.Data == null)
+                return; //fix null:Data
 
             CaseSceneDialogPerson caseDialog = GetFreeDialog(data);
             if(caseDialog == null)
@@ -142,6 +144,9 @@ public class SceneDebuger : MonoBehaviour {
 
     public void UpdateTargetDialog(CaseSceneDialogPerson caseDialog, SceneDialogPerson data, string modelViewTarget)
     {
+        if (data.Data == null)
+            return; //fix null:Data
+
         //Storage.EventsUI.ListLogAdd = "UpdateTargetDialog...........";
         caseDialog.ModelViewTarget = modelViewTarget;
         caseDialog.Activate(data, true);
@@ -268,28 +273,31 @@ public class SceneDebuger : MonoBehaviour {
             Person = p_Data;
             if (Dialog != null)
             {
-                if(isTarget)
-                    Dialog.transform.position = p_Data.TargetPosition;
-                else
-                    Dialog.transform.position = p_Data.Position;
+                if (Person.Data != null)
+                {
+                    if (isTarget)
+                        Dialog.transform.position = p_Data.TargetPosition;
+                    else
+                        Dialog.transform.position = p_Data.Position;
 
 
-                Dialog.SetActive(true);
-                if (isTarget)
-                    Dialog.name = "Dialog_Target_" + ModelViewTarget + "_" + p_Data.NameObject;
-                else
-                    Dialog.name = "Dialog_" + p_Data.NameObject;
-
-                //if (m_dialogView == null)
+                    Dialog.SetActive(true);
+                    if (isTarget)
+                        Dialog.name = "Dialog_Target_" + ModelViewTarget + "_" + p_Data.NameObject;
+                    else
+                        Dialog.name = "Dialog_" + p_Data.NameObject;
+                
+                    //if (m_dialogView == null)
                     m_dialogView = Dialog.GetComponent<DialogSceneInfo>();
 
-                ModeInfo = isTarget ? DialogSceneInfo.ModeInfo.Target : DialogSceneInfo.ModeInfo.Person;
-                m_dialogView.DialogModelViewTarget = ModelViewTarget;
-                //IsLock = true;
-                m_dialogView.InitDialogView(this, ModeInfo);
+                    ModeInfo = isTarget ? DialogSceneInfo.ModeInfo.Target : DialogSceneInfo.ModeInfo.Person;
+                    m_dialogView.DialogModelViewTarget = ModelViewTarget;
+                    //IsLock = true;
+                    m_dialogView.InitDialogView(this, ModeInfo);
+                }
             }
             else{
-                Debug.Log("######### CaseSceneDialogPerson Dialog is NULL");
+                Debug.Log("######### CaseSceneDialogPerson Dialog is NULL"); 
             }
             TimeCreate = Time.time;
             //IsLock = true;

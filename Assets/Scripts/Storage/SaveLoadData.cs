@@ -1102,10 +1102,10 @@ public class SaveLoadData : MonoBehaviour {
         objDataSave.CreateID(nameObject);
         string typePool = objDataSave.TypePoolPrefabName; //test
 
-        objDataSave.SetNameObject(nameObject);
+        objDataSave.SetNameObject(nameObject, true);
         //objDataSave.TagObject = prefabName.ToString(); //@del
         //objDataSave.Position = pos;
-        objDataSave.SetPosition(pos);//###ERR
+        //objDataSave.SetPosition(pos); //FIX**DELETE *1
 
         if (PoolGameObjects.IsUseTypePoolPrefabs)
         {
@@ -1151,8 +1151,11 @@ public class SaveLoadData : MonoBehaviour {
             }
         }
 
-        return Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
+        bool res = Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
+
+        objDataSave.SetPosition(pos); //FIX**DELETE *1
+        return res;
     }
 
     public void ClearWorld(bool isSync = false)

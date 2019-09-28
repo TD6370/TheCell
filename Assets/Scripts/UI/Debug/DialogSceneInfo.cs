@@ -152,15 +152,20 @@ public class DialogSceneInfo : MonoBehaviour {
                     {
                         Sprite spriteTarget = Storage.Palette.SpritesPrefabs[modelViewTarget];
                         DialogIconTarget.GetComponent<SpriteRenderer>().sprite = spriteTarget;
-
-                        if (CaseDialogTarget != null && CaseDialogTarget.IsLock && CaseDialogTarget.Person != null && CaseDialogTarget.Person.ID == p_caseDialogPerson.Person.ID)
+                        if (p_caseDialogPerson.Person.Data != null)
                         {
-                            Storage.SceneDebug.UpdateTargetDialog(CaseDialogTarget, p_caseDialogPerson.Person, modelViewTarget);
-                        }
-                        else
-                            CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
+                            if (CaseDialogTarget != null && CaseDialogTarget.IsLock && CaseDialogTarget.Person != null && CaseDialogTarget.Person.ID == p_caseDialogPerson.Person.ID)
+                            {
+                                Storage.SceneDebug.UpdateTargetDialog(CaseDialogTarget, p_caseDialogPerson.Person, modelViewTarget);
+                            }
+                            else
+                                CaseDialogTarget = Storage.SceneDebug.CreateTargetDialog(p_caseDialogPerson.Person, modelViewTarget);
 
-                        DrawRayTarget(); //!!!!!!!!!!!!!!!!!!!!!!
+                            DrawRayTarget(); //!!!!!!!!!!!!!!!!!!!!!!
+                        }
+                        else {
+                            Debug.Log(Storage.EventsUI.ListLogAdd = "#### InitDialogView Not found p_caseDialogPerson.Person.Data is null >> " + p_caseDialogPerson.Person.ID);
+                        }
                         break;
                     }
                 }

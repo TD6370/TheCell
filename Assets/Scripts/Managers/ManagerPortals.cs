@@ -158,6 +158,11 @@ public class ManagerPortals : MonoBehaviour
                 continue;
             }
             yield return null;
+            if(Portals == null && Portals.Count == 0)
+            {
+                yield return new WaitForSeconds(timeWait * 3);
+                continue;
+            }
 
             CurrentPortal = Portals[CurrentIndex];
 
@@ -200,7 +205,7 @@ public class ManagerPortals : MonoBehaviour
             Storage.EventsUI.ListLogAdd = "PortalWork....";
             Storage.EventsUI.SetMessageBox = "PortalWork....";
 
-            for (int i = p_portal.Resources.Count() - 1; i > 0; i--)  //!!!!!!!!!!!!!!!!
+            for (int i = p_portal.Resources.Count() - 1; i >= 0; i--) 
             {
                 m_resourceNext = p_portal.Resources[i];
                 m_listResourceWork = ResourcesFabrications[p_portal.TypeBiom];

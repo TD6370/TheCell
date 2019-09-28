@@ -999,7 +999,7 @@ public class Storage : MonoBehaviour {
         if (nameField == null)
             return false;
 
-        ReaderWorld.RemoveObjectInfo(setName.GetID());
+        //ReaderWorld.RemoveObjectInfo(setName.GetID()); ////FIX**DELETE - dublicate
 
         bool isExistReal = true;
         //#FIX

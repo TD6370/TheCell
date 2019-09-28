@@ -496,9 +496,10 @@ public class StoragePerson : MonoBehaviour {
 
         string nameObject = Helper.CreateName(dataNPC.TypePrefabName, fieldNew, "", dataNPC.NameObject);
         dataNPC.SetNameObject(nameObject);
-        dataNPC.SetPosition(newPosition);
+        //dataNPC.SetPosition(newPosition);
 
         Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
+        dataNPC.SetPosition(newPosition); //FIX**DELETE
 
         if (index != -1)
         {
@@ -745,7 +746,7 @@ public class StoragePerson : MonoBehaviour {
         }
 
         //objData.Position = gobj.transform.position;
-        objData.SetPosition(gobj.transform.position);//###ERR
+        //objData.SetPosition(gobj.transform.position);//###ERR  *1
 
         if (isDestroy)
             objData.IsReality = false;
@@ -758,9 +759,11 @@ public class StoragePerson : MonoBehaviour {
         bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
         if (!resAddData)
         {
+            Debug.Log("####### FIX**DELETE");
             Storage.Data.UpdatingLocationPersonLocal--;
             return "";
         }
+        objData.SetPosition(gobj.transform.position);//FIX**DELETE *1
 
         //add
         if (!isDestroy)

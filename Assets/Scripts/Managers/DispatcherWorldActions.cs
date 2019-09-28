@@ -86,8 +86,10 @@ public class DispatcherWorldActions : MonoBehaviour
     public class CaseDreamWorker
     {
         //private float timePause = 2f;
-        private float _timeWorkAction  {
-            get {
+        private float _timeWorkAction
+        {
+            get
+            {
                 return Storage.SceneDebug.SettingsScene.TimeWorkAction;
             }
         }
@@ -98,10 +100,11 @@ public class DispatcherWorldActions : MonoBehaviour
         private float _timeStartDreamWork;
         public float TimeStartDreamWork { get { return _timeStartDreamWork; } }
 
-        public CaseDreamWorker(string p_id, float p_timeCreate) {
+        public CaseDreamWorker(string p_id, float p_timeCreate)
+        {
             _timeStartDreamWork = p_timeCreate;
             _id = p_id;
-         }
+        }
         public CaseDreamWorker(string p_id)
         {
             _timeStartDreamWork = Time.time + _timeWorkAction;
@@ -113,7 +116,29 @@ public class DispatcherWorldActions : MonoBehaviour
         }
     }
 
-    
+    //public struct CaseDreamWorker
+    //{
+    //    private string _id;
+    //    public string ID { get { return _id; } }
+
+    //    private float _timeStartDreamWork;
+    //    public float TimeStartDreamWork { get { return _timeStartDreamWork; } }
+
+    //    public CaseDreamWorker(string p_id, float p_timeCreate)
+    //    {
+    //        _timeStartDreamWork = p_timeCreate;
+    //        _id = p_id;
+    //    }
+    //    public CaseDreamWorker(string p_id)
+    //    {
+    //        _timeStartDreamWork = Time.time + Storage.SceneDebug.SettingsScene.TimeWorkAction;
+    //        _id = p_id;
+    //    }
+    //    public void NextTimeWorker()
+    //    {
+    //        _timeStartDreamWork = Time.time + Storage.SceneDebug.SettingsScene.TimeWorkAction;
+    //    }
+    //}
 
     IEnumerator NavigatorWorldScene()
     {
