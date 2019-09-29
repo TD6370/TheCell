@@ -763,12 +763,13 @@ public class GameActionPersonController : MonoBehaviour
             fieldOld = fieldOld_Name;
         }
 
-        if (fieldOld != fieldNew)
+        if (fieldOld != fieldNew) // 2* - test
         {
             Storage.Person.UpdateGamePositionInDream(fieldOld, fieldNew, dataNPC, newPosition);
         }
         else
         {
+            //dataNPC.SetPosition(newPosition, isTestValid: false); // 2*
             dataNPC.SetPosition(newPosition);
         }
     }

@@ -172,6 +172,12 @@ public class ManagerPortals : MonoBehaviour
                 yield return new WaitForSeconds(timeWait * 2);
                 continue;
             }
+            if (CurrentPortal.Id == null)
+            {
+                Debug.Log("######### DispatcherPortals.CurrentPortal ID is null");
+                yield return new WaitForSeconds(timeWait * 2);
+                continue;
+            }
 
             CurrentID = CurrentPortal.Id;
             InfoPortal = CurrentPortal.GetInfo();
@@ -298,6 +304,9 @@ public class ManagerPortals : MonoBehaviour
         //>INV>
         try
         {
+            if (portal.Resources == null) //fix null
+                portal.Resources = new List<DataObjectInventory>();
+
             existRes = portal.Resources.Where(p => p.TypeInventoryObject == alien.Inventory.TypeInventoryObject).FirstOrDefault();
         }catch(System.Exception ex)
         {
@@ -319,6 +328,21 @@ public class ManagerPortals : MonoBehaviour
         else
             existRes.Count += inventory.Count;
 
+    }
+
+    public void SetHome(ModelNPC.GameDataAlien dataAlien)
+    {
+        float dist_min = 10000;
+        float dist = 0;
+        foreach (ModelNPC.PortalData portal in Portals)
+        {
+            dist = Vector3.Distance(portal.Position, dataAlien.Position);
+            if(dist < dist_min)
+            {
+                dist_min = dist;
+                dataAlien.PortalId = portal.Id;
+            }
+        }
     }
 
     #region Process 

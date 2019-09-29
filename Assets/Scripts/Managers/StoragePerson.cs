@@ -495,11 +495,13 @@ public class StoragePerson : MonoBehaviour {
         }
 
         string nameObject = Helper.CreateName(dataNPC.TypePrefabName, fieldNew, "", dataNPC.NameObject);
-        dataNPC.SetNameObject(nameObject);
+        //dataNPC.SetNameObject(nameObject, false, fieldNew, index);
+        dataNPC.SetNameObject(nameObject, isTestValid: false); //isTestValid - 3*
         //dataNPC.SetPosition(newPosition);
 
-        Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);
-        dataNPC.SetPosition(newPosition); //FIX**DELETE
+        Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);  // <<<< beforeUpdateField - 3 *
+        //dataNPC.SetPosition(newPosition, isTestValid: false); //FIX**DELETE    beforeUpdateField - 3*
+        dataNPC.SetPosition(newPosition);
 
         if (index != -1)
         {
@@ -510,7 +512,8 @@ public class StoragePerson : MonoBehaviour {
             objectsData.RemoveAt(index);
         }
 
-        Storage.ReaderWorld.UpdateField(dataNPC, fieldNew);
+        //Storage.ReaderWorld.UpdateField(dataNPC, fieldNew); 
+        Storage.ReaderWorld.UpdateLinkData(dataNPC, true, fieldNew, -1); //FIX**DELETE
     }
 
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
@@ -733,11 +736,6 @@ public class StoragePerson : MonoBehaviour {
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         Storage.Data.UpdatingLocationPersonLocal++;
 
-        //objData.NameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
-        string nameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
-        objData.SetNameObject(nameObject);
-        gobj.name = objData.NameObject;
-
         if (p_newPosition != gobj.transform.position)
         {
             Debug.Log("********** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -745,8 +743,10 @@ public class StoragePerson : MonoBehaviour {
             return "";
         }
 
-        //objData.Position = gobj.transform.position;
-        //objData.SetPosition(gobj.transform.position);//###ERR  *1
+        //objData.NameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        string nameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        objData.SetNameObject(nameObject, isTestValid: false); //isTestValid -- 3 *
+        gobj.name = objData.NameObject;
 
         if (isDestroy)
             objData.IsReality = false;
@@ -756,14 +756,15 @@ public class StoragePerson : MonoBehaviour {
             Storage.Instance.GamesObjectsReal.Add(p_NewField, new List<GameObject>());
         }
 
-        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
+        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField); //<<< beforeUpdateField -- 3*
         if (!resAddData)
         {
             Debug.Log("####### FIX**DELETE");
             Storage.Data.UpdatingLocationPersonLocal--;
             return "";
         }
-        objData.SetPosition(gobj.transform.position);//FIX**DELETE *1
+        //objData.SetPosition(gobj.transform.position, isTestValid: false);//FIX**DELETE *1      beforeUpdateField -- 3*
+        objData.SetPosition(gobj.transform.position);
 
         //add
         if (!isDestroy)
@@ -852,6 +853,9 @@ public class StoragePerson : MonoBehaviour {
                     case TypesJobTo.ToPortal:
                         if (isCompletedMission)
                         {
+                            if (dataAlien.PortalId == null)
+                                Storage.Portals.SetHome(dataAlien);
+
                             var info = ReaderScene.GetInfoID(dataAlien.PortalId);
                             if (info != null)
                                 result = info.Data;
@@ -899,10 +903,9 @@ public class StoragePerson : MonoBehaviour {
 
         Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
 
-        if(temp_findedFileds != null)
-            temp_findedFileds.Clear();
-        if (temp_resourcesData != null)
-            temp_resourcesData.Clear();
+        //temp_resourcesData.Clear(); //FIX**DELETE
+        temp_findedFileds.Clear();
+        temp_resourcesData = null;
         Helper.GetSpiralFields_Cache(ref temp_findedFileds, x, y, distantionWay);
         result = null;
         foreach (Vector2Int fieldNext in temp_findedFileds)
@@ -916,13 +919,14 @@ public class StoragePerson : MonoBehaviour {
             {
                 key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
                 AlienToResourceJobsJoins.TryGetValue(key, out job);
-                if(job != null)
+                if (job != null)
                 {
                     result = resoursData;
                     return;
                 }
             }
         }
+
         job = null;
     }
 

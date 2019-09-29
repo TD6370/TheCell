@@ -35,6 +35,19 @@ public class ReaderScene //: UpdateData
             }
         }
 
+        private int m_IndexField;
+        public int IndexField
+        {
+            get
+            {
+                return m_IndexField;
+            }
+            set
+            {
+                m_IndexField = value;
+            }
+        }
+
         //public ModelNPC.ObjectData Data { get; set; }
         //----
         private ModelNPC.ObjectData m_Data;
@@ -43,11 +56,30 @@ public class ReaderScene //: UpdateData
                 //TestIsValud();
                 return m_Data;
             }
-            set
-            {
-                m_Data = value;
+            //set
+            //{
+            //    m_Data = value;
+            //    TestIsValud();
+            //}
+        }
+
+        public void UpdateData(ModelNPC.ObjectData value, string p_field, int p_index = -1, bool isTestValid = false)
+        {
+            //if (m_Data != null)
+            //    Debug.Log(Storage.EventsUI.ListLogAdd = "######## StartSetData m_Data is fill ???");
+            m_Data = value;
+
+            if(isTestValid)
                 TestIsValud();
-            }
+
+            //if (!string.IsNullOrEmpty(p_field)) //FIX**DELETE
+            m_Field = p_field;
+
+            if (p_index != -1)
+                IndexField = p_index;
+
+            if (isTestValid)
+                TestIsValud();
         }
 
         public void StartSetData(ModelNPC.ObjectData value)
@@ -104,6 +136,22 @@ public class ReaderScene //: UpdateData
         public DataObjectInfoID()
         { }
 
+        public bool TestIsValudField()
+        {
+            if (m_Data == null)
+                return false;
+            if (string.IsNullOrEmpty(Field))
+                return false;
+            if (IndexField == -1)
+                return false;
+            ModelNPC.ObjectData findData = GetObjectDataFromGridContinue(Field, IndexField);
+            if (findData == null)
+                return false;
+            bool test = findData.NameObject == m_Data.NameObject;
+            bool result = findData.Id == m_Data.Id;
+            return result;
+        }
+
         List<ModelNPC.ObjectData> temp_objsTest;
         public bool TestIsValud()
         {
@@ -121,6 +169,15 @@ public class ReaderScene //: UpdateData
             int count = temp_objsTest.Where(p => p.NameObject == m_Data.NameObject).Count();
             if(count == 0)
             {
+                //-- TEST
+                var test = AlienJobsManager.TestHistoryJobs;
+                var testID = AlienJobsManager.TestHistoryJobs.Where(p=>p.IndexOf(ID) !=-1).ToList();
+                var testID_Field = AlienJobsManager.TestHistoryJobs.Where(p => p.IndexOf(Field) != -1).ToList();
+
+                var delID = AlienJobsManager.TestHistoryJobsDelID.Find(p => p == ID);
+                var spawnID = AlienJobsManager.TestHistoryJobsSpawnID.Find(p => p == ID);
+                DataObjectInfoID targetInfo = ReaderScene.GetInfoID(ID);
+
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### DataObjectInfoID NOT.TestIsValud: " + m_Data.NameObject);
             }
             return count > 0;
@@ -189,6 +246,19 @@ public class ReaderScene //: UpdateData
         Storage.EventsUI.SetTittle += message;
 
         string field = string.Empty;
+        string newName = string.Empty;
+        string id = string.Empty;
+
+        string strOld;
+        string strNew;
+        bool isExistID = false;
+        Single dist;
+
+        ModelNPC.ObjectData objData;
+        ModelNPC.ObjectData objDataOld;
+
+        DataObjectInfoID dataInfo;
+
         //int indDublicae = 0;
         CollectionInfoID = new Dictionary<string, DataObjectInfoID>();
         foreach (var item in Storage.Instance.GridDataG.FieldsD)
@@ -199,30 +269,63 @@ public class ReaderScene //: UpdateData
             if(item.Key != field)
                 Debug.Log("##### Error Key Field Storage.Instance.GridDataG.FieldsD " + field + " <> " + item.Key);
             //------------
-
             //foreach (ModelNPC.ObjectData objData in item.Value.Objects)
             for(int indDublicae = item.Value.Objects.Count - 1; indDublicae >= 0; indDublicae--)
             {
-                ModelNPC.ObjectData objData = item.Value.Objects[indDublicae];
-                string id = Helper.GetID(objData.NameObject);
-                DataObjectInfoID dataInfo = new DataObjectInfoID()
+                objData = item.Value.Objects[indDublicae];
+                id = Helper.GetID(objData.NameObject);
+
+                //--- EST JOB
+                if(id== "eb91f6d")
                 {
-                    Field = field,
-                    Data = objData,
-                    Gobject = null
-                };
-                if (CollectionInfoID.ContainsKey(id))
-                {
-                    var oldObj = CollectionInfoID[id];
-                    string strOld = oldObj == null ? " none " : oldObj.Data.NameObject;
-                    string strNew = (dataInfo == null || dataInfo.Data == null) ? " none " : dataInfo.Data.NameObject;
-                    Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew);
-                    //CollectionInfoID.Remove(id);
-                    Storage.Instance.GridDataG.FieldsD[field].Objects.RemoveAt(indDublicae);
-                    continue;
+                    Debug.Log("TEST");
                 }
 
-                CollectionInfoID.Add(id, dataInfo);
+                isExistID = true;
+                while (isExistID)
+                {
+                    isExistID = CollectionInfoID.ContainsKey(id);
+                    if (isExistID)
+                    {
+                        objDataOld = CollectionInfoID[id].Data;
+                        strOld = objDataOld == null ? " none " : objDataOld.NameObject;
+                        strNew = objData == null ? " none " : objData.NameObject;
+                        dist = Vector3.Distance(objData.Position, objDataOld.Position);
+                        if (dist < 2f)
+                        {
+                            Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew + " [REMOVE DUBLICATE]");
+                            Storage.Instance.GridDataG.FieldsD[field].Objects.RemoveAt(indDublicae);
+                            id = string.Empty;
+                            break;
+                        }
+                        else
+                        {
+                            Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew + " [FIX ID]");
+                            newName = string.Empty;
+                            objData.Id = null;
+                            Helper.CreateName_Cache(ref newName, objData.TypePrefabName, field, "-1");
+                            objData.SetNameObject(newName, true);
+                            id = objData.Id;
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(id))
+                {
+                    //-- TEST JOB
+                    if(field != item.Key)
+                    {
+                        Debug.Log("############# ERROR FIELD " + field + " <> " + item.Key);
+                    }
+
+                    dataInfo = new DataObjectInfoID()
+                    {
+                        //Field = field,
+                        //Data = objData,
+                        Gobject = null
+                    };
+                    dataInfo.UpdateData(objData, field, indDublicae);
+                    CollectionInfoID.Add(id, dataInfo);
+                }
             }
         }
         IsLoaded = true;
@@ -248,7 +351,30 @@ public class ReaderScene //: UpdateData
         
     }
 
-    public void UpdateLinkData(ModelNPC.ObjectData newData, bool isGeneric = false)
+    public void UpdateLinkDataFormModel(ModelNPC.ObjectData newData)
+    {
+        if (false == CheckCollectionInfoID(newData.Id, false))
+            return;
+
+        string field = string.Empty;
+        Helper.GetNameFieldByPosit(ref field, newData.Position);
+        List<ModelNPC.ObjectData> result = null;
+        GetObjectsDataFromGridTo(ref result, field);
+        int index = -1;
+        if(result!=null)
+            index = result.FindIndex(p => p.Id == newData.Id || p.NameObject == newData.NameObject);
+        if (index == -1)
+        {
+            CollectionInfoID[newData.Id].UpdateData(newData, string.Empty, -1);
+        }
+        else
+        {
+            CollectionInfoID[newData.Id].UpdateData(newData, field, index);
+        }
+    }
+
+
+    public void UpdateLinkData(ModelNPC.ObjectData newData, bool isGeneric = false, string field = "", int index = -1)
     {
         if (newData == null || newData.NameObject == null) // || isGeneric)
         {
@@ -263,13 +389,16 @@ public class ReaderScene //: UpdateData
         if (isGeneric)
             CollectionInfoID[id].StartSetData(newData);
         else
-            CollectionInfoID[id].Data = newData;
-        
+        {
+            //CollectionInfoID[id].Data = newData;
+            //new
+            CollectionInfoID[id].UpdateData(newData, field, index);
+        }
         //TEST
         //UpdateFix(id, newData);
     }
 
-  public void UpdateLinkData(ModelNPC.ObjectData newData, string newField)
+  public void UpdateLinkData(ModelNPC.ObjectData newData, string newField, int index)
     {
         if (newData == null || newData.NameObject == null)
         {
@@ -277,14 +406,15 @@ public class ReaderScene //: UpdateData
             return;
         }
         string id = GetDataID(newData);
-        if (false == CheckCollectionInfoID(id))
+        //if (false == CheckCollectionInfoID(id))
+        if (false == CheckCollectionInfoID(id, true)) //FIX**DELETE
             return;
 
-        //newData = UpdateFix(newData);
-        CollectionInfoID[id].Data = newData;
-        CollectionInfoID[id].Field = newField;
-        //TEST
-        //UpdateFix(id, newData);
+        //CollectionInfoID[id].Data = newData;
+        //CollectionInfoID[id].Field = newField;
+        //new
+        CollectionInfoID[id].UpdateData(newData, newField, index);
+        
     }
 
 
@@ -337,7 +467,11 @@ public class ReaderScene //: UpdateData
             Debug.Log("RemoveGobject  CollectionInfo  ID not found = " + p_id);
             return;
         }
+        //--TEST JOB
+        AlienJobsManager.TestHistoryJobs.Add("RemoveObjectInfo \\ " + CollectionInfoID[p_id].Data.NameObject);
+        AlienJobsManager.TestHistoryJobsDelID.Add(p_id);
         CollectionInfoID.Remove(p_id);
+        
     }
 
     private bool CheckCollectionInfoID(string id, bool isGeneric = false)
@@ -391,6 +525,15 @@ public class ReaderScene //: UpdateData
             Storage.Data.AddNewFieldInGrid(nameField, "GetObjecsDataFromGrid");
         //}
         return Storage.Instance.GridDataG.FieldsD[nameField].Objects;
+    }
+
+    public static void GetObjectsDataFromGridTo(ref List<ModelNPC.ObjectData> result, string nameField)
+    {
+
+        if (!IsGridDataFieldExist(nameField))
+            result = null;
+        else
+            result = Storage.Instance.GridDataG.FieldsD[nameField].Objects;
     }
 
     public static bool IsFieldFree(string nameField)

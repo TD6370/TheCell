@@ -533,7 +533,9 @@ public class GenericWorldManager : MonoBehaviour {
             Debug.Log("########## ClearLayerObject field is null");
             return;
         }
-       
+
+        //-- TEST JOB
+        AlienJobsManager.TestHistoryJobs.Add("ClearLayer -- " + field);
 
         bool isClearData = false;
         if (objData.IsReality)
@@ -541,13 +543,18 @@ public class GenericWorldManager : MonoBehaviour {
             if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
             {
                 var listObjs = Storage.Instance.GamesObjectsReal[field];
-
-                foreach (var obj in listObjs.ToArray())
+                //foreach (var obj in listObjs)
+                for (int ind = listObjs.Count -1; ind>=0; ind--)
                 {
+                    var obj = listObjs[ind];
                     if (obj.name == objData.NameObject)
                     {
                         if (PoolGameObjects.IsUsePoolObjects)
                         {
+                            //-- TEST JOB
+                            AlienJobsManager.TestHistoryJobs.Add("ClearLayerObject IsReality -- " + objData.NameObject);
+                            AlienJobsManager.TestHistoryJobsDelID.Add(objData.Id);
+
                             obj.DisableComponents();
                             Storage.Instance.DestroyFullObject(obj, isStopReal: false);
                             isClearData = true;
@@ -564,6 +571,11 @@ public class GenericWorldManager : MonoBehaviour {
         {
             if (Storage.Map.IsGridMap)
                 Storage.Map.CheckSector(field);
+
+            //-- TEST JOB
+            AlienJobsManager.TestHistoryJobs.Add("ClearLayerObject DREM -- " + objData.NameObject);
+            AlienJobsManager.TestHistoryJobsDelID.Add(objData.Id);
+
             Storage.Data.RemoveDataObjectInGrid(objData);
         }
     }
@@ -1359,9 +1371,9 @@ public class GenericWorldManager : MonoBehaviour {
 
         Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
         objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
-        objDataSave.SetNameObject(nameObject);
+        objDataSave.SetNameObject(nameObject, isTestValid: false); // isTestValid - 3*
         objDataSave.Position = pos;
-        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
+        Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab"); // 3*
         return objDataSave;
     }
 }

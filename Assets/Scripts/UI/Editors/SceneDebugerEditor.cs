@@ -128,8 +128,9 @@ public class SceneDebugerEditor : Editor
 
         //EditorGUILayout.IntField("Count DreamWork's: ", LivePersonsCount.intValue);
         //EditorGUILayout.IntField("Count DreamWork's: ", sceneDebug.LivePersonsCount);
-        EditorGUILayout.LabelField("Count DreamWork's: ", sceneDebug.LivePersonsCount.ToString());
-
+        EditorGUILayout.LabelField("Count DreamWork's: ", 
+            string.Format("{0}/{1}/{2}", sceneDebug.InfoCount, sceneDebug.LivePersonsCount, sceneDebug.LivePersonsStartCount)            );
+        
         //EditorGUI.BeginDisabledGroup(true);
         //SettingsEditor.OnInspectorGUI(); //<<<<
         //EditorGUI.EndDisabledGroup();

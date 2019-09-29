@@ -10,6 +10,8 @@ public class SceneDebuger : MonoBehaviour {
     [SerializeField, Tooltip("LivePersonsCount")]
     public int LivePersonsCount;
 
+    public int LivePersonsStartCount;
+    public int InfoCount;
     public GameObject DialogPersonPrefab;
     public GameObject PanelDialogPrefabs;
 

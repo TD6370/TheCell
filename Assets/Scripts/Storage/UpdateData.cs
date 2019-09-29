@@ -123,15 +123,19 @@ public class UpdateData {
         ReaderScene.GetObjectsDataFromGrid(nameField)[index] = newData;
 
         if (Storage.Instance.ReaderSceneIsValid)
-            Storage.ReaderWorld.UpdateLinkData(newData);
+            Storage.ReaderWorld.UpdateLinkData(newData, nameField, index);
     }
 
     public void ClearObjecsDataFromGrid(string nameField)
     {
+        //-- TEST JOB
+        AlienJobsManager.TestHistoryJobs.Add("ClearObjecsDataFromGrid *** " + nameField);
+
         if (Storage.Instance.ReaderSceneIsValid)
         {
             foreach (var item in ReaderScene.GetObjectsDataFromGrid(nameField))
             {
+                
                 Storage.ReaderWorld.RemoveObjectInfo(item.Id);
             }
         }
@@ -146,8 +150,14 @@ public class UpdateData {
         if (Storage.Instance.ReaderSceneIsValid)
         {
             temp_string = temp_objsDeletes[index].Id;
+
+            //-- TEST JOB
+            AlienJobsManager.TestHistoryJobsDelID.Add(temp_string);
             Storage.ReaderWorld.RemoveObjectInfo(temp_string);
         }
+        //-- TEST JOB
+        AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex ... " + temp_objsDeletes[index].NameObject);
+        
         temp_objsDeletes.RemoveAt(index);
     }
 
@@ -159,7 +169,17 @@ public class UpdateData {
             temp_string = objects[index].Id;
             //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
             //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
+
+            //-- TEST JOB
+            //if (!objects[index].IsNPC())
+            //    AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex >> " + objects[index].NameObject);
         }
+
+        //-- TEST JOB
+        AlienJobsManager.TestHistoryJobsDelID.Add(objects[index].Id);
+        //-- TEST JOB
+        AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex ... " + objects[index].NameObject);
+
         objects.RemoveAt(index);
     }
 
@@ -182,7 +202,7 @@ public class UpdateData {
 
         //if (Storage.Instance.ReaderSceneIsValid)
         //{
-        //    Storage.ReaderWorld.UpdateLinkData(fieldData, fieldData.NameField); //FIX**DELETE
+        //    Storage.ReaderWorld.UpdateLinkData(fieldData, fieldData.NameField, ); //FIX**DELETE
         //}
 
         return fieldData;
@@ -242,7 +262,7 @@ public class UpdateData {
         if (Storage.Instance.ReaderSceneIsValid)
         {
             //Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
-            Storage.ReaderWorld.UpdateLinkData(objDataSave, fieldData.NameField); //FIX**DELETE
+            Storage.ReaderWorld.UpdateLinkData(objDataSave, fieldData.NameField, fieldData.Objects.Count - 1); //FIX**DELETE
         }
 
         if (Storage.Map.IsGridMap)
@@ -335,6 +355,10 @@ public class UpdateData {
                     {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR type";
+
+                        //-- TEST JOB
+                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
+
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
@@ -352,6 +376,10 @@ public class UpdateData {
                     {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
+
+                        //-- TEST JOB
+                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
+
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
@@ -369,6 +397,10 @@ public class UpdateData {
                     {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
+
+                        //-- TEST JOB
+                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
+
                         //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
@@ -516,9 +548,10 @@ public class UpdateData {
         {
             //Debug.Log("------------------------ UpdateDataObect NEW Pos");
             //setObject.Position = newPos;
-            setObject.SetPosition(newPos);//###ERR
+            //setObject.SetPosition(newPos, isTestValid: false); // -- 3*
+            setObject.SetPosition(newPos);
         }
-        SetObjecDataFromGrid(nameField, index, setObject);
+        SetObjecDataFromGrid(nameField, index, setObject); // -- 3*
 
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);

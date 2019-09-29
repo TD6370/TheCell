@@ -96,25 +96,28 @@ public partial class ModelNPC
             //    Storage.ReaderWorld.UpdateLinkData(this);
         }
 
-        public virtual void SetPosition(Vector3 newPosition, bool beforeUpdateField = false)
+        //public virtual void SetPosition(Vector3 newPosition, bool isTestValid = true)
+        public virtual void SetPosition(Vector3 newPosition)
         {
             Position = new Vector3(newPosition.x, newPosition.y, Position.z);
-            if (!beforeUpdateField)
-            {
-                if (Storage.Instance.ReaderSceneIsValid)
-                {
-                    //Storage.ReaderWorld.UpdateLinkData(this);
-                    string meField = Helper.GetNameFieldPosit(Position.x, Position.y);
-                    Storage.ReaderWorld.UpdateField(this, meField);
-                }
-            }
+            //if (isTestValid)
+            //{
+            //    if (Storage.Instance.ReaderSceneIsValid)
+            //    {
+            //        //Storage.ReaderWorld.UpdateLinkData(this);
+            //        string meField = Helper.GetNameFieldPosit(Position.x, Position.y);
+                    
+            //        ////FIX**DELETE //!!!!!
+            //        Storage.ReaderWorld.UpdateField(this, meField);
+            //    }
+            //}
         }
 
-        public virtual void SetNameObject(string newNameObject, bool isGeneric = false)
+        public virtual void SetNameObject(string newNameObject, bool isGeneric = false, string field = "", int index = -1, bool isTestValid = true)
         {
             NameObject = newNameObject;
-            if (Storage.Instance.ReaderSceneIsValid)
-                Storage.ReaderWorld.UpdateLinkData(this, isGeneric);
+            if (Storage.Instance.ReaderSceneIsValid && isTestValid)
+                Storage.ReaderWorld.UpdateLinkData(this, isGeneric, field, index);
             //CreateID(NameObject);
 
             if (Id == null)
@@ -125,10 +128,16 @@ public partial class ModelNPC
         {
         }
 
+       
         public virtual void UpdateGameObject(GameObject objGame)
         {
-            //objGame.transform.position = Position;
-            //objGame.name = NameObject;
+        }
+
+        public virtual void UpdateGameObjectAndID(GameObject objGame) //FIX**DELETE
+        {
+            UpdateGameObject(objGame);
+            if (Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.UpdateLinkDataFormModel(this);
         }
 
         public object Clone()
@@ -754,8 +763,8 @@ public partial class ModelNPC
             //}
             //-------------------------
 
-            if (Storage.Instance.ReaderSceneIsValid)
-                Storage.ReaderWorld.UpdateLinkData(this);
+            //if (Storage.Instance.ReaderSceneIsValid)
+            //    Storage.ReaderWorld.UpdateLinkDataFormModel(this);
         }
     }
 

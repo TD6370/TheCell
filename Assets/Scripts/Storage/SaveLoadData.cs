@@ -1154,7 +1154,8 @@ public class SaveLoadData : MonoBehaviour {
         bool res = Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
 
-        objDataSave.SetPosition(pos); //FIX**DELETE *1
+        //objDataSave.SetPosition(pos, isTestValid: false); //FIX**DELETE *1
+        objDataSave.SetPosition(pos);
         return res;
     }
 

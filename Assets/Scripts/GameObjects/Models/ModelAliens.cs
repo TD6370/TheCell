@@ -90,8 +90,8 @@ public partial class ModelNPC
                 objGame.GetComponent<SpriteRenderer>().color = Color.red;
             }
 
-            if (Storage.Instance.ReaderSceneIsValid)
-                Storage.ReaderWorld.UpdateLinkData(this);
+            //if (Storage.Instance.ReaderSceneIsValid)
+            //    Storage.ReaderWorld.UpdateLinkData(this);
         }
 
         public void OnTargetCompleted()

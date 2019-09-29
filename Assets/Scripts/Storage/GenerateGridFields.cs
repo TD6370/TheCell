@@ -525,6 +525,8 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     if (!isFind)
                     {
+                        var testSpawnedObjects = AlienJobsManager.TestHistoryJobs;
+
                         Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
 
                         int newIndex = Storage.Log.ConflictLog(gobj, p_nameField, dataObjects);
@@ -647,7 +649,8 @@ public class GenerateGridFields : MonoBehaviour {
                     {
                         //!!!!!!!!!!!!!!!!!!!!!!
                         if (!isDestroy)
-                            dataObj.UpdateGameObject(gobj);
+                            //dataObj.UpdateGameObject(gobj, isTestValid: false); //--- isTestValid 3*
+                            dataObj.UpdateGameObject(gobj); //--- isTestValid 3*
 
                         indErr = "18.";
                         //Debug.Log("___ RENAME : GO: " + gobj.name + "  >>  " + dataObj.NameObject);
@@ -655,18 +658,17 @@ public class GenerateGridFields : MonoBehaviour {
                         indErr = "19.";
                         //Debug.Log("___ RESAVE POS : GO: " + dataObj.Position + "  >>  " + gobj.transform.position);
                         //dataObj.Position = gobj.transform.position;
-                        dataObj.SetPosition(gobj.transform.position);//###ERR
+                        //dataObj.SetPosition(gobj.transform.position, isTestValid: false);//###ERR
+                        dataObj.SetPosition(gobj.transform.position);  //FIX
+                        dataObj.UpdateGameObjectAndID(gobj);
                     }
-                    //dataObj.IsReality = true;
                     dataObj.IsReality = false;
 
                     indErr = "20.";
-
                     //Debug.Log("_________DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
-                    Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //@<<@ 
+                    Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //--- isTestValid 3*
 
                     indErr = "21.";
-
                     //RESAVE REAL +++++++++++++++++++++++++++++++++++++++++++++++++++++
                     if (!Storage.Instance.GamesObjectsReal.ContainsKey(posFieldReal))
                     {
@@ -730,7 +732,8 @@ public class GenerateGridFields : MonoBehaviour {
     public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
     {
         var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
-        objData.UpdateGameObject(newGO);
+        //objData.UpdateGameObject(newGO);
+        objData.UpdateGameObjectAndID(newGO); //FIX**DELETE
         newGO.transform.position = objData.Position;
         newGO.name = objData.NameObject;
 

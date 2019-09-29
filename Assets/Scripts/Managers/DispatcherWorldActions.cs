@@ -153,6 +153,11 @@ public class DispatcherWorldActions : MonoBehaviour
         Queue<CaseDreamWorker> colectionLivePersonVIP = new Queue<CaseDreamWorker>();
         List<string> listNPC;
 
+        // -- TEST JOB
+        //bool isTestJOB = true;
+        //int indTestID = 0;
+        //List<ReaderScene.DataObjectInfoID> listTestID = new List<ReaderScene.DataObjectInfoID>();
+
         while (true)
         {
             //yield break;//TEST TEMP Close
@@ -167,6 +172,8 @@ public class DispatcherWorldActions : MonoBehaviour
 
             if (Storage.Instance.ReaderSceneIsValid)
             {
+                // -- TEST JOB
+                //listTestID = Storage.ReaderWorld.CollectionInfoID.Values.ToList();
                 //---Init---
                 if (colectionLivePerson.Count == 0)
                     m_IsFilledSearchingCollection = false;
@@ -243,6 +250,7 @@ public class DispatcherWorldActions : MonoBehaviour
                     //if(Storage.EventsUI.SetTittle == message)
                         //Storage.EventsUI.SetTittle = "";
                     Storage.EventsUI.ListLogAdd = "...Search dreamworkers end : " + (Time.time - timeStartSearch)  ;
+                    Storage.SceneDebug.LivePersonsStartCount = colectionLivePerson.Count;
                 }
                 //----
                 //---Init VIP---
@@ -309,7 +317,20 @@ public class DispatcherWorldActions : MonoBehaviour
 
 #if UNITY_EDITOR
                 Storage.SceneDebug.LivePersonsCount = colectionLivePerson.Count;
+                Storage.SceneDebug.InfoCount = Storage.ReaderWorld.CollectionInfoID.Count;
 #endif
+                //--- TEST JOB
+                //if(isTestJOB)
+                //{
+                //    if (listTestID.Count > 0)
+                //    {
+                //        if (indTestID >= listTestID.Count)
+                //            indTestID = 0;
+                //        listTestID[indTestID].TestIsValud();
+                //        indTestID++;
+                //    }
+                //}
+
 
                 float timeNext = Storage.SceneDebug.SettingsScene.TimeRelax; //Storage.Person.TestSpeed
                 yield return new WaitForSeconds(timeNext);
