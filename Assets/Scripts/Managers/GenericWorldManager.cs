@@ -534,27 +534,18 @@ public class GenericWorldManager : MonoBehaviour {
             return;
         }
 
-        //-- TEST JOB
-        AlienJobsManager.TestHistoryJobs.Add("ClearLayer -- " + field);
-
         bool isClearData = false;
         if (objData.IsReality)
         {
             if (Storage.Instance.GamesObjectsReal.ContainsKey(field))
             {
-                var listObjs = Storage.Instance.GamesObjectsReal[field];
-                //foreach (var obj in listObjs)
-                for (int ind = listObjs.Count -1; ind>=0; ind--)
+                for (int ind = Storage.Instance.GamesObjectsReal[field].Count -1; ind>=0; ind--)
                 {
-                    var obj = listObjs[ind];
+                    var obj = Storage.Instance.GamesObjectsReal[field][ind];
                     if (obj.name == objData.NameObject)
                     {
                         if (PoolGameObjects.IsUsePoolObjects)
                         {
-                            //-- TEST JOB
-                            AlienJobsManager.TestHistoryJobs.Add("ClearLayerObject IsReality -- " + objData.NameObject);
-                            AlienJobsManager.TestHistoryJobsDelID.Add(objData.Id);
-
                             obj.DisableComponents();
                             Storage.Instance.DestroyFullObject(obj, isStopReal: false);
                             isClearData = true;
@@ -571,10 +562,6 @@ public class GenericWorldManager : MonoBehaviour {
         {
             if (Storage.Map.IsGridMap)
                 Storage.Map.CheckSector(field);
-
-            //-- TEST JOB
-            AlienJobsManager.TestHistoryJobs.Add("ClearLayerObject DREM -- " + objData.NameObject);
-            AlienJobsManager.TestHistoryJobsDelID.Add(objData.Id);
 
             Storage.Data.RemoveDataObjectInGrid(objData);
         }
@@ -714,6 +701,7 @@ public class GenericWorldManager : MonoBehaviour {
             Debug.Log("Sart... GenericWorldPriorityTerra..."); indErr = "2";
 
             Storage.Instance.ClearGridData(); //  >>>TEST 1.
+            Storage.ReaderWorld.Clear();
 
             int countAll = 0;
             int index = 0;
@@ -839,7 +827,8 @@ public class GenericWorldManager : MonoBehaviour {
                     PriorityTreePercent = 40;
                     PriorityRockPercent = 20;
                     PriorityFlorePercent = 30;
-                    percentNPC = 10;
+                    if(IsTestGenNPC)
+                        percentNPC = 10;
                 }
 
                 int countPrefabs = (colectionPosRnd.Count() * PriorityPrefabPercent) / 100;
@@ -895,24 +884,14 @@ public class GenericWorldManager : MonoBehaviour {
 
                     prefabName = GenObjectWorld(modeGeneric);
                     if (modeGeneric != GenObjectWorldMode.NPC)
-                    {
-                        //if (IsUseCache)
-                            GenericTypeTerraOnPriority_Cache(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
-                        //else
-                        //    prefabName = GenericTypeTerraOnPriority(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
-                    }
+                        GenericTypeTerraOnPriority_Cache(prefabName, pos, distantionFindPrefabs, GenObjectWorldMode.PrefabsGray);
 
-                    //if (IsUseCache)
-                        Helper.CreateName_Cache(ref nameObject, prefabName.ToString(), nameField, "-1");
-                    //else
-                    //    nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");
+                    Helper.CreateName_Cache(ref nameObject, prefabName.ToString(), nameField, "-1");
 
                     objDataSave = BilderGameDataObjects.BildObjectData(prefabName);
-                    //objDataSave.SetNameObject(nameObject);
                     objDataSave.Position = pos;
                     Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericWorldPriorityTerra");
                     objDataSave.SetNameObject(nameObject, true);
-                    //Storage.Data.AddFirstDataObjectInGrid(objDataSave, nameField);
                     index++;
                     if (index > countPrefabs)
                         break;
@@ -1263,19 +1242,14 @@ public class GenericWorldManager : MonoBehaviour {
             
             Helper.CreateName_Cache(ref nameObject, typePortal.ToString(), nameField, "-1");
             objDataSave = BilderGameDataObjects.BildObjectData(typePortal);
-            //objDataSave.SetNameObject(nameObject, true); //FIX**DELETE *1
             objDataSave.Position = pos;
 
             //Clear location for portal
             ClearLocationForPortal(posX, posY, objDataSave);
-
             Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
-
-            objDataSave.SetNameObject(nameObject, true); //FIX**DELETE *1
-
+            objDataSave.SetNameObject(nameObject, true);
             portalsId.Add(objDataSave.Id);
         }
-
         return portalsId.ToArray();
     }
 
@@ -1310,10 +1284,9 @@ public class GenericWorldManager : MonoBehaviour {
             var objDataSave = BilderGameDataObjects.BildObjectData(portalFloop);
             string nameObject = string.Empty;
             Helper.CreateName_Cache(ref nameObject, portalFloop.ToString(), nameField, "-1");
-            //objDataSave.SetNameObject(nameObject, true); //FIX**DELETE *1
             objDataSave.Position = Helper.NormalizFieldToWorld(fieldNext);
             Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
-            objDataSave.SetNameObject(nameObject, true); //FIX**DELETE *1
+            objDataSave.SetNameObject(nameObject, true); 
 
             //... Check on Real
             bool isZonaReal = Helper.IsValidPiontInZona(objDataSave.Position.x, objDataSave.Position.y);
@@ -1328,7 +1301,6 @@ public class GenericWorldManager : MonoBehaviour {
         string nameObject = "";
         Vector2Int posField = Vector2Int.zero;
         Helper.GetPositByField_Cache(ref posField, nameField);
-        //Helper.GetNameField_Cache(ref nameField, posX, posY);
         Vector3 pos = new Vector3();
         pos.x = posField.x * SaveLoadData.Spacing;
         pos.y = (posField.y * (-1)) * SaveLoadData.Spacing;
@@ -1336,7 +1308,7 @@ public class GenericWorldManager : MonoBehaviour {
 
         Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
         objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
-        objDataSave.SetNameObject(nameObject, true);//FIX**DELETE
+        objDataSave.SetNameObject(nameObject, true);
         objDataSave.Position = pos;
         return objDataSave;
     }
@@ -1350,10 +1322,9 @@ public class GenericWorldManager : MonoBehaviour {
 
         Helper.CreateName_Cache(ref nameObject, typePrefab.ToString(), nameField, "-1");
         objDataSave = BilderGameDataObjects.BildObjectData(typePrefab);
-        //objDataSave.SetNameObject(nameObject, true);//FIX**DELETE
         objDataSave.Position = pos;
         Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPrefab");
-        objDataSave.SetNameObject(nameObject, true);//FIX**DELETE
+        objDataSave.SetNameObject(nameObject, true);
         return objDataSave;
     }
     

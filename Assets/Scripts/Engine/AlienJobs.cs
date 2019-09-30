@@ -30,17 +30,14 @@ public class AlienJob : ScriptableObject
 
 public static class AlienJobsManager
 {
-    public static List<string> TestHistoryJobs = new List<string>();
-    public static List<string> TestHistoryJobsDelID = new List<string>();
-    public static List<string> TestHistoryJobsSpawnID = new List<string>();
+    //TEST
+    //public static List<string> TestHistoryJobs = new List<string>();
+    //public static List<string> TestHistoryJobsDelID = new List<string>();
+    //public static List<string> TestHistoryJobsSpawnID = new List<string>();
 
-
-    public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC)
+    public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC, GameActionPersonController controller = null)
     {
-        //AlienJob job = p_dataNPC.Job;
-        //string jobName = p_dataNPC.JobName;
         AlienJob job = p_dataNPC.Job;
-
         if(job!=null)
         {
             string fieldAlien = string.Empty;
@@ -51,7 +48,7 @@ public static class AlienJobsManager
             ReaderScene.DataObjectInfoID targetInfo = ReaderScene.GetInfoID(p_dataNPC.TargetID);
             if (targetInfo != null)
             {
-                if (!targetInfo.TestIsValud()) //FIX**DELETE
+                if (!targetInfo.TestIsValud())
                 {
                     p_dataNPC.TargetID = null;
                 }
@@ -89,67 +86,54 @@ public static class AlienJobsManager
                             //Test job on target //@JOB@
                             if (targetInfo.Data.TypePrefab == jobResourceTarget)
                             {
-                                //------ test ----------
-                                if (string.IsNullOrEmpty(targetInfo.ID))
+                                //if (!job.IsJobCompleted && !job.IsJobRun)
+                                //if (p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.Target.ToString())
+                                //p_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Work.ToString())
+                                if (p_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.CompletedLoot.ToString() &&
+                                    p_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Work.ToString())
                                 {
-                                    Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: ReaderScene.DataObjectInfoID targetInfo is null");
+                                    //job.IsJobRun = true;
+                                    //p_dataNPC.CurrentAction = GameActionPersonController.NameActionsPerson.Target.ToString();
+                                    //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Work, null);
+                                    GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Work, controller, true);
                                 }
-                                else
+                                //if(job.IsJobCompleted)
+                                if(p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
                                 {
-                                    var objsTest = ReaderScene.GetFieldsByID(targetInfo.ID);
-                                    if (objsTest.Count == 0)
+                                    //p_dataNPC.CurrentAction = GameActionPersonController.NameActionsPerson.Target.ToString();
+                                    GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Move, controller, true);
+                                    // **** FIND RESOURCE ****
+                                    //---Replace object
+                                    //1. Remove resource
+                                    Vector3 posTarget = targetInfo.Data.Position;
+                                    GenericWorldManager.ClearLayerObject(targetInfo.Data);
+                                    //2. Create new resource
+                                    if (job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
                                     {
-                                        targetInfo.TestIsValud();
-                                        return false;
+                                        //Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
+                                        ModelNPC.ObjectData spawnObject = Storage.GenWorld.GetCreatePrefab(job.ResourceResult, targetInfo.Field);
+                                        bool isSpawned = Storage.Data.AddDataObjectInGrid(spawnObject,
+                                                            targetInfo.Field, "CheckJobAlien",
+                                                            p_modeDelete: PaletteMapController.SelCheckOptDel.None,
+                                                            p_modeCheck: PaletteMapController.SelCheckOptDel.DelTerra);
+                                        if (!isSpawned)
+                                            Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB: Not Spawn " + spawnObject.NameObject);
                                     }
-                                }
-                                //--------------
-
-                                // **** FIND RESOURCE ****
-                                //---Replace object
-                                //1. Remove resource
-                                //Storage.Data.RemoveDataObjectInGrid(fieldTarget, -1, "CheckJobAlien", dataObjDel: targetInfo.Data);
-                                Vector3 posTarget = targetInfo.Data.Position;
-                                //Storage.Data.RemoveDataObjectInGrid(targetInfo.Data);
-                                //GenericWorldManager.ClearLayerForStructure(targetInfo.Field, true);
-                                GenericWorldManager.ClearLayerObject(targetInfo.Data);
-                                //---TEST
-                                TestHistoryJobs.Add("ClearLayerObject : " + targetInfo.Data.NameObject);
-
-                                //2. Create new resource
-                                if (job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
-                                {
-                                    //Storage.GenWorld.GenericPrefabOnWorld(job.ResourceResult, posTarget);
-                                    ModelNPC.ObjectData spawnObject = Storage.GenWorld.GetCreatePrefab(job.ResourceResult, targetInfo.Field);
-                                    bool isSpawned = Storage.Data.AddDataObjectInGrid(spawnObject,
-                                                        targetInfo.Field, "CheckJobAlien",
-                                                        p_modeDelete: PaletteMapController.SelCheckOptDel.None,
-                                                        p_modeCheck: PaletteMapController.SelCheckOptDel.DelTerra);
-                                    if (!isSpawned)
-                                        Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB: Not Spawn " + spawnObject.NameObject);
-                                    else
+                                    bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
+                                    //if (!targetInfo.Data.IsReality && isZonaReal)
+                                    if (isZonaReal)
                                     {
-                                        //-- TEST JOB
-                                        TestHistoryJobs.Add(spawnObject.NameObject + " >> " + targetInfo.Field);
-                                        TestHistoryJobsSpawnID.Add(spawnObject.Id);
+                                        Storage.GenGrid.LoadObjectToReal(targetInfo.Field);
                                     }
-                                }
-                                bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
-                                //if (!targetInfo.Data.IsReality && isZonaReal)
-                                if (isZonaReal)
-                                {
-                                    Storage.GenGrid.LoadObjectToReal(targetInfo.Field);
-                                    //--TEST
-                                    TestHistoryJobs.Add(" LoadObjectToReal >> " + targetInfo.Field);
-                                }
 
-                                //3. Add resource in Inventory
-                                p_dataNPC.Inventory = targetInfo.Data.LootObjectToInventory(p_dataNPC);
-                                //4. Set target to target location
-                                if (job.JobTo == TypesJobTo.ToPortal)
-                                {
-                                    //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Idle, null);
-                                    //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Target, null);
+                                    //3. Add resource in Inventory
+                                    p_dataNPC.Inventory = targetInfo.Data.LootObjectToInventory(p_dataNPC);
+                                    //4. Set target to target location
+                                    if (job.JobTo == TypesJobTo.ToPortal)
+                                    {
+                                        //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Idle, null);
+                                        //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Target, null);
+                                    }
                                 }
                                 //continue work...
                                 return true;
@@ -158,14 +142,6 @@ public static class AlienJobsManager
                     }
                 }
             }
-            //Test all object from location
-            //List<ModelNPC.ObjectData> objectsOnField = ReaderScene.GetObjectsDataFromGrid(fieldAlien);
-            //foreach(ModelNPC.ObjectData nextObject in objectsOnField)
-            //{
-            //    if(nextObject.Id == p_dataNPC.TargetID)
-            //    {
-            //    }
-            //}
         }
         return false;
     }

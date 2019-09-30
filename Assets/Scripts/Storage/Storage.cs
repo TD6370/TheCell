@@ -78,7 +78,7 @@ public class Storage : MonoBehaviour {
         }
     }
 
-    private ManagerPortals _Portals;
+    private ManagerPortals _Portals = null;
     public static ManagerPortals Portals
     {
         get
@@ -989,7 +989,6 @@ public class Storage : MonoBehaviour {
             Debug.Log("+++ DestroyFullObject ++++ object is null");
             return false;
         }
-
         //if (isCorrect)
         //    Debug.Log("++++++++++++ DestroyFullObject ++++ : " + gObj);
 
@@ -999,10 +998,7 @@ public class Storage : MonoBehaviour {
         if (nameField == null)
             return false;
 
-        //ReaderWorld.RemoveObjectInfo(setName.GetID()); ////FIX**DELETE - dublicate
-
         bool isExistReal = true;
-        //#FIX
         if (!_GamesObjectsReal.ContainsKey(nameField))
         {
             isExistReal = false;

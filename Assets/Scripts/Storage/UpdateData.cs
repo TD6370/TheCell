@@ -128,9 +128,6 @@ public class UpdateData {
 
     public void ClearObjecsDataFromGrid(string nameField)
     {
-        //-- TEST JOB
-        AlienJobsManager.TestHistoryJobs.Add("ClearObjecsDataFromGrid *** " + nameField);
-
         if (Storage.Instance.ReaderSceneIsValid)
         {
             foreach (var item in ReaderScene.GetObjectsDataFromGrid(nameField))
@@ -150,14 +147,8 @@ public class UpdateData {
         if (Storage.Instance.ReaderSceneIsValid)
         {
             temp_string = temp_objsDeletes[index].Id;
-
-            //-- TEST JOB
-            AlienJobsManager.TestHistoryJobsDelID.Add(temp_string);
             Storage.ReaderWorld.RemoveObjectInfo(temp_string);
         }
-        //-- TEST JOB
-        AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex ... " + temp_objsDeletes[index].NameObject);
-        
         temp_objsDeletes.RemoveAt(index);
     }
 
@@ -167,44 +158,19 @@ public class UpdateData {
         {
             //TRANSFER
             temp_string = objects[index].Id;
-            //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
-            //Storage.ReaderWorld.RemoveObjectInfo(temp_string);
-
-            //-- TEST JOB
-            //if (!objects[index].IsNPC())
-            //    AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex >> " + objects[index].NameObject);
         }
-
-        //-- TEST JOB
-        AlienJobsManager.TestHistoryJobsDelID.Add(objects[index].Id);
-        //-- TEST JOB
-        AlienJobsManager.TestHistoryJobs.Add("RemoveObjecDataGridByIndex ... " + objects[index].NameObject);
-
         objects.RemoveAt(index);
     }
 
-
+    // ---- ONLY FIELD and NOT DATA
     public ModelNPC.FieldData AddNewFieldInGrid(string newField, string callFunc, bool isForce = false)
     {
         ModelNPC.FieldData fieldData = new ModelNPC.FieldData() { NameField = newField };
-
-        //if (Storage.Instance.IsLoadingWorldThread && isForce == false)
-        //{
-        //    Debug.Log("NOT AddNewFieldInGrid IsLoadingWorldThread is run");
-        //    return fieldData;
-        //}
         _GridDataG.FieldsD.Add(newField, fieldData);
 
         //! SaveHistory("", "AddNewFieldInGrid", callFunc, newField);
-
         if(Storage.Map.IsGridMap)
             Storage.Map.CheckSector(newField);
-
-        //if (Storage.Instance.ReaderSceneIsValid)
-        //{
-        //    Storage.ReaderWorld.UpdateLinkData(fieldData, fieldData.NameField, ); //FIX**DELETE
-        //}
-
         return fieldData;
     }
 
@@ -232,15 +198,6 @@ public class UpdateData {
         if(!_GridDataG.FieldsD.TryGetValue(nameField, out fieldData))
             AddNewFieldInGrid_Cache(ref fieldData, nameField, callFunc);
 
-        //if (!_GridDataG.FieldsD.ContainsKey(nameField))
-        //{
-        //    fieldData = AddNewFieldInGrid(nameField, callFunc);
-        //}
-        //else
-        //{
-        //    fieldData = _GridDataG.FieldsD[nameField];
-        //}
-
         if (isTestSlow)
         {
             var ind = fieldData.Objects.FindIndex(p => p.NameObject == objDataSave.NameObject);
@@ -248,10 +205,6 @@ public class UpdateData {
             {
 
                 Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE:   in " + nameField + "    " + callFunc);
-
-                //var gobj = fieldData.Objects.Find(p => p.NameObject == objDataSave.NameObject);
-                //if (gobj != null)
-                //Storage.Instance.AddDestroyGameObject(gobj.NameObject);
                 Storage.Log.GetHistory(objDataSave.NameObject);
                 return false;
             }
@@ -261,8 +214,7 @@ public class UpdateData {
 
         if (Storage.Instance.ReaderSceneIsValid)
         {
-            //Storage.ReaderWorld.UpdateField(objDataSave, fieldData.NameField);
-            Storage.ReaderWorld.UpdateLinkData(objDataSave, fieldData.NameField, fieldData.Objects.Count - 1); //FIX**DELETE
+            Storage.ReaderWorld.UpdateLinkData(objDataSave, fieldData.NameField, fieldData.Objects.Count - 1);
         }
 
         if (Storage.Map.IsGridMap)
@@ -273,41 +225,29 @@ public class UpdateData {
 
         return true;
     }
-
-
-    //public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc, bool isClaerField = false, bool isTestFilledField = false, bool isTestExistMeType = false,
+           
     public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc,
          PaletteMapController.SelCheckOptDel p_modeDelete = PaletteMapController.SelCheckOptDel.None,
         PaletteMapController.SelCheckOptDel p_modeCheck = PaletteMapController.SelCheckOptDel.None)
     {
         bool isLog = true;
-
-        //bool isDel = p_TypeModeOptStartDelete != PaletteMapController.SelCheckOptDel.None;
-
         if (isLog)
-        {
             Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_modeDelete + " c: " + p_modeCheck;  
-        }
 
         ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))
         {
             fieldData = AddNewFieldInGrid(nameField, callFunc);
         }
-        //else
         else 
         {
             fieldData = _GridDataG.FieldsD[nameField];
 
             if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelFull)
             { 
-                //if (!isDel)
-                //{
-                //if (isTestFilledField)
                 if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelFull && p_modeCheck == PaletteMapController.SelCheckOptDel.DelFull)
                     return false;
 
-                //if (isTestExistMeType)
                 if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelType && 
                     p_modeCheck == PaletteMapController.SelCheckOptDel.DelType)
                 {
@@ -345,9 +285,7 @@ public class UpdateData {
                         return false;
                     }
                 }
-                //}
-                //else
-                //{
+
                 if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelType)
                 {
                     var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
@@ -356,10 +294,6 @@ public class UpdateData {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR type";
 
-                        //-- TEST JOB
-                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
-
-                        //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
                         {
@@ -377,10 +311,6 @@ public class UpdateData {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR prefab";
 
-                        //-- TEST JOB
-                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
-
-                        //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
                         {
@@ -398,10 +328,6 @@ public class UpdateData {
                         if (isLog)
                             Storage.EventsUI.ListLogAdd = "Add IN GRID: " + "CLEAR terra";
 
-                        //-- TEST JOB
-                        AlienJobsManager.TestHistoryJobsDelID.Add(ListRemove[i].Id);
-
-                        //ListRemove.RemoveAt(i);
                         fieldData.Objects.Remove(ListRemove[i]);
                         if (Storage.Instance.ReaderSceneIsValid)
                         {
@@ -421,22 +347,12 @@ public class UpdateData {
             fieldData.Objects.Clear();
         }
 
-        //if (isClaerField)
-        //{
-        //    fieldData.Objects.Clear();
-        //}
-
         if (isTestSlow)
         {
             var ind = fieldData.Objects.FindIndex(p => p.NameObject == objDataSave.NameObject);
             if (ind != -1)
             {
-
                 Debug.Log("########## AddDataObjectInGrid [" + objDataSave.NameObject + "] DUBLICATE:   in " + nameField + "    " + callFunc);
-
-                //var gobj = fieldData.Objects.Find(p => p.NameObject == objDataSave.NameObject);
-                //if (gobj != null)
-                    //Storage.Instance.AddDestroyGameObject(gobj.NameObject);
                 Storage.Log.GetHistory(objDataSave.NameObject);
                 return false;
             }
@@ -507,10 +423,10 @@ public class UpdateData {
         {
             Helper.GetNameFieldByPosit(ref nameField, dataObjDel.Position);
             //---------- test ------
-            var objs = ReaderScene.GetObjectsDataFromGrid(nameField);
-            index = objs.FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            //var objs = ReaderScene.GetObjectsDataFromGrid(nameField);
+            //index = objs.FindIndex(p => p.NameObject == dataObjDel.NameObject);
             //---------------------
-            //index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
+            index = ReaderScene.GetObjectsDataFromGrid(nameField).FindIndex(p => p.NameObject == dataObjDel.NameObject);
             //---------------------
 
             if (index == -1)
@@ -536,7 +452,6 @@ public class UpdateData {
     {
         if (Storage.Log.IsSaveHistory)
         {
-            //ModelNPC.ObjectData oldObj = ReaderScene.GetObjecsDataFromGrid(nameField)[index];
             ModelNPC.ObjectData oldObj = ReaderScene.GetObjectDataFromGrid(nameField, index);
             
             Storage.Log.SaveHistory(setObject.NameObject, "UpdateDataObect", callFunc, nameField, "", oldObj, setObject);
@@ -546,9 +461,6 @@ public class UpdateData {
         var testPos = new Vector3();
         if (testPos != newPos)
         {
-            //Debug.Log("------------------------ UpdateDataObect NEW Pos");
-            //setObject.Position = newPos;
-            //setObject.SetPosition(newPos, isTestValid: false); // -- 3*
             setObject.SetPosition(newPos);
         }
         SetObjecDataFromGrid(nameField, index, setObject); // -- 3*
@@ -749,5 +661,5 @@ public class UpdateData {
     }
         #endregion
 
-    }
+}
     

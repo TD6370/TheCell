@@ -498,18 +498,15 @@ public class GenerateGridFields : MonoBehaviour {
                 GameObject gobj = realObjects[i];
                 if (gobj == null || !gobj.activeSelf)
                 {
-                    //Debug.Log("################# SaveListObjectsToData   REMOVE  GameObject   field:" + p_nameField + "  ind:" + i);
                     Debug.Log("***************** SaveListObjectsToData DESTROY GameObject field:" + p_nameField + "  ind:" + i);
                     continue;
                 }
 
                 indErr = "3.";
-                //SaveLoadData.ObjectData dataObj = dataObjects.Find(p => p.NameObject == gobj.name);
                 int indData = dataObjects.FindIndex(p => p.NameObject == gobj.name);
 
                 if (indData == -1)
                 {
-                    //Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
                     indData = 0;
                     bool isFind = false;
                     foreach (var itemObj in ReaderScene.GetObjectsDataFromGrid(p_nameField))
@@ -525,15 +522,11 @@ public class GenerateGridFields : MonoBehaviour {
                     }
                     if (!isFind)
                     {
-                        var testSpawnedObjects = AlienJobsManager.TestHistoryJobs;
-
                         Debug.Log("################# SaveListObjectsToData 1.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
-
                         int newIndex = Storage.Log.ConflictLog(gobj, p_nameField, dataObjects);
                         if (newIndex == -1)
                         {
                             Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
-                            //Storage.Log.GetHistory(gobj.name);
                             continue;
                         }
                         else
@@ -732,8 +725,7 @@ public class GenerateGridFields : MonoBehaviour {
     public GameObject CreateGameObjectByData(ModelNPC.ObjectData objData)
     {
         var newGO = Storage.Pool.GetPoolGameObject("new", objData.TypePoolPrefabName, new Vector3(0, 0, 0));
-        //objData.UpdateGameObject(newGO);
-        objData.UpdateGameObjectAndID(newGO); //FIX**DELETE
+        objData.UpdateGameObjectAndID(newGO);
         newGO.transform.position = objData.Position;
         newGO.name = objData.NameObject;
 
@@ -773,22 +765,11 @@ public class GenerateGridFields : MonoBehaviour {
             if (Storage.GenGrid.IsLoadOnlyField)
                 return;
 
-            //FIX#REAL
-            //if (Storage.Instance.IsLoadingWorld)
-            //    return;
-
             var keys = Storage.Instance.Fields.Select(p => p.Key).ToArray();
-            //Debug.Log("______________________LoadObjectsNearHero__________________");
-            //foreach (var nameField in Storage.Instance.Fields.Select(p => p.Key))
-
-            //IsValidPiontInZonaCorr() --- //FIX#REAL
-
             foreach (var nameField in keys)
             {
-                //string nameField = field.Key;
                 LoadObjectToReal(nameField);
             }
-
         }catch(Exception x)
         {
             Debug.Log("########### LoadObjectsNearHero !!!!!!!!!!! " + x.Message);

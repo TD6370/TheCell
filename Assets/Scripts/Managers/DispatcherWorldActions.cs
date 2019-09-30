@@ -46,15 +46,6 @@ public class DispatcherWorldActions : MonoBehaviour
 		
 	}
 
-    //private void LoadPriorityPerson()
-    //{
-    //    PersonPriority = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
-    //    foreach(var prior in Storage.Person.ContainerPriority.CollectionPriorityFinder)
-    //    {
-    //        PersonPriority.Add(prior.TypeObserver, prior);
-    //    }
-    //}
-
     public void StopDispatcher()
     {
         m_isStop = true;
@@ -69,13 +60,6 @@ public class DispatcherWorldActions : MonoBehaviour
     {
         try
         {
-            //isInit = false;
-            //StopCoroutine(NavigatorWorldScene());
-            //StartCoroutine(NavigatorWorldScene());
-
-            //isStop = false;
-            //isInit = false;
-
         }
         catch (Exception ex)
         {
@@ -153,15 +137,8 @@ public class DispatcherWorldActions : MonoBehaviour
         Queue<CaseDreamWorker> colectionLivePersonVIP = new Queue<CaseDreamWorker>();
         List<string> listNPC;
 
-        // -- TEST JOB
-        //bool isTestJOB = true;
-        //int indTestID = 0;
-        //List<ReaderScene.DataObjectInfoID> listTestID = new List<ReaderScene.DataObjectInfoID>();
-
         while (true)
         {
-            //yield break;//TEST TEMP Close
-
             if (m_isStop)
             {
                 m_isInit = false;
@@ -172,8 +149,6 @@ public class DispatcherWorldActions : MonoBehaviour
 
             if (Storage.Instance.ReaderSceneIsValid)
             {
-                // -- TEST JOB
-                //listTestID = Storage.ReaderWorld.CollectionInfoID.Values.ToList();
                 //---Init---
                 if (colectionLivePerson.Count == 0)
                     m_IsFilledSearchingCollection = false;
@@ -319,19 +294,6 @@ public class DispatcherWorldActions : MonoBehaviour
                 Storage.SceneDebug.LivePersonsCount = colectionLivePerson.Count;
                 Storage.SceneDebug.InfoCount = Storage.ReaderWorld.CollectionInfoID.Count;
 #endif
-                //--- TEST JOB
-                //if(isTestJOB)
-                //{
-                //    if (listTestID.Count > 0)
-                //    {
-                //        if (indTestID >= listTestID.Count)
-                //            indTestID = 0;
-                //        listTestID[indTestID].TestIsValud();
-                //        indTestID++;
-                //    }
-                //}
-
-
                 float timeNext = Storage.SceneDebug.SettingsScene.TimeRelax; //Storage.Person.TestSpeed
                 yield return new WaitForSeconds(timeNext);
             }

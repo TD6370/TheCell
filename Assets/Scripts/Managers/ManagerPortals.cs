@@ -126,11 +126,7 @@ public class ManagerPortals : MonoBehaviour
             var item = arrayID[i];
             if (item.Data.IsPortal())
             {
-                //Portals.TryGetValue(item.ID, out portal);
-                //if(portal == null)
-                //    Portals.Add(item.ID, item.Data as ModelNPC.PortalData);
                 Portals.Add(item.Data as ModelNPC.PortalData);
-
             }
             if (i % 1000 == 0)
                 yield return null;
@@ -158,14 +154,15 @@ public class ManagerPortals : MonoBehaviour
                 continue;
             }
             yield return null;
-            if(Portals == null && Portals.Count == 0)
+            if(Portals == null || Portals.Count == 0)
             {
                 yield return new WaitForSeconds(timeWait * 3);
                 continue;
             }
+            if (CurrentIndex >= Portals.Count)
+                CurrentIndex = 0;
 
             CurrentPortal = Portals[CurrentIndex];
-
             if (CurrentPortal == null)
             {
                 Debug.Log("######### DispatcherPortals.CurrentPortal == null");
@@ -184,11 +181,7 @@ public class ManagerPortals : MonoBehaviour
             PortalProcess(CurrentPortal);
 
             yield return new WaitForSeconds(timeWait);
-
             CurrentIndex++;
-            if (CurrentIndex >= Portals.Count)
-                CurrentIndex = 0;
-
         }
         yield return null;
     }
@@ -200,8 +193,6 @@ public class ManagerPortals : MonoBehaviour
             p_portal.ChildrensId = new List<string>();
 
         int preCountChild = p_portal.ChildrensId.Count;
-        //bool isIncubationValid = p_portal.ChildrenPreparationIncubation();
-        //bool isParkingLock = p_portal.ChildrenPreparationIncubation();
         bool isNotCreated;
         bool isTimeValid = p_portal.LastTimeIncubation + SettingPortals.PeriodIncubation < Time.time;
 
@@ -234,9 +225,6 @@ public class ManagerPortals : MonoBehaviour
         isNotCreated = preCountChild == p_portal.ChildrensId.Count;// && isIncubationValid;
         if (isNotCreated)
         {
-            //if (p_portal.CurrentProcess != TypeResourceProcess.None)
-            //    StartPortalProcess(p_portal.CurrentProcess, p_portal); //FIX
-            //else
             if (p_portal.CurrentProcess == TypeResourceProcess.None)
             {
                 bool isNotFullLimit = p_portal.ChildrensId.Count < SettingPortals.StartLimitNPC;
@@ -378,7 +366,7 @@ public class ManagerPortals : MonoBehaviour
                 Helper.GetNameFieldByPosit(ref fieldName, positGen);
 
             SaveLoadData.TypePrefabs genNPC = Storage.GenWorld.GenObjectWorld(nodeGen);
-            //TEST
+            //TEST BILD
             genNPC = SaveLoadData.TypePrefabs.Inspector;
 
             ModelNPC.ObjectData objDataNPC = Storage.GenWorld.GenericPrefabOnWorld(genNPC, positGen);

@@ -20,7 +20,8 @@ public static class Helper { //: MonoBehaviour {
     public static int LayerDark = 22;
     public static int LayerDefault = 0;
     public static string LayerTerraName = "LayerTerra";
-    public static string LayerFloorName = "LayerFloor";
+    //public static string LayerFloorName = "LayerFloor";//FIX OSOKA
+    public static string LayerFloorName = "LayerTerraDecor"; 
 
     public static bool IsBigWorld = true;// false; //
 
@@ -312,37 +313,6 @@ public static class Helper { //: MonoBehaviour {
         }
         return prefabType;
     }
-
-    //public static bool IsTerra(SaveLoadData.TypePrefabs typePrefab)
-    //{
-    //    bool isTerra = Enum.IsDefined(typeof(SaveLoadData.TypePrefabObjects), typePrefab.ToString());
-    //    //bool isTerra = IsTypeTypePrefabObjectsContains(typePrefab.ToString());
-    //    return isTerra;
-
-    //    //switch(typePrefab)
-    //    //{
-    //    //    case SaveLoadData.TypePrefabs.PrefabRock:
-    //    //    case SaveLoadData.TypePrefabs.PrefabVood:
-    //    //    case SaveLoadData.TypePrefabs.PrefabElka:
-    //    //    case SaveLoadData.TypePrefabs.PrefabWallRock:
-    //    //    case SaveLoadData.TypePrefabs.PrefabWallWood:
-    //    //        return true;
-    //    //}
-    //    //return false;
-    //}
-
-    //public static bool IsTerra(this string typePrefabStr)
-    //{
-    //    try
-    //    {
-    //        SaveLoadData.TypePrefabs typePrefab = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), typePrefabStr);
-    //        return IsTerra(typePrefab);
-    //    }catch(Exception x)
-    //    {
-    //        Debug.Log("IsTerra " + x.Message);
-    //        return false;
-    //    }
-    //}
         
     public static bool IsUpdateTexture(SaveLoadData.TypePrefabs typePrefab)
     {

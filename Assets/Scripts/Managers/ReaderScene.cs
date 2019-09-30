@@ -5,16 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class ReaderScene //: UpdateData
+public class ReaderScene
 {
     public static bool IsReaderOn = true; //false; //
-
-    //: UpdateData.
-    //[MenuItem("Tools/MyTool/Do It in C#")]
-    //static void DoIt()
-    //{
-    //    EditorUtility.DisplayDialog("MyTool", "Do It in C# !", "OK", "");
-    //}
 
     public class DataObjectInfoID
     {
@@ -48,31 +41,20 @@ public class ReaderScene //: UpdateData
             }
         }
 
-        //public ModelNPC.ObjectData Data { get; set; }
-        //----
         private ModelNPC.ObjectData m_Data;
         public ModelNPC.ObjectData Data {
             get {
                 //TestIsValud();
                 return m_Data;
             }
-            //set
-            //{
-            //    m_Data = value;
-            //    TestIsValud();
-            //}
         }
 
         public void UpdateData(ModelNPC.ObjectData value, string p_field, int p_index = -1, bool isTestValid = false)
         {
-            //if (m_Data != null)
-            //    Debug.Log(Storage.EventsUI.ListLogAdd = "######## StartSetData m_Data is fill ???");
             m_Data = value;
-
             if(isTestValid)
                 TestIsValud();
 
-            //if (!string.IsNullOrEmpty(p_field)) //FIX**DELETE
             m_Field = p_field;
 
             if (p_index != -1)
@@ -98,9 +80,6 @@ public class ReaderScene //: UpdateData
                 return Helper.GetPositByField(Field);
             }
         }
-
-        //public float TimeStartWork { get; set; }
-        //public float TimeStartDreamWork { get; set; }
 
         private string _id;
         public string ID
@@ -160,7 +139,7 @@ public class ReaderScene //: UpdateData
             if (string.IsNullOrEmpty(ID))
                 return false;
 
-            temp_objsTest = GetObjectsDataFromGridContinue(Field); //GetFieldsByID(ID);
+            temp_objsTest = GetObjectsDataFromGridContinue(Field); 
             if (temp_objsTest == null)
             {
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### DataObjectInfoID  NOT.TestIsValud: objsTest is null " + m_Data.NameObject);
@@ -169,15 +148,7 @@ public class ReaderScene //: UpdateData
             int count = temp_objsTest.Where(p => p.NameObject == m_Data.NameObject).Count();
             if(count == 0)
             {
-                //-- TEST
-                var test = AlienJobsManager.TestHistoryJobs;
-                var testID = AlienJobsManager.TestHistoryJobs.Where(p=>p.IndexOf(ID) !=-1).ToList();
-                var testID_Field = AlienJobsManager.TestHistoryJobs.Where(p => p.IndexOf(Field) != -1).ToList();
-
-                var delID = AlienJobsManager.TestHistoryJobsDelID.Find(p => p == ID);
-                var spawnID = AlienJobsManager.TestHistoryJobsSpawnID.Find(p => p == ID);
-                DataObjectInfoID targetInfo = ReaderScene.GetInfoID(ID);
-
+                DataObjectInfoID targetInfo = GetInfoID(ID);
                 Debug.Log(Storage.EventsUI.ListLogAdd = "##### DataObjectInfoID NOT.TestIsValud: " + m_Data.NameObject);
             }
             return count > 0;
@@ -264,22 +235,10 @@ public class ReaderScene //: UpdateData
         foreach (var item in Storage.Instance.GridDataG.FieldsD)
         {
             field = item.Value.NameField;
-
-            //---- test
-            if(item.Key != field)
-                Debug.Log("##### Error Key Field Storage.Instance.GridDataG.FieldsD " + field + " <> " + item.Key);
-            //------------
-            //foreach (ModelNPC.ObjectData objData in item.Value.Objects)
             for(int indDublicae = item.Value.Objects.Count - 1; indDublicae >= 0; indDublicae--)
             {
                 objData = item.Value.Objects[indDublicae];
                 id = Helper.GetID(objData.NameObject);
-
-                //--- EST JOB
-                if(id== "eb91f6d")
-                {
-                    Debug.Log("TEST");
-                }
 
                 isExistID = true;
                 while (isExistID)
@@ -311,16 +270,8 @@ public class ReaderScene //: UpdateData
                 }
                 if (!string.IsNullOrEmpty(id))
                 {
-                    //-- TEST JOB
-                    if(field != item.Key)
-                    {
-                        Debug.Log("############# ERROR FIELD " + field + " <> " + item.Key);
-                    }
-
                     dataInfo = new DataObjectInfoID()
                     {
-                        //Field = field,
-                        //Data = objData,
                         Gobject = null
                     };
                     dataInfo.UpdateData(objData, field, indDublicae);
@@ -347,8 +298,6 @@ public class ReaderScene //: UpdateData
         if (false == CheckCollectionInfoID(id))
             return;
         CollectionInfoID[id].Gobject = newGobject;
-
-        
     }
 
     public void UpdateLinkDataFormModel(ModelNPC.ObjectData newData)
@@ -373,7 +322,6 @@ public class ReaderScene //: UpdateData
         }
     }
 
-
     public void UpdateLinkData(ModelNPC.ObjectData newData, bool isGeneric = false, string field = "", int index = -1)
     {
         if (newData == null || newData.NameObject == null) // || isGeneric)
@@ -385,17 +333,12 @@ public class ReaderScene //: UpdateData
         if (false == CheckCollectionInfoID(id, isGeneric))
             return;
 
-        //newData = UpdateFix(newData);
         if (isGeneric)
             CollectionInfoID[id].StartSetData(newData);
         else
         {
-            //CollectionInfoID[id].Data = newData;
-            //new
             CollectionInfoID[id].UpdateData(newData, field, index);
         }
-        //TEST
-        //UpdateFix(id, newData);
     }
 
   public void UpdateLinkData(ModelNPC.ObjectData newData, string newField, int index)
@@ -406,38 +349,16 @@ public class ReaderScene //: UpdateData
             return;
         }
         string id = GetDataID(newData);
-        //if (false == CheckCollectionInfoID(id))
-        if (false == CheckCollectionInfoID(id, true)) //FIX**DELETE
+        if (false == CheckCollectionInfoID(id, true)) 
             return;
 
-        //CollectionInfoID[id].Data = newData;
-        //CollectionInfoID[id].Field = newField;
-        //new
         CollectionInfoID[id].UpdateData(newData, newField, index);
-        
     }
-
-
-    private void UpdateFix(string id, ModelNPC.ObjectData newData)
-    {
-        //TEST
-        //if (newData.ModelView != null)
-            //CollectionInfoID[id].Data.ModelView = newData.ModelView;
-        //Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ModelView is Null >> " + newData.NameObject);
-        //if (newData.Id != null)
-        //    CollectionInfoID[id].Data.Id = newData.Id;
-        //else
-        //    CollectionInfoID[id].Data.CreateID();
-        //Debug.Log(Storage.EventsUI.ListLogAdd = "#### UpdateFix newData.ID is Null >> " + newData.NameObject);
-    }
-
 
     private string GetDataID(ModelNPC.ObjectData newData)
     {
         string id = Helper.GetID(newData.NameObject);
         var persData = newData as ModelNPC.PersonData;
-        //if (persData != null)
-        //    id = persData.Id;
         return id;
     }
 
@@ -453,10 +374,6 @@ public class ReaderScene //: UpdateData
         if (false == CheckCollectionInfoID(id))
             return;
 
-        //TEST
-        //var t1 = CollectionInfoID[id].Data;
-        //var t2 = CollectionInfoID[id].Gobject;
-
         CollectionInfoID[id].Field = newField;
     }
 
@@ -467,23 +384,17 @@ public class ReaderScene //: UpdateData
             Debug.Log("RemoveGobject  CollectionInfo  ID not found = " + p_id);
             return;
         }
-        //--TEST JOB
-        AlienJobsManager.TestHistoryJobs.Add("RemoveObjectInfo \\ " + CollectionInfoID[p_id].Data.NameObject);
-        AlienJobsManager.TestHistoryJobsDelID.Add(p_id);
         CollectionInfoID.Remove(p_id);
-        
     }
 
     private bool CheckCollectionInfoID(string id, bool isGeneric = false)
     {
         if (!CollectionInfoID.ContainsKey(id))
         {
-            //FIX**DELETE
             if (isGeneric)
                 CollectionInfoID.Add(id, new DataObjectInfoID());
             else
             {
-                //FIX**DELETE
                 return false;
             }
         }
@@ -567,18 +478,12 @@ public class ReaderScene //: UpdateData
     }
 
     //===============================================================================
-
     //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, PriorityFinder priority, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget)
     //public static DataInfoFinder GetDataInfoLocation(Vector2Int fieldPosit, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
     public static DataInfoFinder GetDataInfoLocation(int xPos, int yPos, int distantion, string id_Observer, SaveLoadData.TypePrefabs typeObserver, string id_PrevousTarget, bool isFoor)
     {
         DataInfoFinder finder = new DataInfoFinder();
         Dictionary<string, ModelNPC.ObjectData> locationObjects = new Dictionary<string, ModelNPC.ObjectData>();
-        //bool isFindReaderWorld = Storage.ReaderWorld.CollectionInfoID.Count > 0;
-        //bool isFindReaderWorld = false;
-
-        //if (!Storage.Instance.ReaderSceneIsValid)
-        //    return finder;
 
         int startX = xPos - distantion;
         int startY = yPos - distantion;
@@ -608,39 +513,23 @@ public class ReaderScene //: UpdateData
                         power = Storage.GenWorld.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
                     else
                         power = Storage.Person.GetPriorityPowerByJoin(typeObserver, objData.TypePrefab);
-                    powerDist = (distantion - Math.Max(Math.Abs(xPos - x), Math.Abs(yPos - y))) * 3;
-                    power += powerDist;
-                    //if (finder.ResultPowerData.ContainsKey(id))
-                    //Debug.Log("######### Error finder.ResultPowerData.ContainsKey(id)");
-                    //else
+
+                    //~TEST PRIORITY~
+                    //powerDist = (distantion - Math.Max(Math.Abs(xPos - x), Math.Abs(yPos - y))) * 3;
+                    //power += powerDist;
+
                     if (!finder.ResultPowerData.ContainsKey(id))
                     {
                         finder.ResultPowerData.Add(id, power);
-                        //if (!isFindReaderWorld)
-                        //{
-                            if(!locationObjects.ContainsKey(id))
-                                locationObjects.Add(id, objData);
-                        //}
+                        if(!locationObjects.ContainsKey(id))
+                            locationObjects.Add(id, objData);
                     }
                 }
             }
         }
       
-        //int priorityIndex = 0;
         string selId = string.Empty;
-        //------------------------
-        //foreach (var item in finder.ResultPowerData)
-        //{
-        //    if (priorityIndex < item.Value) 
-        //    {
-                
-        //        priorityIndex = item.Value; //only star
-        //        selId = item.Key;
-
-        //    }
-        //}
-        //------------------------
-        int top = 10;
+        int top = 20; // 10; //~TEST PRIORITY~
         List<string> listTopId = new List<string>();
         foreach (var item in finder.ResultPowerData.OrderByDescending(p=>p.Value))
         {
@@ -656,14 +545,7 @@ public class ReaderScene //: UpdateData
         //--------------------------
         if (!string.IsNullOrEmpty(selId))
         {
-            //if (isFindReaderWorld)
-            //{
-            //    if (Storage.ReaderWorld.CollectionInfoID.ContainsKey(selId))
-            //        finder.ResultData = Storage.ReaderWorld.CollectionInfoID[selId].Data;
-            //}else
-            //{
-                finder.ResultData = locationObjects[selId];
-            //}
+            finder.ResultData = locationObjects[selId];
         }
         return finder;
     }
@@ -750,32 +632,8 @@ public class ReaderScene //: UpdateData
         return finder;
     }
 
-    
-
-
-   
-
-
-    //public static int GetPrioriryPower(DataInfoFinder finder, string id, PriorityPerson priority)
-
-    //public List<PriorityPerson> GetPrioritys()
-    //{
-    //    return new List<PriorityPerson>();
-    //}
-
     public class DataInfoFinder
     {
-        //public Queue<string> StackAll = new Queue<string>();
-        //public Dictionary<string, ModelNPC.ObjectData> listData = new Dictionary<string, ModelNPC.ObjectData>();
-        //public List<ModelNPC.ObjectData> listAll = new List<ModelNPC.ObjectData>();
-
-        //public Dictionary<TypesBiomNPC, Dictionary<string, string>> ListBiomNPC = new Dictionary<TypesBiomNPC, Dictionary<string, string>>();
-        //public Dictionary<PoolGameObjects.TypePoolPrefabs, Dictionary<string, string>> ListTypesPrefabs = new Dictionary<PoolGameObjects.TypePoolPrefabs, Dictionary<string, string>>();
-        //public Dictionary<SaveLoadData.TypePrefabs, Dictionary<string, string>> ListTypesModels = new Dictionary<SaveLoadData.TypePrefabs, Dictionary<string, string>>();
-
-        //public List<string> ListAll = new List<string>();
-        //public Dictionary<string, ModelNPC.ObjectData> ListObjData = new Dictionary<string, ModelNPC.ObjectData>();
-
         public Dictionary<string, int> ResultPowerData = new Dictionary<string, int>();
         public ModelNPC.ObjectData ResultData;
         public int DistantionToTarget = 0;

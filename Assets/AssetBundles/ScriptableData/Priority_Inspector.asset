@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Name: Priority_Inspector
   m_EditorClassIdentifier: 
   TypeObserver: 44
-  PrioritysTypeModelAll: 
-  PrioritysTypeModelNPC: 0200000003000000040000000b0000000d000000070000000a0000000c00000001000000
-  PrioritysTypeModelFloor: 
+  PrioritysTypeModelAll: 10000000110000001200000013000000
+  PrioritysTypeModelNPC: 0200000003000000040000000b0000000d000000
+  PrioritysTypeModelFloor: 0e0000000d0000000c0000000b00000001000000
   PrioritysTypeModelFlore: 00000000070000000400000000000000
   PrioritysTypeModelWood: 030000000b000000
   PrioritysTypeModelWall: 
-  PrioritysTypePool: 040000000300000002000000
+  PrioritysTypePool: 00000000010000000400000002000000
   PrioritysTypeBiomNPC: 020000000300000004000000
   ListJobs:
   - {fileID: 11400000, guid: ed950cfc1ea98a945a6998d5f515b61d, type: 2}

@@ -96,21 +96,9 @@ public partial class ModelNPC
             //    Storage.ReaderWorld.UpdateLinkData(this);
         }
 
-        //public virtual void SetPosition(Vector3 newPosition, bool isTestValid = true)
         public virtual void SetPosition(Vector3 newPosition)
         {
             Position = new Vector3(newPosition.x, newPosition.y, Position.z);
-            //if (isTestValid)
-            //{
-            //    if (Storage.Instance.ReaderSceneIsValid)
-            //    {
-            //        //Storage.ReaderWorld.UpdateLinkData(this);
-            //        string meField = Helper.GetNameFieldPosit(Position.x, Position.y);
-                    
-            //        ////FIX**DELETE //!!!!!
-            //        Storage.ReaderWorld.UpdateField(this, meField);
-            //    }
-            //}
         }
 
         public virtual void SetNameObject(string newNameObject, bool isGeneric = false, string field = "", int index = -1, bool isTestValid = true)
@@ -133,7 +121,7 @@ public partial class ModelNPC
         {
         }
 
-        public virtual void UpdateGameObjectAndID(GameObject objGame) //FIX**DELETE
+        public virtual void UpdateGameObjectAndID(GameObject objGame)
         {
             UpdateGameObject(objGame);
             if (Storage.Instance.ReaderSceneIsValid)

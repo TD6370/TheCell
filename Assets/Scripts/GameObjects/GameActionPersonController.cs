@@ -7,12 +7,13 @@ using UnityEngine;
 public class GameActionPersonController : MonoBehaviour
 {
     public static float TimeIdleLock = 1f;
+    public static float TimeWork = 3f;
     public static int LimitListCommandActions = 3;
 
     public enum NameActionsPerson
     {
         //None, Idle, Move, Dead, Work, Attack, Completed //, Target //, Completion
-        None, Idle, IdleLock, Move, Target, TargetLocal, TargetBackToBase, Dead, Work, Attack, Completed //, Target //, Completion
+        None, Idle, IdleLock, Move, Target, TargetLocal, TargetBackToBase, Dead, Work, Attack, Completed, CompletedLoot //, Target //, Completion
     };
 
     public static bool IsGameActionPersons = true;
@@ -220,6 +221,12 @@ public class GameActionPersonController : MonoBehaviour
             m_MeAnimation.PersonIdle();
     }
 
+    public void PlayAnimationWork()
+    {
+        if (m_MeAnimation != null)
+            m_MeAnimation.PersonWork();
+    }
+
     public static ModelNPC.GameDataAlien GetAlienData(ModelNPC.PersonData dataNPC)
     {
         return dataNPC as ModelNPC.GameDataAlien;
@@ -252,6 +259,7 @@ public class GameActionPersonController : MonoBehaviour
         }
         return ListPersonActions;
     }
+
     public static NameActionsPerson GetCurrentAction(ModelNPC.GameDataAlien dataNPC)
     {
         if(string.IsNullOrEmpty(dataNPC.CurrentAction))
@@ -260,6 +268,17 @@ public class GameActionPersonController : MonoBehaviour
             dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
         }
         return (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.CurrentAction); ;
+    }
+
+    public static void CheckCurrentAction(ModelNPC.GameDataAlien dataNPC, ref NameActionsPerson result)
+    {
+        if (string.IsNullOrEmpty(dataNPC.CurrentAction))
+        {
+            //Debug.Log("####### GetCurrentAction dataNPC.CurrentAction is null");
+            dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
+        }
+        if(dataNPC.CurrentAction != NameActionsPerson.Completed.ToString())
+            result = (NameActionsPerson)Enum.Parse(typeof(NameActionsPerson), dataNPC.CurrentAction); ;
     }
 
     public static void GetCurrentAction_Cache(ref NameActionsPerson result, ModelNPC.GameDataAlien dataNPC)
@@ -277,6 +296,10 @@ public class GameActionPersonController : MonoBehaviour
         CheckCompletionActions(dataNPC, p_actionPerson, controller);
 
         var listPersonActions = GetActions(dataNPC);
+        //fix WORK
+        CheckCurrentAction(dataNPC, ref p_actionPerson);
+        //p_actionPerson = GetCurrentAction(dataNPC);
+
         if (dataNPC.CurrentAction == NameActionsPerson.Completed.ToString())
         {
             if (listPersonActions.Count == 0)
@@ -320,6 +343,12 @@ public class GameActionPersonController : MonoBehaviour
                     controller.ActionPerson = NameActionsPerson.Idle;
                 dataNPC.CurrentAction = NameActionsPerson.Idle.ToString();
                 break;
+            case NameActionsPerson.CompletedLoot:
+                CheckComplitionLoot(dataNPC, controller);
+                break;
+            case NameActionsPerson.Work:
+                CheckComplitionWork(dataNPC, controller);
+                break;
             case NameActionsPerson.Target:
             case NameActionsPerson.TargetLocal:
             case NameActionsPerson.TargetBackToBase:
@@ -327,7 +356,7 @@ public class GameActionPersonController : MonoBehaviour
             case NameActionsPerson.Attack:
             case NameActionsPerson.Dead:
             case NameActionsPerson.Completed:
-            case NameActionsPerson.Work:
+            
                 break;
         }
 
@@ -366,6 +395,7 @@ public class GameActionPersonController : MonoBehaviour
             case NameActionsPerson.Attack:
                 break;
             case NameActionsPerson.Work:
+                ActionWork(dataNPC, controller);
                 break;
             case NameActionsPerson.Target:
                 ActionTarget(dataNPC, controller);
@@ -399,7 +429,7 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void ExecuteActionNPC(ModelNPC.PersonData dataNPC, NameActionsPerson p_nameAction, GameActionPersonController controller, bool isForce = false)
     {
-        if (isForce)
+        if (isForce && controller!=null)
             controller.ResetAction();
 
         if (controller != null)
@@ -440,52 +470,7 @@ public class GameActionPersonController : MonoBehaviour
 
     #region Checked and run actions
 
-    public static void CheckComplitionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
-    {
-        if(dataNPC == null)
-        {
-            string strErr = "########## CheckComplitionIdle dataNPC == null ";
-            if (controller != null)
-                strErr += controller.gameObject.name;
-            Debug.Log(strErr);
-            return;
-        }
-
-        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
-        if (Time.time > timeWait)
-        {
-            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
-            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
-            //IdleLock
-        }
-
-        //FIXANIM
-        if(controller!=null)
-            controller.PlayAnimationIdle();
-    }
-
-    public static void CheckComplitionIdleLock(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
-    {
-        if (controller == null)
-        {
-            //TEST
-            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
-            return;
-        }
-
-        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
-        //if (Time.time > controller.TimeIdleLock && p_nameAction == NameActionsPerson.Idle)
-        if (Time.time > timeWait)
-        {
-            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
-            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
-            //IdleLock
-        }
-
-        //FIXANIM
-        if (controller != null)
-            controller.PlayAnimationIdle();
-    }
+    
 
     private static ModelNPC.ObjectData m_TargetObject = null;
     private static AlienJob temp_job = null;
@@ -601,8 +586,102 @@ public class GameActionPersonController : MonoBehaviour
         return false;
     }
 
+    public static bool ActionWork(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        float tilme = GetAlienData(dataNPC).TimeEndCurrentAction;
+        if (tilme == -1)
+            GetAlienData(dataNPC).TimeEndCurrentAction = Time.time + TimeWork;
+        return false;
+    }
+
     private void ActionDead()
     {
+    }
+
+    //**************************   CHECK   *************************************
+
+    public static void CheckComplitionIdle(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        if (dataNPC == null)
+        {
+            string strErr = "########## CheckComplitionIdle dataNPC == null ";
+            if (controller != null)
+                strErr += controller.gameObject.name;
+            Debug.Log(strErr);
+            return;
+        }
+
+        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
+        if (Time.time > timeWait)
+        {
+            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
+            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            //IdleLock
+        }
+
+        //FIXANIM
+        if (controller != null)
+            controller.PlayAnimationIdle();
+    }
+
+    public static void CheckComplitionIdleLock(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        if (controller == null)
+        {
+            //TEST
+            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            return;
+        }
+
+        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
+        //if (Time.time > controller.TimeIdleLock && p_nameAction == NameActionsPerson.Idle)
+        if (Time.time > timeWait)
+        {
+            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
+            RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            //IdleLock
+        }
+
+        //FIXANIM
+        if (controller != null)
+            controller.PlayAnimationIdle();
+    }
+
+    public static void CheckComplitionWork(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
+    {
+        //if (controller == null)
+        //{
+        //    //RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+        //    return;
+        //}
+
+        float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
+        if (Time.time > timeWait)
+        {
+            GetAlienData(dataNPC).TimeEndCurrentAction = -1;
+            if (dataNPC.Job != null)
+            {
+                //dataNPC.Job.IsJobRun = false;
+                //dataNPC.Job.IsJobCompleted = true;
+                //dataNPC.CurrentAction = NameActionsPerson.CompletedLoot.ToString();
+                //if (p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
+                ExecuteActionNPC(dataNPC, NameActionsPerson.CompletedLoot, controller);
+            }
+            else
+            {
+                RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
+            }
+        }
+        if (controller != null)
+            controller.PlayAnimationWork();
+    }
+
+    public static void CheckComplitionLoot(ModelNPC.GameDataAlien dataNPC, GameActionPersonController controller)
+    {
+        if (AlienJobsManager.CheckJobAlien(dataNPC) == false)
+        {
+            RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
+        }
     }
 
     #endregion
@@ -677,7 +756,7 @@ public class GameActionPersonController : MonoBehaviour
             if (isCompletedMoving) //END WAY TO BASE TARGET
             {
                 //@JOB@
-                if (AlienJobsManager.CheckJobAlien(m_dataNPC) == false)
+                if (AlienJobsManager.CheckJobAlien(m_dataNPC, this) == false)
                 {
                     RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
                     RequestActionNPC(m_dataNPC, NameActionsPerson.Target, this);

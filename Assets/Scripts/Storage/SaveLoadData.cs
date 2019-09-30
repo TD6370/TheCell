@@ -1100,12 +1100,7 @@ public class SaveLoadData : MonoBehaviour {
         string nameObject = Helper.CreateName(prefabName.ToString(), nameField, "-1");// prefabName.ToString() + "_" + nameFiled + "_" + i;
         ModelNPC.ObjectData objDataSave = BilderGameDataObjects.BildObjectData(prefabName);
         objDataSave.CreateID(nameObject);
-        string typePool = objDataSave.TypePoolPrefabName; //test
-
         objDataSave.SetNameObject(nameObject, true);
-        //objDataSave.TagObject = prefabName.ToString(); //@del
-        //objDataSave.Position = pos;
-        //objDataSave.SetPosition(pos); //FIX**DELETE *1
 
         if (PoolGameObjects.IsUseTypePoolPrefabs)
         {
@@ -1143,18 +1138,11 @@ public class SaveLoadData : MonoBehaviour {
                 Debug.Log("####### AddConstructInGridData: structType is TypesStructure.Terra   objDataSave Not is ModelNPC.TerraData !!!!");
                 return false;
             }
-            //objPerson.Level = Storage.Instance._TypesBoss.Where(p => p.TextureMap == personType).Select(p => p.Level).FirstOrDefault(); ;
-            if (!string.IsNullOrEmpty(personTextureName))
-            {
-                //objPerson.Level = TypeBoss.Instance._TypesBoss.Where(p => p.NameTextura2D == personTextureName).Select(p => p.Level).FirstOrDefault();
-                //objPerson.Init();
-            }
         }
 
         bool res = Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "CreateDataGamesObjectsWorld",
             p_TypeModeOptStartDelete, p_TypeModeOptStartCheck);
 
-        //objDataSave.SetPosition(pos, isTestValid: false); //FIX**DELETE *1
         objDataSave.SetPosition(pos);
         return res;
     }

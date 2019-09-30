@@ -165,5 +165,30 @@ public class PlayerAnimation //: MonoBehaviour
         CurrentAnimationPlay = "TriggerIdle";
     }
 
+    public void PersonWork()
+    {
+        if (!isValidAnimation())
+            return;
 
+        if (!m_isMultiAnimation)
+        {
+                m_AnimatorHero.SetBool("TriggerIdle", false);
+            m_AnimatorHero.SetBool("TriggerMove", false);
+            m_AnimatorHero.SetBool("TriggerWork", true);
+        }
+        else
+        {
+                m_AnimatorBack.SetBool("TriggerIdle", false);
+                m_AnimatorFront.SetBool("TriggerIdle", false);
+            m_AnimatorBack.SetBool("TriggerMove", false);
+            m_AnimatorBack.SetBool("TriggerWork", true);
+            m_AnimatorFront.SetBool("TriggerMove", false);
+            m_AnimatorFront.SetBool("TriggerWork", true);
+        }
+
+
+        //CurrentAnimationPlay = "";
+        CurrentAnimationPlay = "TriggerIdle";
+    }
+    
 }

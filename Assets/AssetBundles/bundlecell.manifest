@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3398941379
+CRC: 1034121233
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4ec28d4257bcebbbe94f2eae661c901a
+    Hash: f04a1b406949e0a0fc25e47d40231063
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ea8daf6f6ed1a79e37cab2e1bd73e094
+    Hash: 0571a185abfd036baa868b583ed988de
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -413,8 +413,10 @@ Assets:
 - Assets/AssetBundles/Textures/UI/TittleGreen.png
 - Assets/AssetBundles/Textures/Map/GridIcons/KlenMap.png
 - Assets/AssetBundles/Textures/Portals/PortalGreenFetus.png
+- Assets/AssetBundles/Textures/UI/Inventory/GrassMediumInv.png
 - Assets/AssetBundles/ScriptableData/Wall/Priority_RockBrown.asset
 - Assets/AssetBundles/ScriptableData/Wall/Priority_Klen.asset
+- Assets/AssetBundles/Textures/UI/Inventory/GrassSmallInv.png
 - Assets/AssetBundles/Textures/Terra/Kust.png
 - Assets/AssetBundles/Textures/NarmalMaps/WallWood.png
 - Assets/AssetBundles/ScriptableData/Flore/Priority_Weedflower.asset

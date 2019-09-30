@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,6 +32,11 @@ public class SceneDebugerEditor : Editor
     private SerializedProperty IsShowTittleInfoPerson;
 
     private SerializedObject newSO;
+
+    private float m_timeUpdateUI = 0f;
+    private int m_xOut = 0;
+    private int m_yOut = 0;
+    private string m_childInfo = string.Empty;
 
     void OnEnable()
     {
@@ -124,12 +131,37 @@ public class SceneDebugerEditor : Editor
         IsClearTemplate.boolValue = EditorGUILayout.Toggle("Clear template", IsClearTemplate.boolValue);
         TimeClearTemplate.floatValue = EditorGUILayout.Slider("Delay clear template dialogs", TimeClearTemplate.floatValue, 1, 10);
 
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Count DreamWork's: ",
+            string.Format("{0}/{1}/{2}", sceneDebug.InfoCount, sceneDebug.LivePersonsCount, sceneDebug.LivePersonsStartCount));
+
         EditorGUILayout.Space();
 
-        //EditorGUILayout.IntField("Count DreamWork's: ", LivePersonsCount.intValue);
-        //EditorGUILayout.IntField("Count DreamWork's: ", sceneDebug.LivePersonsCount);
-        EditorGUILayout.LabelField("Count DreamWork's: ", 
-            string.Format("{0}/{1}/{2}", sceneDebug.InfoCount, sceneDebug.LivePersonsCount, sceneDebug.LivePersonsStartCount)            );
+        //if (m_timeUpdateUI < Time.time)
+        //{
+        //    m_timeUpdateUI = Time.time + 3f;
+        if (Storage.Portals != null)
+        {
+            foreach (ModelNPC.PortalData portal in Storage.Portals.Portals.Where(p=>p !=null))
+            {
+                Helper.GetFieldPositByWorldPosit(ref m_xOut, ref m_yOut, portal.Position);
+                m_childInfo = (portal.ChildrensId == null) ? "..." : portal.ChildrensId.Count.ToString();
+                EditorGUILayout.LabelField("PORTAL: ", portal.TypeBiom.ToString());
+                //GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("   field: ", String.Format("{0}x{1}", m_xOut, m_yOut));
+                EditorGUILayout.LabelField("   NPC: ", m_childInfo);
+                //GUILayout.EndHorizontal();
+                EditorGUILayout.LabelField("RESOURCES: ");
+                if (portal.Resources != null) {
+                    foreach(var res in portal.Resources)  {
+                        EditorGUILayout.LabelField("   " + res.NameInventopyObject + ":", res.Count.ToString());
+                    }
+                }
+            }
+        }
+        //}
+        
         
         //EditorGUI.BeginDisabledGroup(true);
         //SettingsEditor.OnInspectorGUI(); //<<<<
