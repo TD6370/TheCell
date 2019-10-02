@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: SettingsPortals
   m_EditorClassIdentifier: 
   StartLimitNPC: 20
-  PeriodIncubation: 2
+  PeriodIncubation: 1

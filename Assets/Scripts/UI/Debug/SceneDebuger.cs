@@ -236,8 +236,19 @@ public class SceneDebuger : MonoBehaviour {
 
             if (findCase != null && findCase.Person != null && findCase.Person.ID == _vip)
             {
-                //!!!! NullReferenceException: Object reference not set to an instance of an object
-                return m_poolDialogPersonPrefabs.Where(p => !p.IsLock && p.Person.ID != _vip).FirstOrDefault();
+                try
+                {
+                    //!!!! NullReferenceException: Object reference not set to an instance of an object
+                    return m_poolDialogPersonPrefabs.Where(p => !p.IsLock && p.Person.ID != _vip).FirstOrDefault();
+                }
+                catch(System.Exception ex)
+                {
+                    Debug.Log(Storage.EventsUI.ListLogAdd = "### GetFreeDialog : " + ex.Message);
+                    ClearTemplate();
+                    DialogsClear();
+                    RefreshDialogs();
+                    return null;
+                }
             }
             if (findCase == null)//force
             {

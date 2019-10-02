@@ -225,7 +225,9 @@ public class ManagerPortals : MonoBehaviour
         isNotCreated = preCountChild == p_portal.ChildrensId.Count;// && isIncubationValid;
         if (isNotCreated)
         {
-            if (p_portal.CurrentProcess == TypeResourceProcess.None)
+            //if (p_portal.CurrentProcess == TypeResourceProcess.None)
+            if (p_portal.CurrentProcess == TypeResourceProcess.None || 
+                (!p_portal.IsReality && p_portal.CurrentProcess == TypeResourceProcess.Incubation)) //FIX<<>>INCUBATION
             {
                 bool isNotFullLimit = p_portal.ChildrensId.Count < SettingPortals.StartLimitNPC;
                 

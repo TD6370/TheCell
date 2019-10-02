@@ -229,16 +229,30 @@ public class ReaderScene
         ModelNPC.ObjectData objDataOld;
 
         DataObjectInfoID dataInfo;
+        bool isLogManyObjects = false;
 
         //int indDublicae = 0;
         CollectionInfoID = new Dictionary<string, DataObjectInfoID>();
         foreach (var item in Storage.Instance.GridDataG.FieldsD)
         {
+            isLogManyObjects = false;
             field = item.Value.NameField;
-            for(int indDublicae = item.Value.Objects.Count - 1; indDublicae >= 0; indDublicae--)
+
+            //--- TEST
+            if (item.Value.Objects.Count > 5)
+            {
+                Debug.Log("#### MANY OBJECTS IN FIELD : " + field);
+                isLogManyObjects = true;
+            }
+            //---------------------
+
+            for (int indDublicae = item.Value.Objects.Count - 1; indDublicae >= 0; indDublicae--)
             {
                 objData = item.Value.Objects[indDublicae];
                 id = Helper.GetID(objData.NameObject);
+
+                if(isLogManyObjects) //--- TEST
+                    Debug.Log("#### onjects IN {" + field + "} : " + objData.NameObject);
 
                 isExistID = true;
                 while (isExistID)
@@ -250,16 +264,16 @@ public class ReaderScene
                         strOld = objDataOld == null ? " none " : objDataOld.NameObject;
                         strNew = objData == null ? " none " : objData.NameObject;
                         dist = Vector3.Distance(objData.Position, objDataOld.Position);
-                        if (dist < 2f)
+                        if (dist < 4f)
                         {
-                            Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew + " [REMOVE DUBLICATE]");
+                            Debug.Log("##### Error ID : " + id + " old =" + strOld + "  New obj=" + strNew);
                             Storage.Instance.GridDataG.FieldsD[field].Objects.RemoveAt(indDublicae);
                             id = string.Empty;
                             break;
                         }
                         else
                         {
-                            Debug.Log("##### Error ID : " + id + " old =" + strOld ?? "null " + "  New obj=" + strNew + " [FIX ID]");
+                            Debug.Log("##### Error fix ID (" + dist + ") : " + id + " old =" + strOld  + " New obj=" + strNew);
                             newName = string.Empty;
                             objData.Id = null;
                             Helper.CreateName_Cache(ref newName, objData.TypePrefabName, field, "-1");

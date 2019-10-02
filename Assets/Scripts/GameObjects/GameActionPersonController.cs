@@ -842,14 +842,22 @@ public class GameActionPersonController : MonoBehaviour
             fieldOld = fieldOld_Name;
         }
 
-        if (fieldOld != fieldNew) // 2* - test
+        if (!dataNPC.IsReality)
         {
-            Storage.Person.UpdateGamePositionInDream(fieldOld, fieldNew, dataNPC, newPosition);
-        }
-        else
-        {
-            //dataNPC.SetPosition(newPosition, isTestValid: false); // 2*
-            dataNPC.SetPosition(newPosition);
+            if (dataNPC.IsMoveValid())//FIX~~TRANSFER
+            {
+                dataNPC.StartTransfer("ActionMove");
+                if (fieldOld != fieldNew) // 2* - test
+                {
+                    Storage.Person.UpdateGamePositionInDream(fieldOld, fieldNew, dataNPC, newPosition);
+                }
+                else
+                {
+                    //dataNPC.SetPosition(newPosition, isTestValid: false); // 2*
+                    dataNPC.SetPosition(newPosition);
+                }
+                dataNPC.StopTransfer();
+            }
         }
     }
     #endregion
@@ -920,7 +928,7 @@ public class GameActionPersonController : MonoBehaviour
                 }
                 catch (Exception x)
                 {
-                    Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
+                    //Debug.Log("########## Error ModelView " + nameModelView + " " + x.Message);
                     continue;
                 }
                 m_ListViewModels.Add(typeModel, modelView);

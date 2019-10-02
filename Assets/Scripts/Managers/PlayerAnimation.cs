@@ -49,8 +49,8 @@ public class PlayerAnimation //: MonoBehaviour
         if (!m_isMultiAnimation &&  m_AnimatorHero == null)
             Debug.Log("############ Hero Animator Component is empty");
 
-        if(m_spriteRendererHeroModel == null)
-            Debug.Log("############ Hero SpriteRender Component is empty");
+        //if(m_spriteRendererHeroModel == null) //test
+        //    Debug.Log("############ Hero SpriteRender Component is empty");
 
         if (m_isMultiAnimation == true && (m_AnimatorBack == null || m_AnimatorFront == null))
             Debug.Log("############ Hero Animators Component is empty");

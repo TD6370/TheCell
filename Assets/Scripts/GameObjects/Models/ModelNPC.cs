@@ -74,6 +74,12 @@ public partial class ModelNPC
         [XmlIgnore]
         public bool IsReality = false;
 
+        [XmlIgnore]
+        private string m_NameTransfer;
+        [XmlIgnore]
+        //public bool IsTransfer = false;
+        public bool IsTransfer {  get { return !string.IsNullOrEmpty(m_NameTransfer); }  }
+        
         public string Id { get; set; }
 
         public ObjectData()
@@ -136,6 +142,27 @@ public partial class ModelNPC
         public override string ToString()
         {
             return NameObject + " " + TypePrefabName + " " + Position;
+        }
+
+        public void StartTransfer(string callName)
+        {
+            m_NameTransfer = callName;
+            Storage.Data.LockResaveObjectsCount++;
+        }
+        public void StopTransfer()
+        {
+            m_NameTransfer = string.Empty;
+            Storage.Data.LockResaveObjectsCount--;
+            if (Storage.Data.LockResaveObjectsCount < 0)
+                Storage.Data.LockResaveObjectsCount = 0;
+        }
+        public bool IsMoveValid()
+        {
+            //FIX~~TRANSFER
+            //if (IsTransfer || Storage.Data.IsUpdatingLocationPersonGlobal)
+            //    Debug.Log(Storage.EventsUI.ListLogAdd = "## Not IsMoveValid " + this.NameObject + " >> " + m_NameTransfer + "  IsHeroUpdate=" + Storage.Data.IsUpdatingLocationPersonGlobal);
+
+            return IsTransfer == false && !Storage.Data.IsUpdatingLocationPersonGlobal;
         }
     }
      
@@ -235,22 +262,26 @@ public partial class ModelNPC
             if (Storage.Instance.IsLoadingWorld)
             {
                 //Debug.Log("_______________ LOADING WORLD ....._______________");
+                StopTransfer();
                 return "";
             }
 
             if (_isError)
             {
                 Debug.Log("################ Error NextPosition (" + gobj.name + ")   already IS ERROR ");
+                StopTransfer();
                 return "Error";
             }
             if (Storage.Instance.IsCorrectData)
             {
                 Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+                StopTransfer();
                 return "Error";
             }
             if (!IsReality)
             {
                 Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");  //!@#$
+                StopTransfer();
                 return "Update";
             }
 
@@ -276,6 +307,7 @@ public partial class ModelNPC
                     //Destroy(gobj, 3f);
                     //Storage.Instance.AddDestroyRealObject(gobj);
                     //@CD@
+                    StopTransfer();
                     _isError = true;
                     Storage.Fix.CorrectData(null, gobj, "NextPosition");
                     return "Error";
@@ -288,7 +320,12 @@ public partial class ModelNPC
 
                     isInZona = false;
                 }
-                newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+                //if (IsMoveValid())
+                //{
+                //    IsTransfer = true;
+                    newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
+                //    IsTransfer = false;
+                //}
                 if (!isInZona && !string.IsNullOrEmpty(newName))
                 {
                     Storage.Instance.DestroyObject(gobj);
@@ -314,8 +351,13 @@ public partial class ModelNPC
             {
                 isInZona = false;
             }
+            if (IsMoveValid())
+            {
+                StartTransfer("Update me");
+                newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
+                StopTransfer();
+            }
 
-            newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona, true);
             if (!isInZona && !string.IsNullOrEmpty(newName))
             {
                 Storage.Instance.DestroyObject(gobj);

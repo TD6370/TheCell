@@ -14,6 +14,8 @@ public class UpdateData {
     bool isTestSlow = false;// true;
 
     public bool IsUpdatingLocationPersonGlobal { get; set; }
+    public int LockResaveObjectsCount { get; set; }
+    public string LockResaveObjectsName { get; set; }
     public int UpdatingLocationPersonLocal { get; set; }
 
     private Dictionary<string, List<GameObject>> _GamesObjectsReal
@@ -150,6 +152,7 @@ public class UpdateData {
             Storage.ReaderWorld.RemoveObjectInfo(temp_string);
         }
         temp_objsDeletes.RemoveAt(index);
+        temp_objsDeletes = null;
     }
 
     public void RemoveObjecDataGridByIndex(ref List<ModelNPC.ObjectData> objects, int index)
@@ -209,6 +212,14 @@ public class UpdateData {
                 return false;
             }
         }
+
+        //---------------------------- TEST DUBLICATE HARD
+        //foreach(var itemTest in Storage.Person.GetAllDataPersonsForName(objDataSave.Id))
+        //{
+        //    if(itemTest.NameObject != objDataSave.NameObject)
+        //        Debug.Log(Storage.EventsUI.ListLogAdd = "#### AddDataObjectInGrid FIX@@DUBLICATE >> " + itemTest.NameObject + " ME:" + objDataSave.NameObject);
+        //}
+        //----------------------------
 
         fieldData.Objects.Add(objDataSave);
 
@@ -371,6 +382,14 @@ public class UpdateData {
         return true;
     }
 
+    public void RemoveDataObjectInGrid(string nameField, int index, string callFunc)
+    {
+        RemoveObjecDataGridByIndex(nameField, index);
+        if (Storage.Map.IsGridMap)
+            Storage.Map.CheckSector(nameField);
+    }
+
+    /*
     public void RemoveDataObjectInGrid(string nameField, int index, string callFunc, bool isDebug = false, ModelNPC.ObjectData dataObjDel = null)
     {
         ModelNPC.ObjectData histData = null;
@@ -413,6 +432,7 @@ public class UpdateData {
         if (Storage.Map.IsGridMap)
             Storage.Map.CheckSector(nameField);
     }
+    */
 
     public void RemoveDataObjectInGrid(ModelNPC.ObjectData dataObjDel = null)
     {
@@ -461,7 +481,12 @@ public class UpdateData {
         var testPos = new Vector3();
         if (testPos != newPos)
         {
-            setObject.SetPosition(newPos);
+            //if (setObject.IsMoveValid()) //FIX~~TRANSFER
+            //{
+            //    setObject.IsTransfer = true;
+                setObject.SetPosition(newPos);
+            //    setObject.IsTransfer = false;
+            //}
         }
         SetObjecDataFromGrid(nameField, index, setObject); // -- 3*
 

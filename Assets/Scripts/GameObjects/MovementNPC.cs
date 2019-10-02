@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MovementNPC : MonoBehaviour {
@@ -204,40 +205,12 @@ public class MovementNPC : MonoBehaviour {
                 actionIsMove = false;
             if (actionIsMove)
             {
-                //yield return null;
-
                 isRunning = true;
-
                 if (step == 0) //TEST
                 {
                     step = speed * Time.deltaTime;
                     Storage.EventsUI.ListLogAdd = "Movement NPC step is zero!!!";
                 }
-                //realtimeMoving = Time.time + 0.5f;
-
-                //if (this.name == MarkerDebug)
-                //{
-                //    Debug.Log("OK");
-                //}
-
-                //if (m_isPause || actionNotMove)
-                //{
-                //    //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") ....._______________");
-                //    veloccityStart = _rb2d.velocity;
-                //    _rb2d.velocity = Vector2.zero;
-                //    while (m_isPause || actionNotMove)
-                //    {
-                //        //Debug.Log("##################### STOP >>>>>>>>>>>>>>>>>>>>>");
-                //        yield return null;
-                //    }
-                //    //step = speed * Time.deltaTime;
-                //    //Debug.Log("_______________ PAUSE ME (" + this.gameObject.name + ") END ....._______________");
-                //}
-                //else
-                //{
-                //    //if(_rb2d.velocity == Vector2.zero)
-                //    //    _rb2d.velocity = veloccityStart;
-                //}
 
                 if (Storage.Instance.IsLoadingWorld)
                 {
@@ -261,40 +234,44 @@ public class MovementNPC : MonoBehaviour {
                     yield break;
                 }
 
-                //isRunning = true;
-
-                Vector3 targetPosition = _dataNPC.TargetPosition;
-                Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
-
-                if (_rb2d != null)
-                {
-                    _rb2d.MovePosition(pos);
-                }
-                else
-                {
-                    //Debug.Log("NPC MoveObjectToPosition Set position 2 original........");
-                    transform.position = pos;
-                }
-
-                //+++++++++++ RESAVE Next Position ++++++++++++
-                bool res = ResavePositionData<T>();
-
-                if (!res)
-                {
-                    Debug.Log("########### STOP MOVE ON ERROR MOVE");
-                    Destroy(this.gameObject);
-                    isRunning = false;
-                    yield break;
-                }
-
-                //$$$LC.4
-                //float dist = Vector3.Distance(targetPosition, transform.position);
-                //if (dist < minDist)
+                //---------------TEST //FIX@@DUBLICATE
+                //if (_dataNPC.NameObject != gameObject.name)
                 //{
-                //    _dataNPC.SetTargetPosition();
+                //    Debug.Log(Storage.EventsUI.ListLogAdd = "#### MoveObjectToPosition ERROR Name " + _dataNPC.NameObject + " <> GO:" + gameObject.name);
                 //}
+                //-------------------------------
 
-                //realtimeMoving = Time.time + 1f;
+                //isRunning = true;
+                if (_dataNPC.IsMoveValid())
+                {
+                    _dataNPC.StartTransfer("MoveObjectToPosition"); //FIX~~TRANSFER
+
+                    Vector3 targetPosition = _dataNPC.TargetPosition;
+                    Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
+
+                    if (_rb2d != null)
+                    {
+                        _rb2d.MovePosition(pos);
+                    }
+                    else
+                    {
+                        //Debug.Log("NPC MoveObjectToPosition Set position 2 original........");
+                        transform.position = pos;
+                    }
+
+                    //+++++++++++ RESAVE Next Position ++++++++++++
+                    bool res = ResavePositionData<T>();
+
+                    if(_dataNPC != null)
+                        _dataNPC.StopTransfer();
+                    if (!res)
+                    {
+                        Debug.Log("########### STOP MOVE ON ERROR MOVE");
+                        Destroy(this.gameObject);
+                        isRunning = false;
+                        yield break;
+                    }
+                }
             }
             yield return null;
             isRunning = false;
@@ -317,6 +294,8 @@ public class MovementNPC : MonoBehaviour {
             Debug.Log("################## ERROR MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + _resName);
             return true;
         }
+
+     
 
         if(Storage.Data.IsUpdatingLocationPersonGlobal)
         {

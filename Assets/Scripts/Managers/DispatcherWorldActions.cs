@@ -167,19 +167,44 @@ public class DispatcherWorldActions : MonoBehaviour
                     //Storage.EventsUI.SetTittle = message;
                     m_IsRunSearching = true;
                     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SPEED
-                    //listNPC = Storage.ReaderWorld.CollectionInfoID.Where(p => p.Value.Data.IsNPC()).Select(p => p.Key).ToList();
+                    //listNPC = new List<string>();
+                    //int indexWait = 0;
+                    //var arrayID = Storage.ReaderWorld.CollectionInfoID.Values.ToArray();
+                    //yield return null;
+                    //int count = arrayID.Count();
+                    //nextIndexID = 0;
+                    //while(nextIndexID < count)
+                    //{
+                    //    var item = arrayID[nextIndexID];
+                    //    if (item.Data.IsNPC())
+                    //        listNPC.Add(item.ID);
+                    //    if(indexWait > 1000)
+                    //    {
+                    //        indexWait = 0;
+                    //        yield return null;
+                    //    }
+                    //    indexWait++;
+                    //    nextIndexID++;
+                    //}
+                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    //^^^^^^^^^^^^^^^^^^^^^^^^^^ TEST
                     listNPC = new List<string>();
                     int indexWait = 0;
-                    var arrayID = Storage.ReaderWorld.CollectionInfoID.Values.ToArray();
+                    //var arrayID = Storage.Instance.GridDataG.FieldsD.Select(x => x.Value).
+                    //    SelectMany(x => x.Objects).
+                    //    Where(p => p.IsNPC()).ToList();
+                    var arrayID = Storage.Instance.GridDataG.FieldsD.Select(x => x.Value).
+                        SelectMany(x => x.Objects).ToList();
+
                     yield return null;
                     int count = arrayID.Count();
                     nextIndexID = 0;
-                    while(nextIndexID < count)
+                    while (nextIndexID < count)
                     {
                         var item = arrayID[nextIndexID];
-                        if (item.Data.IsNPC())
-                            listNPC.Add(item.ID);
-                        if(indexWait > 1000)
+                        if (item.IsNPC())
+                            listNPC.Add(item.Id);
+                        if (indexWait > 1000)
                         {
                             indexWait = 0;
                             yield return null;
@@ -187,7 +212,11 @@ public class DispatcherWorldActions : MonoBehaviour
                         indexWait++;
                         nextIndexID++;
                     }
-                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    //
+
+
                     if (listNPC.Count == 0)
                     {
                         //UnityEngine.Profiling.Profiler.BeginSample("Sample LOCK dreamworkers");

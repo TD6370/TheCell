@@ -177,13 +177,29 @@ public class StoragePerson : MonoBehaviour {
         return null;
     }
 
-    public IEnumerable<GameObject> GetAllRealPersonsForID(string name)
+    public IEnumerable<GameObject> GetAllRealPersonsForName(string name)
     {
+        if(string.IsNullOrEmpty(name))
+            return new List<GameObject>();
+
         string id = Helper.GetID(name);
+
+        if (string.IsNullOrEmpty(id))
+            return new List<GameObject>();
 
         return Storage.Instance.GamesObjectsReal.
                 SelectMany(x => x.Value).
                 Where(p => p!=null && p.name.IndexOf(id)!=-1).ToList();
+    }
+
+    public IEnumerable<GameObject> GetAllRealPersonsForID(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return new List<GameObject>();
+
+        return Storage.Instance.GamesObjectsReal.
+                SelectMany(x => x.Value).
+                Where(p => p != null && p.name.IndexOf(id) != -1).ToList();
     }
 
     public IEnumerable<ModelNPC.ObjectData> GetAllDataPersonsForID(string name)
@@ -485,7 +501,7 @@ public class StoragePerson : MonoBehaviour {
         dataNPC.SetNameObject(nameObject, isTestValid: false); //isTestValid - 3*
 
         Storage.Data.AddDataObjectInGrid(dataNPC, fieldNew, "ActionMove from: " + fieldOld);  // <<<< beforeUpdateField - 3 *
-        dataNPC.SetPosition(newPosition);
+        dataNPC.SetPosition(newPosition); //FIX~~TRANSFER
 
         if (index != -1)
         {
@@ -539,7 +555,7 @@ public class StoragePerson : MonoBehaviour {
             if (p_NameObject != null)
                 Storage.Instance.SelectGameObjectID = Helper.GetID(p_NameObject);
 
-            Storage.Log.GetHistory(p_NameObject);
+            //Storage.Log.GetHistory(p_NameObject);
 
             //@@CORRECT
             //Destroy(thisGameObject, 1f);
@@ -577,7 +593,6 @@ public class StoragePerson : MonoBehaviour {
         {
             if (realObjectsOldField[i] == null)
             {
-                Debug.Log("UGP: (" + p_NameObject + ") ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 Debug.Log("^^^^ UpfatePosition  -- remove destroy realObjects");
                 realObjectsOldField.RemoveAt(i);
             }
@@ -711,6 +726,8 @@ public class StoragePerson : MonoBehaviour {
                 //@@@@
                 //remove dublicate in real list gobj
                 Storage.Data.RemoveRealObject(indT2, p_NewField, "UpdatePosition");
+                Debug.Log("############# UpdateGamePosition  RETURN DUBLICATE");
+                return "";
             }
         }
         Storage.Data.UpdatingLocationPersonLocal++;

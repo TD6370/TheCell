@@ -78,7 +78,7 @@ public class GenerateGridFields : MonoBehaviour {
                 GameObject newField;
 
                 string nameFieldNew = Helper.GetNameField(x, y);
-                if(PoolGameObjects.IsUseTypePoolPrefabs) //$$$
+                if (PoolGameObjects.IsUseTypePoolPrefabs) //$$$
                 {
                     prefabField.tag = PoolGameObjects.TypePoolPrefabs.PoolFloor.ToString();
                 }
@@ -101,8 +101,17 @@ public class GenerateGridFields : MonoBehaviour {
 
     private bool m_onLoadFields = false;
 
+
     public void GenGridLook(Vector2 _movement, int p_PosHeroX = 0, int p_limitHorizontalLook = 0, int p_PosHeroY = 0, int p_limitVerticalLook = 0, bool isOnlyField = false)
     {
+        if (Storage.Data.LockResaveObjectsCount > 0)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### LockResaveObjects : " + Storage.Data.LockResaveObjectsName);
+            return;
+        }
+        //Storage.Data.LockResaveObjects = true;
+        //Storage.Data.LockResaveObjectsName = "GenGridLook";
+
         int gridWidth = Helper.WidthLevel; //100 Big
         int gridHeight = Helper.HeightLevel;//100; Big
 
@@ -220,7 +229,7 @@ public class GenerateGridFields : MonoBehaviour {
 
                 //for (int x = p_startPosX; x < limitHorizontal; x++) //#
                 //#TEST FIX : NOT REMOVED NOT IN ZONA FIELDS
-                for (int x = p_startPosX-1; x < limitHorizontal +1 ; x++) //#
+                for (int x = p_startPosX - 1; x < limitHorizontal + 1; x++) //#
                 {
 
                     string nameField = Helper.GetNameField(x, y);
@@ -272,14 +281,29 @@ public class GenerateGridFields : MonoBehaviour {
 
         Storage.Data.IsUpdatingLocationPersonGlobal = false;
         //Profiler.EndSample();
+
+        //Storage.Data.LockResaveObjects = false;
+        //Storage.Data.LockResaveObjectsName = string.Empty;
+    }
+
+    private ModelNPC.GridData _gridData
+    {
+        get
+        {
+            return Storage.Instance.GridDataG;
+        }
+    }
+    private Dictionary<string, List<GameObject>> _gamesObjectsReal
+    {
+        get
+        {
+            return Storage.Instance.GamesObjectsReal;
+        }
     }
 
     //загрузка из данныx объектов из памяти и создание их на поле  ADDED FOR LOOK - DATA 2
     public void LoadObjectToReal(string p_nameField)
     {
-        var _gridData = Storage.Instance.GridDataG;
-        var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
-
         if (Storage.Instance.IsCorrectData)
         {
             Debug.Log("_______________ RETURN LoadGameObjectDataForLook ON CORRECT_______________");
@@ -357,18 +381,27 @@ public class GenerateGridFields : MonoBehaviour {
                 if (dataObj.IsReality)
                 {
                     indErr = "13.1";
-                    //Debug.Log("LoadGameObjectDataForLook ********************** " + dataObj + " already IsReality !!!!");
                     var realObj = listGameObjectReal.Find(p => p != null && p.name == dataObj.NameObject);
                     indErr = "13.2";
-                    if (realObj != null) //@??@
+                    if (realObj != null)
                     {
-                        //Debug.Log("????????????????? LoadGameObjectDataForLook ****** IsReality DO:" + dataObj + " EXIST in Real == " + realObj.name);
-                        //Storage.Log.GetHistory(dataObj.NameObject);
-                        //return;
                         continue;
                     }
+                    else
+                    {
+                        Debug.Log("????????????????? LoadGameObjectDataForLook ****** IsReality DO:" + dataObj + " NOT in Real");
+                    }
                 }
-                //--------------
+                //------------------------------------------ TEST DUBLICATE HARD
+                //if (!string.IsNullOrEmpty(dataObj.Id))
+                //{
+                //    foreach (var item in Storage.Person.GetAllRealPersonsForID(dataObj.Id))
+                //    {
+                //        Debug.Log(Storage.EventsUI.ListLogAdd = "#### LoadObjectToReal FIX@@DUBLICATE >> " + item.name + "   ME: " + dataObj);
+                //        continue;
+                //    }
+                //}
+                //-------------------
 
                 indErr = "14.";
                 dataObj.IsReality = true;
@@ -378,7 +411,6 @@ public class GenerateGridFields : MonoBehaviour {
                 indErr = "16.";
 
                 listGameObjectReal.Add(gobj);
-
                 //---------- ACTIVATE
                 if (PoolGameObjects.IsUsePoolObjects)
                 {
@@ -402,24 +434,13 @@ public class GenerateGridFields : MonoBehaviour {
                             movementNPC.InitNPC();
                         }
                     }
-                    
                     //#fix color
                     //  newField.GetComponent<SpriteRenderer>().color = Color.white;
                     //newField.SetActive(true);
+            }
+            //------------
 
-                    //@@@>
-                    /*
-                    if (movement != null)
-                    {
-                        //Debug.Log("~~~~~~~~~~~~~~~ GenGrid Activate InitNPC " + newField.name);
-                        newField.SetActive(true);
-                        movement.InitNPC();
-                    }
-                    */
-                }
-                //------------
-
-                Counter++;
+            Counter++;
             }
             indErr = "17.end.";
         }
@@ -487,6 +508,7 @@ public class GenerateGridFields : MonoBehaviour {
         }
 
         List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjectsDataFromGrid(p_nameField);
+        int indLast = -1;
         try
         {
             indErr = "1.";
@@ -575,9 +597,7 @@ public class GenerateGridFields : MonoBehaviour {
                         //Debug.Log("SaveListObjectsToData DEACTIVATE : " + gobj.name);
                         gobj.SetActive(false);
                     }
-
                     indErr = "10. posFieldReal=" + posFieldReal + " <> posFieldOld=" + posFieldOld + "  " + gobj.name;
-
 
                     if (!ReaderScene.IsGridDataFieldExist(posFieldReal))
                     {
@@ -605,14 +625,38 @@ public class GenerateGridFields : MonoBehaviour {
 
                     indErr = "12.";
 
+                    indLast = -1;
+
                     // #????# ????????????????
                     //Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
+
                     if (ReaderScene.IsGridDataFieldExist(posFieldOld))
                     {
-                        int indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
+                        indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
+
+                        // FIX@@DUBLICATE REM# -------------------
                         if (indLast == -1)
-                            Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
+                            indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.Id == dataObj.Id);
+                        //-----------------------------------
+
+                        //if (indLast == -1)
+                        //    Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
+
+                        // FIX@@DUBLICATE REM# --------------
+                        if (indLast != -1)
+                        {
+                            Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData"); ////@<<@ 
+                            //Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
+                        }
+                        else
+                            Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not index " + dataObj.Id + " and " + gobj.name);
+                        //--------------------
                     }
+                    else
+                    {
+                        Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not field " + posFieldOld);
+                    }
+
                     //--------------------
                     indErr = "13.";
 
@@ -656,7 +700,7 @@ public class GenerateGridFields : MonoBehaviour {
                         dataObj.UpdateGameObjectAndID(gobj);
                     }
                     dataObj.IsReality = false;
-
+                    
                     indErr = "20.";
                     //Debug.Log("_________DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
                     Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //--- isTestValid 3*
@@ -685,20 +729,24 @@ public class GenerateGridFields : MonoBehaviour {
                     //@SAVE@
                     if (!isDestroy)
                         GameObjectUpdatePersonData(gobj);
+
+                    //// FIX@@DUBLICATE 99999999999999999999999999999999999 -----
+                    //if (indLast != -1)
+                    //    Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
+                    //else
+                    //    Debug.Log("########## DUBLICATE");
+                    ////--------------------
                 }
                 else
                 {
                     //update
                     if (isDestroy)
                         dataObj.IsReality = false;
-
                     //@@@TEST 
                     Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR); //@<<@ 
                     //------------------------------------
                 }
-
             }
-
         }
         catch (Exception x)
         {
@@ -732,8 +780,24 @@ public class GenerateGridFields : MonoBehaviour {
         return newGO;
     }
 
+    
+    public void SaveAllRealGameObjectsAsync()
+    {
+        if (Storage.Instance.IsLoadingWorld)
+        {
+            Debug.Log("_______________ LOADING WORLD ....._______________");
+            return;
+        }
+
+        StartCoroutine(StartSaveAllRealGameObjects());
+    }
+
     public void SaveAllRealGameObjects()
     {
+        //++FIX SAVE++
+        SaveAllRealGameObjectsAsync();
+        return;
+
         if (Storage.Instance.IsLoadingWorld)
         {
             Debug.Log("_______________ LOADING WORLD ....._______________");
@@ -743,6 +807,9 @@ public class GenerateGridFields : MonoBehaviour {
 
         Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects ...........");
         DateTime startTestTime = DateTime.Now;
+
+        //FIX SAVE
+        //Storage.Instance.StopGame();
 
         //------------
         var listKeyR = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
@@ -755,6 +822,41 @@ public class GenerateGridFields : MonoBehaviour {
         //------------
         Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T1 : " + (DateTime.Now - startTestTime).TotalMilliseconds);
 
+        Storage.Instance.IsLoadingWorld = false;
+    }
+
+    public IEnumerator StartSaveAllRealGameObjects()
+    {
+        
+        Storage.Instance.IsLoadingWorld = true;
+        Storage.GamePause = true;
+
+        yield return null;
+
+        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects ...........");
+        DateTime startTestTime = DateTime.Now;
+
+        yield return null;
+
+        //FIX SAVE
+        //Storage.Instance.StopGame();
+
+        //------------
+
+
+        var listKeyR = Storage.Instance.GamesObjectsReal.Select(p => p.Key).ToList();
+        foreach (var itemKey in listKeyR)
+        {
+            string nameField = itemKey;
+            //SaveListObjectsToData(nameField, true);
+            yield return null;
+            SaveListObjectsToData(nameField);
+        }
+        //------------
+        Debug.Log("SSSSSSSSSSSSS SaveAllRealGameObjects END ^^^^^^^^^^^^^^^^^^^^^: T1 : " + (DateTime.Now - startTestTime).TotalMilliseconds);
+
+        yield return null;
+        Storage.GamePause = false;
         Storage.Instance.IsLoadingWorld = false;
     }
 
