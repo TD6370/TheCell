@@ -241,9 +241,9 @@ public class UpdateData {
          PaletteMapController.SelCheckOptDel p_modeDelete = PaletteMapController.SelCheckOptDel.None,
         PaletteMapController.SelCheckOptDel p_modeCheck = PaletteMapController.SelCheckOptDel.None)
     {
-        bool isLog = true;
+        bool isLog = false;
         if (isLog)
-            Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_modeDelete + " c: " + p_modeCheck;  
+            Storage.EventsUI.ListLogAdd = "Add IN GRID: d: " + p_modeDelete + " c: " + p_modeCheck + " +++ " + objDataSave.NameObject;  
 
         ModelNPC.FieldData fieldData;
         if (!_GridDataG.FieldsD.ContainsKey(nameField))

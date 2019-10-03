@@ -106,7 +106,9 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\Scripts\Engine\AlienJobs.cs" />
+    <Compile Include="Assets\Scripts\Engine\AlienJob.cs" />
+    <Compile Include="Assets\Scripts\Engine\AlienJobsManager.cs" />
+    <Compile Include="Assets\Scripts\Engine\ContainerPortalFabrication.cs" />
     <Compile Include="Assets\Scripts\Engine\ContainerPriorityFinder.cs" />
     <Compile Include="Assets\Scripts\Engine\Helper.cs" />
     <Compile Include="Assets\Scripts\Engine\PortalResourceFabrication.cs" />

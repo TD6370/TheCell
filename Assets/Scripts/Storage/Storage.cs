@@ -12,6 +12,7 @@ using System.Xml.Linq;
 
 public class Storage : MonoBehaviour {
 
+
     private CompletePlayerController _screiptHero;
     //private CreateNPC _scriptNPC;
     private UIEvents _scriptUIEvents;
@@ -79,7 +80,7 @@ public class Storage : MonoBehaviour {
     }
 
     private ManagerPortals _Portals = null;
-    public static ManagerPortals Portals
+    public static ManagerPortals PortalsManager
     {
         get
         {
@@ -565,6 +566,13 @@ public class Storage : MonoBehaviour {
             Directory.CreateDirectory("UserConfig");
         if (!Directory.Exists("Player"))
             Directory.CreateDirectory("Player");
+
+        if (!Directory.Exists(Application.dataPath + "/Levels"))
+            Directory.CreateDirectory(Application.dataPath + "/Levels");
+        if (!Directory.Exists(Application.dataPath + "/UserConfig"))
+            Directory.CreateDirectory(Application.dataPath + "/UserConfig");
+        if (!Directory.Exists(Application.dataPath + "/Player"))
+            Directory.CreateDirectory(Application.dataPath + "/Player");
     }
 
     private void InitObjectsGrid()
@@ -616,7 +624,7 @@ public class Storage : MonoBehaviour {
                 //m_DispatcherWorldActions = null;
             }
         }
-        Portals.Stop();
+        PortalsManager.Stop();
     }
 
     public void ResetDataId()

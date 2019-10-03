@@ -512,8 +512,6 @@ public class GenerateGridFields : MonoBehaviour {
         try
         {
             indErr = "1.";
-
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             for (int i = realObjects.Count - 1; i >= 0; i--)  //+FIX
             {
                 indErr = "2.";
@@ -523,10 +521,8 @@ public class GenerateGridFields : MonoBehaviour {
                     Debug.Log("***************** SaveListObjectsToData DESTROY GameObject field:" + p_nameField + "  ind:" + i);
                     continue;
                 }
-
                 indErr = "3.";
                 int indData = dataObjects.FindIndex(p => p.NameObject == gobj.name);
-
                 if (indData == -1)
                 {
                     indData = 0;
@@ -572,10 +568,8 @@ public class GenerateGridFields : MonoBehaviour {
                     continue;
                 }
 
-
                 indErr = "3.7.";
                 var posD = dataObj.Position;
-                //@SAVE@ var posR = realObjects[i].transform.position; //!!!!
                 var posR = gobj.transform.position; //!!!!
 
                 indErr = "6.";
@@ -594,18 +588,11 @@ public class GenerateGridFields : MonoBehaviour {
                     if (isDestroy)
                     {
                         dataObj.IsReality = false;
-                        //Debug.Log("SaveListObjectsToData DEACTIVATE : " + gobj.name);
                         gobj.SetActive(false);
                     }
                     indErr = "10. posFieldReal=" + posFieldReal + " <> posFieldOld=" + posFieldOld + "  " + gobj.name;
 
-                    if (!ReaderScene.IsGridDataFieldExist(posFieldReal))
-                    {
-                        //Debug.Log("######## ?????? Add field " + posFieldReal + "   " + indErr);
-                        //$$$LC.1
-                        //Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData");
-                    }
-                    else
+                    if (ReaderScene.IsGridDataFieldExist(posFieldReal))
                     {
                         int indValid = ReaderScene.GetObjectsDataFromGrid(posFieldReal).FindIndex(p => p.NameObject == gobj.name);
                         if (indValid != -1)
@@ -615,96 +602,59 @@ public class GenerateGridFields : MonoBehaviour {
                             continue;
                         }
                     }
-
-                    //Debug.Log("___________________ SaveListObjectsToData destroy(" + isDestroy + ")______GO:" + gobj.name + "  DO: " + dataObj.ToString() + "      " + posFieldOld + " >> " + posFieldReal);
                     indErr = "11.";
-
-                    //!!!!!!!!!!!!!!!!!!
                     ModelNPC.ObjectData dataObjNew = (ModelNPC.ObjectData)dataObj.Clone();
                     var name = Helper.CreateName(dataObj.TypePrefabName, posFieldReal, "", gobj.name);
-
                     indErr = "12.";
-
                     indLast = -1;
 
-                    // #????# ????????????????
-                    //Storage.Data.RemoveDataObjectInGrid(p_nameField, i, "SaveListObjectsToData", false,  dataObj); ////@<<@ 
-
-                    if (ReaderScene.IsGridDataFieldExist(posFieldOld))
+                    //----------  FIX@@DUBLICATE REM#
+                    if (!ConfigDebug.IsTestDUBLICATE)
                     {
                         indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
-
-                        // FIX@@DUBLICATE REM# -------------------
-                        if (indLast == -1)
-                            indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.Id == dataObj.Id);
-                        //-----------------------------------
-
-                        //if (indLast == -1)
-                        //    Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
-
-                        // FIX@@DUBLICATE REM# --------------
-                        if (indLast != -1)
-                        {
-                            Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData"); ////@<<@ 
-                            //Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
-                        }
-                        else
-                            Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not index " + dataObj.Id + " and " + gobj.name);
-                        //--------------------
+                        Storage.Data.RemoveDataObjectInGrid(posFieldOld, indData, "SaveListObjectsToData");
                     }
                     else
+                    //-------------------------------------------------------------------------
                     {
-                        Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not field " + posFieldOld);
+                        if (ReaderScene.IsGridDataFieldExist(posFieldOld))
+                        {
+                            indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
+                            // FIX@@DUBLICATE REM# -------------------
+                            if (indLast == -1)
+                                indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.Id == dataObj.Id);
+                            if (indLast != -1)
+                            {
+                                Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData"); ////@<<@ 
+                            }
+                            else
+                                Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not index " + dataObj.Id + " and " + gobj.name);
+                            //--------------------
+                        }
+                        else
+                        {
+                            Debug.Log("#### SaveListObjectsToData DUBLICATE ERROR - not field " + posFieldOld);
+                        }
                     }
-
                     //--------------------
-                    indErr = "13.";
-
-                    //$$$LC.1
-                    //if (!_gridData.FieldsD.ContainsKey(posFieldReal))
-                    //{
-                    //    //$$$LC Storage.Data.AddNewFieldInGrid(posFieldReal, "SaveListObjectsToData"); //@<<@ 
-                    //}
-
                     indErr = "14.";
-
                     dataObj = dataObjNew;
                     indErr = "15.";
-                    //dataObj = dataObjects[indData];
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
                     dataObj.NameObject = name;
-                    //Debug.Log("___ RENAME : DATA OBJECT: " + testDO + "  >>  " + dataObj.NameObject + "         GO:" + gobj.name);
-
-                    //if (isDestroy)
-                    //    dataObj.IsReality = false;
-                    indErr = "16.";
-                   
                     indErr = "17.";
                     //@SAVE@ ------ RESAVE PROPERTIES
                     if (dataObj.NameObject != gobj.name)
                     {
-                        //!!!!!!!!!!!!!!!!!!!!!!
                         if (!isDestroy)
-                            //dataObj.UpdateGameObject(gobj, isTestValid: false); //--- isTestValid 3*
-                            dataObj.UpdateGameObject(gobj); //--- isTestValid 3*
-
+                            dataObj.UpdateGameObject(gobj); 
                         indErr = "18.";
-                        //Debug.Log("___ RENAME : GO: " + gobj.name + "  >>  " + dataObj.NameObject);
-                        //gobj.name = dataObj.NameObject;
+                        dataObj.SetPosition(gobj.transform.position);
                         indErr = "19.";
-                        //Debug.Log("___ RESAVE POS : GO: " + dataObj.Position + "  >>  " + gobj.transform.position);
-                        //dataObj.Position = gobj.transform.position;
-                        //dataObj.SetPosition(gobj.transform.position, isTestValid: false);//###ERR
-                        dataObj.SetPosition(gobj.transform.position);  //FIX
                         dataObj.UpdateGameObjectAndID(gobj);
                     }
                     dataObj.IsReality = false;
-                    
                     indErr = "20.";
-                    //Debug.Log("_________DATA SAVE: " + dataObj  + " " + dataObj.NameObject + "    " + posFieldReal + "       pos filed:" + Helper.GetNameFieldPosit(dataObj.Position.x, dataObj.Position.y) + "  pos:" + dataObj.Position.x + "x" + dataObj.Position.y);
-                    Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData"); //--- isTestValid 3*
-
+                    Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData");
                     indErr = "21.";
                     //RESAVE REAL +++++++++++++++++++++++++++++++++++++++++++++++++++++
                     if (!Storage.Instance.GamesObjectsReal.ContainsKey(posFieldReal))
@@ -712,7 +662,6 @@ public class GenerateGridFields : MonoBehaviour {
                         indErr = "22.";
                         Storage.Data.AddNewFieldInRealObject(posFieldReal, "SaveListObjectsToData");
                     }
-
                     indErr = "23.";
                     if (!isDestroy)
                     {
@@ -721,21 +670,12 @@ public class GenerateGridFields : MonoBehaviour {
                     }
 
                     indErr = "24.";
-                    //Debug.Log("SaveListObjectsToData -- RemoveRealObject -- " + gobj.name + " : " + p_nameField);
                     Storage.Data.RemoveRealObject(i, p_nameField, "SaveListObjectsToData");
                     //+++++++++++++++++++++++++++++++++++++++++++++++++++++
-
                     indErr = "25.";
                     //@SAVE@
                     if (!isDestroy)
                         GameObjectUpdatePersonData(gobj);
-
-                    //// FIX@@DUBLICATE 99999999999999999999999999999999999 -----
-                    //if (indLast != -1)
-                    //    Storage.Data.RemoveDataObjectInGrid(posFieldOld, indLast, "SaveListObjectsToData", false, dataObj); ////@<<@ 
-                    //else
-                    //    Debug.Log("########## DUBLICATE");
-                    ////--------------------
                 }
                 else
                 {

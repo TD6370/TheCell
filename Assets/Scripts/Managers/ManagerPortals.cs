@@ -77,10 +77,26 @@ public class ManagerPortals : MonoBehaviour
 
     private bool LoadResourceFabrications()
     {
-        if (ContainerFabrications == null || ContainerFabrications.CollectionPriorityFinder == null)
+        //TEST
+        //var test = ScriptableObjectUtility.LoadContainerPriorityFinderByTag("Terra");
+        //var test2 = ScriptableObjectUtility.LoadResource<ContainerPortalFabrication>("Job");
+
+        if (ContainerFabrications == null)
         {
-            Storage.EventsUI.ListLogAdd = "Container Prioritys is EMPTY !!!!";
-            Storage.EventsUI.SetMessageBox = "Container Prioritys is EMPTY !!!!";
+            ContainerFabrications = ScriptableObjectUtility.LoadResource<ContainerPortalFabrication>("Job");
+            if (ContainerFabrications == null)
+            {
+                Storage.EventsUI.ListLogAdd = "Container LoadResourceFabrications is EMPTY !!!!";
+                Storage.EventsUI.SetMessageBox = "Container LoadResourceFabrications is EMPTY !!!!";
+                return false;
+            }
+        }
+        if (ContainerFabrications.CollectionResourceFabrication == null)
+        {
+
+
+            Storage.EventsUI.ListLogAdd = "Container CollectionPriorityFinder is EMPTY !!!!";
+            Storage.EventsUI.SetMessageBox = "Container CollectionPriorityFinder is EMPTY !!!!";
             return false;
         }
 
@@ -90,7 +106,7 @@ public class ManagerPortals : MonoBehaviour
         TypesBiomNPC typeBiom = TypesBiomNPC.None;
         List<PortalResourceFabrication> listResourcesBiom = null; // = new List<PortalResourceFabrication>();
         ResourcesFabrications = new Dictionary<TypesBiomNPC, List<PortalResourceFabrication>>();
-        foreach (PortalResourceFabrication resourceNext in ContainerFabrications.CollectionPriorityFinder.OrderBy(p => p.TypeBiom))
+        foreach (PortalResourceFabrication resourceNext in ContainerFabrications.CollectionResourceFabrication.OrderBy(p => p.TypeBiom))
         {
             if (typeBiom != resourceNext.TypeBiom)
             {

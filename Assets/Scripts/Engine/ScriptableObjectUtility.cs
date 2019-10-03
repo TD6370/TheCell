@@ -253,20 +253,46 @@ public static class ScriptableObjectUtility
                 return null;
             }
             var bundle = loadedAssetBundle;
-
             T containerObj = null;
-            T[] containerObjs = bundle.LoadAllAssets<T>();
 
-            if (containerObjs == null)
-                Debug.Log("containerObjs - null");
-            if (containerObjs != null && containerObjs.Length == 0)
-                Debug.Log("containerObjs count = 0");
+            //TEST
+            //var test = bundle.LoadAllAssets<ContainerPortalFabrication>();
+            //var objsScrabs = bundle.LoadAllAssets();
+            //foreach (var item in objsScrabs)
+            //{
+            //    //bool isSprite = item is UnityEngine.Sprite;
+            //    //bool isTexture = item is UnityEngine.Texture2D;
+            //    //if (!isTexture && !isSprite)
+            //    //{
+            //    //    Debug.Log(" Object .... " + item.name + " : " + item.GetType());
+            //    //}
+            //    if (item.name.IndexOf("Container") != -1)
+            //        Debug.Log(">>>>>> Object [Container]== " + item.name + " : " + item.GetType());
 
-            if (containerObjs != null && containerObjs.Length != 0)
+            //    // name - ContainerFabrications
+            //    if (item is ContainerPortalFabrication)
+            //    {
+            //        Debug.Log(">>>>>> ContainerPortalFabrication !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            //        containerObj = item as T;
+            //        break;
+            //    }
+            //}
+
+            if (containerObj == null)
             {
-                containerObj = containerObjs.FirstOrDefault();
-            }
+                //T containerObj = null;
+                T[] containerObjs = bundle.LoadAllAssets<T>();
 
+                if (containerObjs == null)
+                    Debug.Log("containerObjs - null");
+                if (containerObjs != null && containerObjs.Length == 0)
+                    Debug.Log("containerObjs count = 0");
+
+                if (containerObjs != null && containerObjs.Length != 0)
+                {
+                    containerObj = containerObjs.FirstOrDefault();
+                }
+            }
             if (containerObj != null)
                 Debug.Log("ContainerPriorityFinder >> " + containerObj.name + " by Tag = " + tag);
 
@@ -280,7 +306,7 @@ public static class ScriptableObjectUtility
         }
         catch (Exception ex)
         {
-            Debug.Log(Storage.EventsUI.ListLogAdd = "###(" + strErr + ") : " + ex.Message);
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### LoadResource Asset (" + strErr + ") : " + ex.Message);
         }
         return null;
     }

@@ -843,7 +843,7 @@ public class StoragePerson : MonoBehaviour {
                         if (isCompletedMission)
                         {
                             if (dataAlien.PortalId == null)
-                                Storage.Portals.SetHome(dataAlien);
+                                Storage.PortalsManager.SetHome(dataAlien);
 
                             var info = ReaderScene.GetInfoID(dataAlien.PortalId);
                             if (info != null)
@@ -919,17 +919,41 @@ public class StoragePerson : MonoBehaviour {
 
     private void LoadPriorityPerson()
     {
+        string strErr = "";
         try
         {
+            strErr = "1";
+            //if (ContainerPrioritys==null)
+            //{
+            //    Storage.EventsUI.ListLogAdd = "Container ContainerPrioritys is EMPTY !!!!";
+            //    Storage.EventsUI.SetMessageBox = "Container ContainerPrioritys is EMPTY !!!!";
+            //    return;
+            //}
+            strErr = "2";
             PersonPriority = Helper.GetPrioritys(ContainerPrioritys,"NPC");
+            if (PersonPriority == null)
+            {
+                Storage.EventsUI.ListLogAdd = "Container PersonPriority is EMPTY !!!!";
+                Storage.EventsUI.SetMessageBox = "Container PersonPriority is EMPTY !!!!";
+                return;
+            }
+            strErr = "3";
             CollectionPowerAllTypes = Helper.FillPrioritys(PersonPriority);
+            if (CollectionPowerAllTypes == null)
+            {
+                Storage.EventsUI.ListLogAdd = "Container CollectionPowerAllTypes is EMPTY !!!!";
+                Storage.EventsUI.SetMessageBox = "Container CollectionPowerAllTypes is EMPTY !!!!";
+                return;
+            }
+            strErr = "4";
             AlienToResourceJobsJoins = new Dictionary<string, AlienJob>();
             //@JOB@
+            strErr = "5";
             CollectionAlienJob = Helper.CollectionAlienJob(PersonPriority ,ref AlienToResourceJobsJoins);
         }
         catch (Exception ex)
         {
-            Storage.EventsUI.ListLogAdd = "##### LoadTerraPriority : " + ex.Message;
+            Storage.EventsUI.ListLogAdd = "##### LoadPriorityPerson #" + strErr + " : " + ex.Message;
         }
     }
 

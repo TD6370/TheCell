@@ -10,7 +10,7 @@ public class PlayerData
     public PlayerData()
     {
         IsLoadPosition = false;
-        SavePosition = new Vector3(10, 10, -3);
+        SavePosition = new Vector3(30, -20, -3);
     }
 
 }

@@ -46,6 +46,11 @@ public class SettingsSceneDebug : ScriptableObject {
     //public static bool IsDebugOn = false;
 }
 
+public struct ConfigDebug
+{
+    public static bool IsTestDUBLICATE = false;
+}
+
 
 //[CreateAssetMenu(menuName = "Custom Tool/SceneDebug/Create Settings Scene Debug", fileName = "SettingsSceneDebug")]
 /*

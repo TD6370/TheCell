@@ -21,6 +21,6 @@ MonoBehaviour:
   PrioritysTypePool: 00000000010000000400000002000000
   PrioritysTypeBiomNPC: 020000000300000004000000
   ListJobs:
-  - {fileID: 11400000, guid: ed950cfc1ea98a945a6998d5f515b61d, type: 2}
-  - {fileID: 11400000, guid: eebdcc79acce1e14d92439967db15b8c, type: 2}
-  - {fileID: 11400000, guid: eccb6702b3f7b1c4c8d3dba84b19ed4b, type: 2}
+  - {fileID: 11400000, guid: 01a5838b35eb89945916290b3ccdb0f2, type: 2}
+  - {fileID: 11400000, guid: c95c150024f51d249a94bfe6e022882e, type: 2}
+  - {fileID: 11400000, guid: 994d9881c06f8114cbedb3925e317dba, type: 2}

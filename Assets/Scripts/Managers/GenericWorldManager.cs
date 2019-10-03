@@ -698,17 +698,21 @@ public class GenericWorldManager : MonoBehaviour {
             //-------------
             int coutCreateObjects = 0;
             SaveLoadData.TypePrefabs prefabName = SaveLoadData.TypePrefabs.PrefabField;
-            Debug.Log("Sart... GenericWorldPriorityTerra..."); indErr = "2";
-
+            indErr = "2";
+            Debug.Log("Sart... GenericWorldPriorityTerra...");
+            indErr = "3";
             Storage.Instance.ClearGridData(); //  >>>TEST 1.
-            Storage.ReaderWorld.Clear();
-
+            indErr = "5";
+            if(Storage.Instance.ReaderSceneIsValid)
+                Storage.ReaderWorld.Clear();
+            indErr = "6";
             int countAll = 0;
             int index = 0;
             int indRnd = 0;
             int maxRnd = Helper.HeightLevel * Helper.WidthLevel;
-
-            Dictionary<int, Vector3Int> cellsPos = new Dictionary<int, Vector3Int>(); indErr = "3";
+            indErr = "7";
+            Dictionary<int, Vector3Int> cellsPos = new Dictionary<int, Vector3Int>();
+            indErr = "8";
             for (int y = 0; y < Helper.HeightLevel; y++)
             {
                 for (int x = 0; x < Helper.WidthLevel; x++)
@@ -717,13 +721,13 @@ public class GenericWorldManager : MonoBehaviour {
                     cellsPos.Add(index++, new Vector3Int(x, y, indRnd));
                 }
             }
-
+            indErr = "9";
             Queue<Vector3Int> colectionPosRnd = new Queue<Vector3Int>();
             foreach (var item in cellsPos.OrderBy(p => p.Value.z).Select(p => p.Value))
             {
                 colectionPosRnd.Enqueue(item);
             }
-
+            indErr = "10";
             cellsPos.Clear();
             cellsPos = null;
 
@@ -1172,14 +1176,33 @@ public class GenericWorldManager : MonoBehaviour {
 
     private void LoadTerraPriority()
     {
+        string strErr = "0";
         try
         {
+            strErr = "1";
+            ContainerPrioritysTerra = ScriptableObjectUtility.LoadContainerPriorityFinderByTag("Terra");
+            if (ContainerPrioritysTerra == null)
+            {
+                Storage.EventsUI.ListLogAdd = "Container ContainerPrioritysTerra is EMPTY !!!!";
+                Storage.EventsUI.SetMessageBox = "Container ContainerPrioritysTerra is EMPTY !!!!";
+                return;
+            }
+            strErr = "2";
             TerraPriority = Helper.GetPrioritys(ContainerPrioritysTerra, "Terra");
-            CollectionPowerAllTypes = Helper.FillPrioritys(TerraPriority);
+            strErr = "3";
+            if (TerraPriority != null)
+            {
+                CollectionPowerAllTypes = Helper.FillPrioritys(TerraPriority);
+            }
+            else
+            {
+                Storage.EventsUI.ListLogAdd = "Container TerraPriority is EMPTY !!!!";
+                Storage.EventsUI.SetMessageBox = "Container TerraPriority is EMPTY !!!!";
+            }
         }
         catch (Exception ex)
         {
-            Storage.EventsUI.ListLogAdd = "##### LoadTerraPriority : " + ex.Message;
+            Storage.EventsUI.ListLogAdd = "##### LoadTerraPriority #" + strErr  + " : " + ex.Message;
         }
     }
 

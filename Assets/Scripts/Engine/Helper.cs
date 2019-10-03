@@ -881,30 +881,59 @@ public static class Helper { //: MonoBehaviour {
     // = Helper.FillAlienJibs(PersonPriority);//
     public static Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys, ref Dictionary<string, AlienJob> jobsJoin)
     {
+        string strErr = "1";
         Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> jobs = new Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>>();
         SaveLoadData.TypePrefabs prefabNameType;
         SaveLoadData.TypePrefabNPC prefabNameTypeNPC;
-        string key;
-        PriorityFinder prioritys;
-        var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabNPC)).Length - 1;
-        for (int ind = 0; ind < max; ind++)
-        {
-            prefabNameTypeNPC = (SaveLoadData.TypePrefabNPC)Enum.Parse(typeof(SaveLoadData.TypePrefabNPC), ind.ToString());
-            prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabNameTypeNPC.ToString());
-            if (pioritys.ContainsKey(prefabNameType))
+        strErr = "2";
+        try { 
+            string key;
+            PriorityFinder prioritys;
+            strErr = "3";
+            var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabNPC)).Length - 1;
+            strErr = "4";
+            for (int ind = 0; ind < max; ind++)
             {
-                prioritys = pioritys[prefabNameType];
-                foreach(AlienJob job in prioritys.ListJobs)
+                strErr = "5";
+                prefabNameTypeNPC = (SaveLoadData.TypePrefabNPC)Enum.Parse(typeof(SaveLoadData.TypePrefabNPC), ind.ToString());
+                strErr = "6";
+                prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabNameTypeNPC.ToString());
+                if (pioritys.ContainsKey(prefabNameType))
                 {
-                    key = string.Format("{0}_{1}", prefabNameType, job.TargetResource.ToString());
-                    if (!jobsJoin.ContainsKey(key))
-                        jobsJoin.Add(key,job);
-                    
+                    strErr = "7";
+                    prioritys = pioritys[prefabNameType];
+                    strErr = "8";
+                    if (prioritys.ListJobs != null)
+                    {
+                        foreach (AlienJob job in prioritys.ListJobs)
+                        {
+                            if(job==null)
+                            {
+                                Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.job is null";
+                                continue;
+                            }
+
+                            key = string.Format("{0}_{1}", prefabNameType, job.TargetResource.ToString());
+                            if (!jobsJoin.ContainsKey(key))
+                                jobsJoin.Add(key, job);
+
+                        }
+                        strErr = "9";
+                        if (!jobs.ContainsKey(prefabNameType) && prioritys.ListJobs != null && prioritys.ListJobs.Count() > 0)
+                            jobs.Add(prefabNameType, prioritys.ListJobs.ToList());
+                    }else
+                    {
+                        Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.prioritys.ListJobs is null";
+                    }
                 }
-                if(!jobs.ContainsKey(prefabNameType) && prioritys.ListJobs != null && prioritys.ListJobs.Count() >0)
-                    jobs.Add(prefabNameType, prioritys.ListJobs.ToList());
             }
+            strErr = "10";
         }
+        catch (Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob #" + strErr + " : " + ex.Message;
+        }
+
         return jobs;
     }
 
@@ -1036,10 +1065,12 @@ public static class Helper { //: MonoBehaviour {
 
     public static Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> GetPrioritys(ContainerPriorityFinder p_containerPrioritys, string tag)
     {
-        Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> result = null;
+        string strErr = "";
+        Dictionary <SaveLoadData.TypePrefabs, PriorityFinder> result = null;
         try
         {
             Storage.EventsUI.ListLogAdd = "...LoadPriorityPerson....";
+            strErr = "1";
             if (p_containerPrioritys == null)
             {
                 p_containerPrioritys = ScriptableObjectUtility.LoadContainerPriorityFinderByTag(tag);
@@ -1049,12 +1080,15 @@ public static class Helper { //: MonoBehaviour {
                     return null;
                 }
             }
+            strErr = "2";
             if (p_containerPrioritys.CollectionPriorityFinder == null)
             {
                 Storage.EventsUI.ListLogAdd = "ContainerPriority.CollectionPriorityFinder is null";
                 return null;
             }
+            strErr = "3";
             Storage.EventsUI.ListLogAdd = "CollectionPriorityFinder Count = " + p_containerPrioritys.CollectionPriorityFinder.Count();
+            strErr = "4";
             result = new Dictionary<SaveLoadData.TypePrefabs, PriorityFinder>();
             foreach (var prior in p_containerPrioritys.CollectionPriorityFinder)
             {
@@ -1064,7 +1098,7 @@ public static class Helper { //: MonoBehaviour {
         }
         catch (Exception ex)
         {
-            Storage.EventsUI.ListLogAdd = "##### LoadPriorityPerson : " + ex.Message;
+            Storage.EventsUI.ListLogAdd = "##### GetPrioritys : #" + strErr + "  " + ex.Message;
         }
         return result;
     }

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1034121233
+CRC: 2962116956
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f04a1b406949e0a0fc25e47d40231063
+    Hash: 705100b1b1bdf9af41205e4d8b4a5d19
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0571a185abfd036baa868b583ed988de
+    Hash: 42a3b60cf31fd6cdc51ee9d56bde756e
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -22,8 +22,6 @@ ClassTypes:
 - Class: 50
   Script: {instanceID: 0}
 - Class: 58
-  Script: {instanceID: 0}
-- Class: 114
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
@@ -45,6 +43,10 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 8b86c2335a47e1844808e4227a70e3a3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 455186f4c92fbda4f93d2db167b3554f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ccd2b7307f3185d4c95fc3edadea73d0, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 212
@@ -55,6 +57,7 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/BlueBerryInv.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGrassMedium.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconClear35.png
 - Assets/AssetBundles/Textures/Terra/Floor/Land.png
 - Assets/Dust/Prefabs/Terraria/NPC/SpriteBossBooble.prefab
@@ -116,6 +119,7 @@ Assets:
 - Assets/AssetBundles/ScriptableData/Flore/Priority_Kamish.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/Priority/OptPriorityPrefabPercent.png
 - Assets/AssetBundles/Tiles/lantern.asset
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGrassSmall.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/IvaMap.png
 - Assets/AssetBundles/Textures/Map/UI/MapGreen.png
 - Assets/AssetBundles/Textures/Map/GridIcons/RockDarkMap.png
@@ -253,7 +257,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/InspectorInv.png
 - Assets/AssetBundles/Textures/UI/Inventory/loudwoodInv.png
 - Assets/AssetBundles/Textures/LUT/Night_2_LUT_32.png
-- Assets/AssetBundles/ScriptableData/Portals Fabrications/ContainerFabrications.asset
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/ContainerFabrications.asset
 - Assets/AssetBundles/ScriptableData/Priority_Fantom.asset
 - Assets/AssetBundles/Textures/NarmalMaps/PrefabWallWoodNormapMapQ.png
 - Assets/AssetBundles/Textures/Map/SpriteBossMap.png
@@ -400,7 +404,7 @@ Assets:
 - Assets/AssetBundles/Textures/SpriteAtlasUI.spriteatlas
 - Assets/AssetBundles/Textures/World/Floor/Green/Weedflower.png
 - Assets/AssetBundles/Textures/Map/WallRockMap.png
-- Assets/AssetBundles/ScriptableData/Portals Fabrications/Fabrication_Blue_Coldfusion.asset
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion.asset
 - Assets/AssetBundles/Textures/Map/HeroMap.png
 - Assets/AssetBundles/Textures/World/NPC/Blues/Machinetool.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListVersionOn.png
@@ -437,6 +441,7 @@ Assets:
 - Assets/AssetBundles/Textures/Portals/PortalVioletCreator.png
 - Assets/AssetBundles/ScriptableData/Wall/Priority_Aracul.asset
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/PrefabFieldH.asset
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGrass.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconReloadWorldOn.png
 - Assets/Dust/Prefabs/Terraria/NPC/PrefabBoss.prefab
 - Assets/AssetBundles/Textures/World/DetailsNPC/DetailLayers/GaryDetailsFront.png

@@ -128,8 +128,6 @@ public class PlayerManager : MonoBehaviour {
         Serializator.SaveXml<PlayerData>(m_playerDataGame, path, true);
     }
 
-    
-
     public void LoadPlayerData()
     {
         Debug.Log("Loading player data....");

@@ -33,7 +33,7 @@ public class SceneDebugerEditor : Editor
 
     private SerializedObject newSO;
 
-    private float m_timeUpdateUI = 0f;
+    private float m_timeUpdateUI = 3f;
     private int m_xOut = 0;
     private int m_yOut = 0;
     private string m_childInfo = string.Empty;
@@ -67,6 +67,9 @@ public class SceneDebugerEditor : Editor
         //SettingsEditor = Editor.CreateEditor(SettingsScene.objectReferenceValue);
 
     }
+
+    private int m_portalIndexInfo;
+    private ModelNPC.PortalData m_portalNext;
 
     public override void OnInspectorGUI()
     {
@@ -128,6 +131,7 @@ public class SceneDebugerEditor : Editor
         TimeLimitResetNavigator.floatValue = EditorGUILayout.Slider("Dispatcher time reset", TimeLimitResetNavigator.floatValue, 1, 60);
 
         EditorGUILayout.Space();
+
         IsClearTemplate.boolValue = EditorGUILayout.Toggle("Clear template", IsClearTemplate.boolValue);
         TimeClearTemplate.floatValue = EditorGUILayout.Slider("Delay clear template dialogs", TimeClearTemplate.floatValue, 1, 10);
 
@@ -138,25 +142,29 @@ public class SceneDebugerEditor : Editor
 
         EditorGUILayout.Space();
 
-        //if (m_timeUpdateUI < Time.time)
-        //{
-        //    m_timeUpdateUI = Time.time + 3f;
-        if (Storage.Portals != null)
+        
+        if (Storage.PortalsManager != null && Storage.PortalsManager.Portals.Count >0)
         {
-            foreach (ModelNPC.PortalData portal in Storage.Portals.Portals.Where(p=>p !=null))
+            if (m_timeUpdateUI < Time.time || m_portalNext == null)
             {
-                Helper.GetFieldPositByWorldPosit(ref m_xOut, ref m_yOut, portal.Position);
-                m_childInfo = (portal.ChildrensId == null) ? "..." : portal.ChildrensId.Count.ToString();
-                EditorGUILayout.LabelField("PORTAL: ", portal.TypeBiom.ToString());
-                //GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("   field: ", String.Format("{0}x{1}", m_xOut, m_yOut));
-                EditorGUILayout.LabelField("   NPC: ", m_childInfo);
-                //GUILayout.EndHorizontal();
-                EditorGUILayout.LabelField("RESOURCES: ");
-                if (portal.Resources != null) {
-                    foreach(var res in portal.Resources)  {
-                        EditorGUILayout.LabelField("   " + res.NameInventopyObject + ":", res.Count.ToString());
-                    }
+                m_timeUpdateUI = Time.time + 3f;
+                if (m_portalIndexInfo >= Storage.PortalsManager.Portals.Count())
+                    m_portalIndexInfo = 0;
+                m_portalNext = Storage.PortalsManager.Portals[m_portalIndexInfo];
+                m_portalIndexInfo++;
+            }
+
+            Helper.GetFieldPositByWorldPosit(ref m_xOut, ref m_yOut, m_portalNext.Position);
+            m_childInfo = (m_portalNext.ChildrensId == null) ? "..." : m_portalNext.ChildrensId.Count.ToString();
+            EditorGUILayout.LabelField("PORTAL: ", m_portalNext.TypeBiom.ToString());
+            //GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("   field: ", String.Format("{0}x{1}", m_xOut, m_yOut));
+            EditorGUILayout.LabelField("   NPC: ", m_childInfo);
+            //GUILayout.EndHorizontal();
+            EditorGUILayout.LabelField("RESOURCES: ");
+            if (m_portalNext.Resources != null) {
+                foreach(var res in m_portalNext.Resources)  {
+                    EditorGUILayout.LabelField("   " + res.NameInventopyObject + ":", res.Count.ToString());
                 }
             }
         }
