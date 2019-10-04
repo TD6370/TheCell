@@ -28,7 +28,7 @@ public class ManagerPortals : MonoBehaviour
     private bool isInitPortals = false;
 
     public enum TypeResourceProcess { Incubation, IncubationLight, IncubationMedium, IncubationHight,
-        SpawnFlore, WpawnFloor, None };
+        SpawnFlore, WpawnFloor, None, ResourceProduction };
 
     public ManagerPortals()
     {
@@ -209,11 +209,16 @@ public class ManagerPortals : MonoBehaviour
             p_portal.ChildrensId = new List<string>();
 
         int preCountChild = p_portal.ChildrensId.Count;
-        bool isNotCreated;
-        bool isTimeValid = p_portal.LastTimeIncubation + SettingPortals.PeriodIncubation < Time.time;
+        bool isProgress;
+        bool isTimeValid = p_portal.LastTimeFabrication + SettingPortals.PeriodIncubation < Time.time;
+        bool isNotAllLimit = p_portal.ChildrensId.Count < SettingPortals.AllLimitNPC;
+        if (SettingPortals.AllLimitNPC == 0)
+            SettingPortals.AllLimitNPC = 1;
+        if (SettingPortals.AllLimitNPC < SettingPortals.StartLimitNPC)
+            SettingPortals.AllLimitNPC = SettingPortals.StartLimitNPC;
 
         //foreach(DataObjectInventory resource in p_portal.Resources)
-        if (isTimeValid && p_portal.Resources != null && p_portal.Resources.Count > 0)
+        if (isNotAllLimit && isTimeValid && p_portal.Resources != null && p_portal.Resources.Count > 0)
         {
             Storage.EventsUI.ListLogAdd = "PortalWork....";
             Storage.EventsUI.SetMessageBox = "PortalWork....";
@@ -227,8 +232,9 @@ public class ManagerPortals : MonoBehaviour
                 {
                     if (m_resourceNext.Count >= m_workResource.LimitToBeginProcess)
                     {
-                        isNotCreated = preCountChild == p_portal.ChildrensId.Count && p_portal.CurrentProcess == TypeResourceProcess.None;
-                        if (isNotCreated)
+                        //isNotProgress = preCountChild == p_portal.ChildrensId.Count && p_portal.CurrentProcess == TypeResourceProcess.None;
+                        isProgress = preCountChild != p_portal.ChildrensId.Count && p_portal.CurrentProcess != TypeResourceProcess.None;
+                        if (!isProgress)
                         {
                             //Begin portal process incubation on Full resources
                             StartPortalProcess(m_workResource.BeginProcess, p_portal, i, m_workResource);
@@ -238,23 +244,45 @@ public class ManagerPortals : MonoBehaviour
                 }
             }
         }
-        isNotCreated = preCountChild == p_portal.ChildrensId.Count;// && isIncubationValid;
-        if (isNotCreated)
+        isProgress = preCountChild != p_portal.ChildrensId.Count;// && isIncubationValid;
+        if (isProgress == false)
         {
             //if (p_portal.CurrentProcess == TypeResourceProcess.None)
             if (p_portal.CurrentProcess == TypeResourceProcess.None || 
                 (!p_portal.IsReality && p_portal.CurrentProcess == TypeResourceProcess.Incubation)) //FIX<<>>INCUBATION
             {
-                bool isNotFullLimit = p_portal.ChildrensId.Count < SettingPortals.StartLimitNPC;
-                
+                bool isNotStartLimit = p_portal.ChildrensId.Count < SettingPortals.StartLimitNPC;
                 //Begin portal process on Time
-                if (isNotFullLimit && isTimeValid)
+                if (isNotStartLimit && isTimeValid)
                 {
                     StartPortalProcess(TypeResourceProcess.Incubation, p_portal);
+                    isProgress = true;
                 }
             }
         }
+        // - Resources Production
+        if (!isProgress && 
+            p_portal.CurrentProcess == TypeResourceProcess.None && 
+            isTimeValid &&
+            p_portal.Resources != null && 
+            p_portal.Resources.Count > 0 )
+        {
+            isProgress = FabricationProduction(p_portal);
+        }
+
+        if(isProgress)
+            p_portal.EndFabrication();
     }
+
+    private void GetFabricsByResource(ref List<PortalResourceFabrication> resultFabrics, ModelNPC.PortalData p_portal, string p_nameResourceInv)
+    {
+        resultFabrics = ResourcesFabrications[p_portal.TypeBiom].Where(f => f.ResouceInventory.ToString() == p_nameResourceInv).ToList();
+    }
+
+    //private void  GetFabricaByResource(ref PortalResourceFabrication resultFabrica,  ModelNPC.PortalData p_portal, string p_nameResourceInv)
+    //{
+    //    resultFabrica = ResourcesFabrications[p_portal.TypeBiom].Find(f => f.ResouceInventory.ToString() == p_nameResourceInv);
+    //}
 
     //Start Portal process
     private void StartPortalProcess(TypeResourceProcess workProcess, ModelNPC.PortalData p_portal, int index = -1, PortalResourceFabrication fabrication=null)
@@ -270,7 +298,6 @@ public class ManagerPortals : MonoBehaviour
                     p_portal.Resources[index].Count -= fabrication.LimitToBeginProcess;
                     if (p_portal.Resources[index].Count < 0)
                         p_portal.Resources.RemoveAt(index);
-
                 }
                 break;
         }
@@ -304,6 +331,48 @@ public class ManagerPortals : MonoBehaviour
         }
     }
 
+    public bool CheckStorageResourceForAlien(ModelNPC.PortalData portal, ModelNPC.GameDataAlien alien)
+    {
+        if (!alien.Inventory.IsEmpty)
+            return false;
+
+        DataObjectInventory resNext = null;
+        List<AlienJob> temp_listJobs;
+        SaveLoadData.TypePrefabs typeAlien = alien.TypePrefab;
+        int limitRes = 0;
+        Storage.Person.CollectionAlienJob.TryGetValue(typeAlien, out temp_listJobs);
+
+        //>INV>
+        try
+        { 
+            for (int indRes = portal.Resources.Count - 1; indRes >= 0; indRes--)
+            {
+                resNext = portal.Resources[indRes];
+                if (temp_listJobs != null)
+                {
+                    foreach (var itemJob in temp_listJobs)
+                    {
+                        if(itemJob.ResourceResult.ToString() == resNext.NameInventopyObject)
+                        {
+                            limitRes = itemJob.LimitResourceCount == 0 ? 1 : itemJob.LimitResourceCount;
+                            alien.AddToInventory(portal, indRes, limitRes);
+                            alien.Job = itemJob;
+                            alien.CurrentAction = GameActionPersonController.NameActionsPerson.Target.ToString();
+                            Storage.EventsUI.ListLogAdd = "Storage To Alien >> " + resNext.NameInventopyObject + " >> " + itemJob.TargetResource;
+                            return true;
+                        }
+                    }
+                
+                }
+            }
+        }catch (System.Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = string.Format("###### CheckStorageResourceForAlien error: {0}", ex));
+        }
+        //alien.Inventory.Clear();
+        return false;
+    }
+
     public void AddResourceFromAlien(ModelNPC.PortalData portal, ModelNPC.GameDataAlien alien)
     {
         DataObjectInventory existRes = DataObjectInventory.EmptyInventory(); 
@@ -324,6 +393,30 @@ public class ManagerPortals : MonoBehaviour
             existRes.Count += alien.Inventory.Count;
         alien.Inventory.Clear();
     }
+
+    public void AddResource(ModelNPC.PortalData portal, SaveLoadData.TypeInventoryObjects invObj, int Count = 1)
+    {
+        DataObjectInventory inventory = new DataObjectInventory(invObj.ToString(), Count);
+        DataObjectInventory existRes = DataObjectInventory.EmptyInventory();
+        //>INV>
+        try
+        {
+            if (portal.Resources == null) //fix null
+                portal.Resources = new List<DataObjectInventory>();
+
+            existRes = portal.Resources.Where(p => p.TypeInventoryObject == inventory.TypeInventoryObject).FirstOrDefault();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = string.Format("###### AddResource error: {0}", ex));
+        }
+        if (existRes == null)
+            portal.Resources.Add(new DataObjectInventory(inventory));
+        else
+            existRes.Count += inventory.Count;
+    }
+
+
 
     public void AddResource(ModelNPC.PortalData portal, DataObjectInventory inventory)
     {
@@ -352,6 +445,58 @@ public class ManagerPortals : MonoBehaviour
     }
 
     #region Process 
+
+    private bool FabricationProduction(ModelNPC.PortalData p_portal)
+    {
+        DataObjectInventory resInventory;
+        List<PortalResourceFabrication> listFabrics = null;
+        bool isStartProgress = false;
+        int totalResources = p_portal.Resources.Sum(p => p.Count);
+        int limirProcess = p_portal.Resources.Sum(p => p.Count) / totalResources;
+        if (limirProcess < 0)
+            limirProcess = 1;
+        if (limirProcess > 7)
+            limirProcess = 7;
+
+        Storage.EventsUI.ListLogAdd = "PortalWork fabrication.... RES: "  + totalResources + "  pass:" + limirProcess;
+
+        for (int proc = 0; proc < limirProcess; proc++)
+        {
+            for (int i = p_portal.Resources.Count - 1; i >= 0; i--)
+            {
+                resInventory = p_portal.Resources[i];
+                if (resInventory == null || resInventory.Count == 0)
+                    continue;
+                //GetFabricaByResource(ref fabrica, p_portal, resInventory.NameInventopyObject);
+                GetFabricsByResource(ref listFabrics, p_portal, resInventory.NameInventopyObject);
+                foreach (PortalResourceFabrication fabrica in listFabrics)
+                {
+                    if (fabrica == null)
+                        continue;
+
+                    switch (fabrica.BeginProcess)
+                    {
+                        case TypeResourceProcess.ResourceProduction:
+                            //Check production
+                            if (resInventory.Count >= fabrica.LimitToBeginProcess)
+                            {
+                                //Begin progress
+                                p_portal.Resources[i].Count -= fabrica.LimitToBeginProcess;
+                                if (p_portal.Resources[i].Count <= 0)
+                                    p_portal.Resources.RemoveAt(i);
+                                Storage.PortalsManager.AddResource(p_portal, fabrica.SpawnResourceName, 1);
+                                Storage.EventsUI.ListLogAdd = "Fabrication >> " + resInventory.NameInventopyObject + " => " + fabrica.SpawnResourceName;
+                                isStartProgress = true;
+                            }
+                            break;
+                    }
+                    //if (isStartProgress)
+                    //    break;
+                }
+            }
+        }
+        return isStartProgress;
+    }
 
     public static void IncubationProcess(ModelNPC.PortalData p_portal, bool isCallFromReality = false)
     {
@@ -402,7 +547,7 @@ public class ManagerPortals : MonoBehaviour
                 }
             }
             p_portal.CurrentProcess = TypeResourceProcess.None;
-            p_portal.LastTimeIncubation = Time.time;
+            
         }
     }
     #endregion

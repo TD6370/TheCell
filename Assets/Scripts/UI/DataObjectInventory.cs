@@ -50,6 +50,14 @@ public class DataObjectInventory {
         Count = 0;
     }
 
+    public bool IsEmpty
+    {
+        get
+        {
+            return Count == 0 || string.IsNullOrEmpty(NameInventopyObject) || NameInventopyObject == SaveLoadData.TypeInventoryObjects.None.ToString();
+        }
+    }
+
     public override string ToString()
     {
         return string.Format("{0} ({1})", NameInventopyObject, Count);
@@ -77,6 +85,15 @@ public static class InventoryExtension
         }
         SaveLoadData.TypeInventoryObjects invObject = (SaveLoadData.TypeInventoryObjects)Enum.Parse(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName);
         return new DataObjectInventory(invObject.ToString(), countResource);
+    }
+
+    public static void AddToInventory(this ModelNPC.GameDataAlien alien, ModelNPC.PortalData portal, int indexRes, int count)
+    {
+        DataObjectInventory resourceStorage = portal.Resources[indexRes];
+        portal.Resources[indexRes].Count -= count;
+        if (portal.Resources[indexRes].Count <= 0)
+            portal.Resources.RemoveAt(indexRes);
+        alien.Inventory = new DataObjectInventory(resourceStorage.NameInventopyObject, count);
     }
 
     public static DataObjectInventory GetInventoryObject(this ModelNPC.ObjectData targetData)

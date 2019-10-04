@@ -8,5 +8,7 @@ public class SettingsPortals : ScriptableObject
     [SerializeField]
     public int StartLimitNPC;
     [SerializeField]
+    public int AllLimitNPC;
+    [SerializeField]
     public float PeriodIncubation;
 }

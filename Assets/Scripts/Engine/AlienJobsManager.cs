@@ -58,10 +58,15 @@ public static class AlienJobsManager
                                 Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: dataNPC.Inventory is null");
                             }
 
-                            //End job
-                            p_dataNPC.Job = null;
-                            p_dataNPC.TargetID = string.Empty;
-                            p_dataNPC.TargetPosition = Vector3.zero;
+                            //
+                            bool checkStorageResource = Storage.PortalsManager.CheckStorageResourceForAlien(portal, p_dataNPC);
+                            if (!checkStorageResource)
+                            {
+                                //End job
+                                p_dataNPC.Job = null;
+                                p_dataNPC.TargetID = string.Empty;
+                                p_dataNPC.TargetPosition = Vector3.zero;
+                            }
                         }
                         else
                         {
@@ -82,6 +87,14 @@ public static class AlienJobsManager
                                 //if(job.IsJobCompleted)
                                 if(p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
                                 {
+                                    if(job.Job == TypesJobs.Build)
+                                    {
+                                        if(p_dataNPC.Inventory == null ||  p_dataNPC.Inventory.IsEmpty ||  p_dataNPC.Inventory.TypeInventoryObject.ToString() != job.ResourceResult.ToString())
+                                        {
+                                            return false;
+                                        }
+                                    }
+
                                     //p_dataNPC.CurrentAction = GameActionPersonController.NameActionsPerson.Target.ToString();
                                     GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Move, controller, true);
                                     // **** FIND RESOURCE ****
@@ -162,5 +175,10 @@ public static class AlienJobsManager
         }
         
     }
+
+    
+    
+
+
 }
 

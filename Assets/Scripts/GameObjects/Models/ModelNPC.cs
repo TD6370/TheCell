@@ -201,7 +201,6 @@ public partial class ModelNPC
             }
         }
 
-
         private Vector3 m_Position = new Vector3(0, 0, 0);
         public override Vector3 Position
         {
@@ -221,7 +220,6 @@ public partial class ModelNPC
                 return (TargetPosition == null || TargetPosition == new Vector3(0, 0, 0)) && m_Position != null && m_Position != new Vector3(0, 0, 0);
             }
         }
-        //-----------------------------------
 
         public GameDataNPC() : base()
         {
@@ -232,19 +230,13 @@ public partial class ModelNPC
 
         public void SetTargetPosition(Vector3 p_SetTarget)
         {
-            //#TARGET
-            //Debug.Log("^^^^^  Set Target + " + p_SetTarget + "    Name  " + NameObject);
             TargetPosition = p_SetTarget;
             return;
         }
-               
 
         public virtual void SetTargetPosition()
         {
             var _position = Position;
-
-            //int distX = UnityEngine.Random.Range(-15, 15);
-            //int distY = UnityEngine.Random.Range(-15, 15);
             int distX = UnityEngine.Random.Range(-6, 6);
             int distY = UnityEngine.Random.Range(-6, 6);
             float xT = _position.x + distX;
@@ -261,28 +253,29 @@ public partial class ModelNPC
         {
             if (Storage.Instance.IsLoadingWorld)
             {
-                //Debug.Log("_______________ LOADING WORLD ....._______________");
                 StopTransfer();
                 return "";
             }
-
-            if (_isError)
+            if (ConfigDebug.IsTestDUBLICATE)
             {
-                Debug.Log("################ Error NextPosition (" + gobj.name + ")   already IS ERROR ");
-                StopTransfer();
-                return "Error";
-            }
-            if (Storage.Instance.IsCorrectData)
-            {
-                Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
-                StopTransfer();
-                return "Error";
-            }
-            if (!IsReality)
-            {
-                Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");  //!@#$
-                StopTransfer();
-                return "Update";
+                if (_isError)
+                {
+                    Debug.Log("################ Error NextPosition (" + gobj.name + ")   already IS ERROR ");
+                    StopTransfer();
+                    return "Error";
+                }
+                if (Storage.Instance.IsCorrectData)
+                {
+                    Debug.Log("_______________ RETURN CorrectData ON CORRECT_______________");
+                    StopTransfer();
+                    return "Error";
+                }
+                if (!IsReality)
+                {
+                    Debug.Log("_______________  Error NextPosition (" + gobj.name + ")   Not IsReality _______________");  //!@#$
+                    StopTransfer();
+                    return "Update";
+                }
             }
 
             Vector3 _newPosition = gobj.transform.position;
@@ -298,15 +291,10 @@ public partial class ModelNPC
             {
                 newName = "?";
 
-                if (posFieldName != posFieldOld)
+                if (ConfigDebug.IsTestDUBLICATE && posFieldName != posFieldOld)
                 {
-                    //Create dublicate
                     Debug.Log("################ Error NextPosition (" + gobj.name + ")   ERROR NAMES:  Old Field name: " + posFieldName + " !=  posFieldOld: " + posFieldOld + "  ------  posFieldReal: " + posFieldReal + "   DN:" + NameObject + " DataPos: " + Position.x + "x" + Position.y);
                     Storage.Log.GetHistory(gobj.name);
-                    //gobj.PlayAnimation();
-                    //Destroy(gobj, 3f);
-                    //Storage.Instance.AddDestroyRealObject(gobj);
-                    //@CD@
                     StopTransfer();
                     _isError = true;
                     Storage.Fix.CorrectData(null, gobj, "NextPosition");
@@ -314,23 +302,13 @@ public partial class ModelNPC
                 }
 
                 bool isInZona = true;
-
                 if (!Helper.IsValidPiontInZona(_newPosition.x, _newPosition.y))
-                {
-
                     isInZona = false;
-                }
-                //if (IsMoveValid())
-                //{
-                //    IsTransfer = true;
-                    newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
-                //    IsTransfer = false;
-                //}
+                newName = Storage.Person.UpdateGamePosition(posFieldOld, posFieldReal, nameObject, this, _newPosition, gobj, !isInZona);
                 if (!isInZona && !string.IsNullOrEmpty(newName))
                 {
                     Storage.Instance.DestroyObject(gobj);
                 }
-
             }
             return newName;
         }

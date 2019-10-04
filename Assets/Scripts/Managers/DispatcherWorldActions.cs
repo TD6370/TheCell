@@ -214,9 +214,6 @@ public class DispatcherWorldActions : MonoBehaviour
                     }
                     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-                    //
-
-
                     if (listNPC.Count == 0)
                     {
                         //UnityEngine.Profiling.Profiler.BeginSample("Sample LOCK dreamworkers");

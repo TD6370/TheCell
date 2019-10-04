@@ -17,7 +17,7 @@ public partial class ModelNPC
         public virtual int Life { get; set; }
 
         [XmlIgnore]
-        public float LastTimeIncubation;
+        public float LastTimeFabrication;
         [XmlIgnore]
         public virtual TypesBiomNPC TypeBiom { get; set; }
         [XmlIgnore]
@@ -92,9 +92,12 @@ public partial class ModelNPC
                 childInfo,
                 CurrentProcess);
         }
+
+        public void EndFabrication()
+        {
+            LastTimeFabrication = Time.time;
+        }
     }
-
-
 
     [XmlType("PortalRed")]
     public class PortalRed : PortalData

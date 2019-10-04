@@ -514,9 +514,67 @@ public class StoragePerson : MonoBehaviour {
         Storage.ReaderWorld.UpdateLinkData(dataNPC, true, fieldNew, -1);
     }
 
+    public string UpdateGamePosition_Cache(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
+    {
+        if (Storage.Instance.IsLoadingWorld && !NotValid)
+            return "";
+
+        if (Storage.Data.IsUpdatingLocationPersonGlobal)
+            return "";
+
+        List<GameObject> realObjectsOldField = Storage.Instance.GamesObjectsReal[p_OldField];
+        List<ModelNPC.ObjectData> dataObjectsOldField = ReaderScene.GetObjectsDataFromGrid(p_OldField);
+        
+        int indReal = realObjectsOldField.FindIndex(p => p.name == p_NameObject);
+        int testIndData = dataObjectsOldField.FindIndex(p => p.NameObject == p_NameObject);
+        GameObject gobj = realObjectsOldField[indReal];
+
+        //add to new Field
+        if (!ReaderScene.IsGridDataFieldExist(p_NewField))
+            Storage.Data.AddNewFieldInGrid(p_NewField, "UpdateGamePosition");
+
+        Storage.Data.UpdatingLocationPersonLocal++;
+        string nameObject = Helper.CreateName(objData.TypePrefabName, p_NewField, "", p_NameObject);
+        objData.SetNameObject(nameObject, isTestValid: false); 
+        gobj.name = objData.NameObject;
+
+        if (isDestroy)
+            objData.IsReality = false;
+
+        if (!Storage.Instance.GamesObjectsReal.ContainsKey(p_NewField))
+        {
+            Storage.Instance.GamesObjectsReal.Add(p_NewField, new List<GameObject>());
+        }
+
+        bool resAddData = Storage.Data.AddDataObjectInGrid(objData, p_NewField, "UpdateGamePosition from: " + p_OldField);
+        if (!resAddData)
+        {
+            Storage.Data.UpdatingLocationPersonLocal--;
+            return "";
+        }
+        objData.SetPosition(gobj.transform.position);
+        if (!isDestroy)
+        {
+            bool resAddReal = Storage.Data.AddRealObject(gobj, p_NewField, "UpdateGamePosition from: " + p_OldField);
+            if (!resAddReal)
+            {
+                Storage.Data.UpdatingLocationPersonLocal--;
+                return "";
+            }
+        }
+        //remove
+        Storage.Data.RemoveObjecDataGridByIndex(ref dataObjectsOldField, testIndData);
+        realObjectsOldField.RemoveAt(indReal);
+        Storage.Data.UpdatingLocationPersonLocal--;
+
+        return gobj.name;
+    }
+
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
-        
+        if (!ConfigDebug.IsTestDUBLICATE)
+            return UpdateGamePosition_Cache(p_OldField, p_NewField, p_NameObject, objData, p_newPosition, thisGameObject, isDestroy, NotValid);
+
         if (Storage.Instance.IsLoadingWorld && !NotValid)
         {
             Debug.Log("_______________ LOADING WORLD ....._______________");

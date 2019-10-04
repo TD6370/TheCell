@@ -14,6 +14,5 @@ MonoBehaviour:
   Job: 1
   TargetResource: 17
   ResourceResult: 19
-  TargetField: 
-  TargetId: 
   JobTo: 1
+  LimitResourceCount: 1

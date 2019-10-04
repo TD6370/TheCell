@@ -12,10 +12,7 @@ public class AlienJob : ScriptableObject
     public SaveLoadData.TypePrefabs TargetResource = SaveLoadData.TypePrefabs.PrefabField;
     [SerializeField]
     public SaveLoadData.TypePrefabs ResourceResult = SaveLoadData.TypePrefabs.PrefabField;
-    [SerializeField]
-    public string TargetField;
-    [SerializeField]
-    public string TargetId;
-    [SerializeField]
     public TypesJobTo JobTo;
+    [SerializeField]
+    public int LimitResourceCount;
 }

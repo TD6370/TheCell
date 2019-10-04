@@ -13,4 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollectionResourceFabrication:
   - {fileID: 11400000, guid: b291e35a46b5de54592ede4455cbcaf3, type: 2}
+  - {fileID: 11400000, guid: 3999f3d09b1aca043b094dc4fcc9ff8c, type: 2}
+  - {fileID: 11400000, guid: f6337ce733f987e4baaae9e4a247ca8f, type: 2}
+  - {fileID: 11400000, guid: d9d9ba10228d8654eb47c7b2e1237554, type: 2}
+  - {fileID: 11400000, guid: 427fefe6ef3973a41859ffeaf8b4f9f5, type: 2}
   Tag: Job

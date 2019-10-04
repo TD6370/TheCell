@@ -479,8 +479,89 @@ public class GenerateGridFields : MonoBehaviour {
         }
     }
 
+    private void SaveListObjectsToData_Cache(string p_nameField, bool isDestroy = false)
+    {
+        var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
+        var _gridData = Storage.Instance.GridDataG;
+        int indLast = -1;
+        int indData = 0;
+
+        GameObject gobj;
+        ModelNPC.ObjectData dataObj;
+        List<GameObject> realObjects = _gamesObjectsReal[p_nameField];
+        List<ModelNPC.ObjectData> dataObjects = ReaderScene.GetObjectsDataFromGrid(p_nameField);
+
+        Vector3 posD ;
+        Vector3 posR ;
+        string posFieldOld;
+        string posFieldReal;
+        string name;
+
+        for (int i = realObjects.Count - 1; i >= 0; i--) 
+        {
+            gobj = realObjects[i];
+            if (gobj == null || !gobj.activeSelf)
+                continue;
+            indData = dataObjects.FindIndex(p => p.NameObject == gobj.name);
+            dataObj = dataObjects[indData];
+            posD = dataObj.Position;
+            posR = gobj.transform.position;
+            posFieldOld = Helper.GetNameFieldPosit(posD.x, posD.y);
+            posFieldReal = Helper.GetNameFieldPosit(posR.x, posR.y);
+            if (posFieldOld != posFieldReal)
+            {
+                if (isDestroy)
+                {
+                    dataObj.IsReality = false;
+                    gobj.SetActive(false);
+                }
+                ModelNPC.ObjectData dataObjNew = (ModelNPC.ObjectData)dataObj.Clone();
+                name = Helper.CreateName(dataObj.TypePrefabName, posFieldReal, "", gobj.name);
+                indLast = -1;
+                indLast = ReaderScene.GetObjectsDataFromGrid(posFieldOld).FindIndex(p => p.NameObject == gobj.name);
+                Storage.Data.RemoveDataObjectInGrid(posFieldOld, indData, "SaveListObjectsToData");
+                //--------------------
+                dataObj = dataObjNew;
+                dataObj.NameObject = name;
+                //@SAVE@ ------ RESAVE PROPERTIES
+                if (dataObj.NameObject != gobj.name)
+                {
+                    if (!isDestroy)
+                        dataObj.UpdateGameObject(gobj);
+                    dataObj.SetPosition(gobj.transform.position);
+                    dataObj.UpdateGameObjectAndID(gobj);
+                }
+                dataObj.IsReality = false;
+                Storage.Data.AddDataObjectInGrid(dataObj, posFieldReal, "SaveListObjectsToData");
+                if (!Storage.Instance.GamesObjectsReal.ContainsKey(posFieldReal))
+                {
+                    Storage.Data.AddNewFieldInRealObject(posFieldReal, "SaveListObjectsToData");
+                }
+                if (!isDestroy)
+                {
+                    Storage.Data.AddRealObject(gobj, posFieldReal, "SaveListObjectsToData");
+                }
+                Storage.Data.RemoveRealObject(i, p_nameField, "SaveListObjectsToData");
+                if (!isDestroy)
+                    GameObjectUpdatePersonData(gobj);
+            }
+            else
+            {
+                if (isDestroy)
+                    dataObj.IsReality = false;
+                Storage.Data.UpdateDataObect(p_nameField, indData, dataObj, "SaveListObjectsToData", posR); //@<<@ 
+            }
+            
+        }
+    }
+
     private void SaveListObjectsToData(string p_nameField, bool isDestroy = false)
     {
+        if(!ConfigDebug.IsTestDUBLICATE)
+        {
+            SaveListObjectsToData_Cache(p_nameField, isDestroy);
+            return;
+        }
         var _gamesObjectsReal = Storage.Instance.GamesObjectsReal;
         var _gridData = Storage.Instance.GridDataG;
 
@@ -555,17 +636,20 @@ public class GenerateGridFields : MonoBehaviour {
                 }
 
                 ModelNPC.ObjectData dataObj = dataObjects[indData];
-                if (dataObj == null)
+                if (ConfigDebug.IsTestDUBLICATE)
                 {
-                    Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
-                    Storage.Log.GetHistory(gobj.name);
-                    continue;
-                }
-                if (dataObj.NameObject != gobj.name)
-                {
-                    Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") <> (" + gobj.name + ") Gobj)");
-                    Storage.Log.GetHistory(gobj.name);
-                    continue;
+                    if (dataObj == null)
+                    {
+                        Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") not Find in DATA     field: " + p_nameField);
+                        Storage.Log.GetHistory(gobj.name);
+                        continue;
+                    }
+                    if (dataObj.NameObject != gobj.name)
+                    {
+                        Debug.Log("################# SaveListObjectsToData 2.  DataObject (" + gobj.name + ") <> (" + gobj.name + ") Gobj)");
+                        Storage.Log.GetHistory(gobj.name);
+                        continue;
+                    }
                 }
 
                 indErr = "3.7.";
