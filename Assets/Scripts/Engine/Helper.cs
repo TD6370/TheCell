@@ -752,6 +752,21 @@ public static class Helper { //: MonoBehaviour {
         return true;
     }
 
+    public static bool IsValidFieldInZonaPortal(float x, float y, ModelNPC.PortalData portal)
+    {
+        int zonaPortal = 3;
+        Vector2 posFieldPortal = NormalizPosToField(portal.Position.x, portal.Position.y);
+        Rect rect = new Rect((int)(posFieldPortal.x - zonaPortal),
+                             (int)(posFieldPortal.y - zonaPortal), 
+                             (int)(posFieldPortal.x + zonaPortal), 
+                             (int)(posFieldPortal.y + zonaPortal));
+        if (rect.Contains(new Vector2(x, y)))
+            return false;
+        return true;
+    }
+    
+
+
     public static byte[] StringToUTF8ByteArray(string pXmlString)
     {
         System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
@@ -879,63 +894,7 @@ public static class Helper { //: MonoBehaviour {
     }
 
     // = Helper.FillAlienJibs(PersonPriority);//
-    public static Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys, ref Dictionary<string, AlienJob> jobsJoin)
-    {
-        string strErr = "1";
-        Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> jobs = new Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>>();
-        SaveLoadData.TypePrefabs prefabNameType;
-        SaveLoadData.TypePrefabNPC prefabNameTypeNPC;
-        strErr = "2";
-        try { 
-            string key;
-            PriorityFinder prioritys;
-            strErr = "3";
-            var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabNPC)).Length - 1;
-            strErr = "4";
-            for (int ind = 0; ind < max; ind++)
-            {
-                strErr = "5";
-                prefabNameTypeNPC = (SaveLoadData.TypePrefabNPC)Enum.Parse(typeof(SaveLoadData.TypePrefabNPC), ind.ToString());
-                strErr = "6";
-                prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabNameTypeNPC.ToString());
-                if (pioritys.ContainsKey(prefabNameType))
-                {
-                    strErr = "7";
-                    prioritys = pioritys[prefabNameType];
-                    strErr = "8";
-                    if (prioritys.ListJobs != null)
-                    {
-                        foreach (AlienJob job in prioritys.ListJobs)
-                        {
-                            if(job==null)
-                            {
-                                Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.job is null";
-                                continue;
-                            }
-
-                            key = string.Format("{0}_{1}", prefabNameType, job.TargetResource.ToString());
-                            if (!jobsJoin.ContainsKey(key))
-                                jobsJoin.Add(key, job);
-
-                        }
-                        strErr = "9";
-                        if (!jobs.ContainsKey(prefabNameType) && prioritys.ListJobs != null && prioritys.ListJobs.Count() > 0)
-                            jobs.Add(prefabNameType, prioritys.ListJobs.ToList());
-                    }else
-                    {
-                        Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.prioritys.ListJobs is null";
-                    }
-                }
-            }
-            strErr = "10";
-        }
-        catch (Exception ex)
-        {
-            Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob #" + strErr + " : " + ex.Message;
-        }
-
-        return jobs;
-    }
+    
 
     public static Dictionary<string, int> FillPrioritys(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys)
     {
@@ -1168,10 +1127,13 @@ public static class Helper { //: MonoBehaviour {
         public bool isValid;
         public int index;
         public int nextF;
+        public int Order;
+        // public bool isTestPortal;
     }
     public static CacheParamSpiralFields temp_spatal;
+    //List<FieldRnd>
 
-    public static void GetSpiralFields_Cache(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = false)
+    public static void GetSpiralFields_Cache(ref List<FieldRnd> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = false, ModelNPC.PortalData portal = null, bool isRandomOrder = false)
     {
         //cacheSpiralFields = new CacheParamSpiralFields();
 
@@ -1179,23 +1141,31 @@ public static class Helper { //: MonoBehaviour {
         temp_spatal._single = 1;
         temp_spatal.limitInvertSingle = 1;
         temp_spatal.indexFileds = 0;
-        temp_spatal.isValid = !isTestZonaWorls;
+        temp_spatal.isValid = true; // !isTestZonaWorls;
+        //temp_spatal.isTestPortal = portal != null && !isTestZonaWorls;
         temp_spatal.index = 0;
         temp_spatal.nextF = 0;
+        temp_spatal.Order = 0;
+        
 
-        //foreach (int index in Enumerable.Range(0, 6))
         for (temp_spatal.index = 0; temp_spatal.index < 20; temp_spatal.index++)
         {
             //X
-            //foreach (int i in Enumerable.Range(0, index))
             for(temp_spatal.nextF = 0; temp_spatal.nextF < temp_spatal.index; temp_spatal.nextF++)
             {
                 x += temp_spatal._single;
+                temp_spatal.isValid = true;
                 if (isTestZonaWorls)
                     temp_spatal.isValid = IsValidFieldInZonaWorld(x, y);
+                if(portal !=null && temp_spatal.isValid)
+                    temp_spatal.isValid = IsValidFieldInZonaPortal(x, y, portal);
+
                 if (temp_spatal.isValid)
                 {
-                    findedFileds.Add(new Vector2Int(x, y));
+                    if (isRandomOrder)
+                        temp_spatal.Order = UnityEngine.Random.Range(0, lenSnake);
+
+                    findedFileds.Add(new FieldRnd(x, y, temp_spatal.Order));
                     temp_spatal.indexFileds++;
                 }
                 temp_spatal.indexSingle++;
@@ -1209,15 +1179,21 @@ public static class Helper { //: MonoBehaviour {
                 }
             }
             //Y
-            //foreach (int i in Enumerable.Range(0, index))
             for(temp_spatal.nextF = 0; temp_spatal.nextF < temp_spatal.index; temp_spatal.nextF++)
             {
                 y += temp_spatal._single;
+                temp_spatal.isValid = true;
                 if (isTestZonaWorls)
                     temp_spatal.isValid = IsValidFieldInZonaWorld(x, y);
                 if (temp_spatal.isValid)
+                    temp_spatal.isValid = IsValidFieldInZonaPortal(x, y, portal);
+
+                if (temp_spatal.isValid)
                 {
-                    findedFileds.Add(new Vector2Int(x, y));
+                    if (isRandomOrder)
+                        temp_spatal.Order = UnityEngine.Random.Range(0, lenSnake);
+
+                    findedFileds.Add(new FieldRnd(x, y, temp_spatal.Order));
                     temp_spatal.indexFileds++;
                 }
                 temp_spatal.indexSingle++;

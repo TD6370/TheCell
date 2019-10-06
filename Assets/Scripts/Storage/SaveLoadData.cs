@@ -54,6 +54,7 @@ public class SaveLoadData : MonoBehaviour {
     public List<string> NamesPrefabFlore;
     public List<string> NamesPrefabsObjectsAndFlore;
     public List<string> NamesPrefabNPC;
+      
 
     private IEnumerable<string> _namesPrefabs
     {   get
@@ -731,6 +732,8 @@ public class SaveLoadData : MonoBehaviour {
         GrassSmall,
         GrassMedium,
         Grass,
+        Ground04,
+        Ground05,
     }
 
     private void Awake()
@@ -1184,6 +1187,66 @@ public class SaveLoadData : MonoBehaviour {
 
 
 
+}
+
+public static class ModelExtension
+{
+    public static bool GetPeelType(this SaveLoadData.TypePrefabs model)
+    {
+        return Storage.GridData.NamesPrefabFloors.Contains(model.ToString());
+    }
+
+    public static bool IsFloor(this SaveLoadData.TypePrefabs model)
+    {
+        return Storage.GridData.NamesPrefabFloors.Contains(model.ToString());
+    }
+
+    public static bool IsNotFloor(this SaveLoadData.TypePrefabs model)
+    {
+        return !Storage.GridData.NamesPrefabFloors.Contains(model.ToString());
+    }
+
+    public static bool IsPrefab(this SaveLoadData.TypePrefabs model)
+    {
+        return Storage.GridData.NamesPrefabsObjectsAndFlore.Contains(model.ToString());
+    }
+
+    public static bool IsWood(this SaveLoadData.TypePrefabs model)
+    {
+        return Storage.GridData.NamesPrefabObjects.Contains(model.ToString());
+    }
+
+    public static bool IsFlore(this SaveLoadData.TypePrefabs model)
+    {
+        return Storage.GridData.NamesPrefabFlore.Contains(model.ToString());
+    }
+
+    //----
+
+    public static bool IsFloor(this SaveLoadData.TypeInventoryObjects model)
+    {
+        return Storage.GridData.NamesPrefabFloors.Contains(model.ToString());
+    }
+
+    public static bool IsNotFloor(this SaveLoadData.TypeInventoryObjects model)
+    {
+        return !Storage.GridData.NamesPrefabFloors.Contains(model.ToString());
+    }
+
+    public static bool IsPrefab(this SaveLoadData.TypeInventoryObjects model)
+    {
+        return Storage.GridData.NamesPrefabsObjectsAndFlore.Contains(model.ToString());
+    }
+
+    public static bool IsWood(this SaveLoadData.TypeInventoryObjects model)
+    {
+        return Storage.GridData.NamesPrefabObjects.Contains(model.ToString());
+    }
+
+    public static bool IsFlore(this SaveLoadData.TypeInventoryObjects model)
+    {
+        return Storage.GridData.NamesPrefabFlore.Contains(model.ToString());
+    }
 }
 
 

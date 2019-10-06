@@ -18,7 +18,7 @@ public class StoragePerson : MonoBehaviour {
     public Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> PersonPriority;
     public Dictionary<string, int> CollectionPowerAllTypes;
     public Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob;
-    public Dictionary<string, AlienJob> AlienToResourceJobsJoins;
+    //public Dictionary<string, AlienJob> AlienToResourceJobsJoins;
 
     public static string _Ufo { get { return SaveLoadData.TypePrefabs.PrefabUfo.ToString(); } }
     public static string _Boss { get { return SaveLoadData.TypePrefabs.PrefabBoss.ToString(); } }
@@ -935,41 +935,133 @@ public class StoragePerson : MonoBehaviour {
         //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
     }
 
-    List<Vector2Int> temp_findedFileds = new List<Vector2Int>();
-    List<ModelNPC.ObjectData> temp_resourcesData;
-
-    private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.ObjectData dataAien, int distantionWay)
+    private List<FieldRnd> temp_findedFileds = new List<FieldRnd>();
+    private List<ModelNPC.ObjectData> temp_resourcesData;
+    private List<FieldRnd> temp_spiralRandem = new List<FieldRnd>();
+    
+    private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
     {
+        bool isRandomOrder = false;
+        if (job != null && job.Job == TypesJobs.Build)
+            isRandomOrder = job.ResourceResult.IsPrefab();
+
+        ModelNPC.ObjectData spare_result = null;
+        AlienJob spare_job = null;
+        List<AlienJob> jobs = null;
+
+        //TEST BUILD
+        if (dataAien.Inventory != null && 
+            (dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Kolba ||
+            dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Lantern))
+        {
+            Storage.EventsUI.ListLogAdd = "Build PREFAB : " + dataAien.Inventory.NameInventopyObject;
+        }
+
+        ModelNPC.PortalData portal = null;
+
         if (!CollectionAlienJob.ContainsKey(dataAien.TypePrefab))
             return;
+
+        if(!string.IsNullOrEmpty(dataAien.PortalId))
+        {
+            var info = ReaderScene.GetInfoID(dataAien.PortalId);
+            if (info != null)
+                portal = info.Data as ModelNPC.PortalData;
+        }
 
         int x = 0;
         int y = 0;
         string nameField = string.Empty;
-        string key;
+        string key = string.Empty;
 
+        bool isFieldJobValid = true;
+        bool isCompletedTestFiledOnFree = false;
+
+        //Get jobs
+        CollectionAlienJob.TryGetValue(dataAien.TypePrefab, out jobs);
+        
+        //Randomize order spiral
         Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
         temp_findedFileds.Clear();
         temp_resourcesData = null;
-        Helper.GetSpiralFields_Cache(ref temp_findedFileds, x, y, distantionWay);
         result = null;
-        foreach (Vector2Int fieldNext in temp_findedFileds)
+
+        //Fill spiral
+        Helper.GetSpiralFields_Cache(ref temp_findedFileds, 
+            x, y, 
+            distantionWay, 
+            portal: portal, 
+            isRandomOrder: isRandomOrder);
+
+        //Randomize order spiral
+        if(isRandomOrder)
+            temp_findedFileds = temp_findedFileds.OrderBy(p => p.Order).ToList();
+
+        foreach (FieldRnd fieldNext in temp_findedFileds)
         {
-            Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
+            Helper.GetNameField_Cache(ref nameField, fieldNext.Position.x, fieldNext.Position.y);
             //resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
             temp_resourcesData = ReaderScene.GetObjectsDataFromGridContinue(nameField);
             if (temp_resourcesData == null)
                 continue;
+            isCompletedTestFiledOnFree = false;
+            isFieldJobValid = true;
             foreach (ModelNPC.ObjectData resoursData in temp_resourcesData)
             {
-                key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
-                AlienToResourceJobsJoins.TryGetValue(key, out job);
-                if (job != null)
+                //key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
+                //ManagerPortals.GetJobJoin(ref key, dataAien.TypePrefab, resoursData.TypePrefabName));
+                //AlienToResourceJobsJoins.TryGetValue(key, out job);
+                //CollectionAlienJob.TryGetValue(dataAien.TypePrefab, out jobs);
+                //for(int i=0; i < jobs.Count-1; i++)
+                foreach(AlienJob jobItem in jobs.Where(p=>p.TargetResource == resoursData.TypePrefab)) //fix all jobs for type Resource
                 {
-                    result = resoursData;
-                    return;
+                    job = jobItem;
+                    if (job != null)
+                    {
+                        if (spare_job != null && job.Job != TypesJobs.Build)
+                            continue;
+
+                        // Test field on free
+                        if (!isCompletedTestFiledOnFree)
+                        {
+                            AlienJobsManager.CheckFieldsJobValid(ref isFieldJobValid, job, temp_resourcesData);
+                            isCompletedTestFiledOnFree = true;
+                        }
+
+                        //Filter: Build
+                        switch (job.Job)
+                        {
+                            case TypesJobs.Build:
+                                bool isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
+                                if (!isInventoryContainTargetResource || !isFieldJobValid)
+                                {
+                                    job = null;
+                                    continue;
+                                }
+                                break;
+                            case TypesJobs.Bathering:
+                                if (dataAien.Inventory != null && !dataAien.Inventory.IsEmpty)
+                                {
+                                    //Skip Bathering when Filled inventory
+                                    spare_result = resoursData;
+                                    spare_job = job;
+                                    job = null;
+                                    continue;
+                                }
+                                break;
+                        }
+                        result = resoursData;
+                        return;
+                    }
                 }
             }
+        }
+
+        if(spare_result != null)
+        {
+            result = spare_result;
+            job = spare_job;
+            return;
         }
 
         job = null;
@@ -1004,10 +1096,11 @@ public class StoragePerson : MonoBehaviour {
                 return;
             }
             strErr = "4";
-            AlienToResourceJobsJoins = new Dictionary<string, AlienJob>();
+            //AlienToResourceJobsJoins = new Dictionary<string, AlienJob>();
             //@JOB@
             strErr = "5";
-            CollectionAlienJob = Helper.CollectionAlienJob(PersonPriority ,ref AlienToResourceJobsJoins);
+            //CollectionAlienJob =  ManagerPortals.CollectionAlienJob(PersonPriority ,ref AlienToResourceJobsJoins);
+            CollectionAlienJob = ManagerPortals.CollectionAlienJob(PersonPriority);
         }
         catch (Exception ex)
         {
@@ -1155,6 +1248,19 @@ public class FindPersonData
     public ModelNPC.ObjectData DataObj { get; set; }
     public string Field { get; set; }
     public int Index { get; set; }
+}
+
+public struct FieldRnd
+{
+    public Vector2Int Position;
+    public int Order;
+
+    public FieldRnd(int x, int y, int p_order)
+    {
+        Position = new Vector2Int(x, y);
+        Order = p_order;
+    }
+
 }
 
 

@@ -201,6 +201,13 @@ public class PortalController : MonoBehaviour {
                     ManagerPortals.IncubationProcess(m_DataPortal, isCallFromReality: true);
                     m_stateAnimation = AnimationState.None;
                 }
+                else if (m_stateAnimation == AnimationState.Run)
+                {
+                    bool isZonaReal = Helper.IsValidPiontInZona(m_DataPortal.Position.x, m_DataPortal.Position.y);
+                    if (!isZonaReal) //fix incubation
+                        m_stateAnimation = AnimationState.Completed;
+                }
+
                 break;
         }
     }

@@ -17,4 +17,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f6337ce733f987e4baaae9e4a247ca8f, type: 2}
   - {fileID: 11400000, guid: d9d9ba10228d8654eb47c7b2e1237554, type: 2}
   - {fileID: 11400000, guid: 427fefe6ef3973a41859ffeaf8b4f9f5, type: 2}
+  - {fileID: 11400000, guid: 796f3fcb68074bc4a9046c6ee4ddbc17, type: 2}
+  - {fileID: 11400000, guid: 5acb736c23e00a0418aa2a5c650f5f0d, type: 2}
   Tag: Job

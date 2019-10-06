@@ -14,4 +14,7 @@ public class PortalResourceFabrication : ScriptableObject
     public ManagerPortals.TypeResourceProcess BeginProcess;
     [SerializeField]
     public SaveLoadData.TypeInventoryObjects SpawnResourceName;
+    [SerializeField]
+    public int LimitStorage;
+
 }

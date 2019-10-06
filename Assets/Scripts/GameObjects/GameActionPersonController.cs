@@ -160,6 +160,12 @@ public class GameActionPersonController : MonoBehaviour
                 }
             }
 
+            string jobInfo = string.Empty;
+            if (!string.IsNullOrEmpty(DataAlien.JobName))
+            {
+                jobInfo = string.Format("\nJOB: {0}\nTo: {1}\nResource: {2}\nResult: {3}",DataAlien.Job.Job.ToString(), DataAlien.Job.JobTo, DataAlien.Job.TargetResource, DataAlien.Job.ResourceResult);
+            }
+
             string messageInfo =
                 "Action  :" + DataAlien.CurrentAction + "  (" + DataAlien.PersonActions.Length + ")"
                 + "\nTimeWork  : " + (Time.time - DataAlien.TimeEndCurrentAction)
@@ -168,7 +174,8 @@ public class GameActionPersonController : MonoBehaviour
                 + distan
                 + "\nTarget : " + Helper.GetNameField(DataAlien.TargetPosition)
                 + TargetName
-                + inventory;
+                + inventory
+                + jobInfo;
             
             //string messageInfo = "TEST";
 
@@ -649,14 +656,11 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void CheckComplitionWork(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
-        //if (controller == null)
-        //{
-        //    //RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
-        //    return;
-        //}
+        if (controller != null)
+            controller.PlayAnimationWork();
 
         float timeWait = (dataNPC as ModelNPC.GameDataAlien).TimeEndCurrentAction;
-        if (Time.time > timeWait)
+        if (Time.time > timeWait) //time end animation and completed work
         {
             GetAlienData(dataNPC).TimeEndCurrentAction = -1;
             if (dataNPC.Job != null)
@@ -672,15 +676,13 @@ public class GameActionPersonController : MonoBehaviour
                 RequestActionNPC(dataNPC, NameActionsPerson.Completed, controller);
             }
         }
-        if (controller != null)
-            controller.PlayAnimationWork();
     }
 
     public static void CheckComplitionLoot(ModelNPC.GameDataAlien dataNPC, GameActionPersonController controller)
     {
         if (AlienJobsManager.CheckJobAlien(dataNPC) == false)
         {
-            RequestActionNPC(dataNPC, NameActionsPerson.Idle, null);
+            RequestActionNPC(dataNPC, NameActionsPerson.Target, controller);
         }
     }
 

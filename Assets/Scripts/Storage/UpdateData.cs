@@ -239,7 +239,8 @@ public class UpdateData {
            
     public bool AddDataObjectInGrid(ModelNPC.ObjectData objDataSave, string nameField, string callFunc,
          PaletteMapController.SelCheckOptDel p_modeDelete = PaletteMapController.SelCheckOptDel.None,
-        PaletteMapController.SelCheckOptDel p_modeCheck = PaletteMapController.SelCheckOptDel.None)
+        PaletteMapController.SelCheckOptDel p_modeCheck = PaletteMapController.SelCheckOptDel.None, 
+        ModelNPC.ObjectData p_dataNPC = null)
     {
         bool isLog = false;
         if (isLog)
@@ -262,7 +263,11 @@ public class UpdateData {
                 if (p_modeDelete != PaletteMapController.SelCheckOptDel.DelType && 
                     p_modeCheck == PaletteMapController.SelCheckOptDel.DelType)
                 {
-                    var indTM = fieldData.Objects.FindIndex(p => p.TypePrefabName == objDataSave.TypePrefabName);
+                    int indTM = -1;
+                    if(p_dataNPC != null)
+                        indTM = fieldData.Objects.FindIndex(p => p.TypePrefabName == objDataSave.TypePrefabName && p.NameObject != p_dataNPC.NameObject);
+                    else
+                        indTM = fieldData.Objects.FindIndex(p => p.TypePrefabName == objDataSave.TypePrefabName);
                     if (indTM != -1)
                     {
                         if(isLog)
@@ -275,7 +280,12 @@ public class UpdateData {
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => p.TagObject.IsTerra());
                     //var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
-                    var indTM = fieldData.Objects.FindIndex(p => !p.IsFloor());
+                    //var indTM = fieldData.Objects.FindIndex(p => !p.IsFloor());
+                    int indTM = -1;
+                    if (p_dataNPC != null)
+                        indTM = fieldData.Objects.FindIndex(p => !p.IsFloor() && p.NameObject != p_dataNPC.NameObject);
+                    else
+                        indTM = fieldData.Objects.FindIndex(p => !p.IsFloor());
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -288,7 +298,12 @@ public class UpdateData {
                 {
                     //var indTM = fieldData.Objects.FindIndex(p => !p.TagObject.IsTerra());
                     //var indTM = fieldData.Objects.FindIndex(p => !p.TypePrefabName.IsField());
-                    var indTM = fieldData.Objects.FindIndex(p => p.IsFloor());
+                    int indTM = -1;
+                    if (p_dataNPC != null)
+                        indTM = fieldData.Objects.FindIndex(p => p.IsFloor() && p.NameObject != p_dataNPC.NameObject);
+                    else
+                        indTM = fieldData.Objects.FindIndex(p => p.IsFloor());
+
                     if (indTM != -1)
                     {
                         if (isLog)
@@ -299,7 +314,12 @@ public class UpdateData {
 
                 if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelType)
                 {
-                    var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
+                    List<ModelNPC.ObjectData> ListRemove;
+                    if (p_dataNPC != null)
+                        ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName && p.NameObject != p_dataNPC.NameObject).ToList();
+                    else
+                        ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
+                    //var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName == objDataSave.TypePrefabName).ToList();
                     for(int i=ListRemove.Count -1; i>=0;i--)
                     {
                         if (isLog)
@@ -316,7 +336,12 @@ public class UpdateData {
                 else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelPrefab)
                 {
                     //var ListRemove = fieldData.Objects.Where(p => !p.TypePrefabName.IsField()).ToList();
-                    var ListRemove = fieldData.Objects.Where(p => !p.IsFloor()).ToList();
+                    List<ModelNPC.ObjectData> ListRemove;
+                    if (p_dataNPC != null)
+                        ListRemove = fieldData.Objects.Where(p => !p.IsFloor() && p.NameObject != p_dataNPC.NameObject).ToList();
+                    else
+                        ListRemove = fieldData.Objects.Where(p => !p.IsFloor()).ToList();
+                    //var ListRemove = fieldData.Objects.Where(p => !p.IsFloor()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)
@@ -333,7 +358,12 @@ public class UpdateData {
                 else if (p_modeDelete == PaletteMapController.SelCheckOptDel.DelTerra)
                 {
                     //var ListRemove = fieldData.Objects.Where(p => p.TypePrefabName.IsField()).ToList();
-                    var ListRemove = fieldData.Objects.Where(p => p.IsFloor()).ToList();
+                    List<ModelNPC.ObjectData> ListRemove;
+                    if (p_dataNPC != null)
+                        ListRemove = fieldData.Objects.Where(p => p.IsFloor() && p.NameObject != p_dataNPC.NameObject).ToList();
+                    else
+                        ListRemove = fieldData.Objects.Where(p => p.IsFloor()).ToList();
+                    //var ListRemove = fieldData.Objects.Where(p => p.IsFloor()).ToList();
                     for (int i = ListRemove.Count - 1; i >= 0; i--)
                     {
                         if (isLog)

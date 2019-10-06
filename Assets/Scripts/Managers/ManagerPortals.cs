@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System;
 
 public class ManagerPortals : MonoBehaviour
 {
@@ -333,8 +334,12 @@ public class ManagerPortals : MonoBehaviour
 
     public bool CheckStorageResourceForAlien(ModelNPC.PortalData portal, ModelNPC.GameDataAlien alien)
     {
+        string strErr = "0";
+;
+        if(portal.Resources == null || portal.Resources.Count == 0)
+            return false; //pessimistic job
         if (!alien.Inventory.IsEmpty)
-            return false;
+            return true; //optimistic job
 
         DataObjectInventory resNext = null;
         List<AlienJob> temp_listJobs;
@@ -344,20 +349,35 @@ public class ManagerPortals : MonoBehaviour
 
         //>INV>
         try
-        { 
+        {
+            //strErr = "1";
             for (int indRes = portal.Resources.Count - 1; indRes >= 0; indRes--)
             {
+                //strErr = "2";
                 resNext = portal.Resources[indRes];
-                if (temp_listJobs != null)
+                //strErr = "3";
+                if (temp_listJobs != null && resNext != null)
                 {
+                    //strErr = "4";
                     foreach (var itemJob in temp_listJobs)
                     {
-                        if(itemJob.ResourceResult.ToString() == resNext.NameInventopyObject)
+                        //if(itemJob == null)
+                        //{
+                        //    Debug.Log(Storage.EventsUI.ListLogAdd = "### CheckStorageResourceForAlien itemJob is null");
+                        //    continue;
+                        //}
+                        //trErr = "5";
+                        if (itemJob.ResourceResult.ToString() == resNext.NameInventopyObject)
                         {
+                            //strErr = "6";
                             limitRes = itemJob.LimitResourceCount == 0 ? 1 : itemJob.LimitResourceCount;
+                            //strErr = "7";
                             alien.AddToInventory(portal, indRes, limitRes);
+                            //strErr = "8";
                             alien.Job = itemJob;
+                            //strErr = "9";
                             alien.CurrentAction = GameActionPersonController.NameActionsPerson.Target.ToString();
+                            //strErr = "10";
                             Storage.EventsUI.ListLogAdd = "Storage To Alien >> " + resNext.NameInventopyObject + " >> " + itemJob.TargetResource;
                             return true;
                         }
@@ -367,7 +387,7 @@ public class ManagerPortals : MonoBehaviour
             }
         }catch (System.Exception ex)
         {
-            Debug.Log(Storage.EventsUI.ListLogAdd = string.Format("###### CheckStorageResourceForAlien error: {0}", ex));
+            Debug.Log(Storage.EventsUI.ListLogAdd = string.Format("###### CheckStorageResourceForAlien #{1} error: {0}", ex, strErr));
         }
         //alien.Inventory.Clear();
         return false;
@@ -451,8 +471,9 @@ public class ManagerPortals : MonoBehaviour
         DataObjectInventory resInventory;
         List<PortalResourceFabrication> listFabrics = null;
         bool isStartProgress = false;
+        int caseBuild = 7;
         int totalResources = p_portal.Resources.Sum(p => p.Count);
-        int limirProcess = p_portal.Resources.Sum(p => p.Count) / totalResources;
+        int limirProcess = totalResources / caseBuild;
         if (limirProcess < 0)
             limirProcess = 1;
         if (limirProcess > 7)
@@ -477,8 +498,18 @@ public class ManagerPortals : MonoBehaviour
                     switch (fabrica.BeginProcess)
                     {
                         case TypeResourceProcess.ResourceProduction:
+                            if (fabrica.LimitStorage == 0) //TEST
+                                Debug.Log(Storage.EventsUI.ListLogAdd = "## NOT Setting LimitStorage " + fabrica.SpawnResourceName);
+
+                            //Check total storage resources
+                            int totalStorageRes = 0; 
+                            var storageRes = p_portal.Resources.Where(p => p.NameInventopyObject == fabrica.SpawnResourceName.ToString()).FirstOrDefault();
+                            if(storageRes != null)
+                                totalStorageRes = storageRes.Count;
+
                             //Check production
-                            if (resInventory.Count >= fabrica.LimitToBeginProcess)
+                            if (resInventory.Count >= fabrica.LimitToBeginProcess &&
+                                totalStorageRes <= fabrica.LimitStorage)
                             {
                                 //Begin progress
                                 p_portal.Resources[i].Count -= fabrica.LimitToBeginProcess;
@@ -555,6 +586,80 @@ public class ManagerPortals : MonoBehaviour
     public void Stop()
     {
         Portals.Clear();
+    }
+
+    //public static void GetJobJoin(ref string jeyJoin, SaveLoadData.TypePrefabs alienType, AlienJob job)
+    //{
+    //    jeyJoin = string.Format("{0}_{1}_{2}", alienType, job.TargetResource.ToString(), job.ResourceResult.ToString());
+    //}
+
+    public static void GetJobJoin(ref string jeyJoin, SaveLoadData.TypePrefabs alienType, string TargetResource)
+    {
+        jeyJoin = string.Format("{0}_{1}", alienType, TargetResource);
+    }
+
+    //public static Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys, ref Dictionary<string, AlienJob> jobsJoin)
+    public static Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> CollectionAlienJob(Dictionary<SaveLoadData.TypePrefabs, PriorityFinder> pioritys)
+    {
+        string strErr = "1";
+        Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>> jobs = new Dictionary<SaveLoadData.TypePrefabs, List<AlienJob>>();
+        SaveLoadData.TypePrefabs prefabNameType;
+        SaveLoadData.TypePrefabNPC prefabNameTypeNPC;
+        strErr = "2";
+        try
+        {
+            string key = string.Empty;
+            PriorityFinder prioritys;
+            strErr = "3";
+            var max = Enum.GetValues(typeof(SaveLoadData.TypePrefabNPC)).Length - 1;
+            strErr = "4";
+            for (int ind = 0; ind < max; ind++)
+            {
+                strErr = "5";
+                prefabNameTypeNPC = (SaveLoadData.TypePrefabNPC)Enum.Parse(typeof(SaveLoadData.TypePrefabNPC), ind.ToString());
+                strErr = "6";
+                prefabNameType = (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), prefabNameTypeNPC.ToString());
+                if (pioritys.ContainsKey(prefabNameType))
+                {
+                    strErr = "7";
+                    prioritys = pioritys[prefabNameType];
+                    strErr = "8";
+                    if (prioritys.ListJobs != null)
+                    {
+                         /*
+                        foreach (AlienJob job in prioritys.ListJobs)
+                        {
+                            if (job == null)
+                            {
+                                Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.job is null";
+                                continue;
+                            }
+                            //key = string.Format("{0}_{1}", prefabNameType, job.TargetResource.ToString());
+                            GetJobJoin(ref key, prefabNameType, job.TargetResource.ToString());
+                            if (!jobsJoin.ContainsKey(key))
+                                jobsJoin.Add(key, job);
+                            else
+                                Debug.Log(Storage.EventsUI.ListLogAdd = "### jobsJoin dublicte!! == " + key);
+                        }
+                        */
+                        strErr = "9";
+                        if (!jobs.ContainsKey(prefabNameType) && prioritys.ListJobs != null && prioritys.ListJobs.Count() > 0)
+                            jobs.Add(prefabNameType, prioritys.ListJobs.ToList());
+                    }
+                    else
+                    {
+                        Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob.prioritys.ListJobs is null";
+                    }
+                }
+            }
+            strErr = "10";
+        }
+        catch (Exception ex)
+        {
+            Storage.EventsUI.ListLogAdd = "##### CollectionAlienJob #" + strErr + " : " + ex.Message;
+        }
+
+        return jobs;
     }
 }
 

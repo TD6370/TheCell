@@ -54,6 +54,9 @@ public class DataObjectInventory {
     {
         get
         {
+            if((NameInventopyObject != SaveLoadData.TypeInventoryObjects.None.ToString() && Count == 0) ||
+                (NameInventopyObject == SaveLoadData.TypeInventoryObjects.None.ToString() && Count > 0))
+                Clear();
             return Count == 0 || string.IsNullOrEmpty(NameInventopyObject) || NameInventopyObject == SaveLoadData.TypeInventoryObjects.None.ToString();
         }
     }
@@ -62,16 +65,33 @@ public class DataObjectInventory {
     {
         return string.Format("{0} ({1})", NameInventopyObject, Count);
     }
+
+    public bool EqualsInv(SaveLoadData.TypePrefabs typeRes)
+    {
+        return NameInventopyObject  == typeRes.ToString();
+        //return base.Equals(obj);
+    }
 }
 
 public static class InventoryExtension
 {
+    private static Dictionary<SaveLoadData.TypePrefabs, bool> m_emptyTrgetObjects = new Dictionary<SaveLoadData.TypePrefabs, bool>
+    {
+        {SaveLoadData.TypePrefabs.Ground, true},
+        {SaveLoadData.TypePrefabs.Ground02, true},
+        {SaveLoadData.TypePrefabs.Ground03, true}
+    };
+
     public static DataObjectInventory LootObjectToInventory(this ModelNPC.ObjectData targetData, ModelNPC.GameDataAlien alien = null)
     {
+        //if(targetData.TypePrefab == SaveLoadData.TypePrefabs.Ground) //Filter: Loot
+        if (m_emptyTrgetObjects.ContainsKey(targetData.TypePrefab)) //Filter: Loot
+            return DataObjectInventory.EmptyInventory();
+
         if (!Enum.IsDefined(typeof(SaveLoadData.TypeInventoryObjects), targetData.TypePrefabName))
         {
             Debug.Log("######## TypePrefabs not exist NameInventopyObject = " + targetData.TypePrefabName);
-            return new DataObjectInventory();
+            return DataObjectInventory.EmptyInventory();
         }
         int countResource = 1;
         ModelNPC.TerraData terraRes = targetData as ModelNPC.TerraData;

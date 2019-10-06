@@ -16,3 +16,4 @@ MonoBehaviour:
   LimitToBeginProcess: 2
   BeginProcess: 0
   SpawnResourceName: 17
+  LimitStorage: 1
