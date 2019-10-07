@@ -938,7 +938,10 @@ public class StoragePerson : MonoBehaviour {
     private List<FieldRnd> temp_findedFileds = new List<FieldRnd>();
     private List<ModelNPC.ObjectData> temp_resourcesData;
     private List<FieldRnd> temp_spiralRandem = new List<FieldRnd>();
-    
+    private Dictionary<Vector2Int,bool> temp_excludedFreeFileds = new Dictionary<Vector2Int, bool>();
+    //private List<PoolGameObjects.TypePoolPrefabs> m_filterTypesPrefabs;
+        
+
     private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
     {
         bool isRandomOrder = false;
@@ -948,6 +951,10 @@ public class StoragePerson : MonoBehaviour {
         ModelNPC.ObjectData spare_result = null;
         AlienJob spare_job = null;
         List<AlienJob> jobs = null;
+        Vector2Int test_fieldPos = Vector2Int.zero;
+        Vector2Int keyField;
+
+        temp_excludedFreeFileds.Clear();
 
         //TEST BUILD
         if (dataAien.Inventory != null && 
@@ -971,11 +978,16 @@ public class StoragePerson : MonoBehaviour {
 
         int x = 0;
         int y = 0;
+        int sizeBuildingyard = 40;
         string nameField = string.Empty;
         string key = string.Empty;
 
         bool isFieldJobValid = true;
-        bool isCompletedTestFiledOnFree = false;
+        bool isValidFieldBuildFar = true;
+        bool isValidFar = true;
+        bool isInventoryContainTargetResource = false;
+        bool isTestingFreeBuildConstruction = false;
+        TypesBiomNPC biomType = Helper.GetBiomByTypeModel(dataAien.TypePrefab);
 
         //Get jobs
         CollectionAlienJob.TryGetValue(dataAien.TypePrefab, out jobs);
@@ -987,7 +999,7 @@ public class StoragePerson : MonoBehaviour {
         result = null;
 
         //Fill spiral
-        Helper.GetSpiralFields_Cache(ref temp_findedFileds, 
+        AlienJobsManager.GetSpiralFields_Cache(ref temp_findedFileds, 
             x, y, 
             distantionWay, 
             portal: portal, 
@@ -999,21 +1011,27 @@ public class StoragePerson : MonoBehaviour {
 
         foreach (FieldRnd fieldNext in temp_findedFileds)
         {
+            //fix
+            isValidFieldBuildFar = true;
+            keyField = new Vector2Int(fieldNext.Position.x, fieldNext.Position.y);
+
             Helper.GetNameField_Cache(ref nameField, fieldNext.Position.x, fieldNext.Position.y);
-            //resourcesData = ReaderScene.GetObjectsDataFromGrid(nameField);
             temp_resourcesData = ReaderScene.GetObjectsDataFromGridContinue(nameField);
             if (temp_resourcesData == null)
                 continue;
-            isCompletedTestFiledOnFree = false;
             isFieldJobValid = true;
+
+            //Objects in FIELD
             foreach (ModelNPC.ObjectData resoursData in temp_resourcesData)
             {
-                //key = string.Format("{0}_{1}", dataAien.TypePrefabName, resoursData.TypePrefabName);
-                //ManagerPortals.GetJobJoin(ref key, dataAien.TypePrefab, resoursData.TypePrefabName));
-                //AlienToResourceJobsJoins.TryGetValue(key, out job);
-                //CollectionAlienJob.TryGetValue(dataAien.TypePrefab, out jobs);
-                //for(int i=0; i < jobs.Count-1; i++)
-                foreach(AlienJob jobItem in jobs.Where(p=>p.TargetResource == resoursData.TypePrefab)) //fix all jobs for type Resource
+                //fill free fields excludion list 
+                if (isTestingFreeBuildConstruction && resoursData.TypePoolPrefab != PoolGameObjects.TypePoolPrefabs.PoolFloor)
+                {
+                    if (AlienJobsManager.IsNotInListFree(keyField, temp_excludedFreeFileds))
+                        AlienJobsManager.AddExcludeFreeFiled(keyField, temp_excludedFreeFileds);
+                }
+
+                foreach (AlienJob jobItem in jobs.Where(p=>p.TargetResource == resoursData.TypePrefab)) //fix all jobs for type Resource
                 {
                     job = jobItem;
                     if (job != null)
@@ -1022,18 +1040,47 @@ public class StoragePerson : MonoBehaviour {
                             continue;
 
                         // Test field on free
-                        if (!isCompletedTestFiledOnFree)
-                        {
-                            AlienJobsManager.CheckFieldsJobValid(ref isFieldJobValid, job, temp_resourcesData);
-                            isCompletedTestFiledOnFree = true;
-                        }
-
+                        PoolGameObjects.TypePoolPrefabs typePoolResult = AlienJobsManager.CheckFieldJobValid(ref isFieldJobValid, job, resoursData);
                         //Filter: Build
                         switch (job.Job)
                         {
                             case TypesJobs.Build:
-                                bool isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
-                                if (!isInventoryContainTargetResource || !isFieldJobValid)
+
+                                //Test inventory filled
+                                isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
+                                if (!isInventoryContainTargetResource)
+                                    isValidFar = false;
+                                else if (typePoolResult == PoolGameObjects.TypePoolPrefabs.PoolFloor)
+                                    isValidFar = true;
+                                else
+                                {
+                                    //Build Prefab
+                                    //if (test_fieldPos.x != fieldNext.Position.x &&
+                                    //    test_fieldPos.y != fieldNext.Position.y)
+                                    //{
+                                        isTestingFreeBuildConstruction = true;
+                                        //Test position near portal
+                                        isValidFieldBuildFar = Helper.IsValidFieldInZonaPortal(fieldNext.Position.x, fieldNext.Position.y, portal);
+                                        if (isValidFieldBuildFar) //Test Free location
+                                        {
+                                            isValidFieldBuildFar = AlienJobsManager.IsFreeLocationConstruction(ref temp_excludedFreeFileds,
+                                                fieldNext.Position.x, fieldNext.Position.y, sizeBuildingyard, biomType); //TypesBiomNPC
+                                        }
+                                        else
+                                        {
+                                            AlienJobsManager.RemoveExcludeFree(keyField, temp_excludedFreeFileds);
+                                        }
+                                        //test_fieldPos.x = fieldNext.Position.x;
+                                        //test_fieldPos.y = fieldNext.Position.y;
+                                        isValidFar = isValidFieldBuildFar;
+                                    //}
+                                    //else
+                                    //    isValidFar = isValidFieldBuildFar; // = !AlienJobsManager.IsFree(keyField, temp_excludedFreeFileds);
+                                }
+                                //if (isValidFar)//Test inventory filled
+                                //    isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
+                                //if (!isValidFar || !isInventoryContainTargetResource || !isFieldJobValid)
+                                if (!isValidFar || !isFieldJobValid)
                                 {
                                     job = null;
                                     continue;
@@ -1061,9 +1108,13 @@ public class StoragePerson : MonoBehaviour {
         {
             result = spare_result;
             job = spare_job;
+            if (job == null)
+                Debug.Log(Storage.EventsUI.ListLogAdd = "### spare_result is null");
+            temp_findedFileds.Clear();
             return;
         }
 
+        temp_findedFileds.Clear();
         job = null;
     }
 

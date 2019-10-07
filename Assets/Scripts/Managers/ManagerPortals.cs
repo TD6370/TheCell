@@ -167,13 +167,15 @@ public class ManagerPortals : MonoBehaviour
         {
             if (!Storage.Instance.ReaderSceneIsValid)
             {
-                yield return new WaitForSeconds(timeWait * 3);
+                yield return new WaitForSeconds(timeWait);
                 continue;
             }
             yield return null;
             if(Portals == null || Portals.Count == 0)
             {
-                yield return new WaitForSeconds(timeWait * 3);
+                yield return new WaitForSeconds(timeWait);
+                if (Portals.Count == 0)
+                    CreatePortal();
                 continue;
             }
             if (CurrentIndex >= Portals.Count)
@@ -183,13 +185,13 @@ public class ManagerPortals : MonoBehaviour
             if (CurrentPortal == null)
             {
                 Debug.Log("######### DispatcherPortals.CurrentPortal == null");
-                yield return new WaitForSeconds(timeWait * 2);
+                yield return new WaitForSeconds(timeWait);
                 continue;
             }
             if (CurrentPortal.Id == null)
             {
                 Debug.Log("######### DispatcherPortals.CurrentPortal ID is null");
-                yield return new WaitForSeconds(timeWait * 2);
+                yield return new WaitForSeconds(timeWait);
                 continue;
             }
 
@@ -361,11 +363,11 @@ public class ManagerPortals : MonoBehaviour
                     //strErr = "4";
                     foreach (var itemJob in temp_listJobs)
                     {
-                        //if(itemJob == null)
-                        //{
-                        //    Debug.Log(Storage.EventsUI.ListLogAdd = "### CheckStorageResourceForAlien itemJob is null");
-                        //    continue;
-                        //}
+                        if (itemJob == null)
+                        {
+                            Debug.Log(Storage.EventsUI.ListLogAdd = "### CheckStorageResourceForAlien itemJob is null");
+                            continue;
+                        }
                         //trErr = "5";
                         if (itemJob.ResourceResult.ToString() == resNext.NameInventopyObject)
                         {

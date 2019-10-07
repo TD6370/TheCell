@@ -94,12 +94,15 @@ public class PortalController : MonoBehaviour {
 
             string animationInfo = "\n Play : " + m_stateAnimation.ToString();
             string resourcesList = "";
-            foreach (var item in m_DataPortal.Resources)
+            if (m_DataPortal != null && m_DataPortal.Resources != null)
             {
-                resourcesList += "\n" + item;
+                foreach (var item in m_DataPortal.Resources)
+                {
+                    resourcesList += "\n" + item;
+                }
+                if (m_DataPortal.Resources.Count > 0)
+                    resourcesList = "\n  Resources : " + resourcesList;
             }
-            if (m_DataPortal.Resources.Count > 0)
-                resourcesList = "\n  Resources : " + resourcesList;
 
             Color colorGreen = "#9FFF00".ToColor();
             Color colorBlue = "#8BD6FF".ToColor();

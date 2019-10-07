@@ -481,15 +481,23 @@ public class GameActionPersonController : MonoBehaviour
 
     private static ModelNPC.ObjectData m_TargetObject = null;
     private static AlienJob temp_job = null;
+    private static bool ActionTargetIsLock = false;
 
     public static void ActionTarget(ModelNPC.PersonData dataNPC, GameActionPersonController controller)
     {
+        if(ActionTargetIsLock) {
+            Debug.Log(Storage.EventsUI.ListLogAdd = ".....ActionTarget is LOCK");
+            return;
+        }
+        ActionTargetIsLock = true;
+
         //Storage.EventsUI.ListLogAdd = "ActionTarget .... ReaderSceneIsValid=" + Storage.Instance.ReaderSceneIsValid;
         temp_job = null;
 
         if (!Storage.Instance.ReaderSceneIsValid)// && TimeEndCurrentAction < Time.time)
         {
-            ActionTargetLocal(dataNPC, controller); 
+            ActionTargetLocal(dataNPC, controller);
+            ActionTargetIsLock = false;
             return;
         }
 
@@ -511,6 +519,7 @@ public class GameActionPersonController : MonoBehaviour
         catch (Exception ex)
         {
             Storage.EventsUI.ListLogAdd = "##### ActionTarget " + ex.Message;
+            ActionTargetIsLock = false;
             return;
         }
 
@@ -534,6 +543,8 @@ public class GameActionPersonController : MonoBehaviour
 
         if(controller!=null)
             controller.DrawRayTarget(); //TEST
+
+        ActionTargetIsLock = false;
     }
 
     public static void ActionTargetLocal(ModelNPC.PersonData dataNPC, GameActionPersonController controller)

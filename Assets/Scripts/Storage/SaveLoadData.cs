@@ -122,6 +122,7 @@ public class SaveLoadData : MonoBehaviour {
         }
     }
 
+
     private List<TypePrefabs> m_collectionFloreGray;
     public List<TypePrefabs> GetFloreGray
     {
@@ -148,6 +149,69 @@ public class SaveLoadData : MonoBehaviour {
 
             }
             return m_collectionFloreGray;
+        }
+    }
+
+    private Dictionary<TypesBiomNPC, List<TypePrefabs>> m_collectionPrefabsBioms;
+    public Dictionary<TypesBiomNPC, List<TypePrefabs>> GetPrefabsBioms
+    {
+        get
+        {
+            if (m_collectionPrefabsBioms == null)
+            {
+                m_collectionPrefabsBioms = new Dictionary<TypesBiomNPC, List<TypePrefabs>>()
+                {
+                    {TypesBiomNPC.Blue,
+                        new List<TypePrefabs>()
+                        {
+                            TypePrefabs.Kolba,
+                            TypePrefabs.Lantern,
+                            TypePrefabs.PortalBlue,
+                        }},
+                    {TypesBiomNPC.Red,
+                        new List<TypePrefabs>()
+                        {
+                            TypePrefabs.Nadmozg,
+                            TypePrefabs.Triffid,
+                            TypePrefabs.PortalRed,
+                        }},
+                    {TypesBiomNPC.Green,
+                        new List<TypePrefabs>()
+                        {
+                            TypePrefabs.Bananas,
+                            TypePrefabs.Chpok,
+                            TypePrefabs.Cluben,
+                            TypePrefabs.PortalGreen,
+                        }},
+                    {TypesBiomNPC.Violet,
+                        new List<TypePrefabs>()
+                        {
+                            TypePrefabs.Aracul,
+                            TypePrefabs.Cloudwood,
+                            TypePrefabs.PortalViolet,
+                        }}
+
+                };
+            }
+            return m_collectionPrefabsBioms;
+        }
+    }
+
+
+    private List<TypePrefabs> m_collectionPrefabBlue;
+    public List<TypePrefabs> GetPrefabsBlue
+    {
+        get
+        {
+            if (m_collectionPrefabBlue == null)
+            {
+                m_collectionPrefabBlue = new List<TypePrefabs>()
+                {
+                    TypePrefabs.Kolba,
+                    TypePrefabs.Lantern,
+                };
+            }
+            return m_collectionPrefabBlue;
         }
     }
 
