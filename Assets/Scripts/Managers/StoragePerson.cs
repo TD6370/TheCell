@@ -1045,34 +1045,40 @@ public class StoragePerson : MonoBehaviour {
                         switch (job.Job)
                         {
                             case TypesJobs.Build:
-
+                                isValidFar = false;
                                 //Test inventory filled
                                 isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
                                 if (!isInventoryContainTargetResource)
                                     isValidFar = false;
                                 else if (typePoolResult == PoolGameObjects.TypePoolPrefabs.PoolFloor)
-                                    isValidFar = true;
+                                {
+                                    //isValidFar = true;
+                                    //test near objects type of me (Claster)
+                                    AlienJobsManager.IsMeClaster(ref isValidFar, fieldNext.Position.x, fieldNext.Position.y, job.ResourceResult);
+                                }
                                 else
                                 {
                                     //Build Prefab
                                     //if (test_fieldPos.x != fieldNext.Position.x &&
                                     //    test_fieldPos.y != fieldNext.Position.y)
                                     //{
-                                        isTestingFreeBuildConstruction = true;
-                                        //Test position near portal
-                                        isValidFieldBuildFar = Helper.IsValidFieldInZonaPortal(fieldNext.Position.x, fieldNext.Position.y, portal);
-                                        if (isValidFieldBuildFar) //Test Free location
-                                        {
-                                            isValidFieldBuildFar = AlienJobsManager.IsFreeLocationConstruction(ref temp_excludedFreeFileds,
-                                                fieldNext.Position.x, fieldNext.Position.y, sizeBuildingyard, biomType); //TypesBiomNPC
-                                        }
-                                        else
-                                        {
-                                            AlienJobsManager.RemoveExcludeFree(keyField, temp_excludedFreeFileds);
-                                        }
-                                        //test_fieldPos.x = fieldNext.Position.x;
-                                        //test_fieldPos.y = fieldNext.Position.y;
-                                        isValidFar = isValidFieldBuildFar;
+                                    isTestingFreeBuildConstruction = true;
+                                    //Test position near portal
+
+                                    //fix down
+                                    //isValidFieldBuildFar = Helper.IsValidFieldInZonaPortal(fieldNext.Position.x, fieldNext.Position.y, portal);
+                                    if (isValidFieldBuildFar) //Test Free location
+                                    {
+                                        isValidFieldBuildFar = AlienJobsManager.IsFreeLocationConstruction(ref temp_excludedFreeFileds,
+                                            fieldNext.Position.x, fieldNext.Position.y, sizeBuildingyard, biomType); //TypesBiomNPC
+                                    }
+                                    else
+                                    {
+                                        AlienJobsManager.RemoveExcludeFree(keyField, temp_excludedFreeFileds);
+                                    }
+                                    //test_fieldPos.x = fieldNext.Position.x;
+                                    //test_fieldPos.y = fieldNext.Position.y;
+                                    isValidFar = isValidFieldBuildFar;
                                     //}
                                     //else
                                     //    isValidFar = isValidFieldBuildFar; // = !AlienJobsManager.IsFree(keyField, temp_excludedFreeFileds);

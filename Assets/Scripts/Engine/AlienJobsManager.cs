@@ -20,7 +20,7 @@ public static class AlienJobsManager
     public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC, GameActionPersonController controller = null)
     {
         AlienJob job = p_dataNPC.Job;
-        if(job!=null)
+        if (job != null)
         {
             string fieldAlien = string.Empty;
             string fieldTarget = string.Empty;
@@ -48,13 +48,13 @@ public static class AlienJobsManager
                         {
                             p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
                             //Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: dataNPC.Inventory is null");
-                        }else
+                        } else
                             isExitTargetResource = job.TargetResource.ToString() == p_dataNPC.Inventory.TypeInventoryObject.ToString();
 
                         // --- TO PORTAL
-                        if (portal != null )
+                        if (portal != null)
                         {
-                            if(isExitTargetResource)
+                            if (isExitTargetResource)
                             {
                                 //***** Back to HOME **** (trget is Portal)
                                 //p_dataNPC.InventoryObject is ModelNPC;
@@ -71,7 +71,7 @@ public static class AlienJobsManager
                             }
                             //Continue job
                             if (p_dataNPC.Job != null && p_dataNPC.Job.Job != TypesJobs.Bathering)
-                                return true; 
+                                return true;
                         }
                         // --- TO LOOT && BUILD
                         else
@@ -91,11 +91,11 @@ public static class AlienJobsManager
                                     GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Work, controller, true);
                                 }
                                 //if(job.IsJobCompleted)
-                                if(p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
+                                if (p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
                                 {
-                                    if(job.Job == TypesJobs.Build)
+                                    if (job.Job == TypesJobs.Build)
                                     {
-                                        if(p_dataNPC.Inventory == null ||  p_dataNPC.Inventory.IsEmpty ||  p_dataNPC.Inventory.TypeInventoryObject.ToString() != job.ResourceResult.ToString())
+                                        if (p_dataNPC.Inventory == null || p_dataNPC.Inventory.IsEmpty || p_dataNPC.Inventory.TypeInventoryObject.ToString() != job.ResourceResult.ToString())
                                         {
                                             Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB BUILD: Inventory is Empty >> " + job.Job.ToString() + " " + job.TargetResource + " R:" + job.ResourceResult);
                                             //p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
@@ -139,10 +139,10 @@ public static class AlienJobsManager
                                         bool isSpawned = Storage.Data.AddDataObjectInGrid(spawnObject,
                                                             targetInfo.Field, "CheckJobAlien",
                                                             p_modeDelete: deleteOpt,
-                                                            p_modeCheck: checkOpt, 
+                                                            p_modeCheck: checkOpt,
                                                             p_dataNPC: p_dataNPC);
                                         if (!isSpawned)
-                                            Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB [" + job .Job.ToString() + "]: Not Spawn " + spawnObject.NameObject);
+                                            Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB [" + job.Job.ToString() + "]: Not Spawn " + spawnObject.NameObject);
                                     }
                                     bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
                                     //if (!targetInfo.Data.IsReality && isZonaReal)
@@ -150,10 +150,10 @@ public static class AlienJobsManager
                                     {
                                         Storage.GenGrid.LoadObjectToReal(targetInfo.Field);
                                     }
-                                  
+
                                     //3. Add resource in Inventory (where not Ground)
                                     p_dataNPC.Inventory = targetInfo.Data.LootObjectToInventory(p_dataNPC);
-                                  
+
                                     //4. Set target to target location
                                     if (job.JobTo == TypesJobTo.ToPortal)
                                     {
@@ -193,18 +193,18 @@ public static class AlienJobsManager
         //AlienJob job = p_dataNPC.Job;
         Storage.Person.CollectionAlienJob.TryGetValue(typeAlien, out temp_listJobs);
         string nameNextJob = string.Empty;
-        if(temp_listJobs != null)
+        if (temp_listJobs != null)
         {
-            foreach(var itemJob in temp_listJobs)
+            foreach (var itemJob in temp_listJobs)
             {
                 GetNameJob(ref nameNextJob, itemJob);
-                if(nameNextJob == jobName)
+                if (nameNextJob == jobName)
                 {
                     resultJob = itemJob;
                 }
             }
         }
-        
+
     }
 
     public static bool ResourceRsultIsFloor(AlienJob job)
@@ -220,7 +220,7 @@ public static class AlienJobsManager
         return Storage.GridData.NamesPrefabObjects.Contains(job.ResourceResult.ToString());
     }
 
-    public static void CheckFieldsJobValid(ref bool resultIsValid, AlienJob job,  List<ModelNPC.ObjectData> resourcesData)
+    public static void CheckFieldsJobValid(ref bool resultIsValid, AlienJob job, List<ModelNPC.ObjectData> resourcesData)
     {
         foreach (ModelNPC.ObjectData fieldItem in resourcesData)
         {
@@ -233,7 +233,7 @@ public static class AlienJobsManager
     public static PoolGameObjects.TypePoolPrefabs CheckFieldJobValid(ref bool resultIsValid, AlienJob job, ModelNPC.ObjectData objectField)
     {
         bool isResourcePrefabs = Storage.GridData.NamesPrefabObjects.Contains(job.ResourceResult.ToString());
-        if(isResourcePrefabs)
+        if (isResourcePrefabs)
         {
             //resultIsValid = !(objectField is ModelNPC.WoodData);
             resultIsValid = !(objectField is ModelNPC.WoodData) &&
@@ -241,7 +241,7 @@ public static class AlienJobsManager
             return PoolGameObjects.TypePoolPrefabs.PoolWood;
         }
         bool isResourceFloor = Storage.GridData.NamesPrefabFloors.Contains(job.ResourceResult.ToString());
-        if(isResourceFloor)
+        if (isResourceFloor)
         {
             //resultIsValid = !(objectField is ModelNPC.FloorData);
             resultIsValid = true; //FIX__FLOOR_BILD
@@ -358,6 +358,20 @@ public static class AlienJobsManager
                     temp_spatal.indexSingle = 0;
                     temp_spatal._single *= -1;
                 }
+            }
+        }
+    }
+
+
+    public static void IsMeClaster(ref bool result, int x, int y, SaveLoadData.TypePrefabs resourceResult)
+    {
+        for (int stepX = -1; stepX < 2; stepX ++)
+        {
+            for (int stepY = -1; stepY < 2; stepY++)
+            {
+                result = IsFieldMe(x + stepX, y + stepY, resourceResult);
+                if (result)
+                    return;
             }
         }
     }
@@ -520,6 +534,22 @@ public static class AlienJobsManager
         }
         return true;
     }
+
+    public static bool IsFieldMe(int x, int y, SaveLoadData.TypePrefabs prefabMe)
+    {
+        string nameField = Helper.GetNameField(x, y);
+        List<ModelNPC.ObjectData> dataObjs = ReaderScene.GetObjectsDataFromGridContinue(nameField);
+        if (dataObjs == null)
+            return false;
+        foreach (ModelNPC.ObjectData itemData in dataObjs)
+        {
+            if (itemData.TypePrefab == prefabMe)
+                return true;
+        }
+        return false;
+    }
+
+
 
     public static void AddExcludeFreeFiled(Vector2Int key, Dictionary<Vector2Int, bool> excludedFreeFileds)
     {
