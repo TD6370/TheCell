@@ -13,7 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TypeBiom: 2
   ResouceInventory: 40
-  LimitToBeginProcess: 10
+  LimitToBeginProcess: 7
   BeginProcess: 7
   SpawnResourceName: 30
   LimitStorage: 5
+  LimitBuilding: 0

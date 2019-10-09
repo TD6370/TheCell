@@ -11,6 +11,9 @@ public class DataObjectInventory {
     public int Count;
 
     [XmlIgnore]
+    public int OrderIndex;
+
+    [XmlIgnore]
     public SaveLoadData.TypeInventoryObjects TypeInventoryObject
     {
         get
@@ -109,6 +112,21 @@ public static class InventoryExtension
 
     public static void AddToInventory(this ModelNPC.GameDataAlien alien, ModelNPC.PortalData portal, int indexRes, int count)
     {
+        DataObjectInventory resourceStorage = portal.Resources[indexRes];
+        portal.Resources[indexRes].Count -= count;
+        if (portal.Resources[indexRes].Count <= 0)
+            portal.Resources.RemoveAt(indexRes);
+        alien.Inventory = new DataObjectInventory(resourceStorage.NameInventopyObject, count);
+    }
+
+    public static void AddToInventory(this ModelNPC.GameDataAlien alien, ModelNPC.PortalData portal, DataObjectInventory res, int count)
+    {
+        int indexRes = portal.Resources.FindIndex(p => p == res);
+        if(indexRes == -1)
+        {
+            Debug.Log("### AddToInventory not fount res: " + res);
+            return;
+        }
         DataObjectInventory resourceStorage = portal.Resources[indexRes];
         portal.Resources[indexRes].Count -= count;
         if (portal.Resources[indexRes].Count <= 0)

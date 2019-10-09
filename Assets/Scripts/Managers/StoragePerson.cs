@@ -953,6 +953,7 @@ public class StoragePerson : MonoBehaviour {
         List<AlienJob> jobs = null;
         Vector2Int test_fieldPos = Vector2Int.zero;
         Vector2Int keyField;
+        int sizeSearchingLocation = 40;
 
         temp_excludedFreeFileds.Clear();
 
@@ -978,7 +979,7 @@ public class StoragePerson : MonoBehaviour {
 
         int x = 0;
         int y = 0;
-        int sizeBuildingyard = 40;
+        //int sizeBuildingyard = 40;
         string nameField = string.Empty;
         string key = string.Empty;
 
@@ -1054,7 +1055,7 @@ public class StoragePerson : MonoBehaviour {
                                 {
                                     //isValidFar = true;
                                     //test near objects type of me (Claster)
-                                    AlienJobsManager.IsMeClaster(ref isValidFar, fieldNext.Position.x, fieldNext.Position.y, job.ResourceResult);
+                                    AlienJobsManager.IsMeCluster(ref isValidFar, fieldNext.Position.x, fieldNext.Position.y, job.ResourceResult, job.ClusterSize);
                                 }
                                 else
                                 {
@@ -1070,7 +1071,7 @@ public class StoragePerson : MonoBehaviour {
                                     if (isValidFieldBuildFar) //Test Free location
                                     {
                                         isValidFieldBuildFar = AlienJobsManager.IsFreeLocationConstruction(ref temp_excludedFreeFileds,
-                                            fieldNext.Position.x, fieldNext.Position.y, sizeBuildingyard, biomType); //TypesBiomNPC
+                                            fieldNext.Position.x, fieldNext.Position.y, job.BuildingyardSize, biomType); //TypesBiomNPC
                                     }
                                     else
                                     {

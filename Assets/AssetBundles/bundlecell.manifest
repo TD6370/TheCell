@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2962116956
+CRC: 3196152063
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 705100b1b1bdf9af41205e4d8b4a5d19
+    Hash: 249e3e2892ecc36b85171150091b7481
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 42a3b60cf31fd6cdc51ee9d56bde756e
+    Hash: ef8b0d5eb3aa2ec85696f773a305b984
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -26,11 +26,15 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: ccd2b7307f3185d4c95fc3edadea73d0, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 9fdbd970b1d3ecd4e9cf3788622b5230, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 8859a97391eb93e4a873a2f2997c8611, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: ce882d440e9f92647bf416894eb8ae7e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 455186f4c92fbda4f93d2db167b3554f, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0491a1c550afc7945a3961141977a0ff, type: 3}
 - Class: 114
@@ -43,10 +47,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 1f0b109f30c78374f8153a38ef93ec88, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 8b86c2335a47e1844808e4227a70e3a3, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 455186f4c92fbda4f93d2db167b3554f, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: ccd2b7307f3185d4c95fc3edadea73d0, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 212
@@ -61,6 +61,7 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/IconClear35.png
 - Assets/AssetBundles/Textures/Terra/Floor/Land.png
 - Assets/Dust/Prefabs/Terraria/NPC/SpriteBossBooble.prefab
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_GrassSmall_Coldfusion.asset
 - Assets/AssetBundles/Textures/UI/Inventory/OrbitsInv.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/FantomDetails.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/MachinetoolDetails.png
@@ -90,6 +91,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/VhailorInv.png
 - Assets/AssetBundles/Textures/World/NPC/Violet/Fantom.png
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMapBrd.png
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Grass_Coldfusion.asset
 - Assets/AssetBundles/Tiles/dendroid.asset
 - Assets/AssetBundles/Textures/Map/ToolBar/IconOptSegmentFirst.png
 - Assets/AssetBundles/Textures/Portals/PortalGreenDetails.png
@@ -100,6 +102,7 @@ Assets:
 - Assets/AssetBundles/Textures/Map/ToolBar/IconBrushOn.png
 - Assets/AssetBundles/Textures/World/Prefabs/Red/Nadmozg.png
 - Assets/AssetBundles/Textures/Map/GridIcons/SwampMap.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_BuildGecsagon_Ground3.asset
 - Assets/AssetBundles/Textures/Map/UI/BackgroundPaletteMap.png
 - Assets/AssetBundles/Textures/Map/GridIcons/KamishMap.png
 - Assets/AssetBundles/ScriptableData/Settings/SettingsPortals.asset
@@ -122,6 +125,7 @@ Assets:
 - Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGrassSmall.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/IvaMap.png
 - Assets/AssetBundles/Textures/Map/UI/MapGreen.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_BuildGecsagon.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/RockDarkMap.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListContainerVersionOn.png
 - Assets/AssetBundles/Textures/NPC/SpriteBossArm.png
@@ -136,6 +140,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/Inventory/WeedflowerInv.png
 - Assets/AssetBundles/Textures/Map/ToolBar/BackOpt.png
 - Assets/AssetBundles/Textures/Map/UI/MapCell.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGround4.asset
 - Assets/AssetBundles/Textures/Map/UI/MapCloseBtn.png
 - Assets/AssetBundles/Tiles/triffid.asset
 - Assets/AssetBundles/Textures/UI/SceneDialogInfo/Dialog.png
@@ -166,6 +171,7 @@ Assets:
 - Assets/AssetBundles/Textures/UI/CursorPoint.png
 - Assets/AssetBundles/Textures/World/Prefabs/Red/Triffid.png
 - Assets/AssetBundles/ScriptableData/Settings/SettingsSceneDebug.asset
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_PickupGround5.asset
 - Assets/AssetBundles/ScriptableData/Wall/Priority_RockValun.asset
 - Assets/AssetBundles/Textures/Map/UI/CellMapLgt.png
 - Assets/AssetBundles/Textures/World/Floor/Gray/Ground.png
@@ -289,6 +295,7 @@ Assets:
 - Assets/AssetBundles/Textures/SpriteAtlasWorld.spriteatlas
 - Assets/AssetBundles/Tiles/berry.asset
 - Assets/AssetBundles/ScriptableData/Wall/Priority_Cloudwood.asset
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion_Gecsagon.asset
 - Assets/AssetBundles/Textures/UI/Inventory/PandoraInv.png
 - Assets/AssetBundles/Textures/World/NPC/Red/Pavuk.png
 - Assets/AssetBundles/Textures/NarmalMaps/RockMaterial.mat
@@ -332,9 +339,11 @@ Assets:
 - Assets/AssetBundles/Textures/Terra/Floor/Tiles/Boloto.asset
 - Assets/AssetBundles/Tiles/hydragon.asset
 - Assets/AssetBundles/Textures/Portals/PortalGreenCreatorDetails.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_BuildGecsagon_Ground2.asset
 - Assets/AssetBundles/Textures/NPC/SpriteBoss.png
 - Assets/AssetBundles/Textures/World/Prefabs/Gray/RockBrown.png
 - Assets/AssetBundles/Tiles/desert.asset
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_GrassMedium_Coldfusion.asset
 - Assets/AssetBundles/Textures/Map/UI/BorderCell100.png
 - Assets/AssetBundles/Textures/Terra/Grass300.png
 - Assets/AssetBundles/Textures/Portals/PortalVioletDetails.png
@@ -404,7 +413,7 @@ Assets:
 - Assets/AssetBundles/Textures/SpriteAtlasUI.spriteatlas
 - Assets/AssetBundles/Textures/World/Floor/Green/Weedflower.png
 - Assets/AssetBundles/Textures/Map/WallRockMap.png
-- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion.asset
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion_Incubation_Inspector.asset
 - Assets/AssetBundles/Textures/Map/HeroMap.png
 - Assets/AssetBundles/Textures/World/NPC/Blues/Machinetool.png
 - Assets/AssetBundles/Textures/Map/ToolBar/GenOptListVersionOn.png
@@ -458,6 +467,7 @@ Assets:
 - Assets/AssetBundles/ScriptableData/Flore/Priority_Orbits.asset
 - Assets/AssetBundles/Textures/World/NPC/Green/Gary.png
 - Assets/AssetBundles/Textures/UI/ExpandOpen.png
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion_Kolba.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/ChpokMap.png
 - Assets/AssetBundles/Textures/World/DetailsNPC/SkvidDetails.png
 - Assets/AssetBundles/ScriptableData/Floor/Priority_Desert.asset
@@ -475,12 +485,14 @@ Assets:
 - Assets/AssetBundles/Textures/World/DetailsNPC/InspectorDetails.png
 - Assets/AssetBundles/Textures/Map/GridIcons/Ground03Map.png
 - Assets/AssetBundles/Textures/Map/ToolBar/OptGenlTypeCheck.png
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_BuildKolba.asset
 - Assets/AssetBundles/Textures/World/DetailsNPC/EjDetails.png
 - Assets/AssetBundles/Textures/Terra/Wall/WallRock.png
 - Assets/Dust/Prefabs/Terraria/NPC/SpriteBossAlien.prefab
 - Assets/AssetBundles/Textures/UI/Inventory/GrassInv.png
 - Assets/AssetBundles/Tiles/machinetool.asset
 - Assets/AssetBundles/Textures/Map/GridIcons/DustMap.png
+- Assets/AssetBundles/ScriptableData/PortalsFabrications/Fabrication_Blue_Coldfusion_Latern.asset
 - Assets/AssetBundles/Textures/SpriteAtlasInventory.spriteatlas
 - Assets/AssetBundles/ScriptableData/Flore/Priority_Corals.asset
 - Assets/AssetBundles/Textures/LUT/NeutralLUT_16.png
@@ -583,6 +595,7 @@ Assets:
 - Assets/AssetBundles/Textures/Terra/Wall/PlitkaVood.png
 - Assets/AssetBundles/Textures/UI/Metal/stainless.png
 - Assets/AssetBundles/Tiles/parket.asset
+- Assets/AssetBundles/ScriptableData/AlienJobs/Inspector/AlienJob_BuildLatern.asset
 - Assets/AssetBundles/Textures/World/Floor/Green/Berry.png
 - Assets/AssetBundles/Textures/Map/ToolBar/IconPaint35.png
 - Assets/AssetBundles/Textures/UI/Inventory/KolbaInv.png

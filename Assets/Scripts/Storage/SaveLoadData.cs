@@ -167,6 +167,7 @@ public class SaveLoadData : MonoBehaviour {
                             TypePrefabs.Kolba,
                             TypePrefabs.Lantern,
                             TypePrefabs.PortalBlue,
+                            TypePrefabs.PrefabPortal,
                         }},
                     {TypesBiomNPC.Red,
                         new List<TypePrefabs>()
@@ -174,6 +175,7 @@ public class SaveLoadData : MonoBehaviour {
                             TypePrefabs.Nadmozg,
                             TypePrefabs.Triffid,
                             TypePrefabs.PortalRed,
+                            TypePrefabs.PrefabPortal,
                         }},
                     {TypesBiomNPC.Green,
                         new List<TypePrefabs>()
@@ -182,6 +184,7 @@ public class SaveLoadData : MonoBehaviour {
                             TypePrefabs.Chpok,
                             TypePrefabs.Cluben,
                             TypePrefabs.PortalGreen,
+                            TypePrefabs.PrefabPortal,
                         }},
                     {TypesBiomNPC.Violet,
                         new List<TypePrefabs>()
@@ -189,6 +192,7 @@ public class SaveLoadData : MonoBehaviour {
                             TypePrefabs.Aracul,
                             TypePrefabs.Cloudwood,
                             TypePrefabs.PortalViolet,
+                            TypePrefabs.PrefabPortal,
                         }}
 
                 };

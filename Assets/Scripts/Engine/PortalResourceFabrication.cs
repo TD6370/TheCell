@@ -16,5 +16,7 @@ public class PortalResourceFabrication : ScriptableObject
     public SaveLoadData.TypeInventoryObjects SpawnResourceName;
     [SerializeField]
     public int LimitStorage;
+    [SerializeField]
+    public int LimitBuilding;
 
 }

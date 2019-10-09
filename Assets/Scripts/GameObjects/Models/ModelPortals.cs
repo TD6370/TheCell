@@ -10,11 +10,31 @@ public partial class ModelNPC
     
     [XmlType("Portal")]
     //[XmlInclude(typeof(DataObjectInventory))]
+    [XmlInclude(typeof(SaveLoadData.TypePrefabs))]
     public class PortalData : ObjectData
     {
         public List<DataObjectInventory> Resources { get; set; }
         public List<string> ChildrensId { get; set; }
         public virtual int Life { get; set; }
+        public List<KeyValuePair<SaveLoadData.TypePrefabs, List<string>>> ConstructionsIdXML { get; set; }
+        public int BuildSize = 54; //23;
+
+        private Dictionary<SaveLoadData.TypePrefabs, List<string>> m_ConstructionsId;
+        [XmlIgnore]
+        public Dictionary<SaveLoadData.TypePrefabs, List<string>> ConstructionsId
+        {
+            get
+            {
+                if (m_ConstructionsId == null)
+                {
+                    if (ConstructionsIdXML == null)
+                        m_ConstructionsId = new Dictionary<SaveLoadData.TypePrefabs, List<string>>();
+                    else
+                        m_ConstructionsId = ConstructionsIdXML.ToDictionary(x => x.Key, x => x.Value);
+                }
+                return m_ConstructionsId;
+            }
+        }
 
         [XmlIgnore]
         public float LastTimeFabrication;
@@ -26,6 +46,29 @@ public partial class ModelNPC
         public override SaveLoadData.TypePrefabs TypePrefab { get { return SaveLoadData.TypePrefabs.PrefabPortal; } }
         [XmlIgnore]
         public ManagerPortals.TypeResourceProcess CurrentProcess = ManagerPortals.TypeResourceProcess.None;
+
+        public void AddChild(string id)
+        {
+            ChildrensId.Add(id);
+        }
+
+        public void AddConstruction(SaveLoadData.TypePrefabs typeContr, string id)
+        {
+            if (m_ConstructionsId == null)
+                m_ConstructionsId = new Dictionary<SaveLoadData.TypePrefabs, List<string>>();
+            List<string> listId = null;
+            m_ConstructionsId.TryGetValue(typeContr, out listId);
+            if (listId == null)
+                m_ConstructionsId.Add(typeContr, new List<string> { id });
+            else
+                listId.Add(id);
+            Save();
+        }
+
+        public void Save()
+        {
+            ConstructionsIdXML = m_ConstructionsId.ToList();
+        }
 
         public bool ChildrenPreparationIncubation()
         {
@@ -97,6 +140,51 @@ public partial class ModelNPC
         {
             LastTimeFabrication = Time.time;
         }
+
+        private Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs> PortalBiomFloorsSpawn;
+        //Clear location for portal
+        public void ClearLocationAndCreateBiomFloor(int fieldX, int fieldY)
+        {
+            var portal = this;
+            TypesBiomNPC typePortal = portal.TypeBiom;
+            if (PortalBiomFloorsSpawn == null)
+            {
+                PortalBiomFloorsSpawn = new Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs>()
+            {
+                {TypesBiomNPC.Blue, SaveLoadData.TypePrefabs.Gecsagon },
+                {TypesBiomNPC.Green, SaveLoadData.TypePrefabs.Weed },
+                {TypesBiomNPC.Red, SaveLoadData.TypePrefabs.Kishka },
+                {TypesBiomNPC.Violet, SaveLoadData.TypePrefabs.Desert },
+            };
+            }
+
+            string nameField = string.Empty;
+            List<Vector2Int> findedFileds = new List<Vector2Int>();
+            Helper.GetSpiralFields(ref findedFileds, fieldX, fieldY, BuildSize);
+            findedFileds.Add(new Vector2Int(fieldX, fieldY));
+            foreach (Vector2Int fieldNext in findedFileds)
+            {
+                Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
+                GenericWorldManager.ClearLayerForStructure(nameField, true);
+
+                SaveLoadData.TypePrefabs portalFloop = PortalBiomFloorsSpawn[typePortal];
+
+                //Create object Biom Floor
+                var objDataSave = BilderGameDataObjects.BildObjectData(portalFloop);
+                string nameObject = string.Empty;
+                Helper.CreateName_Cache(ref nameObject, portalFloop.ToString(), nameField, "-1");
+                objDataSave.Position = Helper.NormalizFieldToWorld(fieldNext);
+                Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
+                objDataSave.SetNameObject(nameObject, true);
+
+                //... Check on Real
+                bool isZonaReal = Helper.IsValidPiontInZona(objDataSave.Position.x, objDataSave.Position.y);
+                if (!objDataSave.IsReality && isZonaReal)
+                    Storage.GenGrid.LoadObjectToReal(nameField);
+            }
+        }
+
+
     }
 
     [XmlType("PortalRed")]

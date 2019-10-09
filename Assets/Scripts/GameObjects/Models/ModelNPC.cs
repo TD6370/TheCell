@@ -81,6 +81,7 @@ public partial class ModelNPC
         public bool IsTransfer {  get { return !string.IsNullOrEmpty(m_NameTransfer); }  }
         
         public string Id { get; set; }
+        public string PortalId { get; set; }
 
         public ObjectData()
         {
@@ -382,8 +383,6 @@ public partial class ModelNPC
     public class PersonData : GameDataNPC
     {
         public override Vector3 TargetPosition { get; set; }
-        public virtual string PortalId { get; set; }
-
         public string[] PersonActions { get; set; } //$$$
         public string CurrentAction { get; set; }
         public string JobName { get; set; }

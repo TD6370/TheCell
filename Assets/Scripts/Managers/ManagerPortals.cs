@@ -348,15 +348,27 @@ public class ManagerPortals : MonoBehaviour
         SaveLoadData.TypePrefabs typeAlien = alien.TypePrefab;
         int limitRes = 0;
         Storage.Person.CollectionAlienJob.TryGetValue(typeAlien, out temp_listJobs);
-
+        List<int> randomIndex;
         //>INV>
         try
         {
-            //strErr = "1";
-            for (int indRes = portal.Resources.Count - 1; indRes >= 0; indRes--)
+            //Randomize resources
+            //Queue<DataObjectInventory> storageResources = new Queue<DataObjectInventory>();
+            //foreach (var item in portal.Resources)
+            //    item.OrderIndex = UnityEngine.Random.Range(0, 100);
+            //foreach (var item in portal.Resources.OrderBy(p => p.OrderIndex))
+            //    storageResources.Enqueue(item);
+
+            System.Random rnd = new System.Random();
+            portal.Resources = portal.Resources.OrderBy(x => rnd.Next()).ToList();
+
+            //while (storageResources.Count > 0)
+            //foreach(var resNext in portal.Resources)
+            for(int indRes = portal.Resources.Count-1; indRes >= 0; indRes--)
             {
                 //strErr = "2";
                 resNext = portal.Resources[indRes];
+                //resNext = storageResources.Dequeue();
                 //strErr = "3";
                 if (temp_listJobs != null && resNext != null)
                 {
@@ -375,6 +387,7 @@ public class ManagerPortals : MonoBehaviour
                             limitRes = itemJob.LimitResourceCount == 0 ? 1 : itemJob.LimitResourceCount;
                             //strErr = "7";
                             alien.AddToInventory(portal, indRes, limitRes);
+                            //alien.AddToInventory(portal, resNext, limitRes);
                             //strErr = "8";
                             alien.Job = itemJob;
                             //strErr = "9";
@@ -438,7 +451,30 @@ public class ManagerPortals : MonoBehaviour
             existRes.Count += inventory.Count;
     }
 
-
+    public static void AddConstruction(ModelNPC.ObjectData spawnedBuild, ModelNPC.GameDataAlien alien)
+    {
+        if (string.IsNullOrEmpty(spawnedBuild.PortalId))
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction = spawnedBuild.PortalId - is null");
+            return;
+        }
+        ModelNPC.PortalData portal = Storage.PortalsManager.Portals.Find(p => p.Id == spawnedBuild.PortalId); //  info.Data as ModelNPC.PortalData;
+        if (portal == null)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction =  Storage.PortalsManager.Portals - not found = " + spawnedBuild.PortalId);
+            Storage.PortalsManager.SetHome(alien); 
+            spawnedBuild.PortalId = alien.PortalId;
+            var info = ReaderScene.GetInfoID(spawnedBuild.PortalId);
+            if(info == null)
+                Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction = spawnedBuild.Id - not found = " + spawnedBuild.Id);
+            else
+                portal = info.Data as ModelNPC.PortalData;
+        }
+        if (portal != null)
+            portal.AddConstruction(spawnedBuild.TypePrefab, spawnedBuild.PortalId);
+        else
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction = portal is null");
+    }
 
     public void AddResource(ModelNPC.PortalData portal, DataObjectInventory inventory)
     {
@@ -568,8 +604,9 @@ public class ManagerPortals : MonoBehaviour
             ModelNPC.ObjectData objDataNPC = Storage.GenWorld.GenericPrefabOnWorld(genNPC, positGen);
             if (objDataNPC != null)
             {
-                (objDataNPC as ModelNPC.PersonData).PortalId = p_portal.Id;
-                p_portal.ChildrensId.Add(objDataNPC.Id);
+                objDataNPC.PortalId = p_portal.Id;
+                //p_portal.ChildrensId.Add(objDataNPC.Id);
+                p_portal.AddChild(objDataNPC.Id);
                 bool isZonaReal = Helper.IsValidPiontInZona(objDataNPC.Position.x, objDataNPC.Position.y);
                 if (!isZonaReal)
                     objDataNPC.IsReality = false;

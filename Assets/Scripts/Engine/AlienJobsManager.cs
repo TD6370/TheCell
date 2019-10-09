@@ -141,8 +141,11 @@ public static class AlienJobsManager
                                                             p_modeDelete: deleteOpt,
                                                             p_modeCheck: checkOpt,
                                                             p_dataNPC: p_dataNPC);
+                                        spawnObject.PortalId = p_dataNPC.PortalId;
                                         if (!isSpawned)
                                             Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB [" + job.Job.ToString() + "]: Not Spawn " + spawnObject.NameObject);
+                                        else
+                                            ManagerPortals.AddConstruction(spawnObject, p_dataNPC);
                                     }
                                     bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
                                     //if (!targetInfo.Data.IsReality && isZonaReal)
@@ -279,6 +282,8 @@ public static class AlienJobsManager
         public int nextF;
         public int Order;
         public Vector2Int testPosit;
+        public int StartX;
+        public int StartY;
         // public bool isTestPortal;
     }
     public static CacheParamSpiralFields temp_spatal;
@@ -363,15 +368,20 @@ public static class AlienJobsManager
     }
 
 
-    public static void IsMeClaster(ref bool result, int x, int y, SaveLoadData.TypePrefabs resourceResult)
+    public static void IsMeCluster(ref bool result, int x, int y, SaveLoadData.TypePrefabs resourceResult, int ClusterSize = 0)
     {
+        int countClusterObjects = 0;
         for (int stepX = -1; stepX < 2; stepX ++)
         {
             for (int stepY = -1; stepY < 2; stepY++)
             {
                 result = IsFieldMe(x + stepX, y + stepY, resourceResult);
                 if (result)
-                    return;
+                {
+                    if(countClusterObjects >= ClusterSize)
+                        return;
+                    countClusterObjects++;
+                }
             }
         }
     }
@@ -387,7 +397,8 @@ public static class AlienJobsManager
         ref Dictionary<Vector2Int, bool> excludedFreeFileds,
         int x, int y,
         int lenSnake,
-        TypesBiomNPC biomType) 
+        TypesBiomNPC biomType
+        ) 
 
     {
         temp_spatal.indexSingle = 0;
@@ -398,7 +409,11 @@ public static class AlienJobsManager
         temp_spatal.index = 0;
         temp_spatal.nextF = 0;
         temp_spatal.Order = 0;
-
+        temp_spatal.StartX = x;
+        temp_spatal.StartY = y;
+        if (lenSnake == 0)
+            lenSnake = 40;
+      
         for (temp_spatal.index = 0; temp_spatal.index < 20; temp_spatal.index++)
         {
             //X
@@ -415,7 +430,6 @@ public static class AlienJobsManager
                         //test on free
                         if (IsFreeFieldConstructBiom(x, y, biomType) == false)
                             return false;
-
                         AddExcludeFreeFiled(temp_spatal.testPosit, excludedFreeFileds);
                     }
                     temp_spatal.indexFileds++;
@@ -446,7 +460,6 @@ public static class AlienJobsManager
                         //test on free
                         if (IsFreeFieldConstructBiom(x, y, biomType) == false)
                             return false;
-
                         AddExcludeFreeFiled(temp_spatal.testPosit, excludedFreeFileds);
                     }
                     temp_spatal.indexFileds++;

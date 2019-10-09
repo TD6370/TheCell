@@ -20,7 +20,7 @@ public class GenericWorldManager : MonoBehaviour {
     [Header("Count Prioritys Join ID")]
     public int CountPrioritysJoinID = 0;
 
-    private Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs> PortalBiomFloorsSpawn;
+    //
 
     // Use this for initialization
     void Start () {
@@ -1235,7 +1235,7 @@ public class GenericWorldManager : MonoBehaviour {
         };
         int maxPortal = listPortals.Values.Count();
         string nameField = "";
-        ModelNPC.ObjectData objDataSave;
+        ModelNPC.PortalData objDataSave;
         int maxRnd = Helper.HeightLevel;
         int padding = 15;
         int posX = 0;
@@ -1248,8 +1248,8 @@ public class GenericWorldManager : MonoBehaviour {
             posY = Random.Range(padding, maxRnd - padding);
             if (IsTestPortal) //TEST
             {
-                posX = Random.Range(10, 20);
-                posY = Random.Range(10, 20);
+                posX = Random.Range(15, 40);
+                posY = Random.Range(15, 40);
             }
 
             if (isRndTypePortal)
@@ -1264,58 +1264,16 @@ public class GenericWorldManager : MonoBehaviour {
 
             
             Helper.CreateName_Cache(ref nameObject, typePortal.ToString(), nameField, "-1");
-            objDataSave = BilderGameDataObjects.BildObjectData(typePortal);
+            objDataSave = BilderGameDataObjects.BildObjectData(typePortal) as ModelNPC.PortalData; 
             objDataSave.Position = pos;
 
             //Clear location for portal
-            ClearLocationForPortal(posX, posY, objDataSave);
+            objDataSave.ClearLocationAndCreateBiomFloor(posX, posY);
             Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
             objDataSave.SetNameObject(nameObject, true);
             portalsId.Add(objDataSave.Id);
         }
         return portalsId.ToArray();
-    }
-
-    //Clear location for portal
-    private void ClearLocationForPortal(int fieldX, int fieldY, ModelNPC.ObjectData objData)
-    {
-        var portal = objData as ModelNPC.PortalData;
-        TypesBiomNPC typePortal = portal.TypeBiom;
-        if (PortalBiomFloorsSpawn == null)
-        {
-            PortalBiomFloorsSpawn = new Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs>()
-            {
-                {TypesBiomNPC.Blue, SaveLoadData.TypePrefabs.Gecsagon },
-                {TypesBiomNPC.Green, SaveLoadData.TypePrefabs.Weed },
-                {TypesBiomNPC.Red, SaveLoadData.TypePrefabs.Kishka },
-                {TypesBiomNPC.Violet, SaveLoadData.TypePrefabs.Desert },
-            };
-        }
-
-        string nameField = string.Empty;
-        List<Vector2Int> findedFileds = new List<Vector2Int>();
-        Helper.GetSpiralFields(ref findedFileds, fieldX, fieldY, 23);
-        findedFileds.Add(new Vector2Int(fieldX, fieldY));
-        foreach (Vector2Int fieldNext in findedFileds)
-        {
-            Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
-            ClearLayerForStructure(nameField, true);
-
-            SaveLoadData.TypePrefabs portalFloop = PortalBiomFloorsSpawn[typePortal];
-
-            //Create object Biom Floor
-            var objDataSave = BilderGameDataObjects.BildObjectData(portalFloop);
-            string nameObject = string.Empty;
-            Helper.CreateName_Cache(ref nameObject, portalFloop.ToString(), nameField, "-1");
-            objDataSave.Position = Helper.NormalizFieldToWorld(fieldNext);
-            Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
-            objDataSave.SetNameObject(nameObject, true); 
-
-            //... Check on Real
-            bool isZonaReal = Helper.IsValidPiontInZona(objDataSave.Position.x, objDataSave.Position.y);
-            if (!objDataSave.IsReality && isZonaReal)
-                Storage.GenGrid.LoadObjectToReal(nameField);
-        }
     }
 
     public ModelNPC.ObjectData GetCreatePrefab(SaveLoadData.TypePrefabs typePrefab, string nameField = "")

@@ -15,4 +15,8 @@ public class AlienJob : ScriptableObject
     public TypesJobTo JobTo;
     [SerializeField]
     public int LimitResourceCount;
+    [SerializeField]
+    public int ClusterSize;
+    [SerializeField]
+    public int BuildingyardSize;
 }
