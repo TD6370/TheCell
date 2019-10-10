@@ -278,6 +278,15 @@ public static class Helper { //: MonoBehaviour {
         yOut = (int)Mathf.Abs(yIn / Storage.ScaleWorld);
         //return FieldKey + (int)x + "x" + Mathf.Abs((int)y);
     }
+
+    public static Vector2Int GetFieldPositByWorldPosit(Vector3 positIn)
+    {
+        Vector2Int result = new Vector2Int();
+        result.x = (int)(positIn.x / Storage.ScaleWorld);
+        result.y = (int)Mathf.Abs(positIn.y / Storage.ScaleWorld);
+        return result;
+    }
+
     public static void GetFieldPositByWorldPosit(ref int xOut, ref int yOut, Vector3 pos)
     {
         xOut = (int)(pos.x / Storage.ScaleWorld);

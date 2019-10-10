@@ -675,6 +675,9 @@ public partial class ModelNPC
         public virtual string Debuff { get; set; }
         public virtual string ParentId { get; set; }
 
+        public int ClusterFillSize { get; set; }
+        public DateTime DataCreate { get; set; }
+
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolFloor; } }
 

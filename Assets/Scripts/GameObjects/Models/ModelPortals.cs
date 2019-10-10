@@ -141,22 +141,11 @@ public partial class ModelNPC
             LastTimeFabrication = Time.time;
         }
 
-        private Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs> PortalBiomFloorsSpawn;
         //Clear location for portal
         public void ClearLocationAndCreateBiomFloor(int fieldX, int fieldY)
         {
             var portal = this;
             TypesBiomNPC typePortal = portal.TypeBiom;
-            if (PortalBiomFloorsSpawn == null)
-            {
-                PortalBiomFloorsSpawn = new Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs>()
-            {
-                {TypesBiomNPC.Blue, SaveLoadData.TypePrefabs.Gecsagon },
-                {TypesBiomNPC.Green, SaveLoadData.TypePrefabs.Weed },
-                {TypesBiomNPC.Red, SaveLoadData.TypePrefabs.Kishka },
-                {TypesBiomNPC.Violet, SaveLoadData.TypePrefabs.Desert },
-            };
-            }
 
             string nameField = string.Empty;
             List<Vector2Int> findedFileds = new List<Vector2Int>();
@@ -166,16 +155,24 @@ public partial class ModelNPC
             {
                 Helper.GetNameField_Cache(ref nameField, fieldNext.x, fieldNext.y);
                 GenericWorldManager.ClearLayerForStructure(nameField, true);
-
-                SaveLoadData.TypePrefabs portalFloop = PortalBiomFloorsSpawn[typePortal];
+                SaveLoadData.TypePrefabs portalFloorType = ManagerPortals.PortalBiomFloorsBase[typePortal];
 
                 //Create object Biom Floor
-                var objDataSave = BilderGameDataObjects.BildObjectData(portalFloop);
+                var objDataSave = BilderGameDataObjects.BildObjectData(portalFloorType);
                 string nameObject = string.Empty;
-                Helper.CreateName_Cache(ref nameObject, portalFloop.ToString(), nameField, "-1");
+                Helper.CreateName_Cache(ref nameObject, portalFloorType.ToString(), nameField, "-1");
                 objDataSave.Position = Helper.NormalizFieldToWorld(fieldNext);
                 Storage.Data.AddDataObjectInGrid(objDataSave, nameField, "GenericPortal");
                 objDataSave.SetNameObject(nameObject, true);
+
+                //%CLUSTER FILL
+                //if (objDataSave.IsFloor())
+                //{
+                Vector2Int posField = Helper.GetFieldPositByWorldPosit(objDataSave.Position);
+                int clusterSize = AlienJobsManager.GetClusterSize(posField.x, posField.y, objDataSave.TypePrefab);
+                (objDataSave as ModelNPC.TerraData).ClusterFillSize = clusterSize;
+                (objDataSave as ModelNPC.TerraData).DataCreate = DateTime.Now;
+                //}
 
                 //... Check on Real
                 bool isZonaReal = Helper.IsValidPiontInZona(objDataSave.Position.x, objDataSave.Position.y);

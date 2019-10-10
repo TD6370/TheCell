@@ -30,6 +30,20 @@ public class DataObjectInventory {
         }
     }
 
+    [XmlIgnore]
+    public SaveLoadData.TypePrefabs TypePrefabObject
+    {
+        get
+        {
+            if (!Enum.IsDefined(typeof(SaveLoadData.TypePrefabs), NameInventopyObject))
+            {
+                Debug.Log("######## TypePrefabObject not exist NameInventopyObject = " + NameInventopyObject);
+                return SaveLoadData.TypePrefabs.PrefabField;
+            }
+            return (SaveLoadData.TypePrefabs)Enum.Parse(typeof(SaveLoadData.TypePrefabs), NameInventopyObject);
+        }
+    }
+
     public DataObjectInventory() { }
 
     public DataObjectInventory(string nameObjectInventory, int m_count =0)

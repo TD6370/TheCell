@@ -144,7 +144,7 @@ public static class AlienJobsManager
                                         spawnObject.PortalId = p_dataNPC.PortalId;
                                         if (!isSpawned)
                                             Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB [" + job.Job.ToString() + "]: Not Spawn " + spawnObject.NameObject);
-                                        else
+                                        else if(job.Job == TypesJobs.Build)
                                             ManagerPortals.AddConstruction(spawnObject, p_dataNPC);
                                     }
                                     bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
@@ -289,7 +289,7 @@ public static class AlienJobsManager
     public static CacheParamSpiralFields temp_spatal;
     //List<FieldRnd>
 
-    public static void GetSpiralFields_Cache(ref List<FieldRnd> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = false, ModelNPC.PortalData portal = null, bool isRandomOrder = false)
+    public static void GetSpiralFields_Cache(ref List<FieldRnd> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorld = false, ModelNPC.PortalData portal = null, bool isRandomOrder = false)
     {
         //cacheSpiralFields = new CacheParamSpiralFields();
 
@@ -311,7 +311,7 @@ public static class AlienJobsManager
             {
                 x += temp_spatal._single;
                 temp_spatal.isValid = true;
-                if (isTestZonaWorls)
+                if (isTestZonaWorld)
                     temp_spatal.isValid = Helper.IsValidFieldInZonaWorld(x, y);
                 //FIX__FLOOR_BILD
                 //if(portal !=null && temp_spatal.isValid)
@@ -340,7 +340,7 @@ public static class AlienJobsManager
             {
                 y += temp_spatal._single;
                 temp_spatal.isValid = true;
-                if (isTestZonaWorls)
+                if (isTestZonaWorld)
                     temp_spatal.isValid = Helper.IsValidFieldInZonaWorld(x, y);
                 //FIX__FLOOR_BILD
                 //if (temp_spatal.isValid)
@@ -371,20 +371,53 @@ public static class AlienJobsManager
     public static void IsMeCluster(ref bool result, int x, int y, SaveLoadData.TypePrefabs resourceResult, int ClusterSize = 0)
     {
         int countClusterObjects = 0;
-        for (int stepX = -1; stepX < 2; stepX ++)
+        for (int stepX = -1; stepX < 2; stepX++)
         {
             for (int stepY = -1; stepY < 2; stepY++)
             {
-                result = IsFieldMe(x + stepX, y + stepY, resourceResult);
-                if (result)
+                if (IsFieldMe(x + stepX, y + stepY, resourceResult))
                 {
-                    if(countClusterObjects >= ClusterSize)
-                        return;
                     countClusterObjects++;
+                    if (countClusterObjects >= ClusterSize)
+                        result = true;
                 }
             }
         }
     }
+
+    public static int GetClusterSize(int x, int y, SaveLoadData.TypePrefabs resourceResult)
+    {
+        int countClusterObjects = 0;
+        for (int stepX = -1; stepX < 2; stepX++)
+        {
+            for (int stepY = -1; stepY < 2; stepY++)
+            {
+                if (IsFieldMe(x + stepX, y + stepY, resourceResult))
+                {
+                    countClusterObjects++;
+                }
+            }
+        }
+        return countClusterObjects;
+    }
+
+    //public static void IsMeCluster(ref bool result, int x, int y, SaveLoadData.TypePrefabs resourceResult, int ClusterSize = 0)
+    //{
+    //    int countClusterObjects = 0;
+    //    for (int stepX = -1; stepX < 2; stepX ++)
+    //    {
+    //        for (int stepY = -1; stepY < 2; stepY++)
+    //        {
+    //            result = IsFieldMe(x + stepX, y + stepY, resourceResult);
+    //            if (result)
+    //            {
+    //                if(countClusterObjects >= ClusterSize)
+    //                    return;
+    //                countClusterObjects++;
+    //            }
+    //        }
+    //    }
+    //}
 
     //public static bool IsFilledLocationConstruction(int x, int y)
     //{
@@ -393,6 +426,8 @@ public static class AlienJobsManager
     //}
 
     //List<PoolGameObjects.TypePoolPrefabs> filretsIgnorType = null)
+
+/*
     public static bool IsFreeLocationConstruction(
         ref Dictionary<Vector2Int, bool> excludedFreeFileds,
         int x, int y,
@@ -478,6 +513,7 @@ public static class AlienJobsManager
 
         return true;
     }
+    */
 
     public static bool FilterData(
         ref ModelNPC.ObjectData findedData,

@@ -19,7 +19,7 @@ MonoBehaviour:
   SpeedMovePersonInDream: 10
   TimeRelax: 0
   TimeWorkAction: 1
-  TimeLimitResetNavigator: 5.8
+  TimeLimitResetNavigator: 15.7
   TimeRefreshDebugScene: 0.1
   IsClearTemplate: 0
   TimeClearTemplate: 10

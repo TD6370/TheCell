@@ -28,6 +28,12 @@ public class ManagerPortals : MonoBehaviour
     private PortalResourceFabrication m_workResource;
     private bool isInitPortals = false;
 
+    private List<string> temp_findedFloorsIdForBuild = new List<string>();
+    private Dictionary<Vector2Int, bool> temp_excludedFreeFileds = new Dictionary<Vector2Int, bool>();
+
+    public static Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs> PortalBiomFloorsBase;
+    private static Dictionary<TypesBiomNPC, GenericWorldManager.GenObjectWorldMode> GetGenericModeNPC;
+
     public enum TypeResourceProcess { Incubation, IncubationLight, IncubationMedium, IncubationHight,
         SpawnFlore, WpawnFloor, None, ResourceProduction };
 
@@ -35,8 +41,6 @@ public class ManagerPortals : MonoBehaviour
     {
         Portals = new List<ModelNPC.PortalData>();
     }
-
-    private static Dictionary<TypesBiomNPC, GenericWorldManager.GenObjectWorldMode> GetGenericModeNPC;
 
     private void Awake()
     {
@@ -46,6 +50,13 @@ public class ManagerPortals : MonoBehaviour
             { TypesBiomNPC.Red, GenericWorldManager.GenObjectWorldMode.RedNPC},
             { TypesBiomNPC.Green, GenericWorldManager.GenObjectWorldMode.BlueNPC},
             { TypesBiomNPC.Violet, GenericWorldManager.GenObjectWorldMode.VioletNPC},
+        };
+        PortalBiomFloorsBase = new Dictionary<TypesBiomNPC, SaveLoadData.TypePrefabs>()
+        {
+            {TypesBiomNPC.Blue,  SaveLoadData.TypePrefabs.Gecsagon},
+            {TypesBiomNPC.Red,  SaveLoadData.TypePrefabs.Kishka},
+            {TypesBiomNPC.Green,  SaveLoadData.TypePrefabs.Weed},
+            {TypesBiomNPC.Violet,  SaveLoadData.TypePrefabs.Desert},
         };
     }
 
@@ -353,17 +364,9 @@ public class ManagerPortals : MonoBehaviour
         try
         {
             //Randomize resources
-            //Queue<DataObjectInventory> storageResources = new Queue<DataObjectInventory>();
-            //foreach (var item in portal.Resources)
-            //    item.OrderIndex = UnityEngine.Random.Range(0, 100);
-            //foreach (var item in portal.Resources.OrderBy(p => p.OrderIndex))
-            //    storageResources.Enqueue(item);
-
             System.Random rnd = new System.Random();
             portal.Resources = portal.Resources.OrderBy(x => rnd.Next()).ToList();
 
-            //while (storageResources.Count > 0)
-            //foreach(var resNext in portal.Resources)
             for(int indRes = portal.Resources.Count-1; indRes >= 0; indRes--)
             {
                 //strErr = "2";
@@ -464,14 +467,26 @@ public class ManagerPortals : MonoBehaviour
             Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction =  Storage.PortalsManager.Portals - not found = " + spawnedBuild.PortalId);
             Storage.PortalsManager.SetHome(alien); 
             spawnedBuild.PortalId = alien.PortalId;
+
+            
             var info = ReaderScene.GetInfoID(spawnedBuild.PortalId);
             if(info == null)
                 Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction = spawnedBuild.Id - not found = " + spawnedBuild.Id);
             else
                 portal = info.Data as ModelNPC.PortalData;
         }
+
+        //%CLUSTER FILL
+        if (spawnedBuild.IsFloor())
+        {
+            Vector2Int posField = Helper.GetFieldPositByWorldPosit(spawnedBuild.Position);
+            int clusterFill = AlienJobsManager.GetClusterSize(posField.x, posField.y, spawnedBuild.TypePrefab);
+            (spawnedBuild as ModelNPC.TerraData).ClusterFillSize = clusterFill;
+            (spawnedBuild as ModelNPC.TerraData).DataCreate = DateTime.Now;
+        }
+
         if (portal != null)
-            portal.AddConstruction(spawnedBuild.TypePrefab, spawnedBuild.PortalId);
+            portal.AddConstruction(spawnedBuild.TypePrefab, spawnedBuild.Id);
         else
             Debug.Log(Storage.EventsUI.ListLogAdd = "### Portal AddConstruction = portal is null");
     }
@@ -699,6 +714,157 @@ public class ManagerPortals : MonoBehaviour
         }
 
         return jobs;
+    }
+    
+    public void FindJobBuildLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
+    {
+        if (!Storage.Person.CollectionAlienJob.ContainsKey(dataAien.TypePrefab))
+            return;
+
+        ReaderScene.DataObjectInfoID info;
+        ModelNPC.PortalData portal = null;
+        List<string> listId;
+        TypesBiomNPC biomType = Helper.GetBiomByTypeModel(dataAien.TypePrefab);
+        SaveLoadData.TypePrefabs floorType = PortalBiomFloorsBase[biomType];
+
+        result = null;
+        if (string.IsNullOrEmpty(dataAien.PortalId))
+            return;
+        info = ReaderScene.GetInfoID(dataAien.PortalId);
+        if (info == null)
+            return;
+
+        portal = info.Data as ModelNPC.PortalData;
+        portal.ConstructionsId.TryGetValue(floorType, out listId);
+        if (listId == null)
+            return;
+
+        List<AlienJob> jobs = null;
+        Vector2Int test_fieldPos = Vector2Int.zero;
+        Vector2Int keyField;
+        int x = 0;
+        int y = 0;
+        string nameField = string.Empty;
+        string key = string.Empty;
+        bool isFieldJobValid = true;
+        bool isValidFieldBuildFar = true;
+        bool isValidFar = true;
+        bool isInventoryContainTargetResource = false;
+
+        temp_excludedFreeFileds.Clear();
+        //Get jobs
+        Storage.Person.CollectionAlienJob.TryGetValue(dataAien.TypePrefab, out jobs);
+
+        Helper.GetFieldPositByWorldPosit(ref x, ref y, dataAien.Position);
+        temp_findedFloorsIdForBuild.Clear();
+
+        //Fill floors portal for building
+        System.Random rnd = new System.Random();
+        temp_findedFloorsIdForBuild = listId.OrderBy(p => rnd.Next()).ToList();
+
+        List<ModelNPC.TerraData> floorsData = new List<ModelNPC.TerraData>();
+        foreach (string nextRndID in temp_findedFloorsIdForBuild)
+        {
+            info = ReaderScene.GetInfoID(nextRndID);
+            if (info == null)
+                continue;
+            if(!(info.Data is ModelNPC.TerraData))
+                continue;
+            floorsData.Add(info.Data as ModelNPC.TerraData);
+        }
+        //Floors portal
+        foreach (ModelNPC.TerraData floorData in floorsData.OrderBy(p => p.ClusterFillSize))
+        {
+            isValidFieldBuildFar = true;
+            isFieldJobValid = true;
+            keyField = Helper.GetFieldPositByWorldPosit(floorData.Position);
+            //Select job by target resource
+            foreach (AlienJob jobItem in jobs.Where(p => p.TargetResource == floorData.TypePrefab)) //fix all jobs for type Resource
+            {
+                job = jobItem;
+                if (job != null)
+                {
+                    if (job.Job != TypesJobs.Build)
+                        continue;
+
+                    // Test field on free
+                    PoolGameObjects.TypePoolPrefabs typePoolResult = AlienJobsManager.CheckFieldJobValid(ref isFieldJobValid, job, floorData);
+                    //Filter: Build
+                    switch (job.Job)
+                    {
+                        case TypesJobs.Build:
+                            isValidFar = false;
+                            //Test inventory filled
+                            isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
+                            if (!isInventoryContainTargetResource)
+                                isValidFar = false;
+                            else if (typePoolResult == PoolGameObjects.TypePoolPrefabs.PoolFloor)
+                            {
+                                //test near objects type of me (Cluster)
+                                //AlienJobsManager.IsMeCluster(ref isValidFar, keyField.x, keyField.y, job.ResourceResult, job.ClusterSize);
+                                job = null;
+                                continue;
+                            }
+                            else
+                            {
+                                //Build Prefab
+                                if (isValidFieldBuildFar) //Test Free location
+                                {
+                                    //isValidFieldBuildFar = IsFreeLocationPortalConstruction(ref temp_excludedFreeFileds,
+                                    //    keyField.x, keyField.y, job.BuildingyardSize, dataAien.Inventory.TypePrefabObject, portal); //TypesBiomNPC
+                                    isValidFieldBuildFar = IsFreeLocationPortalConstruction(ref temp_excludedFreeFileds,
+                                       keyField.x, keyField.y, job.BuildingyardSize, job.ResourceResult, portal); //TypesBiomNPC
+                                }
+                                isValidFar = isValidFieldBuildFar;
+                            }
+                            if (!isValidFar || !isFieldJobValid)
+                            {
+                                job = null;
+                                continue;
+                            }
+                            break;
+                    }
+                    result = floorData;
+                    return;
+                }
+            }
+        }
+      
+        temp_findedFloorsIdForBuild.Clear();
+        job = null;
+    }
+
+    private bool IsFreeLocationPortalConstruction(
+        ref Dictionary<Vector2Int, bool> excludedFreeFileds,
+        int x, int y,
+        int lenSize,
+        SaveLoadData.TypePrefabs buildType,
+        ModelNPC.PortalData portal)
+    {
+        ReaderScene.DataObjectInfoID infoNext;
+        Vector2 requestPosition = new Vector2(x, y);
+        Vector2 biuldPosition;
+        int portaBuildingyardSize = 2;
+        List<string> bouldingId;
+
+        portal.ConstructionsId.TryGetValue(buildType, out bouldingId);
+        if(bouldingId==null)
+            return true;
+
+        biuldPosition = Helper.GetFieldPositByWorldPosit(portal.Position);
+        if (Vector3.Distance(requestPosition, biuldPosition) < portaBuildingyardSize)
+            return false;
+
+        foreach (var nextID in bouldingId)
+        {
+            infoNext = ReaderScene.GetInfoID(nextID);
+            if (infoNext == null || infoNext.Data == null)
+                continue;
+            biuldPosition = Helper.GetFieldPositByWorldPosit(infoNext.Data.Position);
+            if (Vector3.Distance(requestPosition, biuldPosition) < lenSize)
+                return false;
+        }
+        return true;
     }
 }
 

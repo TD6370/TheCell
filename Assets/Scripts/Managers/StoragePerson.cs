@@ -917,7 +917,10 @@ public class StoragePerson : MonoBehaviour {
             if (result == null)
             {
                 temp_distantionFind = UnityEngine.Random.Range(2, 150);
-                FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
+                if(dataAlien.Inventory != null && !dataAlien.Inventory.IsEmpty && dataAlien.Inventory.TypeInventoryObject.IsPrefab())//FIX%CLUSTER
+                    Storage.PortalsManager.FindJobBuildLocation(ref result, ref job, dataAlien, temp_distantionFind);
+                if (result == null)
+                    FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
                 if (result == null)
                 {
                     temp_distantionFind = UnityEngine.Random.Range(2, 25);//15
@@ -945,6 +948,7 @@ public class StoragePerson : MonoBehaviour {
     private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
     {
         bool isRandomOrder = false;
+        //FIX%CLUSTER !! JOB -- > REF
         if (job != null && job.Job == TypesJobs.Build)
             isRandomOrder = job.ResourceResult.IsPrefab();
 
@@ -958,12 +962,12 @@ public class StoragePerson : MonoBehaviour {
         temp_excludedFreeFileds.Clear();
 
         //TEST BUILD
-        if (dataAien.Inventory != null && 
-            (dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Kolba ||
-            dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Lantern))
-        {
-            Storage.EventsUI.ListLogAdd = "Build PREFAB : " + dataAien.Inventory.NameInventopyObject;
-        }
+        //if (dataAien.Inventory != null && 
+        //    (dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Kolba ||
+        //    dataAien.Inventory.TypeInventoryObject == SaveLoadData.TypeInventoryObjects.Lantern))
+        //{
+        //    Storage.EventsUI.ListLogAdd = "Build PREFAB : " + dataAien.Inventory.NameInventopyObject;
+        //}
 
         ModelNPC.PortalData portal = null;
 
@@ -1003,6 +1007,7 @@ public class StoragePerson : MonoBehaviour {
         AlienJobsManager.GetSpiralFields_Cache(ref temp_findedFileds, 
             x, y, 
             distantionWay, 
+            isTestZonaWorld: true, //FIX%CLUSTER
             portal: portal, 
             isRandomOrder: isRandomOrder);
 
@@ -1046,6 +1051,8 @@ public class StoragePerson : MonoBehaviour {
                         switch (job.Job)
                         {
                             case TypesJobs.Build:
+                                // in FindJobBuildLocation
+                                //continue;
                                 isValidFar = false;
                                 //Test inventory filled
                                 isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
@@ -1059,15 +1066,9 @@ public class StoragePerson : MonoBehaviour {
                                 }
                                 else
                                 {
-                                    //Build Prefab
-                                    //if (test_fieldPos.x != fieldNext.Position.x &&
-                                    //    test_fieldPos.y != fieldNext.Position.y)
-                                    //{
+                                    //Build Prefab 
+                                    /*
                                     isTestingFreeBuildConstruction = true;
-                                    //Test position near portal
-
-                                    //fix down
-                                    //isValidFieldBuildFar = Helper.IsValidFieldInZonaPortal(fieldNext.Position.x, fieldNext.Position.y, portal);
                                     if (isValidFieldBuildFar) //Test Free location
                                     {
                                         isValidFieldBuildFar = AlienJobsManager.IsFreeLocationConstruction(ref temp_excludedFreeFileds,
@@ -1077,16 +1078,11 @@ public class StoragePerson : MonoBehaviour {
                                     {
                                         AlienJobsManager.RemoveExcludeFree(keyField, temp_excludedFreeFileds);
                                     }
-                                    //test_fieldPos.x = fieldNext.Position.x;
-                                    //test_fieldPos.y = fieldNext.Position.y;
                                     isValidFar = isValidFieldBuildFar;
-                                    //}
-                                    //else
-                                    //    isValidFar = isValidFieldBuildFar; // = !AlienJobsManager.IsFree(keyField, temp_excludedFreeFileds);
+                                    */
+                                    job = null;
+                                    continue;
                                 }
-                                //if (isValidFar)//Test inventory filled
-                                //    isInventoryContainTargetResource = dataAien.Inventory != null && dataAien.Inventory.EqualsInv(job.ResourceResult);
-                                //if (!isValidFar || !isInventoryContainTargetResource || !isFieldJobValid)
                                 if (!isValidFar || !isFieldJobValid)
                                 {
                                     job = null;
@@ -1318,7 +1314,18 @@ public struct FieldRnd
         Position = new Vector2Int(x, y);
         Order = p_order;
     }
+}
 
+public struct IdRnd
+{
+    public string ID;
+    public int Order;
+
+    public IdRnd(string p_id, int p_order)
+    {
+        Order = p_order;
+        ID = p_id;
+    }
 }
 
 

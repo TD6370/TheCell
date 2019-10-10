@@ -24,7 +24,7 @@ public class ReaderScene
             }
             set {
                 m_Field = value;
-                TestIsValud();
+                //TestIsValud();
             }
         }
 
@@ -52,16 +52,16 @@ public class ReaderScene
         public void UpdateData(ModelNPC.ObjectData value, string p_field, int p_index = -1, bool isTestValid = false)
         {
             m_Data = value;
-            if(isTestValid)
-                TestIsValud();
+            //if(isTestValid)
+            //    TestIsValud();
 
             m_Field = p_field;
 
             if (p_index != -1)
                 IndexField = p_index;
 
-            if (isTestValid)
-                TestIsValud();
+            //if (isTestValid)
+            //    TestIsValud();
         }
 
         public void StartSetData(ModelNPC.ObjectData value)
