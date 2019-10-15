@@ -143,7 +143,7 @@ public class SceneDebugerEditor : Editor
         EditorGUILayout.Space();
 
         
-        if (Storage.PortalsManager != null && Storage.PortalsManager.Portals.Count >0)
+        if (Storage.Instance != null && Storage.PortalsManager != null && Storage.PortalsManager.Portals.Count >0)
         {
             if (m_timeUpdateUI < Time.time || m_portalNext == null)
             {

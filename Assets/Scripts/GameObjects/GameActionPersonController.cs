@@ -514,7 +514,8 @@ public class GameActionPersonController : MonoBehaviour
             m_TargetObject = null;
             //@JOB@
             temp_job = dataNPC.Job;
-            Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, ref temp_job, GetAlienData(dataNPC));
+            //Storage.Person.GetAlienNextTargetObject(ref m_TargetObject, ref temp_job, GetAlienData(dataNPC));
+            AlienJobsManager.GetAlienNextTargetObject(ref m_TargetObject, ref temp_job, GetAlienData(dataNPC));
         }
         catch (Exception ex)
         {
@@ -535,6 +536,8 @@ public class GameActionPersonController : MonoBehaviour
         {
             var targetPosition = m_TargetObject.Position;
             dataNPC.TargetID = m_TargetObject.Id;
+            //FIX base>>ToPortal
+            (dataNPC as ModelNPC.GameDataAlien).BaseLockedTargetID = dataNPC.TargetID;
             dataNPC.SetTargetPosition(targetPosition);
             dataNPC.Job = temp_job;//@JOB@
         }

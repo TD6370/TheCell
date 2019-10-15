@@ -831,6 +831,7 @@ public class ManagerPortals : MonoBehaviour
         }
       
         temp_findedFloorsIdForBuild.Clear();
+        dataAien.JobPass = 0;
         job = null;
     }
 

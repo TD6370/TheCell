@@ -840,8 +840,9 @@ public class StoragePerson : MonoBehaviour {
 
     //private PriorityFinder m_prioritysGet;
     //private AlienJob temp_job;
-    private int temp_distantionFind;
+    //private int temp_distantionFind;
 
+    /*
     public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
     {
         int versionSearching = 2;// 1; //@JOB@
@@ -860,20 +861,7 @@ public class StoragePerson : MonoBehaviour {
             return;
         }
 
-        /*
-        if (!PersonPriority.ContainsKey(dataAlien.TypePrefab))
-        {
-            if (PersonPriority.Count == 0)
-            {
-                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority count = 0");
-                LoadPriorityPerson();
-            }
-            else
-                Debug.Log(Storage.EventsUI.ListLogAdd = "##### GetAlienNextTargetObject PersonPriority Not found = " + dataAlien.TypePrefab);
-            result = null;
-            return;
-        }
-        */
+        
 
         //m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
         //int distantionFind = UnityEngine.Random.Range(2, 15);
@@ -920,7 +908,11 @@ public class StoragePerson : MonoBehaviour {
                 if(dataAlien.Inventory != null && !dataAlien.Inventory.IsEmpty && dataAlien.Inventory.TypeInventoryObject.IsPrefab())//FIX%CLUSTER
                     Storage.PortalsManager.FindJobBuildLocation(ref result, ref job, dataAlien, temp_distantionFind);
                 if (result == null)
-                    FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
+                {
+                    CeckJobPass(ref result, dataAlien);
+                    if (result == null)
+                        FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
+                }
                 if (result == null)
                 {
                     temp_distantionFind = UnityEngine.Random.Range(2, 25);//15
@@ -938,6 +930,34 @@ public class StoragePerson : MonoBehaviour {
         //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
     }
 
+    
+    private void CeckJobPass(ref ModelNPC.ObjectData result, ModelNPC.GameDataAlien dataAlien)
+    {
+        dataAlien.JobPass++;
+        if(dataAlien.JobPass >2)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "[[[ JobPass Go To Home ]]] " + dataAlien.NameObject);
+            
+            if (dataAlien.PortalId == null)
+                Storage.PortalsManager.SetHome(dataAlien);
+
+            var info = ReaderScene.GetInfoID(dataAlien.PortalId);
+            if (info != null)
+            {
+                if (dataAlien.JobPass >= 5)
+                    result = info.Data;
+                else
+                {
+                    var portal = info.Data as ModelNPC.PortalData;
+                    if(portal != null && portal.Resources == null && portal.Resources.Count > 0)
+                        result = info.Data;
+                }
+            }
+            dataAlien.JobPass = 0;
+        }
+    }
+*/
+
     private List<FieldRnd> temp_findedFileds = new List<FieldRnd>();
     private List<ModelNPC.ObjectData> temp_resourcesData;
     private List<FieldRnd> temp_spiralRandem = new List<FieldRnd>();
@@ -945,7 +965,7 @@ public class StoragePerson : MonoBehaviour {
     //private List<PoolGameObjects.TypePoolPrefabs> m_filterTypesPrefabs;
         
 
-    private void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
+    public void FindJobResouceLocation(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAien, int distantionWay)
     {
         bool isRandomOrder = false;
         //FIX%CLUSTER !! JOB -- > REF
@@ -1121,7 +1141,7 @@ public class StoragePerson : MonoBehaviour {
         job = null;
     }
 
-    private void LoadPriorityPerson()
+    public void LoadPriorityPerson()
     {
         string strErr = "";
         try

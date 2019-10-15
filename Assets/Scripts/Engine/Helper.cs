@@ -749,14 +749,14 @@ public static class Helper { //: MonoBehaviour {
 
     public static bool IsValidFieldInZonaWorld(float x, float y)
     {
-        var posWorld = NormalizFieldToPos(x, y);
-        if (posWorld.x < 1)
+        //FIX base>>ToPortal
+        if (x < 0)
             return false;
-        if (posWorld.y > -1)
-            return false; 
-        if (posWorld.x > WidthLevel * Storage.ScaleWorld)
-            return false; 
-        if (posWorld.y < (HeightLevel * Storage.ScaleWorld) * (-1))
+        if (y < 0)
+            return false;
+        if (x > WidthLevel)
+            return false;
+        if (y > HeightLevel)
             return false;
         return true;
     }

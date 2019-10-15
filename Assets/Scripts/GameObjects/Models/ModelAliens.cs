@@ -18,6 +18,8 @@ public partial class ModelNPC
 
         [XmlIgnore]
         public float TimeEndCurrentAction = -1f;
+        [XmlIgnore]
+        public float JobPass = 0f;
         //[XmlIgnore]
         //public Vector3 MovePosition;
         [XmlIgnore]
