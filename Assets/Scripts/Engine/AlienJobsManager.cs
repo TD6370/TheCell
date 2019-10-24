@@ -12,12 +12,164 @@ public enum TypesJobTo { Free, ToPortal, ToMe, ToBrother, ToEnemy, ToHero, ToRed
 
 public static class AlienJobsManager
 {
-    //TEST
-    //public static List<string> TestHistoryJobs = new List<string>();
-    //public static List<string> TestHistoryJobsDelID = new List<string>();
-    //public static List<string> TestHistoryJobsSpawnID = new List<string>();
     private static int temp_distantionFind;
 
+  
+
+    public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC, GameActionPersonController controller = null, bool isCheckDistance = true)
+    {
+        AlienJob job = p_dataNPC.Job;
+        if (job == null)
+            return false;
+      
+        ReaderScene.DataObjectInfoID targetInfo = ReaderScene.GetInfoID(p_dataNPC.TargetID);
+        if (targetInfo == null)
+            return false;
+
+        if (!targetInfo.TestIsValud())
+        {
+            p_dataNPC.TargetID = null;
+            return false;
+        }
+
+        if (isCheckDistance) {
+            if (!Helper.DistanceIsFinish(targetInfo.Data.Position, p_dataNPC.Position))
+                return true;
+        }
+
+        string fieldTarget = string.Empty;
+        string fieldAlien = string.Empty;
+        bool isExitTargetResource = false;
+
+        Helper.GetNameFieldByPosit(ref fieldTarget, targetInfo.Data.Position);
+        ModelNPC.PortalData portal = targetInfo.Data as ModelNPC.PortalData;
+        SaveLoadData.TypePrefabs jobResourceTarget = job.TargetResource;
+        Helper.GetNameFieldByPosit(ref fieldAlien, p_dataNPC.Position);
+
+        if (p_dataNPC.Inventory == null)
+        {
+            p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
+            //Debug.Log(Storage.EventsUI.ListLogAdd = "## JOB: dataNPC.Inventory is null");
+        }
+        else
+            isExitTargetResource = job.TargetResource.ToString() == p_dataNPC.Inventory.TypeInventoryObject.ToString();
+
+        // --- TO PORTAL
+        if (portal != null)
+        {
+            if (isExitTargetResource)
+            {
+                //***** Back to HOME **** (trget is Portal)
+                //p_dataNPC.InventoryObject is ModelNPC;
+                Storage.PortalsManager.AddResourceFromAlien(portal, p_dataNPC);
+            }
+            // --- TAKE RESOURCE
+            bool checkStorageResource = Storage.PortalsManager.CheckStorageResourceForAlien(portal, p_dataNPC);
+            if (!checkStorageResource && isExitTargetResource)
+            {
+                //End job
+                p_dataNPC.Job = null;
+                p_dataNPC.TargetID = string.Empty;
+                p_dataNPC.TargetPosition = Vector3.zero;
+            }
+            //Continue job
+            if (p_dataNPC.Job != null && p_dataNPC.Job.Job != TypesJobs.Bathering)
+                return true;
+        }
+        // --- TO LOOT && BUILD
+        else
+        {
+            //Test job on target //@JOB@
+            if (targetInfo.Data.TypePrefab != jobResourceTarget)
+                return false;
+            
+            if (p_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.CompletedLoot.ToString() &&
+                p_dataNPC.CurrentAction != GameActionPersonController.NameActionsPerson.Work.ToString())
+            {
+                GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Work, controller, true);
+            }
+            if (p_dataNPC.CurrentAction == GameActionPersonController.NameActionsPerson.CompletedLoot.ToString())
+            {
+                if (job.Job == TypesJobs.Build)
+                {
+                    if (p_dataNPC.Inventory == null || p_dataNPC.Inventory.IsEmpty || p_dataNPC.Inventory.TypeInventoryObject.ToString() != job.ResourceResult.ToString())
+                    {
+                        Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB BUILD: Inventory is Empty >> " + job.Job.ToString() + " " + job.TargetResource + " R:" + job.ResourceResult);
+                        //p_dataNPC.Inventory = DataObjectInventory.EmptyInventory();
+                        return false;
+                    }
+                }
+                GameActionPersonController.ExecuteActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Move, controller, true);
+                // **** FIND RESOURCE ****
+                //---Replace object
+                //1. Remove resource
+                Vector3 posTarget = targetInfo.Data.Position;
+
+                bool isTargetTypeTrue = false;
+                PoolGameObjects.TypePoolPrefabs typePoolResource = CheckFieldJobValid(ref isTargetTypeTrue, job, targetInfo.Data);
+                if (job.Job == TypesJobs.Build)
+                {
+                    if (typePoolResource == PoolGameObjects.TypePoolPrefabs.PoolFloor)
+                        GenericWorldManager.ClearLayerObject(targetInfo.Data);
+                    //---- TEST
+                    //else
+                    //    Debug.Log(Storage.EventsUI.ListLogAdd = "TypesJobs.Build .. Not Remove resource: " + job.ResourceResult.ToString() + " >> " + targetInfo.Data.NameObject);
+                }
+                else
+                    GenericWorldManager.ClearLayerObject(targetInfo.Data);
+
+                //2. Create new resource
+                if (job.ResourceResult != SaveLoadData.TypePrefabs.PrefabField)
+                    CreateNewResource(typePoolResource, job, targetInfo, p_dataNPC);
+
+                bool isZonaReal = Helper.IsValidPiontInZona(targetInfo.Data.Position.x, targetInfo.Data.Position.y);
+                if (isZonaReal)
+                    Storage.GenGrid.LoadObjectToReal(targetInfo.Field);
+
+                //3. Add resource in Inventory (where not Ground)
+                p_dataNPC.Inventory = targetInfo.Data.LootObjectToInventory(p_dataNPC);
+
+                //4. Set target to target location
+                //if (job.JobTo == TypesJobTo.ToPortal)
+                //{
+                    //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Idle, null);
+                    //GameActionPersonController.RequestActionNPC(p_dataNPC, GameActionPersonController.NameActionsPerson.Target, null);
+                //}
+            }
+            //continue work...
+            return true;
+            
+        }
+        return false;
+    }
+
+    private static void CreateNewResource(PoolGameObjects.TypePoolPrefabs typePoolResource,
+        AlienJob job,
+        ReaderScene.DataObjectInfoID targetInfo,
+        ModelNPC.GameDataAlien p_dataNPC)
+    {
+        PaletteMapController.SelCheckOptDel deleteOpt = PaletteMapController.SelCheckOptDel.None;
+        PaletteMapController.SelCheckOptDel checkOpt = PaletteMapController.SelCheckOptDel.DelTerra;
+        if (typePoolResource != PoolGameObjects.TypePoolPrefabs.PoolFloor &&
+            typePoolResource != PoolGameObjects.TypePoolPrefabs.PoolPerson)
+        {
+            checkOpt = PaletteMapController.SelCheckOptDel.DelPrefab;
+        }
+
+        ModelNPC.ObjectData spawnObject = Storage.GenWorld.GetCreatePrefab(job.ResourceResult, targetInfo.Field);
+        bool isSpawned = Storage.Data.AddDataObjectInGrid(spawnObject,
+                            targetInfo.Field, "CheckJobAlien",
+                            p_modeDelete: deleteOpt,
+                            p_modeCheck: checkOpt,
+                            p_dataNPC: p_dataNPC);
+        spawnObject.PortalId = p_dataNPC.PortalId;
+        if (!isSpawned)
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### JOB [" + job.Job.ToString() + "]: Not Spawn " + spawnObject.NameObject);
+        else if (job.Job == TypesJobs.Build)
+            ManagerPortals.AddConstruction(spawnObject, p_dataNPC);
+    }
+
+    /*
     public static bool CheckJobAlien(ModelNPC.GameDataAlien p_dataNPC, GameActionPersonController controller = null)
     {
         AlienJob job = p_dataNPC.Job;
@@ -175,8 +327,7 @@ public static class AlienJobsManager
         }
         return false;
     }
-
-    
+    */
 
     public static void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
     {
@@ -322,6 +473,7 @@ public static class AlienJobsManager
         }
 
     }
+     
 
     public static bool ResourceRsultIsFloor(AlienJob job)
     {

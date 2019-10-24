@@ -1072,6 +1072,22 @@ public static class Helper { //: MonoBehaviour {
     }
     #endregion
 
+    private static double minDistanceToFinish = 1.0;//.2;
+    private static double minDistanceToFinishLarge = 1.2;//.2;
+    public static bool DistanceIsFinish(Vector3 p_targetPosition, Vector3 p_npcPosition , bool p_isLarge = false)
+    {
+        //float distField = Vector2.Distance(new Vector2(p_targetPosition.x+1,
+        //                                       p_targetPosition.y-1)
+        //                                      , new Vector2(p_npcPosition.x, p_npcPosition.y));
+        float distField = Vector2.Distance(new Vector2(p_targetPosition.x,
+                                             p_targetPosition.y)
+                                             , new Vector2(p_npcPosition.x, p_npcPosition.y+0.5f));
+        if(p_isLarge)
+            return distField < minDistanceToFinishLarge;
+        else
+            return distField < minDistanceToFinish;
+    }
+
     public static void GetSpiralFields(ref List<Vector2Int> findedFileds, int x, int y, int lenSnake = 8, bool isTestZonaWorls = true)
     {
         int indexSingle = 0;

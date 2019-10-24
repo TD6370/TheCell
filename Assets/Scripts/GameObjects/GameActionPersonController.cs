@@ -694,7 +694,8 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void CheckComplitionLoot(ModelNPC.GameDataAlien dataNPC, GameActionPersonController controller)
     {
-        if (AlienJobsManager.CheckJobAlien(dataNPC) == false)
+        //if (AlienJobsManager.CheckJobAlien(dataNPC) == false)
+        if (AlienJobsManager.CheckJobAlien(dataNPC, isCheckDistance: false) == false)
         {
             RequestActionNPC(dataNPC, NameActionsPerson.Target, controller);
         }
@@ -716,6 +717,13 @@ public class GameActionPersonController : MonoBehaviour
 
     public static void CheckComplitionMoveInDream(ModelNPC.GameDataAlien dataNPC)
     {
+        //TEST
+        if(dataNPC.IsReality)
+        {
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### CheckComplitionMoveInDream dataNPC IsReality !!!");
+            return;
+        }
+
         Vector3 newCurrentPosition = GetAlienData(dataNPC).Position;// .MovePosition;
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
         string nameFiledTarget = Helper.GetNameField(dataNPC.TargetPosition);
@@ -767,12 +775,13 @@ public class GameActionPersonController : MonoBehaviour
         }
         else
         {
-            float dist = Vector3.Distance(targetPosition, transform.position);
-            isCompletedMoving = dist < MinDistEndMove;
-            if (isCompletedMoving) //END WAY TO BASE TARGET
+            //float dist = Vector3.Distance(targetPosition, transform.position);
+            //isCompletedMoving = dist < MinDistEndMove;
+            //if (isCompletedMoving) //END WAY TO BASE TARGET
+            if(Helper.DistanceIsFinish(targetPosition, transform.position))
             {
                 //@JOB@
-                if (AlienJobsManager.CheckJobAlien(m_dataNPC, this) == false)
+                if (AlienJobsManager.CheckJobAlien(m_dataNPC, this, false) == false)
                 {
                     RequestActionNPC(m_dataNPC, NameActionsPerson.Idle, this);
                     RequestActionNPC(m_dataNPC, NameActionsPerson.Target, this);

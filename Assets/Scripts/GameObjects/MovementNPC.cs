@@ -283,6 +283,12 @@ public class MovementNPC : MonoBehaviour {
 
     private bool ResavePositionData<T>() where T : ModelNPC.GameDataNPC
     {
+        if (!_dataNPC.IsReality)
+        {
+            _dataNPC.IsReality = true;
+            Debug.Log(Storage.EventsUI.ListLogAdd = "### CheckComplitionMoveInDream dataNPC IsReality !!!");
+        }
+
         if (Storage.Instance.IsCorrectData)
         {
             Debug.Log("_______________ResavePositionData     RETURN CorrectData ON CORRECT_______________");
@@ -294,8 +300,6 @@ public class MovementNPC : MonoBehaviour {
             Debug.Log("################## ERROR MoveObjectToPosition ===========PRED========= rael name: " + this.gameObject.name + "  new name: " + _resName);
             return true;
         }
-
-     
 
         if(Storage.Data.IsUpdatingLocationPersonGlobal)
         {

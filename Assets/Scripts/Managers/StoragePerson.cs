@@ -514,7 +514,8 @@ public class StoragePerson : MonoBehaviour {
         Storage.ReaderWorld.UpdateLinkData(dataNPC, true, fieldNew, -1);
     }
 
-    public string UpdateGamePosition_Cache(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
+    //public string UpdateGamePosition_Cache(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
+    public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
         if (Storage.Instance.IsLoadingWorld && !NotValid)
             return "";
@@ -570,11 +571,13 @@ public class StoragePerson : MonoBehaviour {
         return gobj.name;
     }
 
+    /*
     public string UpdateGamePosition(string p_OldField, string p_NewField, string p_NameObject, ModelNPC.ObjectData objData, Vector3 p_newPosition, GameObject thisGameObject, bool isDestroy = false, bool NotValid = false)
     {
         if (!ConfigDebug.IsTestDUBLICATE)
             return UpdateGamePosition_Cache(p_OldField, p_NewField, p_NameObject, objData, p_newPosition, thisGameObject, isDestroy, NotValid);
 
+        
         if (Storage.Instance.IsLoadingWorld && !NotValid)
         {
             Debug.Log("_______________ LOADING WORLD ....._______________");
@@ -835,130 +838,131 @@ public class StoragePerson : MonoBehaviour {
 
         return gobj.name;
     }
-
-    //================================================
-
-    //private PriorityFinder m_prioritysGet;
-    //private AlienJob temp_job;
-    //private int temp_distantionFind;
-
-    /*
-    public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
-    {
-        int versionSearching = 2;// 1; //@JOB@
-
-        if (PersonPriority == null)
-        {
-            Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> PersonPriority is null";
-            LoadPriorityPerson();
-            result = null;
-            return;
-        }
-        if (dataAlien == null)
-        {
-            Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> dataAlien is null";
-            result = null;
-            return;
-        }
-
-        
-
-        //m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
-        //int distantionFind = UnityEngine.Random.Range(2, 15);
-
-        //v.1
-        if (versionSearching == 1)
-        {
-            //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
-            //result = Helper.FindFromLocation(dataAlien, distantionFind);
-            temp_distantionFind = UnityEngine.Random.Range(2, 15);
-            Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
-        }
-        else //v.3
-        {
-            if (job != null)
-            {
-                //fix job
-                bool isCompletedMission = job != null &&
-                    dataAlien.Inventory != null &&
-                    dataAlien.Inventory.NameInventopyObject == job.TargetResource.ToString();
-
-                switch (job.JobTo)
-                {
-                    case TypesJobTo.ToPortal:
-                        if (isCompletedMission)
-                        {
-                            if (dataAlien.PortalId == null)
-                                Storage.PortalsManager.SetHome(dataAlien);
-
-                            var info = ReaderScene.GetInfoID(dataAlien.PortalId);
-                            if (info != null)
-                                result = info.Data;
-                        }
-                        break;
-                    default:
-                        job = null;
-                        break;
-                }
-            }
-            //if (string.IsNullOrEmpty(dataAlien.TargetID))
-            if (result == null)
-            {
-                temp_distantionFind = UnityEngine.Random.Range(2, 150);
-                if(dataAlien.Inventory != null && !dataAlien.Inventory.IsEmpty && dataAlien.Inventory.TypeInventoryObject.IsPrefab())//FIX%CLUSTER
-                    Storage.PortalsManager.FindJobBuildLocation(ref result, ref job, dataAlien, temp_distantionFind);
-                if (result == null)
-                {
-                    CeckJobPass(ref result, dataAlien);
-                    if (result == null)
-                        FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
-                }
-                if (result == null)
-                {
-                    temp_distantionFind = UnityEngine.Random.Range(2, 25);//15
-                    Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
-                }
-            }
-
-        }
-        //v.2
-        //if (versionSearching == 2)
-        //{
-        //    string fieldName = Helper.GetNameFieldPosit(dataAlien.Position.x, dataAlien.Position.y);
-        //    Vector2 posField = Helper.GetPositByField(fieldName);
-        //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
-        //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
-    }
-
-    
-    private void CeckJobPass(ref ModelNPC.ObjectData result, ModelNPC.GameDataAlien dataAlien)
-    {
-        dataAlien.JobPass++;
-        if(dataAlien.JobPass >2)
-        {
-            Debug.Log(Storage.EventsUI.ListLogAdd = "[[[ JobPass Go To Home ]]] " + dataAlien.NameObject);
-            
-            if (dataAlien.PortalId == null)
-                Storage.PortalsManager.SetHome(dataAlien);
-
-            var info = ReaderScene.GetInfoID(dataAlien.PortalId);
-            if (info != null)
-            {
-                if (dataAlien.JobPass >= 5)
-                    result = info.Data;
-                else
-                {
-                    var portal = info.Data as ModelNPC.PortalData;
-                    if(portal != null && portal.Resources == null && portal.Resources.Count > 0)
-                        result = info.Data;
-                }
-            }
-            dataAlien.JobPass = 0;
-        }
-    }
 */
 
-    private List<FieldRnd> temp_findedFileds = new List<FieldRnd>();
+//================================================
+
+//private PriorityFinder m_prioritysGet;
+//private AlienJob temp_job;
+//private int temp_distantionFind;
+
+/*
+public void GetAlienNextTargetObject(ref ModelNPC.ObjectData result, ref AlienJob job, ModelNPC.GameDataAlien dataAlien)
+{
+    int versionSearching = 2;// 1; //@JOB@
+
+    if (PersonPriority == null)
+    {
+        Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> PersonPriority is null";
+        LoadPriorityPerson();
+        result = null;
+        return;
+    }
+    if (dataAlien == null)
+    {
+        Storage.EventsUI.ListLogAdd = "### GetAlienNextTargetObject >> dataAlien is null";
+        result = null;
+        return;
+    }
+
+
+
+    //m_prioritysGet = PersonPriority[dataAlien.TypePrefab];
+    //int distantionFind = UnityEngine.Random.Range(2, 15);
+
+    //v.1
+    if (versionSearching == 1)
+    {
+        //result = FindFromLocation(dataAlien.Position, distantionFind, prioritys, dataAlien.Id, dataAlien.TypePrefab);
+        //result = Helper.FindFromLocation(dataAlien, distantionFind);
+        temp_distantionFind = UnityEngine.Random.Range(2, 15);
+        Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
+    }
+    else //v.3
+    {
+        if (job != null)
+        {
+            //fix job
+            bool isCompletedMission = job != null &&
+                dataAlien.Inventory != null &&
+                dataAlien.Inventory.NameInventopyObject == job.TargetResource.ToString();
+
+            switch (job.JobTo)
+            {
+                case TypesJobTo.ToPortal:
+                    if (isCompletedMission)
+                    {
+                        if (dataAlien.PortalId == null)
+                            Storage.PortalsManager.SetHome(dataAlien);
+
+                        var info = ReaderScene.GetInfoID(dataAlien.PortalId);
+                        if (info != null)
+                            result = info.Data;
+                    }
+                    break;
+                default:
+                    job = null;
+                    break;
+            }
+        }
+        //if (string.IsNullOrEmpty(dataAlien.TargetID))
+        if (result == null)
+        {
+            temp_distantionFind = UnityEngine.Random.Range(2, 150);
+            if(dataAlien.Inventory != null && !dataAlien.Inventory.IsEmpty && dataAlien.Inventory.TypeInventoryObject.IsPrefab())//FIX%CLUSTER
+                Storage.PortalsManager.FindJobBuildLocation(ref result, ref job, dataAlien, temp_distantionFind);
+            if (result == null)
+            {
+                CeckJobPass(ref result, dataAlien);
+                if (result == null)
+                    FindJobResouceLocation(ref result, ref job, dataAlien, temp_distantionFind);
+            }
+            if (result == null)
+            {
+                temp_distantionFind = UnityEngine.Random.Range(2, 25);//15
+                Helper.FindFromLocation_Cache(ref result, dataAlien, temp_distantionFind);
+            }
+        }
+
+    }
+    //v.2
+    //if (versionSearching == 2)
+    //{
+    //    string fieldName = Helper.GetNameFieldPosit(dataAlien.Position.x, dataAlien.Position.y);
+    //    Vector2 posField = Helper.GetPositByField(fieldName);
+    //    Vector2Int posFieldInt = new Vector2Int((int)posField.x, (int)posField.y);
+    //    ReaderScene.DataInfoFinder finder = ReaderScene.GetDataInfoLocationFromID((int)posFieldInt.x, (int)posFieldInt.y, distantionFind, dataAlien.TypePrefab, dataAlien.Id);
+}
+
+
+private void CeckJobPass(ref ModelNPC.ObjectData result, ModelNPC.GameDataAlien dataAlien)
+{
+    dataAlien.JobPass++;
+    if(dataAlien.JobPass >2)
+    {
+        Debug.Log(Storage.EventsUI.ListLogAdd = "[[[ JobPass Go To Home ]]] " + dataAlien.NameObject);
+
+        if (dataAlien.PortalId == null)
+            Storage.PortalsManager.SetHome(dataAlien);
+
+        var info = ReaderScene.GetInfoID(dataAlien.PortalId);
+        if (info != null)
+        {
+            if (dataAlien.JobPass >= 5)
+                result = info.Data;
+            else
+            {
+                var portal = info.Data as ModelNPC.PortalData;
+                if(portal != null && portal.Resources == null && portal.Resources.Count > 0)
+                    result = info.Data;
+            }
+        }
+        dataAlien.JobPass = 0;
+    }
+}
+*/
+
+private List<FieldRnd> temp_findedFileds = new List<FieldRnd>();
     private List<ModelNPC.ObjectData> temp_resourcesData;
     private List<FieldRnd> temp_spiralRandem = new List<FieldRnd>();
     private Dictionary<Vector2Int,bool> temp_excludedFreeFileds = new Dictionary<Vector2Int, bool>();

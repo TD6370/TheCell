@@ -17,4 +17,4 @@ MonoBehaviour:
   JobTo: 1
   LimitResourceCount: 1
   ClusterSize: 0
-  BuildingyardSize: 5
+  BuildingyardSize: 7
