@@ -230,7 +230,7 @@
     <None Include="Assets\Levels\LevelDataPart1x1.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.shader" />
-    <None Include="Assets\AssetBundles\Shaders\NewImageEffectShader.shader" />
+    <None Include="Assets\AssetBundles\Shaders\EvalatorEffectShader.shader" />
     <None Include="Assets\Levels\Temp\LevelDataPart1x2.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

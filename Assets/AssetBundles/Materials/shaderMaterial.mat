@@ -43,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d1cc06458fe724df8837423c0a2f8f93, type: 3}
+        m_Texture: {fileID: 2800000, guid: bec7b13118f98b44e954f47f6b3302c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -72,6 +72,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _GradientHide: 1.4
+    - _GreenAnima: -0.9
+    - _HorizontOffset: 94
+    - _IsColorMix: 0
+    - _IsColorMixRGB: 0
+    - _IsFilled: 1
+    - _LimitHide: 1.6
     - _Metallic: 0
     - _Mode: 0
     - _MotionAmount: 0
@@ -80,12 +87,17 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpeedFill: 7.5
     - _SrcBlend: 1
     - _UVSec: 0
+    - _VerticalOffset: 409
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorMix: {r: 0.5943396, g: 0.28168964, b: 0.11494303, a: 0.5}
+    - _ColorMix: {r: 0.052862734, g: 0, b: 0.6132076, a: 1}
+    - _ColorMixB: {r: 0.27483654, g: 0, b: 1, a: 1}
+    - _ColorMixG: {r: 0.1843137, g: 0.54251635, b: 0.5647059, a: 1}
+    - _ColorMixR: {r: 0.3647059, g: 0.6486641, b: 0.8117647, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
