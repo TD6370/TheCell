@@ -1,11 +1,11 @@
-﻿Shader "Custom/Effect/EvalatorEffectShader"
+﻿Shader "Custom/Effect/ElevatorEffectShader"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_IsColorMix ("IS COLOR MIX", Range (0,1)) = 1
 		_IsColorMixRGB ("IS COLOR MIX RGB", Range (0,1)) = 1
-		_ColorMix ("COLOR MIX", Color) = (1,1,1,1.0)
+		_Color ("COLOR MIX", Color) = (1,1,1,1.0)
 		_ColorMixR ("COLOR MIX R", Color) = (1,1,1,1.0)
 		_ColorMixG ("COLOR MIX G", Color) = (1,1,1,1.0)
 		_ColorMixB ("COLOR MIX B", Color) = (1,1,1,1.0)
@@ -29,7 +29,8 @@
 		//Cull Off ZWrite Off ZTest Less  
 		//Blend SrcAlpha OneMinusSrcAlpha
 		//-------------------------
-		Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
+		//Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
+		Tags { "Queue"="Transparent" "IgnoreProjector"="True" }
 		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 		//-------------------------
@@ -82,7 +83,7 @@
 			}
 			
 			sampler2D _MainTex;
-			fixed4  _ColorMix;
+			fixed4  _Color;
 			fixed4  _ColorMixR;
 			fixed4  _ColorMixG;
 			fixed4  _ColorMixB;
@@ -140,42 +141,36 @@
 				float2 screenPos = i.screenPos;
 				float2 mouse = float2(.5,.5);
 				float iTime = 1.;
-				fixed4 colorMix  = _ColorMix ;
+				fixed4 colorMix  = _Color ;
 			
 				float u_time;
 				//u_time = (_Time + unity_DeltaTime)*600.;
-				//u_time = (sin(_Time)*cos(_Time))*1000.;
 				u_time = (_Time)*1000.+1500.;
 
-				//fixed4 anima1 = anima(i.uv, screenPos, u_time);
 				fixed4 anima1 = anima(i.uv, screenPos, u_time, _HorizontOffset, _VerticalOffset, _GreenAnima);
-
-				//col.rgb += anima1.rgb;
-				//col.rgb *= anima1.rgb;
-				//col.a *= anima1.rgb;
-				//float limRGB = col.r+col.g+col.b;
-				//if(limRGB < _LimitHide){
-				//	if(col.a > 0.){
-				//		col.a = (limRGB/_LimitHide)* _GradientHide;
-				//		//col.a = step(col.a,.7);
-				//	}
-				//}
-
+				
 				bool isAfterMix = false;
 				bool isVerticalLimitHide = true;
 				bool isLimitStart = false;
 				float timeFill = _Time*_SpeedFill;
-				float limitFill = sin(timeFill)*cos(timeFill)+.72;//.6;
+				float limitFill = sin(timeFill)*cos(timeFill)*1.3+.6;
+				//limitFill = ceil(limitFill);
 				if(_IsFilled == 1)
 				{
-					isVerticalLimitHide = col.y > limitFill;
-					isLimitStart = col.y > limitFill+.1;
-					isAfterMix = col.y > limitFill-.2;
+					//float posY = abs(col.y);
+					//float posY = abs(col.y);
+					float posY = col.y;
+					//posY = floor(col.y);
+					//posY = round(col.y);
+					isVerticalLimitHide = posY > limitFill;
+					isLimitStart = posY > limitFill+.1;
+					isAfterMix = posY > limitFill-.2;
 				}
 				if(isLimitStart){
 					col.a =0.;
 				} else{
 					float limRGB = anima1.r + anima1.g + anima1.b;
+					//limRGB = round(limRGB);
 					if(limRGB < _LimitHide){
 						if(anima1.a > 0. ){
 							if(isVerticalLimitHide)
