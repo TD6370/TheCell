@@ -188,6 +188,8 @@ public partial class ModelNPC
 
         [XmlIgnore]
         public int Speed { get; set; }
+        [XmlIgnore]
+        public int SpeedCurrent { get; set; }
 
         [XmlIgnore]
         public override PoolGameObjects.TypePoolPrefabs TypePoolPrefab { get { return PoolGameObjects.TypePoolPrefabs.PoolPerson; } }

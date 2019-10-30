@@ -7,7 +7,11 @@ using UnityEngine.U2D;
 
 public class ManagerPalette : MonoBehaviour {
 
+    public Texture2D TextureDrawPolyline;
+    public Material MaterialDrawPolyline;
     public Color DrawPolylineColor = Color.green;
+    [Range(0.1f, 100f)]
+    public float DrawPolylineSize = 0.1f;
 
     public Color SceneSkyColor = Color.white;
     public Color SceneEquatorColor = Color.white;

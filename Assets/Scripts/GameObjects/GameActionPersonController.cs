@@ -56,6 +56,9 @@ public class GameActionPersonController : MonoBehaviour
     private SaveLoadData.TypePrefabs temp_TypePrefab = SaveLoadData.TypePrefabs.PrefabField;
     private PositionRenderSorting m_sortingLayer;
 
+    private string temp_TargetID = "-1";
+    private bool temp_isLargeBlock = true;
+
     private void Awake()
     {
         m_sortingLayer = GetComponent<PositionRenderSorting>();
@@ -78,27 +81,13 @@ public class GameActionPersonController : MonoBehaviour
 
         if (IsStartInit)
             ChangeActions();
+
+        DrawTargetRect();
     }
-
-
+         
     private void OnDrawGizmos()
     {
-        //if (Storage.SceneDebug.SettingsScene.IsShowTittleInfoPerson)
-        //{
-        //    if (m_dataNPC != null && m_dataNPC.TargetPosition != Vector3.zero)
-        //    {
-        //        DrawGizmosLine(transform.position, m_dataNPC.TargetPosition, "#8533ff".ToColor());
-        //    }
-        //}
-    }
-
-
-    private void DrawGizmosLine(Vector3 pos1, Vector3 pos2, Color color)
-    {
-#if UNITY_EDITOR
-        Gizmos.color = color;
-        Gizmos.DrawLine(pos1, pos2);
-#endif
+        //Debug.Log("OnDrawGizmos ><><><><><><><><><><><>");
     }
 
     void OnGUI()
@@ -708,7 +697,8 @@ public class GameActionPersonController : MonoBehaviour
     private int stepTest = 0;
     private int stepLimitTest = 10;
     private string lastFieldForLock = "";
-    private float limitLockInField = 5f; //3f;
+    //!FIX MOVE TARGET!
+    private float limitLockInField = 5f;// 5f; //3f;
     private float TimeInField;
     private float minDistLck = 0.0005f;
     private Vector3 lastPositionForLock;
@@ -726,8 +716,10 @@ public class GameActionPersonController : MonoBehaviour
 
         Vector3 newCurrentPosition = GetAlienData(dataNPC).Position;// .MovePosition;
         float dist = Vector3.Distance(dataNPC.TargetPosition, newCurrentPosition);
-        string nameFiledTarget = Helper.GetNameField(dataNPC.TargetPosition);
-        string nameFiledCurrent = Helper.GetNameField(newCurrentPosition);
+        //string nameFiledTarget = Helper.GetNameField(dataNPC.TargetPosition);
+        //string nameFiledCurrent = Helper.GetNameField(newCurrentPosition);
+        string nameFiledTarget = Helper.GetNameFieldPosit(dataNPC.TargetPosition.x, dataNPC.TargetPosition.y);
+        string nameFiledCurrent = Helper.GetNameFieldPosit(newCurrentPosition.x, newCurrentPosition.y);
 
         //End move to Target
         bool trueDist = dist < MinDistEndMove;
@@ -775,10 +767,13 @@ public class GameActionPersonController : MonoBehaviour
         }
         else
         {
+            //test on Structure //!FIX MOVE TARGET!
+            bool p_isLarge = IsValidLargeLock(false);
+
             //float dist = Vector3.Distance(targetPosition, transform.position);
             //isCompletedMoving = dist < MinDistEndMove;
             //if (isCompletedMoving) //END WAY TO BASE TARGET
-            if(Helper.DistanceIsFinish(targetPosition, transform.position))
+            if (Helper.DistanceIsFinish(targetPosition, transform.position, p_isLarge))
             {
                 //@JOB@
                 if (AlienJobsManager.CheckJobAlien(m_dataNPC, this, false) == false)
@@ -797,13 +792,48 @@ public class GameActionPersonController : MonoBehaviour
             m_MeAnimation.PersonMove(isAnimateMove);
     }
 
-    
+    private bool IsValidLargeLock(bool isFullTest =true)
+    {
+        //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID))
+        //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID)
+        //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID)
+        if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID))
+        {
+            temp_isLargeBlock = !Storage.ReaderWorld.CollectionInfoID[m_dataNPC.TargetID].Data.IsFloor();
+            temp_TargetID = m_dataNPC.TargetID;
+            if (!temp_isLargeBlock) {
+                string nameFiledTarget = Helper.GetNameField(m_dataNPC.TargetPosition);
+
+                List<ModelNPC.ObjectData> objs = new List<ModelNPC.ObjectData>();
+                ReaderScene.GetObjectsDataFromGridTo(ref objs, nameFiledTarget);
+                if (objs != null)
+                {
+                    foreach (var item in objs)
+                    {
+                        if (!item.IsFloor())
+                        {
+                            temp_isLargeBlock = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            //temp_isLargeBlock = false == Storage.ReaderWorld.CollectionInfoID[m_dataNPC.TargetID].Data.IsFloor();
+        }
+        if (!isFullTest)
+            return temp_isLargeBlock;
+
+        float distField = Vector2.Distance(new Vector2(m_dataNPC.TargetPosition.x,
+                                     m_dataNPC.TargetPosition.y)
+                                     , new Vector2(m_dataNPC.Position.x, m_dataNPC.Position.y));
+        return temp_isLargeBlock || distField > 1;
+    }
+
     private bool TestMoveTargetLock()
     {
-        ////TEST#
-        //return false;
-
         bool isLock = false;
+        //!FIX MOVE TARGET!-------------------------------------
+        bool isValid = IsValidLargeLock();
 
         float distLock = Vector3.Distance(lastPositionForLock, transform.position);
         if (distLock < minDistLck)
@@ -811,8 +841,14 @@ public class GameActionPersonController : MonoBehaviour
             stepTest++;
             if (stepTest > stepLimitTest)
             {
-                isLock = true;
-                stepTest = 0;
+                if (isValid || stepTest > stepLimitTest * 10)
+                {
+                    isLock = true;
+                    stepTest = 0;
+                }else
+                {
+                    var test = "TEST";
+                }
             }
         }
         else
@@ -832,8 +868,16 @@ public class GameActionPersonController : MonoBehaviour
                 {
                     if (!string.IsNullOrEmpty(lastFieldForLock))
                     {
-                        isLock = true;
-                        TimeInField = -1f;
+                        //if (isValid)
+                        if (isValid || Time.time > TimeInField*10)
+                        {
+                            isLock = true;
+                            TimeInField = -1f;
+                        }
+                        else
+                        {
+                            var test = "TEST";
+                        }
                     }
                 }
             }else
@@ -1079,6 +1123,62 @@ public class GameActionPersonController : MonoBehaviour
     }
     #endregion
 
+
+    public Vector2[] GetTargetPolyline(Vector3 posObserver, Vector3 targetPosition)
+    {
+        //float targFieldX = (int)(targetPosition.x);
+        //float targFieldY = (int)(targetPosition.y);
+        float targFieldX = (int)(targetPosition.x/ Storage.ScaleWorld);
+        float targFieldY = (int)(targetPosition.y/ Storage.ScaleWorld);
+        targFieldX = (int)(targFieldX * Storage.ScaleWorld);
+        targFieldY = (int)(targFieldY * Storage.ScaleWorld);
+        Vector2 poF = new Vector2(targFieldX - 1, targFieldY + 1);
+        Vector2 poS = posObserver;
+        Vector2 posA = new Vector2(poF.x, poF.y - Storage.ScaleWorld);
+        Vector2 posB = new Vector2(posA.x, posA.y + Storage.ScaleWorld);
+        Vector2 posC = new Vector2(posB.x + Storage.ScaleWorld, posB.y);
+        Vector2 posD = new Vector2(posC.x, posC.y - Storage.ScaleWorld);
+        RayTargetClear();
+        return new Vector2[]{
+                    poS,
+                    posA,
+                    posB,
+                    posC,
+                    posD,
+                    poS
+                };
+    }
+
+    private void DrawTargetRect()
+    {
+        if (Storage.SceneDebug.SettingsScene.IsShowTargetRayPerson)
+        {
+            if (m_dataNPC != null 
+                && m_dataNPC.TargetPosition != Vector3.zero 
+                && (string.IsNullOrEmpty(Storage.EventsUI.SelectedExpandMenuAlienID) 
+                    || m_dataNPC.Id == Storage.EventsUI.SelectedExpandMenuAlienID))
+            {
+                //DrawGizmosLine(transform.position, m_dataNPC.TargetPosition, "#8533ff".ToColor());
+                //--- info ID
+                /*
+                if(!string.IsNullOrEmpty(m_dataNPC.TargetID))
+                {
+                    var info = ReaderScene.GetInfoID(m_dataNPC.TargetID);
+                    if(info!=null)
+                    {
+                        //info.Data.
+                    }
+                }
+                */
+                RayTargetClear();
+                var pointsRay = GetTargetPolyline(transform.position, m_dataNPC.TargetPosition);
+                DrawPolyline(pointsRay, 
+                    Storage.Palette.DrawPolylineColor, 
+                    Storage.Palette.DrawPolylineSize);
+            }
+        }
+    }
+
     public void RayTargetClear()
     {
         m_lineRenderer.positionCount = 0;
@@ -1103,17 +1203,14 @@ public class GameActionPersonController : MonoBehaviour
 
     public void DrawPolyline(Vector2[] points, Color color, float width = 0.2f)
     {
-        //return;
-
         if (m_lineRenderer == null)
         {
             Debug.Log("LineRenderer is null !!!!");
             return;
         }
-
         var colorKeys = new GradientColorKey[] { new GradientColorKey() { color = color } };
         //m_lineRenderer.SetColors(color, color);
-        m_lineRenderer.colorGradient = new Gradient() { colorKeys = colorKeys };
+        //m_lineRenderer.colorGradient = new Gradient() { colorKeys = colorKeys };
         m_lineRenderer.SetWidth(width, width);
         int size = points.Length;
         m_lineRenderer.SetVertexCount(size);
@@ -1122,5 +1219,42 @@ public class GameActionPersonController : MonoBehaviour
             Vector3 posPoint = new Vector3(points[i].x, points[i].y, -2);
             m_lineRenderer.SetPosition(i, posPoint);
         }
+        //m_lineRenderer.material = Storage.Palette.MaterialDrawPolyline;
+        //m_lineRenderer.material.mainTexture = Storage.Palette.TextureDrawPolyline;
+        //m_lineRenderer.material.color = color;
+        for (int i = 0; i < m_lineRenderer.materials.Length; i++)
+        {
+            m_lineRenderer.materials[i] = Storage.Palette.MaterialDrawPolyline;
+            m_lineRenderer.materials[i].color = color;
+            m_lineRenderer.materials[i].mainTexture = Storage.Palette.TextureDrawPolyline;
+        }
+    }
+
+
+
+    private void DrawGizmosLine(Vector3 pos1, Vector3 pos2, Color color)
+    {
+#if UNITY_EDITOR
+        Gizmos.color = color;
+        Gizmos.DrawLine(pos1, pos2);
+#endif
+    }
+
+    private void DrawGizmosPolyline(Vector3[] posTrigon, Color color)
+    {
+#if UNITY_EDITOR
+        Gizmos.color = color;
+        Vector3 posPre = Vector3.zero;
+        foreach (Vector3 pos in posTrigon)
+        {
+            if (posPre == Vector3.zero)
+                posPre = pos;
+            else
+            {
+                Gizmos.DrawLine(posPre, pos);
+                posPre = pos;
+            }
+        }
+#endif
     }
 }

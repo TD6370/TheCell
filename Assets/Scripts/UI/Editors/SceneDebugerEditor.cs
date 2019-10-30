@@ -30,6 +30,7 @@ public class SceneDebugerEditor : Editor
     private SerializedProperty TimeWorkAction;
     private SerializedProperty TimeLimitResetNavigator;
     private SerializedProperty IsShowTittleInfoPerson;
+    private SerializedProperty IsShowTargetRayPerson;
 
     private SerializedObject newSO;
 
@@ -58,6 +59,7 @@ public class SceneDebugerEditor : Editor
         TimeWorkAction = newSO.FindProperty("TimeWorkAction");
         TimeLimitResetNavigator = newSO.FindProperty("TimeLimitResetNavigator");
         IsShowTittleInfoPerson = newSO.FindProperty("IsShowTittleInfoPerson");
+        IsShowTargetRayPerson = newSO.FindProperty("IsShowTargetRayPerson");
 
         ResetPropertyEditor();
     }
@@ -108,6 +110,7 @@ public class SceneDebugerEditor : Editor
         IsLog.boolValue = EditorGUILayout.Toggle("Show log actions", IsLog.boolValue);
         IsShowTittlePerson.boolValue = EditorGUILayout.Toggle("Show tittle Person", IsShowTittlePerson.boolValue);
         IsShowTittleInfoPerson.boolValue = EditorGUILayout.Toggle("Show tittle Person Info action", IsShowTittleInfoPerson.boolValue);
+        IsShowTargetRayPerson.boolValue = EditorGUILayout.Toggle("Show target ray Person", IsShowTargetRayPerson.boolValue);
 
         EditorGUILayout.Space();
         //@@$$

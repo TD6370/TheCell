@@ -172,6 +172,8 @@ public class MovementNPC : MonoBehaviour {
     
     protected IEnumerator MoveObjectToPosition<T>() where T : ModelNPC.GameDataNPC
     {
+        float timeLockOnTarget = 0f;
+        //int countLockOnTarget = 0;
         int speed = 1;
         Vector2 veloccityStart = _rb2d.velocity;
         float step = 0;
@@ -186,7 +188,7 @@ public class MovementNPC : MonoBehaviour {
         _dataNPC = GetUpdateData();
         if (_dataNPC != null)
         {
-            speed = _dataNPC.Speed;
+            speed = _dataNPC.SpeedCurrent = _dataNPC.Speed;
             step = speed * Time.deltaTime;
         }
         else
@@ -209,6 +211,8 @@ public class MovementNPC : MonoBehaviour {
                 if (step == 0) //TEST
                 {
                     step = speed * Time.deltaTime;
+                    //!FIX MOVE TARGET!
+                    //step = _dataNPC.SpeedCurrent * Time.deltaTime;
                     Storage.EventsUI.ListLogAdd = "Movement NPC step is zero!!!";
                 }
 
@@ -244,10 +248,35 @@ public class MovementNPC : MonoBehaviour {
                 //isRunning = true;
                 if (_dataNPC.IsMoveValid())
                 {
+                    Vector3 targetPosition = _dataNPC.TargetPosition;
+
                     _dataNPC.StartTransfer("MoveObjectToPosition"); //FIX~~TRANSFER
 
-                    Vector3 targetPosition = _dataNPC.TargetPosition;
+                    //float stepMove = step;
                     Vector3 pos = Vector3.MoveTowards(transform.position, targetPosition, step);
+
+                    //----
+                    float distField = Vector2.Distance(new Vector2(targetPosition.x,
+                                             targetPosition.y)
+                                             , new Vector2(transform.position.x, transform.position.y));
+
+                    //!FIX MOVE TARGET!
+                    if (distField < 0.5)
+                    {
+                        if (timeLockOnTarget < Time.time)
+                        {
+                            timeLockOnTarget = Time.time + 0.5f;
+                            if (targetPosition.x > transform.position.x)
+                                pos.x = transform.position.x + step / 2;
+                            else
+                                pos.x = transform.position.x - step / 2;
+                            if (targetPosition.y > transform.position.y)
+                                pos.y = transform.position.y + step / 2;
+                            else
+                                pos.y = transform.position.y - step / 2;
+                        }
+                    }
+                    //-----
 
                     if (_rb2d != null)
                     {

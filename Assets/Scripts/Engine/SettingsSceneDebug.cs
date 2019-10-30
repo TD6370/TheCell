@@ -10,6 +10,8 @@ public class SettingsSceneDebug : ScriptableObject {
     public bool IsShowTittlePerson = false;
     [SerializeField, Tooltip("Show tittle full info scene perons")]
     public bool IsShowTittleInfoPerson = false;
+    [SerializeField, Tooltip("Show target ray perons")]
+    public bool IsShowTargetRayPerson = false;
     [SerializeField, Tooltip("Write Debug in log list")]
     public bool IsLog = false;
 
