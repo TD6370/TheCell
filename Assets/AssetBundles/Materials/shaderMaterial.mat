@@ -72,13 +72,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GradientHide: 1.4
-    - _GreenAnima: -0.9
-    - _HorizontOffset: 94
+    - _GradientHide: 1.5
+    - _GreenAnima: -1
+    - _HorizontOffset: 8
     - _IsColorMix: 0
     - _IsColorMixRGB: 0
     - _IsFilled: 1
-    - _LimitHide: 1.6
+    - _LimitHide: 1
     - _Metallic: 0
     - _Mode: 0
     - _MotionAmount: 0
@@ -87,10 +87,10 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpeedFill: 7.5
+    - _SpeedFill: 7
     - _SrcBlend: 1
     - _UVSec: 0
-    - _VerticalOffset: 409
+    - _VerticalOffset: 60
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

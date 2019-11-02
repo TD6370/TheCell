@@ -606,9 +606,6 @@ public class PaletteMapController : MonoBehaviour {
     int LayerViewUI;
     int LayerObjects;
 
-
-
-
     private void Awake()
     {
         LayerUI = LayerMask.NameToLayer("LayerUI");

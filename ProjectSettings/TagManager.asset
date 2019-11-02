@@ -4,46 +4,42 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Ufak
+  - Shootable
+  - Undefined
   - Field
-  - PrefabVood
-  - PrefabRock
-  - PrefabUfo
-  - PrefabPanel
-  - UI
-  - PrefabBoss
-  - PrefabCommandButton
-  - ExpandPersonControl
-  - Cursor
-  - TrackPoint
-  - CommandButtonPerson
-  - CommandButton
-  - CommandButtonTool
-  - PanelCommandPerson
-  - ListCommandPerson
-  - MapObject
-  - PrafabWall
-  - PrefabWallWood
-  - PrefabWallRock
-  - Hero
-  - PanelPaletteMap
-  - PrefabField
-  - PaletteCell
-  - InPool
-  - MapGridCell
-  - PrefabFlore
-  - PrefabNPC
-  - PoolPerson
+  - PoolFloor
+  - PoolFlore
   - PoolWood
   - PoolWall
-  - PoolFlore
-  - PoolFloor
-  - InventoryCase
-  - BackAnimationModel
-  - FrontAnimationModel
-  - BoneModelAnimation
-  - RootBoneModelAnimation
+  - PoolPerson
   - PoolPortal
+  - PrefabUfo
+  - BackAnimationModel
+  - ListCommandPerson
+  - InventoryCase
+  - PrefabCommandButton
+  - RootBoneModelAnimation
+  - FrontAnimationModel
+  - PanelPaletteMap
+  - BoneModelAnimation
+  - TrackPoint
+  - PrefabBoss
+  - PrefabPanel
+  - Hero
+  - PanelCommandPerson
+  - UI
+  - Cursor
+  - PrefabRock
+  - PrefabField
+  - MapObject
+  - PrefabWallWood
+  - PrefabWallRock
+  - PrefabVood
+  - PaletteCell
+  - ExpandPersonControl
+  - CommandButtonTool
+  - CommandButtonPerson
+  - CommandButton
   layers:
   - Default
   - TransparentFX
@@ -74,55 +70,58 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Lighting
+  - Ground
+  - Postprocessing
   m_SortingLayers:
+  - name: Fire
+    uniqueID: 3804908061
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
   - name: LayerBackground
-    uniqueID: 2410860441
+    uniqueID: 1120209669
     locked: 0
   - name: LayerScreen
-    uniqueID: 1102042169
+    uniqueID: 554688045
     locked: 0
   - name: LayerTerra
-    uniqueID: 1445392771
+    uniqueID: 3361257809
     locked: 0
   - name: LayerTerraDecor
-    uniqueID: 2858655495
+    uniqueID: 2729163747
     locked: 0
   - name: LayerGeometry
-    uniqueID: 1432927223
+    uniqueID: 3430692629
     locked: 0
   - name: LayerFloor
-    uniqueID: 3142276597
+    uniqueID: 1567265061
     locked: 0
   - name: LayerFlooObjects
-    uniqueID: 3416631219
+    uniqueID: 3565259681
     locked: 0
   - name: LayerObjects
-    uniqueID: 2507473933
+    uniqueID: 2599718363
     locked: 0
   - name: LayerRoof
-    uniqueID: 2306341251
+    uniqueID: 1902944569
     locked: 0
   - name: LayerFly
-    uniqueID: 1450456911
+    uniqueID: 2356295053
     locked: 0
   - name: LayerForeground
-    uniqueID: 3562309737
+    uniqueID: 2646875699
     locked: 0
   - name: LayerEffects
-    uniqueID: 2470891189
+    uniqueID: 548341501
     locked: 0
   - name: LayerUI
-    uniqueID: 1273576207
+    uniqueID: 2379477459
     locked: 0
   - name: LeyerUIDecor
-    uniqueID: 3476023211
+    uniqueID: 2458515025
     locked: 0
   - name: LayerUIEffects
-    uniqueID: 1455557975
+    uniqueID: 1084252991
     locked: 0

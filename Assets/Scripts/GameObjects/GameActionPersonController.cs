@@ -797,9 +797,19 @@ public class GameActionPersonController : MonoBehaviour
         //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID))
         //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID)
         //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID)
-        if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID))
+        //if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID))
+        bool isCheckLarge = false;
+        bool isCheckTarget = true;
+        if (!string.IsNullOrEmpty(m_dataNPC.TargetID) && Storage.Instance.ReaderSceneIsValid)
+            isCheckLarge = isCheckTarget = Storage.ReaderWorld.CollectionInfoID.ContainsKey(m_dataNPC.TargetID);
+
+        if (m_dataNPC.TargetID != null && temp_TargetID != m_dataNPC.TargetID && isCheckTarget)
         {
-            temp_isLargeBlock = !Storage.ReaderWorld.CollectionInfoID[m_dataNPC.TargetID].Data.IsFloor();
+            if (isCheckLarge)
+                temp_isLargeBlock = !Storage.ReaderWorld.CollectionInfoID[m_dataNPC.TargetID].Data.IsFloor();
+            else
+                temp_isLargeBlock = false;
+
             temp_TargetID = m_dataNPC.TargetID;
             if (!temp_isLargeBlock) {
                 string nameFiledTarget = Helper.GetNameField(m_dataNPC.TargetPosition);
