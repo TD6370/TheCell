@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsShowTittlePerson: 0
   IsShowTittleInfoPerson: 0
-  IsShowTargetRayPerson: 1
+  IsShowTargetRayPerson: 0
   IsLog: 0
   AutoRefreshOn: 0
   RealDebugOn: 0

@@ -103,7 +103,7 @@ public static class AlienJobsManager
                 // **** FIND RESOURCE ****
                 //---Replace object
                 //1. Remove resource
-                Vector3 posTarget = targetInfo.Data.Position;
+                //Vector3 posTarget = targetInfo.Data.Position;
 
                 bool isTargetTypeTrue = false;
                 PoolGameObjects.TypePoolPrefabs typePoolResource = CheckFieldJobValid(ref isTargetTypeTrue, job, targetInfo.Data);
